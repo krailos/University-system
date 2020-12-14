@@ -1,5 +1,6 @@
 package ua.com.foxminded.krailo.domain;
 
+import java.time.LocalTime;
 import java.time.MonthDay;
 import java.util.ArrayList;
 
@@ -41,14 +42,24 @@ public class Main {
 	faculty.getDepartments().add(department);
 	System.out.println(faculty.getDepartments());
 	System.out.println("-- Create teachers");
-	Teacher teacher1 = new Teacher("Vasyl","Lyutyuy");
-	Teacher teacher2 = new Teacher("Yarema","Podoroznyuy");
-	System.out.println(teacher1);
-	System.out.println(teacher2);
+	Teacher teacher1 = new Teacher("Teacher","One");
+	Teacher teacher2 = new Teacher("Teacher","Two");
+	Teacher teacher3 = new Teacher("Teacher","Three");
+	Teacher teacher4 = new Teacher("Teacher","Four");
+	Teacher teacher5 = new Teacher("Teacher","Five");
+	Teacher teacher6 = new Teacher("Teacher","Six");
+	Teacher teacher7 = new Teacher("Teacher","Seven");
+	Teacher teacher8 = new Teacher("Teacher","Eight");
 	System.out.println("-- Add teacher to department");
 	department.setTeachers(new ArrayList<>());
 	department.getTeachers().add(teacher1);
 	department.getTeachers().add(teacher2);
+	department.getTeachers().add(teacher3);
+	department.getTeachers().add(teacher4);
+	department.getTeachers().add(teacher5);
+	department.getTeachers().add(teacher6);
+	department.getTeachers().add(teacher7);
+	department.getTeachers().add(teacher8);
 	System.out.println(department.getTeachers());
 	System.out.println("-- Create DeansOffice");
 	DeansOffice deansOffice = new DeansOffice("Deans office of Financial faculty");
@@ -134,8 +145,58 @@ public class Main {
 	System.out.println(year2Finance.getGroups());
 	System.out.println(year1Banking.getGroups());
 	System.out.println(year2Banking.getGroups());
-	
-	
+	System.out.println("-- Create subject");
+	Subject subjectFinance1 = new Subject("subject Finance 1");
+	Subject subjectFinance2 = new Subject("subject Finance 2");
+	Subject subjectFinance3 = new Subject("subject Finance 3");
+	Subject subjectFinance4 = new Subject("subject Finance 4");
+	Subject subjectBanking1 = new Subject("subject Banking 1");
+	Subject subjectBanking2 = new Subject("subject Banking 2");
+	Subject subjectBanking3 = new Subject("subject Banking 3");
+	Subject subjectBanking4 = new Subject("subject Banking 4");
+	System.out.println("-- Add teacher to subject");
+	subjectFinance1.setTeachers(new ArrayList<>());
+	subjectFinance2.setTeachers(new ArrayList<>());
+	subjectFinance3.setTeachers(new ArrayList<>());
+	subjectFinance4.setTeachers(new ArrayList<>());
+	subjectBanking1.setTeachers(new ArrayList<>());
+	subjectBanking2.setTeachers(new ArrayList<>());
+	subjectBanking3.setTeachers(new ArrayList<>());
+	subjectBanking4.setTeachers(new ArrayList<>());
+	subjectFinance1.getTeachers().add(teacher1);
+	subjectFinance2.getTeachers().add(teacher2);
+	subjectFinance3.getTeachers().add(teacher3);
+	subjectFinance4.getTeachers().add(teacher4);
+	subjectBanking4.getTeachers().add(teacher5);
+	subjectBanking4.getTeachers().add(teacher6);
+	subjectBanking4.getTeachers().add(teacher7);
+	subjectBanking4.getTeachers().add(teacher8);
+	System.out.println("-- Add subject to years");
+	year1Finance.setSubjects(new ArrayList<>());
+	year2Finance.setSubjects(new ArrayList<>());
+	year1Banking.setSubjects(new ArrayList<>());
+	year2Banking.setSubjects(new ArrayList<>());
+	year1Finance.getSubjects().add(subjectFinance1);
+	year1Finance.getSubjects().add(subjectFinance2);
+	year2Finance.getSubjects().add(subjectFinance3);
+	year2Finance.getSubjects().add(subjectFinance4);
+	year1Banking.getSubjects().add(subjectBanking1);
+	year1Banking.getSubjects().add(subjectBanking2);
+	year2Banking.getSubjects().add(subjectBanking3);
+	year2Banking.getSubjects().add(subjectBanking4);
+	System.out.println(year1Finance.getSubjects());
+	System.out.println(year2Finance.getSubjects());
+	System.out.println(year1Banking.getSubjects());
+	System.out.println(year2Banking.getSubjects());
+	System.out.println("-- Create lessons time");
+	LessonTime lessonTime1 = new LessonTime("First lesson", LocalTime.of(8, 30), LocalTime.of(9, 15));
+	LessonTime lessonTime2 = new LessonTime("Second lesson", LocalTime.of(9, 30), LocalTime.of(10, 15));
+	System.out.println("-- Create Lessons time schedule and add lessons time");
+	LessonsTimeSchedule lessonsTimeSchedule = new LessonsTimeSchedule("lessons time schedule");
+	lessonsTimeSchedule.setLessonTimes(new ArrayList<>());
+	lessonsTimeSchedule.getLessonTimes().add(lessonTime1);
+	lessonsTimeSchedule.getLessonTimes().add(lessonTime2);
+	System.out.println(lessonsTimeSchedule.getLessonTimes());
 	
     }
 }
