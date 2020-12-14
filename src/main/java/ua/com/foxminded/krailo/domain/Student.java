@@ -4,6 +4,10 @@ import java.util.Date;
 
 public class Student {
     
+    public Student() {
+    }
+    
+    
     private String id;
     private String firstName;
     private String lastName;
