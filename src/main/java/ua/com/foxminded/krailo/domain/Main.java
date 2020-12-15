@@ -228,6 +228,13 @@ public class Main {
 	System.out.println(lesson2Year2Finance);
 	System.out.println(lesson1Year2Banking);
 	System.out.println(lesson2Year2Banking);
+	System.out.println("-- Create timetable");
+	Timetable timetableFinanceYear1 = new Timetable("Timetable", specialityFinance, year1Finance);
+	timetableFinanceYear1.setLessons(new ArrayList<>());
+	timetableFinanceYear1.getLessons().add(lesson1Year1Finance);
+	timetableFinanceYear1.getLessons().add(lesson2Year1Finance);
+	System.out.println(timetableFinanceYear1);
+	
 	
 	
 	

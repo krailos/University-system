@@ -50,7 +50,7 @@ public class Year {
 
     @Override
     public String toString() {
-	return name+" "+speciality;
+	return name;
     }
     
     
