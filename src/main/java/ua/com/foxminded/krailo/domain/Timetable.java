@@ -1,6 +1,9 @@
 package ua.com.foxminded.krailo.domain;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class Timetable {
 
@@ -52,6 +55,10 @@ public class Timetable {
 
     @Override
     public String toString() {
+        return name;
+    }
+    
+    public String showAll() {
 	StringBuilder sb = new StringBuilder();
         sb.append(name).append(System.lineSeparator());
         sb.append(speciality).append(" ").append(year).append(System.lineSeparator());
@@ -62,5 +69,20 @@ public class Timetable {
 	}
         return sb.toString();
     }
-
+    
+    public String showTimetableByStudent (Student student, LocalDate start, LocalDate end) {
+	StringBuilder sb = new StringBuilder();
+        sb.append(name).append(System.lineSeparator());
+        sb.append(student.getSpeciality()).append(" ").append(student.getGroup().getYear()).append(System.lineSeparator());
+        String pattern = "%-10s| %-12s| %-15s| %-20s";
+        
+        List<Lesson> lessonFiltered = lessons.stream().filter(l -> l.getDate().isAfter(start.minusDays(1)) && l.getDate().isBefore(end.plusDays(1))
+        	&& l.getGroups().contains(student.getGroup())).collect(Collectors.toList());
+        for (Lesson lesson : lessonFiltered) {
+	    sb.append(String.format(pattern, lesson.getDate().toString(), lesson.getAudience(), lesson.getSubject(), lesson.getLessonTime()));
+	    sb.append(System.lineSeparator());
+	}
+        return sb.toString();
+    }
+    
 }
