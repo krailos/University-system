@@ -47,6 +47,14 @@ public class UniversityOffice {
 	return name;
     }
     
+    public String showHolidays () {
+	StringBuilder sb = new StringBuilder();
+	for (Holiday holiday : holidays) {
+	    sb.append(holiday.toString()).append(System.lineSeparator());
+	}
+	return sb.toString();
+    }
+    
     
     
 
