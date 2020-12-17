@@ -2,6 +2,7 @@ package ua.com.foxminded.krailo.domain;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class DeansOffice {
@@ -73,27 +74,67 @@ public class DeansOffice {
 	sb.append(allTimetables).append(System.lineSeparator());
 	return sb.toString();
     }
-    
-    public String getTimeTableByStudentId (String studentId, LocalDate start, LocalDate end) {
-	Student student = faculty.getSpecialities().stream().flatMap(s -> s.getYears().stream()).flatMap(y -> y.getGroups().stream()).
-		flatMap(g -> g.getStudents().stream()).filter(s -> s.getId().equals(studentId)).collect(Collectors.toList()).get(0);
-	if(student ==null)
-	    System.out.println("student null");
-	Timetable timetable = getTimetableBySpecialityAndYear(student.getSpeciality().getName(), student.getGroup().getYear().getName());
-	return timetable.showTimetableByStudent(studentId, start, end);
+
+    public String showTimeTableByStudentsId(String studentId, LocalDate start, LocalDate end) {
+	Student student = faculty.getSpecialities().stream().flatMap(s -> s.getYears().stream())
+		.flatMap(y -> y.getGroups().stream()).flatMap(g -> g.getStudents().stream())
+		.filter(s -> s.getId().equals(studentId)).collect(Collectors.toList()).get(0);
+	if (student == null) {
+	    return "students id " + studentId + " not exist";
+	}
+	Timetable timetable = getTimetableBySpecialityAndYear(student.getSpeciality().getName(),
+		student.getGroup().getYear().getName());
+	StringBuilder sb = new StringBuilder();
+	sb.append(name).append(System.lineSeparator());
+	sb.append(student.getSpeciality()).append(" ").append(student.getGroup().getYear())
+		.append(System.lineSeparator());
+	String pattern = "%-10s| %-12s| %-15s| %-20s";
+	List<Lesson> lessonFiltered = timetable
+		.getLessons().stream().filter(l -> l.getDate().isAfter(start.minusDays(1))
+			&& l.getDate().isBefore(end.plusDays(1)) && l.getGroups().contains(student.getGroup()))
+		.collect(Collectors.toList());
+	for (Lesson lesson : lessonFiltered) {
+	    sb.append(String.format(pattern, lesson.getDate(), lesson.getAudience(), lesson.getSubject(),
+		    lesson.getLessonTime()));
+	    sb.append(System.lineSeparator());
+	}
+	return sb.toString();
     }
-    
+
+    public String showTimetableByTeachersId(String teacherId, LocalDate start, LocalDate end) {
+	Teacher teacher = faculty.getDepartments().stream().flatMap(d -> d.getTeachers().stream()).filter(t -> t.getId().equals(teacherId)).
+		collect(Collectors.toList()).get(0);
+	if (teacher == null) {
+	    return "teachers id " + teacherId + " not exist";
+	}
+	StringBuilder sb = new StringBuilder();
+	sb.append(name).append(System.lineSeparator());
+	sb.append(teacher.getFirstName()).append(" ").append(teacher.getLastName()).append(System.lineSeparator());
+	String pattern = "%-10s| %-12s| %-15s| %-20s";
+	List<Lesson> lessonFiltered = timetables
+		.stream().flatMap(t -> t.getLessons().stream()).filter(l -> l.getDate().isAfter(start.minusDays(1))
+			&& l.getDate().isBefore(end.plusDays(1)) && l.getTeacher().getId().equals(teacherId))
+		.collect(Collectors.toList());
+	for (Lesson lesson : lessonFiltered) {
+	    sb.append(String.format(pattern, lesson.getDate(), lesson.getAudience(), lesson.getSubject(),
+		    lesson.getLessonTime()));
+	    sb.append(System.lineSeparator());
+	}
+	return sb.toString();
+    }
+
     public Timetable getTimetableBySpecialityAndYear(String specialityName, String yearName) {
-	Timetable timetable = timetables.stream().filter(t -> t.getSpeciality().getName().equals(specialityName) && t.getYear().getName().equals(yearName)).
-	collect(Collectors.toList()).get(0);
+	Timetable timetable = timetables.stream().filter(
+		t -> t.getSpeciality().getName().equals(specialityName) && t.getYear().getName().equals(yearName))
+		.collect(Collectors.toList()).get(0);
 	if (timetable == null) {
-	System.out.println("timetable for speciality " + specialityName + " and year " + yearName + " not exist");
-	return null;
+	    System.out.println("timetable for speciality " + specialityName + " and year " + yearName + " not exist");
+	    return null;
 	}
 	return timetable;
     }
 
-    public String showVocationByTeacher(Teacher teacher, LocalDate start, LocalDate end) {
+    public String showVocationsByTeacher(Teacher teacher, LocalDate start, LocalDate end) {
 	StringBuilder sb = new StringBuilder();
 	sb.append("Vocations").append(System.lineSeparator());
 	sb.append(teacher.getFirstName()).append(" ").append(teacher.getLastName()).append(System.lineSeparator());

@@ -37,7 +37,8 @@ public class Main {
 	    System.out.println("application university office");
 	    System.out.println("choose operations");
 	    System.out.println("-- 1. Show time table for all faculty press -- 1");
-	    System.out.println("-- 2. Show time table using students id -- 2");
+	    System.out.println("-- 2. Show time table for student using students id press -- 2");
+	    System.out.println("-- 3. Show time table for teacher using teachers id press -- 3");
 	    System.out.println("-- 10. Exit press -- 10");
 	    int userInput = scanner.nextInt();
 	    switch (userInput) {
@@ -47,8 +48,12 @@ public class Main {
 	    case 2:
 		System.out.println("please enter students id");
 		String studentsId = scanner.next();
-		
-		System.out.println(app.deansOffice.getTimeTableByStudentId("finance1", LocalDate.of(2020, 12, 1), LocalDate.of(2020, 12, 3)));
+		System.out.println(app.deansOffice.showTimeTableByStudentsId(studentsId, LocalDate.of(2020, 12, 1), LocalDate.of(2020, 12, 3)));
+		break;
+	    case 3:
+		System.out.println("please enter teachers id");
+		String teachersId = scanner.next();
+		System.out.println(app.deansOffice.showTimetableByTeachersId(teachersId, LocalDate.of(2020, 12, 1), LocalDate.of(2020, 12, 3)));
 		break;
 	    case 10:
 		exit = true;
@@ -70,14 +75,14 @@ public class Main {
 	universityOffice.setHolidays(new ArrayList<>());
 	universityOffice.getHolidays().add(holidayNewYear);
 	universityOffice.getHolidays().add(holidayIndependantDay);
-	Teacher teacher1 = new Teacher("Teacher", "One");
-	Teacher teacher2 = new Teacher("Teacher", "Two");
-	Teacher teacher3 = new Teacher("Teacher", "Three");
-	Teacher teacher4 = new Teacher("Teacher", "Four");
-	Teacher teacher5 = new Teacher("Teacher", "Five");
-	Teacher teacher6 = new Teacher("Teacher", "Six");
-	Teacher teacher7 = new Teacher("Teacher", "Seven");
-	Teacher teacher8 = new Teacher("Teacher", "Eight");
+	Teacher teacher1 = new Teacher("t1", "Teacher", "One");
+	Teacher teacher2 = new Teacher("t2", "Teacher", "Two");
+	Teacher teacher3 = new Teacher("t3", "Teacher", "Three");
+	Teacher teacher4 = new Teacher("t4", "Teacher", "Four");
+	Teacher teacher5 = new Teacher("t5", "Teacher", "Five");
+	Teacher teacher6 = new Teacher("t6", "Teacher", "Six");
+	Teacher teacher7 = new Teacher("t7", "Teacher", "Seven");
+	Teacher teacher8 = new Teacher("t8", "Teacher", "Eight");
 	Subject subject1Finance = new Subject("Economy");
 	Subject subject2Finance = new Subject("Meth");
 	Subject subject3Finance = new Subject("Data Analysis");

@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Teacher {
 
+    private String id;
     private String firstName;
     private String lastName;
     private Date birthDate;
@@ -19,9 +20,18 @@ public class Teacher {
     public Teacher() {
     }
 
-    public Teacher(String firstName, String lastName) {
+    public Teacher(String id, String firstName, String lastName) {
+	this.id = id;
 	this.firstName = firstName;
 	this.lastName = lastName;
+    }
+
+    public String getId() {
+	return id;
+    }
+
+    public void setId(String id) {
+	this.id = id;
     }
 
     public String getFirstName() {
@@ -139,9 +149,5 @@ public class Teacher {
 	    return false;
 	return true;
     }
-    
-    
-    
-    
 
 }
