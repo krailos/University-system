@@ -39,6 +39,8 @@ public class Main {
 	    System.out.println("-- 1. Show time table for all faculty press -- 1");
 	    System.out.println("-- 2. Show time table for student using students id press -- 2");
 	    System.out.println("-- 3. Show time table for teacher using teachers id press -- 3");
+	    System.out.println("-- 4. Show holiday for university press-- 4");
+	    System.out.println("-- 5. Show vocations for teacher using teachers id press-- 5");
 	    System.out.println("-- 10. Exit press -- 10");
 	    int userInput = scanner.nextInt();
 	    switch (userInput) {
@@ -54,6 +56,14 @@ public class Main {
 		System.out.println("please enter teachers id");
 		String teachersId = scanner.next();
 		System.out.println(app.deansOffice.showTimetableByTeachersId(teachersId, LocalDate.of(2020, 12, 1), LocalDate.of(2020, 12, 3)));
+		break;
+	    case 4:
+		System.out.println(app.universityOffice.showHolidays());
+		break;
+	    case 5:
+		System.out.println("please enter teachers id");
+		teachersId = scanner.next();
+		System.out.println(app.deansOffice.showVocationsByTeachersId(teachersId, LocalDate.of(2020, 1, 1), LocalDate.of(2020, 12, 31)));
 		break;
 	    case 10:
 		exit = true;
@@ -255,8 +265,8 @@ public class Main {
 	group1BankingYear1.getStudents().add(student1BankingYear1Group1);
 	group2BankingYear1.setStudents(new ArrayList<>());
 	group2BankingYear1.getStudents().add(student2BankingYear1Group2);
-	Vocation vocation = new Vocation("yearly", LocalDate.of(2020, 1, 1), teacher1, LocalDate.of(2021, 1, 1),
-		LocalDate.of(2021, 1, 15));
+	Vocation vocation = new Vocation("yearly", LocalDate.of(2020, 1, 1), teacher1, LocalDate.of(2020, 1, 1),
+		LocalDate.of(2020, 1, 15));
 	deansOffice.setVocations(new ArrayList<>());
 	deansOffice.getVocations().add(vocation);
     }
