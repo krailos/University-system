@@ -66,12 +66,21 @@ public class DeansOffice {
 	return name;
     }
 
-    public String showAllTimetables() {
+    public String showLessonsFromAllTimetablesOfFaculty() {
 	StringBuilder sb = new StringBuilder();
 	sb.append(name).append(System.lineSeparator());
 	String allTimetables = timetables.stream().map(t -> t.showAllLessons()).collect(Collectors.joining());
 	sb.append(allTimetables).append(System.lineSeparator());
 	return sb.toString();
+    }
+    
+    public String getTimeTableByStudentId (String studentId, LocalDate start, LocalDate end) {
+	Student student = faculty.getSpecialities().stream().flatMap(s -> s.getYears().stream()).flatMap(y -> y.getGroups().stream()).
+		flatMap(g -> g.getStudents().stream()).filter(s -> s.getId().equals(studentId)).collect(Collectors.toList()).get(0);
+	if(student ==null)
+	    System.out.println("student null");
+	Timetable timetable = getTimetableBySpecialityAndYear(student.getSpeciality().getName(), student.getGroup().getYear().getName());
+	return timetable.showTimetableByStudent(studentId, start, end);
     }
     
     public Timetable getTimetableBySpecialityAndYear(String specialityName, String yearName) {

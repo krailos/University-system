@@ -29,36 +29,39 @@ public class Main {
     public static void main(String[] args) {
 
 	Main app = new Main();
-
 	app.fillExampleData();
 	System.out.println("data loaded");
-	
-	System.out.println(app.deansOffice.showAllTimetables());
-	
-	System.out.println(app.deansOffice.getTimetableBySpecialityAndYear("Finance", "1 year")
-		.showTimetableByStudent("finance1", LocalDate.of(2020, 12, 1), LocalDate.of(2020, 12, 3)));
 	Scanner scanner = new Scanner(System.in);
+	boolean exit = false;
+	while (exit != true) {
+	    System.out.println("application university office");
+	    System.out.println("choose operations");
+	    System.out.println("-- 1. Show time table for all faculty press -- 1");
+	    System.out.println("-- 2. Show time table using students id -- 2");
+	    System.out.println("-- 10. Exit press -- 10");
+	    int userInput = scanner.nextInt();
+	    switch (userInput) {
+	    case 1:
+		System.out.println(app.deansOffice.showLessonsFromAllTimetablesOfFaculty());
+		break;
+	    case 2:
+		System.out.println("please enter students id");
+		String studentsId = scanner.next();
+		
+		System.out.println(app.deansOffice.getTimeTableByStudentId("finance1", LocalDate.of(2020, 12, 1), LocalDate.of(2020, 12, 3)));
+		break;
+	    case 10:
+		exit = true;
+		break;
+	    default:
+		System.out.println("any operation choosen");
+		break;
+	    }
 
-	System.out.println("application university office");
-	System.out.println("choose operations");
+	}
+
 	System.out.println();
 
-    }
-
-    private void showSceduleOfFaculty() {
-	System.out.println("-- Using timetable");
-	System.out.println(deansOffice.getTimetableBySpecialityAndYear("Finance", "Year1")
-		.showTimetableByStudent("finance1", LocalDate.of(2020, 12, 1), LocalDate.of(2020, 12, 3)));
-	System.out.println(deansOffice.getTimetableBySpecialityAndYear("Banking", "Year1")
-		.showTimetableByStudent("banling1", LocalDate.of(2020, 12, 1), LocalDate.of(2020, 12, 2)));
-//	System.out.println(timetableFinanceYear1.showTimetableByTeacher(teacher1, LocalDate.of(2020, 12, 1),
-//		LocalDate.of(2020, 12, 2)));
-	System.out.println("-- Using holidays");
-	System.out.println(universityOffice.showHolidays());
-
-	System.out.println("-- Using vocations");
-//	System.out.println(
-//		deansOffice.showVocationByTeacher(teacher1, LocalDate.of(2021, 1, 1), LocalDate.of(2021, 12, 31)));
     }
 
     private void fillExampleData() {
@@ -146,30 +149,30 @@ public class Main {
 	building.getAudiences().add(audience2);
 	building.getAudiences().add(audience3);
 	building.getAudiences().add(audience4);
-	Lesson lesson1FinanceYear1Date01 = new Lesson(LocalDate.of(2020, 12, 1), subject1Finance, audience1, lessonTime1,
-		teacher1);
-	Lesson lesson2FinanceYear1Date01 = new Lesson(LocalDate.of(2020, 12, 1), subject2Finance, audience1, lessonTime2,
-		teacher2);
-	Lesson lesson1FinanceYear1Date02 = new Lesson(LocalDate.of(2020, 12, 2), subject1Finance, audience1, lessonTime1,
-		teacher1);
-	Lesson lesson2FinanceYear1Date02 = new Lesson(LocalDate.of(2020, 12, 2), subject2Finance, audience1, lessonTime2,
-		teacher2);
-	Lesson lesson1FinanceYear1Date03 = new Lesson(LocalDate.of(2020, 12, 3), subject1Finance, audience1, lessonTime1,
-		teacher1);
-	Lesson lesson2FinanceYear1Date03 = new Lesson(LocalDate.of(2020, 12, 3), subject2Finance, audience1, lessonTime2,
-		teacher2);
-	Lesson lesson1BankingYear1Date01 = new Lesson(LocalDate.of(2020, 12, 1), subject1Banking, audience2, lessonTime1,
-		teacher3);
-	Lesson lesson2BankingYear1Date01 = new Lesson(LocalDate.of(2020, 12, 1), subject2Banking, audience2, lessonTime2,
-		teacher4);	
-	Lesson lesson1BankingYear1Date02 = new Lesson(LocalDate.of(2020, 12, 2), subject1Banking, audience2, lessonTime1,
-		teacher3);
-	Lesson lesson2BankingYear1Date02 = new Lesson(LocalDate.of(2020, 12, 2), subject2Banking, audience2, lessonTime2,
-		teacher4);	
-	Lesson lesson1BankingYear1Date03 = new Lesson(LocalDate.of(2020, 12, 3), subject1Banking, audience2, lessonTime1,
-		teacher3);
-	Lesson lesson2BankingYear1Date03 = new Lesson(LocalDate.of(2020, 12, 3), subject2Banking, audience2, lessonTime2,
-		teacher4);
+	Lesson lesson1FinanceYear1Date01 = new Lesson(LocalDate.of(2020, 12, 1), subject1Finance, audience1,
+		lessonTime1, teacher1);
+	Lesson lesson2FinanceYear1Date01 = new Lesson(LocalDate.of(2020, 12, 1), subject2Finance, audience1,
+		lessonTime2, teacher2);
+	Lesson lesson1FinanceYear1Date02 = new Lesson(LocalDate.of(2020, 12, 2), subject1Finance, audience1,
+		lessonTime1, teacher1);
+	Lesson lesson2FinanceYear1Date02 = new Lesson(LocalDate.of(2020, 12, 2), subject2Finance, audience1,
+		lessonTime2, teacher2);
+	Lesson lesson1FinanceYear1Date03 = new Lesson(LocalDate.of(2020, 12, 3), subject1Finance, audience1,
+		lessonTime1, teacher1);
+	Lesson lesson2FinanceYear1Date03 = new Lesson(LocalDate.of(2020, 12, 3), subject2Finance, audience1,
+		lessonTime2, teacher2);
+	Lesson lesson1BankingYear1Date01 = new Lesson(LocalDate.of(2020, 12, 1), subject1Banking, audience2,
+		lessonTime1, teacher3);
+	Lesson lesson2BankingYear1Date01 = new Lesson(LocalDate.of(2020, 12, 1), subject2Banking, audience2,
+		lessonTime2, teacher4);
+	Lesson lesson1BankingYear1Date02 = new Lesson(LocalDate.of(2020, 12, 2), subject1Banking, audience2,
+		lessonTime1, teacher3);
+	Lesson lesson2BankingYear1Date02 = new Lesson(LocalDate.of(2020, 12, 2), subject2Banking, audience2,
+		lessonTime2, teacher4);
+	Lesson lesson1BankingYear1Date03 = new Lesson(LocalDate.of(2020, 12, 3), subject1Banking, audience2,
+		lessonTime1, teacher3);
+	Lesson lesson2BankingYear1Date03 = new Lesson(LocalDate.of(2020, 12, 3), subject2Banking, audience2,
+		lessonTime2, teacher4);
 	lesson1FinanceYear1Date01.setGroups(new ArrayList<>());
 	lesson2FinanceYear1Date01.setGroups(new ArrayList<>());
 	lesson1FinanceYear1Date02.setGroups(new ArrayList<>());
@@ -177,9 +180,9 @@ public class Main {
 	lesson1FinanceYear1Date03.setGroups(new ArrayList<>());
 	lesson2FinanceYear1Date03.setGroups(new ArrayList<>());
 	lesson1BankingYear1Date01.setGroups(new ArrayList<>());
-	lesson2BankingYear1Date01.setGroups(new ArrayList<>());	
+	lesson2BankingYear1Date01.setGroups(new ArrayList<>());
 	lesson1BankingYear1Date02.setGroups(new ArrayList<>());
-	lesson2BankingYear1Date02.setGroups(new ArrayList<>());	
+	lesson2BankingYear1Date02.setGroups(new ArrayList<>());
 	lesson1BankingYear1Date03.setGroups(new ArrayList<>());
 	lesson2BankingYear1Date03.setGroups(new ArrayList<>());
 	lesson1FinanceYear1Date01.getGroups().add(group1FinanceYear1);
@@ -193,15 +196,15 @@ public class Main {
 	lesson1FinanceYear1Date03.getGroups().add(group1FinanceYear1);
 	lesson1FinanceYear1Date03.getGroups().add(group2FinanceYear1);
 	lesson2FinanceYear1Date03.getGroups().add(group1FinanceYear1);
-	lesson2FinanceYear1Date03.getGroups().add(group2FinanceYear1);	
+	lesson2FinanceYear1Date03.getGroups().add(group2FinanceYear1);
 	lesson1BankingYear1Date01.getGroups().add(group1BankingYear1);
 	lesson1BankingYear1Date01.getGroups().add(group2BankingYear1);
 	lesson2BankingYear1Date01.getGroups().add(group1BankingYear1);
-	lesson2BankingYear1Date01.getGroups().add(group2BankingYear1);	
+	lesson2BankingYear1Date01.getGroups().add(group2BankingYear1);
 	lesson1BankingYear1Date02.getGroups().add(group1BankingYear1);
 	lesson1BankingYear1Date02.getGroups().add(group2BankingYear1);
 	lesson2BankingYear1Date02.getGroups().add(group1BankingYear1);
-	lesson2BankingYear1Date02.getGroups().add(group2BankingYear1);	
+	lesson2BankingYear1Date02.getGroups().add(group2BankingYear1);
 	lesson1BankingYear1Date03.getGroups().add(group1BankingYear1);
 	lesson1BankingYear1Date03.getGroups().add(group2BankingYear1);
 	lesson2BankingYear1Date03.getGroups().add(group1BankingYear1);
@@ -227,17 +230,17 @@ public class Main {
 	timetableBankingYear1.getLessons().add(lesson2BankingYear1Date03);
 	lesson1FinanceYear1Date01.setGroups(new ArrayList<>());
 	lesson1FinanceYear1Date01.getGroups().addAll(year1Finance.getGroups());
-	Student student1FinanceYear1Group1 = new Student("finance1", "Name1", "LastNameFinance1", faculty, specialityFinance,
-		group1FinanceYear1);
+	Student student1FinanceYear1Group1 = new Student("finance1", "Name1", "LastNameFinance1", faculty,
+		specialityFinance, group1FinanceYear1);
 	student1FinanceYear1Group1.setGender(Gender.MALE);
-	Student student2FinanceYear1Group2 = new Student("finance2", "Name2", "LastNameFinance2", faculty, specialityFinance,
-		group1FinanceYear1);
+	Student student2FinanceYear1Group2 = new Student("finance2", "Name2", "LastNameFinance2", faculty,
+		specialityFinance, group1FinanceYear1);
 	student2FinanceYear1Group2.setGender(Gender.MALE);
-	Student student1BankingYear1Group1 = new Student("banking1", "Name1", "LastNameBanking1", faculty, specialityBanking,
-		group1BankingYear1);
+	Student student1BankingYear1Group1 = new Student("banking1", "Name1", "LastNameBanking1", faculty,
+		specialityBanking, group1BankingYear1);
 	student1BankingYear1Group1.setGender(Gender.MALE);
-	Student student2BankingYear1Group2 = new Student("banking2", "Name2", "LastNameBanking2", faculty, specialityBanking,
-		group1BankingYear1);
+	Student student2BankingYear1Group2 = new Student("banking2", "Name2", "LastNameBanking2", faculty,
+		specialityBanking, group1BankingYear1);
 	student2BankingYear1Group2.setGender(Gender.MALE);
 	group1FinanceYear1.setStudents(new ArrayList<>());
 	group1FinanceYear1.getStudents().add(student1FinanceYear1Group1);
