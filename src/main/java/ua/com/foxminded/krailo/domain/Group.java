@@ -4,19 +4,19 @@ import java.util.List;
 
 public class Group {
 
-    public Group() {
-
-    }
-
-    public Group(String name) {
-	this.name = name;
-
-    }
-
     private String name;
     private Year year;
     private Speciality speciality;
     private List<Student> students;
+
+    public Group() {
+    }
+
+    public Group(String name, Year year, Speciality speciality) {
+	this.name = name;
+	this.year = year;
+	this.speciality = speciality;
+    }
 
     public String getName() {
 	return name;

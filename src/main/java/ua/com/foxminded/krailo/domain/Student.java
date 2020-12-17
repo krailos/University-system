@@ -3,7 +3,7 @@ package ua.com.foxminded.krailo.domain;
 import java.util.Date;
 
 public class Student {
-        
+
     private String id;
     private String firstName;
     private String lastName;
@@ -14,8 +14,8 @@ public class Student {
     private String phone;
     private String address;
     private String email;
-    private String gender;
-    private Double rank;	
+    private Enum<Gender> gender;
+    private Double rank;
 
     public Student() {
     }
@@ -31,102 +31,99 @@ public class Student {
     }
 
     public String getId() {
-        return id;
+	return id;
     }
 
     public void setId(String id) {
-        this.id = id;
+	this.id = id;
     }
 
     public String getFirstName() {
-        return firstName;
+	return firstName;
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+	this.firstName = firstName;
     }
 
     public String getLastName() {
-        return lastName;
+	return lastName;
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+	this.lastName = lastName;
     }
 
     public Date getBirthDate() {
-        return birthDate;
+	return birthDate;
     }
 
     public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
+	this.birthDate = birthDate;
     }
 
     public Faculty getFaculty() {
-        return faculty;
+	return faculty;
     }
 
     public void setFaculty(Faculty faculty) {
-        this.faculty = faculty;
+	this.faculty = faculty;
     }
 
     public Speciality getSpeciality() {
-        return speciality;
+	return speciality;
     }
 
     public void setSpeciality(Speciality speciality) {
-        this.speciality = speciality;
+	this.speciality = speciality;
     }
 
     public Group getGroup() {
-        return group;
+	return group;
     }
 
     public void setGroup(Group group) {
-        this.group = group;
+	this.group = group;
     }
 
     public String getPhone() {
-        return phone;
+	return phone;
     }
 
     public void setPhone(String phone) {
-        this.phone = phone;
+	this.phone = phone;
     }
 
     public String getAddress() {
-        return address;
+	return address;
     }
 
     public void setAddress(String address) {
-        this.address = address;
+	this.address = address;
     }
 
     public String getEmail() {
-        return email;
+	return email;
     }
 
     public void setEmail(String email) {
-        this.email = email;
+	this.email = email;
     }
 
-    public String getGender() {
-        return gender;
+    public Enum<Gender> getGender() {
+	return gender;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
+    public void setGender(Enum<Gender> gender) {
+	this.gender = gender;
     }
 
     public Double getRank() {
-        return rank;
+	return rank;
     }
 
     public void setRank(Double rank) {
-        this.rank = rank;
+	this.rank = rank;
     }
 
-    
-    
-    
 }

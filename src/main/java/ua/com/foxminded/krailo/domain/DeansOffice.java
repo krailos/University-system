@@ -8,15 +8,17 @@ public class DeansOffice {
 
     private String name;
     private Faculty faculty;
+    private UniversityOffice universityOffice;
     private List<Timetable> timetables;
     private List<Vocation> vocations;
-    private UniversityOffice universityOffice;
 
     public DeansOffice() {
     }
 
-    public DeansOffice(String name) {
+    public DeansOffice(String name, Faculty faculty, UniversityOffice universityOffice) {
 	this.name = name;
+	this.faculty = faculty;
+	this.universityOffice = universityOffice;
     }
 
     public String getName() {
@@ -64,6 +66,24 @@ public class DeansOffice {
 	return name;
     }
 
+    public String showAllTimetables() {
+	StringBuilder sb = new StringBuilder();
+	sb.append(name).append(System.lineSeparator());
+	String allTimetables = timetables.stream().map(t -> t.showAllLessons()).collect(Collectors.joining());
+	sb.append(allTimetables).append(System.lineSeparator());
+	return sb.toString();
+    }
+    
+    public Timetable getTimetableBySpecialityAndYear(String specialityName, String yearName) {
+	Timetable timetable = timetables.stream().filter(t -> t.getSpeciality().getName().equals(specialityName) && t.getYear().getName().equals(yearName)).
+	collect(Collectors.toList()).get(0);
+	if (timetable == null) {
+	System.out.println("timetable for speciality " + specialityName + " and year " + yearName + " not exist");
+	return null;
+	}
+	return timetable;
+    }
+
     public String showVocationByTeacher(Teacher teacher, LocalDate start, LocalDate end) {
 	StringBuilder sb = new StringBuilder();
 	sb.append("Vocations").append(System.lineSeparator());
@@ -75,7 +95,8 @@ public class DeansOffice {
 		&& v.getStartVocation().isAfter(start.minusDays(1)) && v.getStartVocation().isBefore(end.plusDays(1)))
 		.collect(Collectors.toList());
 	for (Vocation vocation : vocationFiltered) {
-	    sb.append(String.format(pattern, vocation.getKind(), vocation.getStartVocation(), vocation.getEndVocation()));
+	    sb.append(
+		    String.format(pattern, vocation.getKind(), vocation.getStartVocation(), vocation.getEndVocation()));
 	    sb.append(System.lineSeparator());
 	}
 	return sb.toString();

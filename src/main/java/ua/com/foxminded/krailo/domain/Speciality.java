@@ -11,8 +11,9 @@ public class Speciality {
     public Speciality() {
     }
 
-    public Speciality(String name) {
+    public Speciality(String name, Faculty faculty) {
 	this.name = name;
+	this.faculty = faculty;
     }
 
     public String getName() {

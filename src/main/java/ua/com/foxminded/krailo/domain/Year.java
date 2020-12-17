@@ -12,8 +12,9 @@ public class Year {
     public Year() {
     }
 
-    public Year(String name) {
+    public Year(String name, Speciality speciality) {
 	this.name = name;
+	this.speciality = speciality;
     }
 
     public String getName() {
@@ -52,8 +53,5 @@ public class Year {
     public String toString() {
 	return name;
     }
-    
-    
-    
 
 }

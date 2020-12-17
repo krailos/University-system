@@ -7,8 +7,8 @@ public class Vocation {
     private String kind;
     private LocalDate applayingDate;
     private Teacher teacher;
-    private LocalDate startVocation;
-    private LocalDate endVocation;
+    private LocalDate start;
+    private LocalDate end;
 
     public Vocation() {
     }
@@ -18,8 +18,8 @@ public class Vocation {
 	this.kind = kind;
 	this.applayingDate = applayingDate;
 	this.teacher = teacher;
-	this.startVocation = startVocation;
-	this.endVocation = endVocation;
+	this.start = startVocation;
+	this.end = endVocation;
     }
 
     public String getKind() {
@@ -47,24 +47,24 @@ public class Vocation {
     }
 
     public LocalDate getStartVocation() {
-	return startVocation;
+	return start;
     }
 
     public void setStartVocation(LocalDate startVocation) {
-	this.startVocation = startVocation;
+	this.start = startVocation;
     }
 
     public LocalDate getEndVocation() {
-	return endVocation;
+	return end;
     }
 
     public void setEndVocation(LocalDate endVocation) {
-	this.endVocation = endVocation;
+	this.end = endVocation;
     }
     
     @Override
     public String toString() {
-        return teacher.toString() + " " + kind + " from " + startVocation + " till " + endVocation;
+        return teacher.toString() + " " + kind + " from " + start + " till " + end;
     }
 
 }

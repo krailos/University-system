@@ -7,6 +7,7 @@ import java.util.List;
 import javax.print.attribute.standard.MediaSize.NA;
 
 public class Lesson {
+
     private LocalDate date;
     private Subject subject;
     private Audience audience;
@@ -17,8 +18,6 @@ public class Lesson {
     public Lesson() {
     }
 
-
-
     public Lesson(LocalDate date, Subject subject, Audience audience, LessonTime lessonTime, Teacher teacher) {
 	this.date = date;
 	this.subject = subject;
@@ -27,63 +26,57 @@ public class Lesson {
 	this.teacher = teacher;
     }
 
-
-
     public LocalDate getDate() {
-        return date;
+	return date;
     }
 
     public void setDate(LocalDate date) {
-        this.date = date;
+	this.date = date;
     }
 
     public Subject getSubject() {
-        return subject;
+	return subject;
     }
 
     public void setSubject(Subject subject) {
-        this.subject = subject;
+	this.subject = subject;
     }
 
     public Audience getAudience() {
-        return audience;
+	return audience;
     }
 
     public void setAudience(Audience audience) {
-        this.audience = audience;
+	this.audience = audience;
     }
 
     public LessonTime getLessonTime() {
-        return lessonTime;
+	return lessonTime;
     }
 
     public void setLessonTime(LessonTime lessonTime) {
-        this.lessonTime = lessonTime;
+	this.lessonTime = lessonTime;
     }
 
     public Teacher getTeacher() {
-        return teacher;
+	return teacher;
     }
 
     public void setTeacher(Teacher teacher) {
-        this.teacher = teacher;
+	this.teacher = teacher;
     }
 
     public List<Group> getGroups() {
-        return groups;
+	return groups;
     }
 
     public void setGroups(List<Group> groups) {
-        this.groups = groups;
+	this.groups = groups;
     }
-    
+
     @Override
     public String toString() {
-        return lessonTime.getLessonNumber()+ " " + subject + " " + lessonTime + " " + audience + " " + teacher;
+	return lessonTime.getLessonNumber() + " " + subject + " " + lessonTime + " " + audience + " " + teacher;
     }
-    
-    
-    
-    
 
 }

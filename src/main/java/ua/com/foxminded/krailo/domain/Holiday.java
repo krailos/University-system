@@ -1,21 +1,20 @@
 package ua.com.foxminded.krailo.domain;
 
-import java.time.MonthDay;
+import java.time.LocalDate;
 
 public class Holiday {
 
     private String name;
-    private MonthDay date;
-    
-    
-    public Holiday(String name, MonthDay date) {
+    private LocalDate date;
+
+    public Holiday(String name, LocalDate date) {
 	this.name = name;
 	this.date = date;
     }
-    
+
     @Override
     public String toString() {
-      return name + " - "+date.getDayOfMonth()+"."+date.getMonthValue();
+	return name + " " + date;
     }
-    
+
 }
