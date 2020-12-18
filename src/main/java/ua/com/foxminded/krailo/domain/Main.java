@@ -4,17 +4,18 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class Main {
 
     UniversityOffice universityOffice = new UniversityOffice("KNEU");
-    Faculty faculty = new Faculty("61", "Faculty of Finance and Economy");
+    Faculty facultyOfFinance = new Faculty("61", "Faculty of Finance and Economy");
     Department department = new Department("Department of Financial faculty");
-    DeansOffice deansOffice = new DeansOffice("Deans office of Financial faculty", faculty, universityOffice);
-    Speciality specialityFinance = new Speciality("6104", "Finance", faculty);
-    Speciality specialityBanking = new Speciality("6105", "Banking", faculty);
+    DeansOffice deansOffice = new DeansOffice("Deans office of Financial faculty", facultyOfFinance, universityOffice);
+    Speciality specialityFinance = new Speciality("6104", "Finance", facultyOfFinance);
+    Speciality specialityBanking = new Speciality("6105", "Banking", facultyOfFinance);
     Year year1Finance = new Year("1 year", specialityFinance);
     Year year1Banking = new Year("1 year", specialityBanking);
     Group group1FinanceYear1 = new Group("1", year1Finance, specialityFinance);
@@ -27,6 +28,7 @@ public class Main {
     Audience audience3 = new Audience("audience 3");
     Audience audience4 = new Audience("audience 4");
     LessonsTimeSchedule lessonsTimeSchedule = new LessonsTimeSchedule("lessons time schedule");
+    StudentsRegister studentsRegister = new StudentsRegister("register of all universities students");
 
     public static void main(String[] args) {
 
@@ -92,22 +94,29 @@ public class Main {
 		String studentsLastName = scanner.next();
 		System.out.println("enter faculty id");
 		String facultyId = scanner.next();
-		Faculty facultyByid = app.universityOffice.getFaculties().stream()
-			.filter(f -> f.getId().equals(facultyId)).collect(Collectors.toList()).get(0);
-		if (facultyByid == null) {
+		List<Faculty> facultyFiltered = app.universityOffice.getFaculties().stream()
+			.filter(f -> f.getId().equals(facultyId)).collect(Collectors.toList());
+		if (facultyFiltered.size() == 0) {
 		    System.out.println("faculty with id " + facultyId + "not exist");
+		    break;
 		}
+		Faculty facultyByid = facultyFiltered.get(0);
+
 		System.out.println("enter speciality id");
 		String specialityId = scanner.next();
-		Speciality specialityById = app.universityOffice.getFaculties().stream()
+		List<Speciality> specialityFiltered = app.universityOffice.getFaculties().stream()
 			.flatMap(f -> f.getSpecialities().stream()).filter(s -> s.getId().equals(specialityId))
-			.collect(Collectors.toList()).get(0);
-		if (specialityById == null) {
+			.collect(Collectors.toList());
+		if (specialityFiltered.size() == 0) {
 		    System.out.println("speciality with id " + specialityId + "not exist");
+		    break;
 		}
-		Student studentByUser = new Student(studentsId, studentsFirstName, studentsLastName, facultyByid, specialityById);
+		Speciality specialityById = specialityFiltered.get(0);
+		Student studentByUser = new Student(studentsId, studentsFirstName, studentsLastName, facultyByid,
+			specialityById);
+		app.studentsRegister.getStudents().add(studentByUser);
 		System.out.println("student " + studentByUser + " was created");
-		
+
 	    case 10:
 		exit = true;
 		break;
@@ -127,7 +136,7 @@ public class Main {
 
     private void fillExampleData() {
 	universityOffice.setFaculties(new ArrayList<>());
-	universityOffice.getFaculties().add(faculty);
+	universityOffice.getFaculties().add(facultyOfFinance);
 	Holiday holidayNewYear = new Holiday("New year", LocalDate.of(2020, 1, 1));
 	Holiday holidayIndependantDay = new Holiday("Independent Day", LocalDate.of(2020, 8, 24));
 	universityOffice.setHolidays(new ArrayList<>());
@@ -149,11 +158,11 @@ public class Main {
 	Subject subject2Banking = new Subject("Riscs");
 	Subject subject3Banking = new Subject("Ensuarence");
 	Subject subject4Banking = new Subject("Low");
-	faculty.setSpecialities(new ArrayList<>());
-	faculty.getSpecialities().add(specialityFinance);
-	faculty.getSpecialities().add(specialityBanking);
-	faculty.setDepartments(new ArrayList<>());
-	faculty.getDepartments().add(department);
+	facultyOfFinance.setSpecialities(new ArrayList<>());
+	facultyOfFinance.getSpecialities().add(specialityFinance);
+	facultyOfFinance.getSpecialities().add(specialityBanking);
+	facultyOfFinance.setDepartments(new ArrayList<>());
+	facultyOfFinance.getDepartments().add(department);
 	department.setTeachers(new ArrayList<>());
 	department.getTeachers().add(teacher1);
 	department.getTeachers().add(teacher2);
@@ -163,23 +172,23 @@ public class Main {
 	department.getTeachers().add(teacher6);
 	department.getTeachers().add(teacher7);
 	department.getTeachers().add(teacher8);
-	faculty.setDeansOffice(deansOffice);
-	faculty.getSpecialities().get(0).setYears(new ArrayList<>());
-	faculty.getSpecialities().get(0).getYears().add(year1Finance);
-	faculty.getSpecialities().get(1).setYears(new ArrayList<>());
-	faculty.getSpecialities().get(1).getYears().add(year1Banking);
+	facultyOfFinance.setDeansOffice(deansOffice);
+	facultyOfFinance.getSpecialities().get(0).setYears(new ArrayList<>());
+	facultyOfFinance.getSpecialities().get(0).getYears().add(year1Finance);
+	facultyOfFinance.getSpecialities().get(1).setYears(new ArrayList<>());
+	facultyOfFinance.getSpecialities().get(1).getYears().add(year1Banking);
 	year1Finance.setGroups(new ArrayList<>());
 	year1Finance.getGroups().add(group1FinanceYear1);
 	year1Finance.getGroups().add(group2FinanceYear1);
 	year1Banking.setGroups(new ArrayList<>());
 	year1Banking.getGroups().add(group1BankingYear1);
 	year1Banking.getGroups().add(group2BankingYear1);
-	faculty.getSpecialities().get(0).getYears().get(0).setGroups(new ArrayList<>());
-	faculty.getSpecialities().get(1).getYears().get(0).setGroups(new ArrayList<>());
-	faculty.getSpecialities().get(0).getYears().get(0).getGroups().add(group1FinanceYear1);
-	faculty.getSpecialities().get(0).getYears().get(0).getGroups().add(group2FinanceYear1);
-	faculty.getSpecialities().get(1).getYears().get(0).getGroups().add(group1BankingYear1);
-	faculty.getSpecialities().get(1).getYears().get(0).getGroups().add(group2BankingYear1);
+	facultyOfFinance.getSpecialities().get(0).getYears().get(0).setGroups(new ArrayList<>());
+	facultyOfFinance.getSpecialities().get(1).getYears().get(0).setGroups(new ArrayList<>());
+	facultyOfFinance.getSpecialities().get(0).getYears().get(0).getGroups().add(group1FinanceYear1);
+	facultyOfFinance.getSpecialities().get(0).getYears().get(0).getGroups().add(group2FinanceYear1);
+	facultyOfFinance.getSpecialities().get(1).getYears().get(0).getGroups().add(group1BankingYear1);
+	facultyOfFinance.getSpecialities().get(1).getYears().get(0).getGroups().add(group2BankingYear1);
 	subject1Finance.setTeachers(new ArrayList<>());
 	subject2Finance.setTeachers(new ArrayList<>());
 	subject3Finance.setTeachers(new ArrayList<>());
@@ -293,14 +302,23 @@ public class Main {
 	timetableBankingYear1.getLessons().add(lesson2BankingYear1Date03);
 	lesson1FinanceYear1Date01.setGroups(new ArrayList<>());
 	lesson1FinanceYear1Date01.getGroups().addAll(year1Finance.getGroups());
-	Student student1FinanceYear1Group1 = new Student("6104_1", "Name1", "LastName1", faculty, specialityFinance);
-	Student student2FinanceYear1Group2 = new Student("6104_2", "Name2", "LastName2", faculty, specialityFinance);
-	Student student1BankingYear1Group1 = new Student("6105_1", "Name3", "LastName3", faculty, specialityBanking);
-	Student student2BankingYear1Group2 = new Student("6105_2", "Name4", "LastName4", faculty, specialityBanking);
+	Student student1FinanceYear1Group1 = new Student("6104_1", "Name1", "LastName1", facultyOfFinance,
+		specialityFinance);
+	Student student2FinanceYear1Group2 = new Student("6104_2", "Name2", "LastName2", facultyOfFinance,
+		specialityFinance);
+	Student student1BankingYear1Group1 = new Student("6105_1", "Name3", "LastName3", facultyOfFinance,
+		specialityBanking);
+	Student student2BankingYear1Group2 = new Student("6105_2", "Name4", "LastName4", facultyOfFinance,
+		specialityBanking);
 	student1FinanceYear1Group1.setGender(Gender.MALE);
 	student2FinanceYear1Group2.setGender(Gender.MALE);
 	student1BankingYear1Group1.setGender(Gender.MALE);
 	student2BankingYear1Group2.setGender(Gender.MALE);
+	studentsRegister.setStudents(new ArrayList<>());
+	studentsRegister.getStudents().add(student1FinanceYear1Group1);
+	studentsRegister.getStudents().add(student2FinanceYear1Group2);
+	studentsRegister.getStudents().add(student1BankingYear1Group1);
+	studentsRegister.getStudents().add(student2BankingYear1Group2);
 	group1FinanceYear1.setStudents(new ArrayList<>());
 	group2FinanceYear1.setStudents(new ArrayList<>());
 	group1BankingYear1.setStudents(new ArrayList<>());
