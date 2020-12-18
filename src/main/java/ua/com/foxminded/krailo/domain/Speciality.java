@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Speciality {
 
+    private String id;
     private String name;
     private Faculty faculty;
     private List<Year> years;
@@ -11,9 +12,18 @@ public class Speciality {
     public Speciality() {
     }
 
-    public Speciality(String name, Faculty faculty) {
+    public Speciality(String id, String name, Faculty faculty) {
+	this.id = id;
 	this.name = name;
 	this.faculty = faculty;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {

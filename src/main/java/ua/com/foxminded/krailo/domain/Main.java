@@ -2,23 +2,25 @@ package ua.com.foxminded.krailo.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Main {
 
     UniversityOffice universityOffice = new UniversityOffice("KNEU");
-    Faculty faculty = new Faculty("Faculty of Finance and Economy");
+    Faculty faculty = new Faculty("61", "Faculty of Finance and Economy");
     Department department = new Department("Department of Financial faculty");
     DeansOffice deansOffice = new DeansOffice("Deans office of Financial faculty", faculty, universityOffice);
-    Speciality specialityFinance = new Speciality("Finance", faculty);
-    Speciality specialityBanking = new Speciality("Banking", faculty);
+    Speciality specialityFinance = new Speciality("6104", "Finance", faculty);
+    Speciality specialityBanking = new Speciality("6105", "Banking", faculty);
     Year year1Finance = new Year("1 year", specialityFinance);
     Year year1Banking = new Year("1 year", specialityBanking);
-    Group group1FinanceYear1 = new Group("1 group", year1Finance, specialityFinance);
-    Group group2FinanceYear1 = new Group("2 group", year1Finance, specialityFinance);
-    Group group1BankingYear1 = new Group("1 group", year1Banking, specialityBanking);
-    Group group2BankingYear1 = new Group("2 group", year1Banking, specialityFinance);
+    Group group1FinanceYear1 = new Group("1", year1Finance, specialityFinance);
+    Group group2FinanceYear1 = new Group("2", year1Finance, specialityFinance);
+    Group group1BankingYear1 = new Group("1", year1Banking, specialityBanking);
+    Group group2BankingYear1 = new Group("2", year1Banking, specialityFinance);
     Building building = new Building("Main building");
     Audience audience1 = new Audience("audience 1");
     Audience audience2 = new Audience("audience 2");
@@ -41,6 +43,7 @@ public class Main {
 	    System.out.println("-- 3. Show time table for teacher using teachers id press -- 3");
 	    System.out.println("-- 4. Show holiday for university press-- 4");
 	    System.out.println("-- 5. Show vocations for teacher using teachers id press-- 5");
+	    System.out.println("-- 6. create student press-- 6");
 	    System.out.println("-- 10. Exit press -- 10");
 	    int userInput = scanner.nextInt();
 	    switch (userInput) {
@@ -50,12 +53,22 @@ public class Main {
 	    case 2:
 		System.out.println("please enter students id");
 		String studentsId = scanner.next();
-		System.out.println(app.deansOffice.showTimeTableByStudentsId(studentsId, LocalDate.of(2020, 12, 1), LocalDate.of(2020, 12, 3)));
+		System.out.println("enter start of period use folowing date formatt d/mm/yyyy ");
+		String startDate = scanner.next();
+		System.out.println("enter end of period use folowing formatt d/mm/yyyy ");
+		String endDate = scanner.next();
+		System.out.println(app.deansOffice.showTimeTableByStudentsId(studentsId, getDateFromString(startDate),
+			getDateFromString(endDate)));
 		break;
 	    case 3:
 		System.out.println("please enter teachers id");
 		String teachersId = scanner.next();
-		System.out.println(app.deansOffice.showTimetableByTeachersId(teachersId, LocalDate.of(2020, 12, 1), LocalDate.of(2020, 12, 3)));
+		System.out.println("enter start of period use folowing date formatt d/mm/yyyy ");
+		startDate = scanner.next();
+		System.out.println("enter end of period use folowing formatt d/mm/yyyy ");
+		endDate = scanner.next();
+		System.out.println(app.deansOffice.showTimetableByTeachersId(teachersId, getDateFromString(startDate),
+			getDateFromString(endDate)));
 		break;
 	    case 4:
 		System.out.println(app.universityOffice.showHolidays());
@@ -63,8 +76,38 @@ public class Main {
 	    case 5:
 		System.out.println("please enter teachers id");
 		teachersId = scanner.next();
-		System.out.println(app.deansOffice.showVocationsByTeachersId(teachersId, LocalDate.of(2020, 1, 1), LocalDate.of(2020, 12, 31)));
+		System.out.println("enter start of period use folowing date formatt d/mm/yyyy ");
+		startDate = scanner.next();
+		System.out.println("enter end of period use folowing formatt d/mm/yyyy ");
+		endDate = scanner.next();
+		System.out.println(app.deansOffice.showVocationsByTeachersId(teachersId, getDateFromString(startDate),
+			getDateFromString(endDate)));
 		break;
+	    case 6:
+		System.out.println("enter student id");
+		studentsId = scanner.next();
+		System.out.println("enter student first name");
+		String studentsFirstName = scanner.next();
+		System.out.println("enter student last name");
+		String studentsLastName = scanner.next();
+		System.out.println("enter faculty id");
+		String facultyId = scanner.next();
+		Faculty facultyByid = app.universityOffice.getFaculties().stream()
+			.filter(f -> f.getId().equals(facultyId)).collect(Collectors.toList()).get(0);
+		if (facultyByid == null) {
+		    System.out.println("faculty with id " + facultyId + "not exist");
+		}
+		System.out.println("enter speciality id");
+		String specialityId = scanner.next();
+		Speciality specialityById = app.universityOffice.getFaculties().stream()
+			.flatMap(f -> f.getSpecialities().stream()).filter(s -> s.getId().equals(specialityId))
+			.collect(Collectors.toList()).get(0);
+		if (specialityById == null) {
+		    System.out.println("speciality with id " + specialityId + "not exist");
+		}
+		Student studentByUser = new Student(studentsId, studentsFirstName, studentsLastName, facultyByid, specialityById);
+		System.out.println("student " + studentByUser + " was created");
+		
 	    case 10:
 		exit = true;
 		break;
@@ -72,14 +115,19 @@ public class Main {
 		System.out.println("any operation choosen");
 		break;
 	    }
-
 	}
 
-	System.out.println();
+    }
+
+    private static LocalDate getDateFromString(String date) {
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+	return LocalDate.parse(date, formatter);
 
     }
 
     private void fillExampleData() {
+	universityOffice.setFaculties(new ArrayList<>());
+	universityOffice.getFaculties().add(faculty);
 	Holiday holidayNewYear = new Holiday("New year", LocalDate.of(2020, 1, 1));
 	Holiday holidayIndependantDay = new Holiday("Independent Day", LocalDate.of(2020, 8, 24));
 	universityOffice.setHolidays(new ArrayList<>());
@@ -245,26 +293,22 @@ public class Main {
 	timetableBankingYear1.getLessons().add(lesson2BankingYear1Date03);
 	lesson1FinanceYear1Date01.setGroups(new ArrayList<>());
 	lesson1FinanceYear1Date01.getGroups().addAll(year1Finance.getGroups());
-	Student student1FinanceYear1Group1 = new Student("finance1", "Name1", "LastNameFinance1", faculty,
-		specialityFinance, group1FinanceYear1);
+	Student student1FinanceYear1Group1 = new Student("6104_1", "Name1", "LastName1", faculty, specialityFinance);
+	Student student2FinanceYear1Group2 = new Student("6104_2", "Name2", "LastName2", faculty, specialityFinance);
+	Student student1BankingYear1Group1 = new Student("6105_1", "Name3", "LastName3", faculty, specialityBanking);
+	Student student2BankingYear1Group2 = new Student("6105_2", "Name4", "LastName4", faculty, specialityBanking);
 	student1FinanceYear1Group1.setGender(Gender.MALE);
-	Student student2FinanceYear1Group2 = new Student("finance2", "Name2", "LastNameFinance2", faculty,
-		specialityFinance, group1FinanceYear1);
 	student2FinanceYear1Group2.setGender(Gender.MALE);
-	Student student1BankingYear1Group1 = new Student("banking1", "Name1", "LastNameBanking1", faculty,
-		specialityBanking, group1BankingYear1);
 	student1BankingYear1Group1.setGender(Gender.MALE);
-	Student student2BankingYear1Group2 = new Student("banking2", "Name2", "LastNameBanking2", faculty,
-		specialityBanking, group1BankingYear1);
 	student2BankingYear1Group2.setGender(Gender.MALE);
 	group1FinanceYear1.setStudents(new ArrayList<>());
-	group1FinanceYear1.getStudents().add(student1FinanceYear1Group1);
 	group2FinanceYear1.setStudents(new ArrayList<>());
-	group2FinanceYear1.getStudents().add(student2FinanceYear1Group2);
 	group1BankingYear1.setStudents(new ArrayList<>());
-	group1BankingYear1.getStudents().add(student1BankingYear1Group1);
 	group2BankingYear1.setStudents(new ArrayList<>());
-	group2BankingYear1.getStudents().add(student2BankingYear1Group2);
+	group1FinanceYear1.addStudentToGroup(student1FinanceYear1Group1);
+	group2FinanceYear1.addStudentToGroup(student2FinanceYear1Group2);
+	group1BankingYear1.addStudentToGroup(student1BankingYear1Group1);
+	group2BankingYear1.addStudentToGroup(student2BankingYear1Group2);
 	Vocation vocation = new Vocation("yearly", LocalDate.of(2020, 1, 1), teacher1, LocalDate.of(2020, 1, 1),
 		LocalDate.of(2020, 1, 15));
 	deansOffice.setVocations(new ArrayList<>());

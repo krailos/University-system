@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Faculty {
 
+    private String id;
     private String name;
     private List<Department> departments;
     private List<Speciality> specialities;
@@ -12,8 +13,17 @@ public class Faculty {
     public Faculty() {
     }
 
-    public Faculty(String name) {
+    public Faculty(String id, String name) {
+	this.id = id;
 	this.name = name;
+    }
+
+    public String getId() {
+	return id;
+    }
+
+    public void setId(String id) {
+	this.id = id;
     }
 
     public String getName() {
@@ -52,7 +62,5 @@ public class Faculty {
     public String toString() {
 	return name;
     }
-
-
 
 }

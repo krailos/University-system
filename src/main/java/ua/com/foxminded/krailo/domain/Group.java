@@ -97,5 +97,10 @@ public class Group {
 	    return false;
 	return true;
     }
+    
+    public void addStudentToGroup (Student student) {
+	student.setGroup(this);
+	students.add(student);
+    }
 
 }

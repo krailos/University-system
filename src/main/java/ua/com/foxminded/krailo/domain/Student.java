@@ -20,7 +20,7 @@ public class Student {
     public Student() {
     }
 
-    public Student(String id, String firstName, String lastName, Faculty faculty, Speciality speciality, Group group) {
+    public Student(String id, String firstName, String lastName, Faculty faculty, Speciality speciality) {
 	super();
 	this.id = id;
 	this.firstName = firstName;
@@ -124,6 +124,11 @@ public class Student {
 
     public void setRank(Double rank) {
 	this.rank = rank;
+    }
+
+    @Override
+    public String toString() {
+	return id + " " + firstName + " " + lastName;
     }
 
 }
