@@ -102,8 +102,8 @@ public class DeansOffice {
     }
 
     public String showTimetableByTeachersId(String teacherId, LocalDate start, LocalDate end) {
-	Teacher teacher = faculty.getDepartments().stream().flatMap(d -> d.getTeachers().stream()).filter(t -> t.getId().equals(teacherId)).
-		collect(Collectors.toList()).get(0);
+	Teacher teacher = faculty.getDepartments().stream().flatMap(d -> d.getTeachers().stream())
+		.filter(t -> t.getId().equals(teacherId)).collect(Collectors.toList()).get(0);
 	if (teacher == null) {
 	    return "teachers id " + teacherId + " not exist";
 	}
@@ -135,8 +135,8 @@ public class DeansOffice {
     }
 
     public String showVocationsByTeachersId(String teacherId, LocalDate start, LocalDate end) {
-	Teacher teacher = faculty.getDepartments().stream().flatMap(d -> d.getTeachers().stream()).filter(t -> t.getId().equals(teacherId)).
-		collect(Collectors.toList()).get(0);
+	Teacher teacher = faculty.getDepartments().stream().flatMap(d -> d.getTeachers().stream())
+		.filter(t -> t.getId().equals(teacherId)).collect(Collectors.toList()).get(0);
 	if (teacher == null) {
 	    return "teachers id " + teacherId + " not exist";
 	}

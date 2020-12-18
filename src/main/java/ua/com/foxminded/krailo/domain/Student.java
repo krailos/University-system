@@ -1,13 +1,13 @@
 package ua.com.foxminded.krailo.domain;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Student {
 
     private String id;
     private String firstName;
     private String lastName;
-    private Date birthDate;
+    private LocalDate birthDate;
     private Faculty faculty;
     private Speciality speciality;
     private Group group;
@@ -54,11 +54,11 @@ public class Student {
 	this.lastName = lastName;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
 	return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
 	this.birthDate = birthDate;
     }
 
@@ -132,7 +132,5 @@ public class Student {
 		+ ", faculty=" + faculty + ", speciality=" + speciality + ", group=" + group + ", phone=" + phone
 		+ ", address=" + address + ", email=" + email + ", gender=" + gender + ", rank=" + rank + "]";
     }
-
- 
 
 }

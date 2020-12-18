@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -40,13 +41,15 @@ public class Main {
 	while (exit != true) {
 	    System.out.println("application university office");
 	    System.out.println("choose operations");
-	    System.out.println("-- 1. Show time table for all faculty press -- 1");
-	    System.out.println("-- 2. Show time table for student using students id press -- 2");
-	    System.out.println("-- 3. Show time table for teacher using teachers id press -- 3");
-	    System.out.println("-- 4. Show holiday for university press-- 4");
-	    System.out.println("-- 5. Show vocations for teacher using teachers id press-- 5");
+	    System.out.println("-- 1. show time table for all faculty press -- 1");
+	    System.out.println("-- 2. show time table for student using students id press -- 2");
+	    System.out.println("-- 3. show time table for teacher using teachers id press -- 3");
+	    System.out.println("-- 4. show holiday for university press-- 4");
+	    System.out.println("-- 5. show vocations for teacher using teachers id press-- 5");
 	    System.out.println("-- 6. create student press-- 6");
-	    System.out.println("-- 10. Exit press -- 10");
+	    System.out.println("-- 7. edit student press-- 7");
+	    System.out.println("-- 8. delete student press-- 8");
+	    System.out.println("-- 10. to exit press -- 10");
 	    int userInput = scanner.nextInt();
 	    switch (userInput) {
 	    case 1:
@@ -94,28 +97,94 @@ public class Main {
 		String studentsLastName = scanner.next();
 		System.out.println("enter faculty id");
 		String facultyId = scanner.next();
-		List<Faculty> facultyFiltered = app.universityOffice.getFaculties().stream()
-			.filter(f -> f.getId().equals(facultyId)).collect(Collectors.toList());
-		if (facultyFiltered.size() == 0) {
-		    System.out.println("faculty with id " + facultyId + "not exist");
+		Faculty facultyByid = app.universityOffice.getFacultyById(facultyId);
+		if (facultyByid == null) {
 		    break;
 		}
-		Faculty facultyByid = facultyFiltered.get(0);
-
 		System.out.println("enter speciality id");
 		String specialityId = scanner.next();
-		List<Speciality> specialityFiltered = app.universityOffice.getFaculties().stream()
-			.flatMap(f -> f.getSpecialities().stream()).filter(s -> s.getId().equals(specialityId))
-			.collect(Collectors.toList());
-		if (specialityFiltered.size() == 0) {
-		    System.out.println("speciality with id " + specialityId + "not exist");
+		Speciality specialityById = app.universityOffice.getSpecialityById(specialityId);
+		if (specialityById == null) {
 		    break;
 		}
-		Speciality specialityById = specialityFiltered.get(0);
 		Student studentByUser = new Student(studentsId, studentsFirstName, studentsLastName, facultyByid,
 			specialityById);
 		app.studentsRegister.getStudents().add(studentByUser);
 		System.out.println("student " + studentByUser + " was created");
+		break;
+	    case 7:
+		boolean exitEditStudent = false;
+		while (exitEditStudent != true) {
+		    System.out.println("enter student id");
+		    studentsId = scanner.next();
+		    Student student = app.studentsRegister.getStudentsById(studentsId);
+		    if (student == null) {
+			break;
+		    }
+		    System.out.println("edit student");
+		    System.out.println("choose operations");
+		    System.out.println("	- 1. add group press - 1");
+		    System.out.println("	- 2. add birthDate press - 2");
+		    System.out.println("	- 3. add phone press - 3");
+		    System.out.println("	- 4. add address press - 4");
+		    System.out.println("	- 5. add email press - 5");
+		    System.out.println("	- 6. add rank press - 6");
+		    System.out.println("	- 0. to exit press - 0");
+		    int editStudentOperation = scanner.nextInt();
+		    switch (editStudentOperation) {
+		    case 1:
+			System.out.println("enter group id");
+			String groupsName = scanner.next();
+			if (student.getGroup() != null) {
+			    app.universityOffice.getGroupByName(student.getGroup().getName()).getStudents()
+				    .remove(student);
+			}
+			app.universityOffice.getGroupByName(groupsName).addStudentToGroup(student);
+			break;
+		    case 2:
+			System.out.println("enter students birtDate use folowing date formatt d/mm/yyyy");
+			String studentsBirthDate = scanner.next();
+			student.setBirthDate(getDateFromString(studentsBirthDate));
+			break;
+		    case 3:
+			System.out.println("enter phone number");
+			String pnoneNumber = scanner.next();
+			student.setPhone(pnoneNumber);
+			break;
+		    case 4:
+			System.out.println("enter address");
+			String address = scanner.nextLine();
+			student.setAddress(address);
+			break;
+		    case 5:
+			System.out.println("enter email");
+			String email = scanner.next();
+			student.setEmail(email);
+			break;
+		    case 6:
+			System.out.println("enter rank");
+			Double rank = scanner.nextDouble();
+			student.setRank(rank);
+			break;
+		    case 0:
+			exitEditStudent = true;
+			break;
+		    default:
+			System.out.println("any operation choosen");
+			break;
+		    }
+		}
+		break;
+	    case 8:
+		System.out.println("enter student id");
+		studentsId = scanner.next();
+		Student student = app.studentsRegister.getStudentsById(studentsId);
+		if (student == null) {
+		    break;
+		}
+		app.universityOffice.getGroupByName(student.getGroup().getName()).getStudents().remove(student);
+		app.studentsRegister.getStudents().remove(student);
+		break;
 
 	    case 10:
 		exit = true;

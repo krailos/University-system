@@ -28,11 +28,11 @@ public class StudentsRegister {
 	this.students = students;
     }
 
-    public Student getById(String id) {
+    public Student getStudentsById(String id) {
 	List<Student> studentsFiltered = students.stream().filter(s -> s.getId().equals(id))
 		.collect(Collectors.toList());
 	if (studentsFiltered.size() == 0) {
-	    System.out.println("student id " + id + "not exist");
+	    System.out.println("student id " + id + " not exist");
 	    return null;
 	}
 	return studentsFiltered.get(0);
