@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.domain;
+package ua.com.foxminded.krailo.entities;
 
 import java.util.List;
 
@@ -49,6 +49,7 @@ public class Speciality {
     public void setYears(List<Year> years) {
 	this.years = years;
     }
+
 
     @Override
     public String toString() {

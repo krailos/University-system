@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.domain;
+package ua.com.foxminded.krailo.entities;
 
 import java.sql.Time;
 import java.time.LocalTime;

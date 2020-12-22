@@ -2,90 +2,90 @@ package ua.com.foxminded.krailo.domain;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-public class DeansOffice {
+import ua.com.foxminded.krailo.entities.Faculty;
+import ua.com.foxminded.krailo.entities.Group;
+import ua.com.foxminded.krailo.entities.Lesson;
+import ua.com.foxminded.krailo.entities.Speciality;
+import ua.com.foxminded.krailo.entities.Student;
+import ua.com.foxminded.krailo.entities.Teacher;
+import ua.com.foxminded.krailo.entities.Timetable;
+import ua.com.foxminded.krailo.entities.Vocation;
+import ua.com.foxminded.krailo.entities.Year;
 
-    private String name;
-    private Faculty faculty;
-    private UniversityOffice universityOffice;
-    private List<Timetable> timetables;
-    private List<Vocation> vocations;
+public class FacultyAdmin {
 
-    public DeansOffice() {
-    }
+    Faculty faculty;
 
-    public DeansOffice(String name, Faculty faculty, UniversityOffice universityOffice) {
-	this.name = name;
-	this.faculty = faculty;
-	this.universityOffice = universityOffice;
-    }
-
-    public String getName() {
-	return name;
-    }
-
-    public void setName(String name) {
-	this.name = name;
-    }
-
-    public Faculty getFaculty() {
-	return faculty;
-    }
-
-    public void setFaculty(Faculty faculty) {
+    public FacultyAdmin(Faculty faculty) {
 	this.faculty = faculty;
     }
 
-    public List<Timetable> getTimetables() {
-	return timetables;
+    public Student getStudentsById(String id) {
+	List<Student> studentsFiltered = faculty.getSpecialities().stream().flatMap(s -> s.getYears().stream()).flatMap(s -> s.getStudents().stream())
+		.filter(s -> s.getId().equals(id)).collect(Collectors.toList());
+	if (studentsFiltered.size() == 0) {
+	    System.out.println("student id " + id + " not exist");
+	    return null;
+	}
+	return studentsFiltered.get(0);
     }
 
-    public void setTimetables(List<Timetable> timetables) {
-	this.timetables = timetables;
+    public String showStudentsAllFaculty() {
+	return faculty.getSpecialities().stream().flatMap(s -> s.getYears().stream()).flatMap(s -> s.getStudents().stream())
+		.map(s -> s.toString() + System.lineSeparator()).collect(Collectors.joining());
     }
 
-    public List<Vocation> getVocations() {
-	return vocations;
+    public Group getGroupByNameAndSpecialityAndYear(String groupName, String specialityId, String yearName) {
+	Year year = getYearByNameAndSpeciality(yearName, specialityId);
+	
+	List<Group> groupFiltered = year.getGroups().stream().filter(g -> g.getName().equals(groupName)).collect(Collectors.toList());
+	if (groupFiltered.size() == 0) {
+	    System.out.println("group with name " + groupName + " not exist");
+	    return null;
+	}
+	return groupFiltered.get(0);
     }
 
-    public void setVocations(List<Vocation> vocations) {
-	this.vocations = vocations;
+    public Year getYearByNameAndSpeciality(String yearName, String specialityId) {
+	Speciality speciallity = getSpecialityById(specialityId);
+	List<Year> years = speciallity.getYears().stream().filter(y -> y.getName().equals(yearName))
+		.collect(Collectors.toList());
+	if (years.size() == 0) {
+	    System.out.println("year with name " + yearName + " not exist");
+	    return null;
+	}
+	return years.get(0);
     }
 
-    public UniversityOffice getUniversityOffice() {
-	return universityOffice;
+    public Speciality getSpecialityById(String id) {
+	List<Speciality> specialityFiltered = faculty.getSpecialities().stream().filter(s -> s.getId().equals(id))
+		.collect(Collectors.toList());
+	if (specialityFiltered.size() == 0) {
+	    System.out.println("speciality with id " + id + " not exist");
+	    return null;
+	}
+	return specialityFiltered.get(0);
     }
-
-    public void setUniversityOffice(UniversityOffice universityOffice) {
-	this.universityOffice = universityOffice;
-    }
-
-    @Override
-    public String toString() {
-	return name;
-    }
-
+    
     public String showLessonsFromAllTimetablesOfFaculty() {
 	StringBuilder sb = new StringBuilder();
-	sb.append(name).append(System.lineSeparator());
-	String allTimetables = timetables.stream().map(t -> t.showAllLessons()).collect(Collectors.joining());
+	sb.append(faculty.getName()).append(System.lineSeparator());
+	String allTimetables = faculty.getDeansOffice().getTimetables().stream().map(t -> this.showTimetable(t)).collect(Collectors.joining());
 	sb.append(allTimetables).append(System.lineSeparator());
 	return sb.toString();
     }
 
     public String showTimeTableByStudentsId(String studentId, LocalDate start, LocalDate end) {
-	Student student = faculty.getSpecialities().stream().flatMap(s -> s.getYears().stream())
-		.flatMap(y -> y.getGroups().stream()).flatMap(g -> g.getStudents().stream())
-		.filter(s -> s.getId().equals(studentId)).collect(Collectors.toList()).get(0);
+	Student student = getStudentsById(studentId);
 	if (student == null) {
 	    return "students id " + studentId + " not exist";
 	}
 	Timetable timetable = getTimetableBySpecialityAndYear(student.getSpeciality().getName(),
 		student.getGroup().getYear().getName());
 	StringBuilder sb = new StringBuilder();
-	sb.append(name).append(System.lineSeparator());
+	sb.append(timetable.getName()).append(System.lineSeparator());
 	sb.append(student.getSpeciality()).append(" ").append(student.getGroup().getYear())
 		.append(System.lineSeparator());
 	String pattern = "%-10s| %-12s| %-15s| %-20s";
@@ -124,7 +124,7 @@ public class DeansOffice {
     }
 
     public Timetable getTimetableBySpecialityAndYear(String specialityName, String yearName) {
-	Timetable timetable = timetables.stream().filter(
+	Timetable timetable = faculty.getDeansOffice().getTimetables().stream().filter(
 		t -> t.getSpeciality().getName().equals(specialityName) && t.getYear().getName().equals(yearName))
 		.collect(Collectors.toList()).get(0);
 	if (timetable == null) {
@@ -156,5 +156,18 @@ public class DeansOffice {
 	}
 	return sb.toString();
     }
+    
+    public String showTimetable(Timetable timetable) {
+   	StringBuilder sb = new StringBuilder();
+   	sb.append(timetable.getName()).append(System.lineSeparator());
+   	sb.append("all lessons for ").append(timetable.getSpeciality()).append(" ").append(timetable.getYear()).append(System.lineSeparator());
+   	String pattern = "%-10s| %-12s| %-15s| %-20s";
+   	for (Lesson lesson : timetable.getLessons()) {
+   	    sb.append(String.format(pattern, lesson.getDate(), lesson.getAudience(), lesson.getSubject(),
+   		    lesson.getLessonTime()));
+   	    sb.append(System.lineSeparator());
+   	}
+   	return sb.toString();
+       }
 
 }

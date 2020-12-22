@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.domain;
+package ua.com.foxminded.krailo.entities;
 
 import java.util.List;
 
@@ -7,6 +7,7 @@ public class Year {
     private String name;
     private Speciality speciality;
     private List<Subject> subjects;
+    private List<Student> students;
     private List<Group> groups;
 
     public Year() {
@@ -47,6 +48,14 @@ public class Year {
 
     public void setGroups(List<Group> groups) {
 	this.groups = groups;
+    }
+
+    public List<Student> getStudents() {
+	return students;
+    }
+
+    public void setStudents(List<Student> students) {
+	this.students = students;
     }
 
     @Override

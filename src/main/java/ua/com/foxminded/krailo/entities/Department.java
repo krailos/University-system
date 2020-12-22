@@ -1,16 +1,17 @@
-package ua.com.foxminded.krailo.domain;
+package ua.com.foxminded.krailo.entities;
 
 import java.util.List;
 
-public class Subject {
+public class Department {
 
     private String name;
     private List<Teacher> teachers;
 
-    public Subject() {
+    public Department() {
+
     }
 
-    public Subject(String name) {
+    public Department(String name) {
 	this.name = name;
     }
 
@@ -29,10 +30,13 @@ public class Subject {
     public void setTeachers(List<Teacher> teachers) {
 	this.teachers = teachers;
     }
-    
+
     @Override
     public String toString() {
-        return name;
+	return name;
     }
+    
+ 
+
 
 }

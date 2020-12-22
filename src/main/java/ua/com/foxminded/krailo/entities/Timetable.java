@@ -1,9 +1,6 @@
-package ua.com.foxminded.krailo.domain;
+package ua.com.foxminded.krailo.entities;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class Timetable {
 
@@ -51,19 +48,6 @@ public class Timetable {
 
     public void setLessons(List<Lesson> lessons) {
 	this.lessons = lessons;
-    }
-
-    public String showAllLessons() {
-	StringBuilder sb = new StringBuilder();
-	sb.append(name).append(System.lineSeparator());
-	sb.append("all lessons for ").append(speciality).append(" ").append(year).append(System.lineSeparator());
-	String pattern = "%-10s| %-12s| %-15s| %-20s";
-	for (Lesson lesson : lessons) {
-	    sb.append(String.format(pattern, lesson.getDate(), lesson.getAudience(), lesson.getSubject(),
-		    lesson.getLessonTime()));
-	    sb.append(System.lineSeparator());
-	}
-	return sb.toString();
     }
 
 }
