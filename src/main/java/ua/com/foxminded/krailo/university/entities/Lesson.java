@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.entities;
+package ua.com.foxminded.krailo.university.entities;
 
 import java.time.LocalDate;
 import java.util.Date;

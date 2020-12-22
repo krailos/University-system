@@ -1,11 +1,11 @@
-package ua.com.foxminded.krailo.domain;
+package ua.com.foxminded.krailo.university.domain;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import ua.com.foxminded.krailo.entities.Faculty;
-import ua.com.foxminded.krailo.entities.Holiday;
-import ua.com.foxminded.krailo.entities.UniversityOffice;
+import ua.com.foxminded.krailo.university.entities.Faculty;
+import ua.com.foxminded.krailo.university.entities.Holiday;
+import ua.com.foxminded.krailo.university.entities.UniversityOffice;
 
 public class UniversityAdmin {
 

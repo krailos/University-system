@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.main;
+package ua.com.foxminded.krailo.university.main;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -6,27 +6,27 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import ua.com.foxminded.krailo.domain.FacultyAdmin;
-import ua.com.foxminded.krailo.domain.UniversityAdmin;
-import ua.com.foxminded.krailo.entities.Audience;
-import ua.com.foxminded.krailo.entities.Building;
-import ua.com.foxminded.krailo.entities.DeansOffice;
-import ua.com.foxminded.krailo.entities.Department;
-import ua.com.foxminded.krailo.entities.Faculty;
-import ua.com.foxminded.krailo.entities.Gender;
-import ua.com.foxminded.krailo.entities.Group;
-import ua.com.foxminded.krailo.entities.Holiday;
-import ua.com.foxminded.krailo.entities.Lesson;
-import ua.com.foxminded.krailo.entities.LessonTime;
-import ua.com.foxminded.krailo.entities.LessonsTimeSchedule;
-import ua.com.foxminded.krailo.entities.Speciality;
-import ua.com.foxminded.krailo.entities.Student;
-import ua.com.foxminded.krailo.entities.Subject;
-import ua.com.foxminded.krailo.entities.Teacher;
-import ua.com.foxminded.krailo.entities.Timetable;
-import ua.com.foxminded.krailo.entities.UniversityOffice;
-import ua.com.foxminded.krailo.entities.Vocation;
-import ua.com.foxminded.krailo.entities.Year;
+import ua.com.foxminded.krailo.university.domain.FacultyAdmin;
+import ua.com.foxminded.krailo.university.domain.UniversityAdmin;
+import ua.com.foxminded.krailo.university.entities.Audience;
+import ua.com.foxminded.krailo.university.entities.Building;
+import ua.com.foxminded.krailo.university.entities.DeansOffice;
+import ua.com.foxminded.krailo.university.entities.Department;
+import ua.com.foxminded.krailo.university.entities.Faculty;
+import ua.com.foxminded.krailo.university.entities.Gender;
+import ua.com.foxminded.krailo.university.entities.Group;
+import ua.com.foxminded.krailo.university.entities.Holiday;
+import ua.com.foxminded.krailo.university.entities.Lesson;
+import ua.com.foxminded.krailo.university.entities.LessonTime;
+import ua.com.foxminded.krailo.university.entities.LessonsTimeSchedule;
+import ua.com.foxminded.krailo.university.entities.Speciality;
+import ua.com.foxminded.krailo.university.entities.Student;
+import ua.com.foxminded.krailo.university.entities.Subject;
+import ua.com.foxminded.krailo.university.entities.Teacher;
+import ua.com.foxminded.krailo.university.entities.Timetable;
+import ua.com.foxminded.krailo.university.entities.UniversityOffice;
+import ua.com.foxminded.krailo.university.entities.Vocation;
+import ua.com.foxminded.krailo.university.entities.Year;
 
 public class Main {
 
@@ -39,7 +39,7 @@ public class Main {
 	System.out.println("data loaded");
 	UniversityAdmin universityAdmin = new UniversityAdmin(app.universityOffice);
 	FacultyAdmin facultyAdmin = new FacultyAdmin(universityAdmin.getFacultyById("61"));
-	
+
 	Scanner scanner = new Scanner(System.in);
 	boolean exit = false;
 	while (exit != true) {
@@ -57,65 +57,23 @@ public class Main {
 	    int userInput = scanner.nextInt();
 	    switch (userInput) {
 	    case 1:
-		System.out.println(  facultyAdmin.showLessonsFromAllTimetablesOfFaculty());
+		System.out.println(facultyAdmin.showLessonsFromAllTimetablesOfFaculty());
 		break;
 	    case 2:
-		System.out.println("please enter students id");
-		String studentsId = scanner.next();
-		System.out.println("enter start of period use folowing date formatt d/mm/yyyy ");
-		String startDate = scanner.next();
-		System.out.println("enter end of period use folowing formatt d/mm/yyyy ");
-		String endDate = scanner.next();
-		System.out.println(facultyAdmin.showTimeTableByStudentsId(studentsId, getDateFromString(startDate),
-			getDateFromString(endDate)));
+		app.showTimetableForStudentByStudentsId(scanner, facultyAdmin);
 		break;
-//	    case 3:
-//		System.out.println("please enter teachers id");
-//		String teachersId = scanner.next();
-//		System.out.println("enter start of period use folowing date formatt d/mm/yyyy ");
-//		startDate = scanner.next();
-//		System.out.println("enter end of period use folowing formatt d/mm/yyyy ");
-//		endDate = scanner.next();
-//		System.out.println(app.deansOffice.showTimetableByTeachersId(teachersId, getDateFromString(startDate),
-//			getDateFromString(endDate)));
-//		break;
-//	    case 4:
-//		System.out.println(app.universityOffice.showHolidays());
-//		break;
-//	    case 5:
-//		System.out.println("please enter teachers id");
-//		teachersId = scanner.next();
-//		System.out.println("enter start of period use folowing date formatt d/mm/yyyy ");
-//		startDate = scanner.next();
-//		System.out.println("enter end of period use folowing formatt d/mm/yyyy ");
-//		endDate = scanner.next();
-//		System.out.println(app.deansOffice.showVocationsByTeachersId(teachersId, getDateFromString(startDate),
-//			getDateFromString(endDate)));
-//		break;
-//	    case 6:
-//		System.out.println("enter student id");
-//		studentsId = scanner.next();
-//		System.out.println("enter student first name");
-//		String studentsFirstName = scanner.next();
-//		System.out.println("enter student last name");
-//		String studentsLastName = scanner.next();
-//		System.out.println("enter faculty id");
-//		String facultyId = scanner.next();
-//		Faculty facultyByid = app.universityOffice.getFacultyById(facultyId);
-//		if (facultyByid == null) {
-//		    break;
-//		}
-//		System.out.println("enter speciality id");
-//		String specialityId = scanner.next();
-//		Speciality specialityById = app.universityOffice.getSpecialityById(specialityId);
-//		if (specialityById == null) {
-//		    break;
-//		}
-//		Student studentByUser = new Student(studentsId, studentsFirstName, studentsLastName, facultyByid,
-//			specialityById);
-//		app.studentsRegister.getStudents().add(studentByUser);
-//		System.out.println("student " + studentByUser + " was created");
-//		break;
+	    case 3:
+		app.showTimetableForTeacherByTeachersId(scanner, facultyAdmin);
+		break;
+	    case 4:
+		System.out.println(universityAdmin.showHolidays());
+		break;
+	    case 5:
+		app.showVocationsForTeacherByTeachersId(scanner, facultyAdmin);
+		break;
+	    case 6:
+
+		break;
 //	    case 7:
 //		boolean exitEditStudent = false;
 //		while (exitEditStudent != true) {
@@ -200,6 +158,58 @@ public class Main {
 	}
 
     }
+    
+    private void createStudent (Scanner scanner, FacultyAdmin facultyAdmin) {
+	System.out.println("enter student id");
+	String studentsId = scanner.next();
+	System.out.println("enter student first name");
+	String studentsFirstName = scanner.next();
+	System.out.println("enter student last name");
+	String studentsLastName = scanner.next();
+	System.out.println("enter speciality id");
+	String specialityId = scanner.next();
+	Speciality specialityById = facultyAdmin.getSpecialityById(specialityId);
+	if (specialityById == null) {
+	    break;
+	}
+	Student studentByUser = new Student(studentsId, studentsFirstName, studentsLastName, facultyByid,
+		specialityById);
+	System.out.println("student " + studentByUser + " was created");
+    }
+    
+    private void showVocationsForTeacherByTeachersId (Scanner scanner, FacultyAdmin facultyAdmin) {
+	System.out.println("please enter teachers id");
+	String teachersId = scanner.next();
+	System.out.println("enter start of period use folowing date formatt d/mm/yyyy ");
+	String startDate = scanner.next();
+	System.out.println("enter end of period use folowing formatt d/mm/yyyy ");
+	String endDate = scanner.next();
+	System.out.println(facultyAdmin.showVocationsByTeachersId(teachersId, getDateFromString(startDate),
+		getDateFromString(endDate)));
+    }
+
+    private void showTimetableForStudentByStudentsId(Scanner scanner, FacultyAdmin facultyAdmin) {
+	System.out.println("please enter students id");
+	String studentsId = scanner.next();
+	System.out.println("enter start of period use folowing date formatt d/mm/yyyy ");
+	String startDate = scanner.next();
+	System.out.println("enter end of period use folowing formatt d/mm/yyyy ");
+	String endDate = scanner.next();
+	System.out.println(facultyAdmin.showTimeTableByStudentsId(studentsId, getDateFromString(startDate),
+		getDateFromString(endDate)));
+    }
+
+    private void showTimetableForTeacherByTeachersId(Scanner scanner, FacultyAdmin facultyAdmin) {
+	System.out.println("please enter teachers id");
+	String teachersId = scanner.next();
+	System.out.println("enter start of period use folowing date formatt d/mm/yyyy ");
+	String startDate = scanner.next();
+	System.out.println("enter end of period use folowing formatt d/mm/yyyy ");
+	String endDate = scanner.next();
+	System.out.println(facultyAdmin.showTimetableByTeachersId(teachersId, getDateFromString(startDate),
+		getDateFromString(endDate)));
+    }
+    
 
     private static LocalDate getDateFromString(String date) {
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");

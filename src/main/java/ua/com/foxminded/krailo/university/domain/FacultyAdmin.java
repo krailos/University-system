@@ -1,18 +1,18 @@
-package ua.com.foxminded.krailo.domain;
+package ua.com.foxminded.krailo.university.domain;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import ua.com.foxminded.krailo.entities.Faculty;
-import ua.com.foxminded.krailo.entities.Group;
-import ua.com.foxminded.krailo.entities.Lesson;
-import ua.com.foxminded.krailo.entities.Speciality;
-import ua.com.foxminded.krailo.entities.Student;
-import ua.com.foxminded.krailo.entities.Teacher;
-import ua.com.foxminded.krailo.entities.Timetable;
-import ua.com.foxminded.krailo.entities.Vocation;
-import ua.com.foxminded.krailo.entities.Year;
+import ua.com.foxminded.krailo.university.entities.Faculty;
+import ua.com.foxminded.krailo.university.entities.Group;
+import ua.com.foxminded.krailo.university.entities.Lesson;
+import ua.com.foxminded.krailo.university.entities.Speciality;
+import ua.com.foxminded.krailo.university.entities.Student;
+import ua.com.foxminded.krailo.university.entities.Teacher;
+import ua.com.foxminded.krailo.university.entities.Timetable;
+import ua.com.foxminded.krailo.university.entities.Vocation;
+import ua.com.foxminded.krailo.university.entities.Year;
 
 public class FacultyAdmin {
 
@@ -30,6 +30,16 @@ public class FacultyAdmin {
 	    return null;
 	}
 	return studentsFiltered.get(0);
+    }
+    
+    public Teacher getTeacherById(String id) {
+	List<Teacher> teachers = faculty.getDepartments().stream().flatMap(d -> d.getTeachers().stream())
+		.filter(t -> t.getId().equals(id)).collect(Collectors.toList());	
+	if (teachers.size() == 0) {
+	    System.out.println("tacher id " + id + " not exist");
+	    return null;
+	}
+	return teachers.get(0);
     }
 
     public String showStudentsAllFaculty() {
@@ -86,6 +96,7 @@ public class FacultyAdmin {
 		student.getGroup().getYear().getName());
 	StringBuilder sb = new StringBuilder();
 	sb.append(timetable.getName()).append(System.lineSeparator());
+	sb.append(student.toString()).append(System.lineSeparator());
 	sb.append(student.getSpeciality()).append(" ").append(student.getGroup().getYear())
 		.append(System.lineSeparator());
 	String pattern = "%-10s| %-12s| %-15s| %-20s";
@@ -102,16 +113,13 @@ public class FacultyAdmin {
     }
 
     public String showTimetableByTeachersId(String teacherId, LocalDate start, LocalDate end) {
-	Teacher teacher = faculty.getDepartments().stream().flatMap(d -> d.getTeachers().stream())
-		.filter(t -> t.getId().equals(teacherId)).collect(Collectors.toList()).get(0);
-	if (teacher == null) {
-	    return "teachers id " + teacherId + " not exist";
-	}
+	Teacher teacher = getTeacherById(teacherId);
 	StringBuilder sb = new StringBuilder();
-	sb.append(name).append(System.lineSeparator());
+	sb.append("schedule for teacher").append(System.lineSeparator());
+	sb.append(teacher.toString()).append(System.lineSeparator());
 	sb.append(teacher.getFirstName()).append(" ").append(teacher.getLastName()).append(System.lineSeparator());
 	String pattern = "%-10s| %-12s| %-15s| %-20s";
-	List<Lesson> lessonFiltered = timetables
+	List<Lesson> lessonFiltered = faculty.getDeansOffice().getTimetables()
 		.stream().flatMap(t -> t.getLessons().stream()).filter(l -> l.getDate().isAfter(start.minusDays(1))
 			&& l.getDate().isBefore(end.plusDays(1)) && l.getTeacher().getId().equals(teacherId))
 		.collect(Collectors.toList());
@@ -135,18 +143,13 @@ public class FacultyAdmin {
     }
 
     public String showVocationsByTeachersId(String teacherId, LocalDate start, LocalDate end) {
-	Teacher teacher = faculty.getDepartments().stream().flatMap(d -> d.getTeachers().stream())
-		.filter(t -> t.getId().equals(teacherId)).collect(Collectors.toList()).get(0);
-	if (teacher == null) {
-	    return "teachers id " + teacherId + " not exist";
-	}
+	Teacher teacher = getTeacherById(teacherId);
 	StringBuilder sb = new StringBuilder();
 	sb.append("Vocations").append(System.lineSeparator());
 	sb.append(teacher.getFirstName()).append(" ").append(teacher.getLastName()).append(System.lineSeparator());
 	sb.append("Period from " + start.toString()).append(" to " + end.toString()).append(System.lineSeparator());
 	String pattern = "%-10s| %-12s| %-12s";
-
-	List<Vocation> vocationFiltered = vocations.stream().filter(v -> v.getTeacher().equals(teacher)
+	List<Vocation> vocationFiltered = faculty.getDeansOffice().getVocations().stream().filter(v -> v.getTeacher().equals(teacher)
 		&& v.getStartVocation().isAfter(start.minusDays(1)) && v.getStartVocation().isBefore(end.plusDays(1)))
 		.collect(Collectors.toList());
 	for (Vocation vocation : vocationFiltered) {
@@ -169,5 +172,10 @@ public class FacultyAdmin {
    	}
    	return sb.toString();
        }
+    
+    public void addNewStudent (String id, String firstName, String lastName, Faculty faculty, Speciality speciality) {
+	Student student = new Student(id, firstName, lastName, faculty, speciality);
+	
+    }
 
 }
