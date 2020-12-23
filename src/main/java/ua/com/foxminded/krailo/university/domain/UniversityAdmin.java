@@ -16,6 +16,7 @@ public class UniversityAdmin {
     }
 
     public String showHolidays() {
+	office.setHolidays(null);
 	StringBuilder sb = new StringBuilder();
 	for (Holiday holiday : office.getHolidays()) {
 	    sb.append(holiday.toString()).append(System.lineSeparator());

@@ -36,7 +36,7 @@ public class Main {
 
 	Main app = new Main();
 	app.fillExampleData();
-	System.out.println("data loaded");
+	System.out.println("example data for faculty with id=61 is loaded");
 	UniversityAdmin universityAdmin = new UniversityAdmin(app.universityOffice);
 	FacultyAdmin facultyAdmin = new FacultyAdmin(universityAdmin.getFacultyById("61"));
 
@@ -72,82 +72,14 @@ public class Main {
 		app.showVocationsForTeacherByTeachersId(scanner, facultyAdmin);
 		break;
 	    case 6:
-
+		app.createStudent(scanner, facultyAdmin);
 		break;
-//	    case 7:
-//		boolean exitEditStudent = false;
-//		while (exitEditStudent != true) {
-//		    System.out.println("enter student id");
-//		    studentsId = scanner.next();
-//		    Student student = app.studentsRegister.getStudentsById(studentsId);
-//		    if (student == null) {
-//			break;
-//		    }
-//		    System.out.println("edit student");
-//		    System.out.println("choose operations");
-//		    System.out.println("	- 1. add group press - 1");
-//		    System.out.println("	- 2. add birthDate press - 2");
-//		    System.out.println("	- 3. add phone press - 3");
-//		    System.out.println("	- 4. add address press - 4");
-//		    System.out.println("	- 5. add email press - 5");
-//		    System.out.println("	- 6. add rank press - 6");
-//		    System.out.println("	- 0. to exit press - 0");
-//		    int editStudentOperation = scanner.nextInt();
-//		    switch (editStudentOperation) {
-//		    case 1:
-//			System.out.println("enter group id");
-//			String groupsName = scanner.next();
-//			if (student.getGroup() != null) {
-//			    app.universityOffice.getGroupByName(student.getGroup().getName()).getStudents()
-//				    .remove(student);
-//			}
-//			app.universityOffice.getGroupByName(groupsName).addStudentToGroup(student);
-//			break;
-//		    case 2:
-//			System.out.println("enter students birtDate use folowing date formatt d/mm/yyyy");
-//			String studentsBirthDate = scanner.next();
-//			student.setBirthDate(getDateFromString(studentsBirthDate));
-//			break;
-//		    case 3:
-//			System.out.println("enter phone number");
-//			String pnoneNumber = scanner.next();
-//			student.setPhone(pnoneNumber);
-//			break;
-//		    case 4:
-//			System.out.println("enter address");
-//			String address = scanner.nextLine();
-//			student.setAddress(address);
-//			break;
-//		    case 5:
-//			System.out.println("enter email");
-//			String email = scanner.next();
-//			student.setEmail(email);
-//			break;
-//		    case 6:
-//			System.out.println("enter rank");
-//			Double rank = scanner.nextDouble();
-//			student.setRank(rank);
-//			break;
-//		    case 0:
-//			exitEditStudent = true;
-//			break;
-//		    default:
-//			System.out.println("any operation choosen");
-//			break;
-//		    }
-//		}
-//		break;
-//	    case 8:
-//		System.out.println("enter student id");
-//		studentsId = scanner.next();
-//		Student student = app.studentsRegister.getStudentsById(studentsId);
-//		if (student == null) {
-//		    break;
-//		}
-//		app.universityOffice.getGroupByName(student.getGroup().getName()).getStudents().remove(student);
-//		app.studentsRegister.getStudents().remove(student);
-//		break;
-//
+	    case 7:
+		app.editSudent(scanner, facultyAdmin);
+		break;
+	    case 8:
+		app.deleteStudent(scanner, facultyAdmin);
+		break;
 	    case 10:
 		exit = true;
 		break;
@@ -158,8 +90,89 @@ public class Main {
 	}
 
     }
-    
-    private void createStudent (Scanner scanner, FacultyAdmin facultyAdmin) {
+
+    private void deleteStudent(Scanner scanner, FacultyAdmin facultyAdmin) {
+	System.out.println("enter student id");
+	String studentsId = scanner.next();
+	Student student = facultyAdmin.getStudentsById(studentsId);
+	student.getGroup().getStudents().remove(student);
+	student.getGroup().getYear().getStudents().remove(student);
+    }
+
+    private void editSudent(Scanner scanner, FacultyAdmin facultyAdmin) {
+	boolean exitEditStudent = false;
+	while (exitEditStudent != true) {
+	    System.out.println("enter student id");
+	    String studentsId = scanner.next();
+	    Student student = facultyAdmin.getStudentsById(studentsId);
+	    if (student == null) {
+		break;
+	    }
+	    System.out.println("edit student");
+	    System.out.println("choose operations");
+	    System.out.println("	- 1. add group press - 1");
+	    System.out.println("	- 2. add birthDate press - 2");
+	    System.out.println("	- 3. add phone press - 3");
+	    System.out.println("	- 4. add address press - 4");
+	    System.out.println("	- 5. add email press - 5");
+	    System.out.println("	- 6. add rank press - 6");
+	    System.out.println("	- 0. to exit press - 0");
+	    int editStudentOperation = scanner.nextInt();
+	    switch (editStudentOperation) {
+	    case 1:
+		System.out.println("eneter speciality id");
+		System.out.println("available specialities Id ");
+		facultyAdmin.getFaculty().getSpecialities().stream().forEach(s -> System.out.print(s.getId() + "; "));
+		String specialityId = scanner.next();
+		System.out.println("enter year name");
+		System.out.println("available year name");
+		facultyAdmin.getSpecialityById(specialityId).getYears().stream()
+			.forEach(y -> System.out.print(y.getName() + "; "));
+		String yearName = scanner.next();
+		System.out.println("enter group name");
+		System.out.println("available group name");
+		facultyAdmin.getYearByNameAndSpeciality(yearName, specialityId).getGroups().stream()
+			.forEach(g -> System.out.print(g.getName() + "; "));
+		String groupsName = scanner.next();
+		facultyAdmin.addStudentToGroop(studentsId, groupsName, yearName, specialityId);
+		System.out.println("student was added to group " + student.getGroup().getName());
+		break;
+	    case 2:
+		System.out.println("enter students birtDate use folowing date formatt d/mm/yyyy");
+		String studentsBirthDate = scanner.next();
+		student.setBirthDate(getDateFromString(studentsBirthDate));
+		break;
+	    case 3:
+		System.out.println("enter phone number");
+		String pnoneNumber = scanner.next();
+		student.setPhone(pnoneNumber);
+		break;
+	    case 4:
+		System.out.println("enter address");
+		String address = scanner.nextLine();
+		student.setAddress(address);
+		break;
+	    case 5:
+		System.out.println("enter email");
+		String email = scanner.next();
+		student.setEmail(email);
+		break;
+	    case 6:
+		System.out.println("enter rank");
+		Double rank = scanner.nextDouble();
+		student.setRank(rank);
+		break;
+	    case 0:
+		exitEditStudent = true;
+		break;
+	    default:
+		System.out.println("any operation choosen");
+		break;
+	    }
+	}
+    }
+
+    private void createStudent(Scanner scanner, FacultyAdmin facultyAdmin) {
 	System.out.println("enter student id");
 	String studentsId = scanner.next();
 	System.out.println("enter student first name");
@@ -168,16 +181,13 @@ public class Main {
 	String studentsLastName = scanner.next();
 	System.out.println("enter speciality id");
 	String specialityId = scanner.next();
-	Speciality specialityById = facultyAdmin.getSpecialityById(specialityId);
-	if (specialityById == null) {
-	    break;
-	}
-	Student studentByUser = new Student(studentsId, studentsFirstName, studentsLastName, facultyByid,
-		specialityById);
-	System.out.println("student " + studentByUser + " was created");
+	System.out.println("enter year name");
+	String yearName = scanner.next();
+	facultyAdmin.createNewStudent(studentsId, studentsFirstName, studentsLastName, specialityId, yearName);
+	System.out.println("student " + facultyAdmin.getStudentsById(studentsId) + " was created");
     }
-    
-    private void showVocationsForTeacherByTeachersId (Scanner scanner, FacultyAdmin facultyAdmin) {
+
+    private void showVocationsForTeacherByTeachersId(Scanner scanner, FacultyAdmin facultyAdmin) {
 	System.out.println("please enter teachers id");
 	String teachersId = scanner.next();
 	System.out.println("enter start of period use folowing date formatt d/mm/yyyy ");
@@ -209,7 +219,6 @@ public class Main {
 	System.out.println(facultyAdmin.showTimetableByTeachersId(teachersId, getDateFromString(startDate),
 		getDateFromString(endDate)));
     }
-    
 
     private static LocalDate getDateFromString(String date) {
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
@@ -232,10 +241,10 @@ public class Main {
 	facultyOfFinance.setSpecialities(new ArrayList<>());
 	facultyOfFinance.getSpecialities().add(specialityFinance);
 	facultyOfFinance.getSpecialities().add(specialityBanking);
-	Year year1Finance = new Year("1 year", specialityFinance);
+	Year year1Finance = new Year("1year", specialityFinance);
 	specialityFinance.setYears(new ArrayList<>());
 	specialityFinance.getYears().add(year1Finance);
-	Year year1Banking = new Year("1 year", specialityBanking);
+	Year year1Banking = new Year("1year", specialityBanking);
 	specialityBanking.setYears(new ArrayList<>());
 	specialityBanking.getYears().add(year1Banking);
 	Group group1FinanceYear1 = new Group("1", year1Finance, specialityFinance);

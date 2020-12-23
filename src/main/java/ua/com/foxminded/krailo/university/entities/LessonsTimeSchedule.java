@@ -1,11 +1,12 @@
 package ua.com.foxminded.krailo.university.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LessonsTimeSchedule {
 
     private String name;
-    private List<LessonTime> lessonTimes;
+    private List<LessonTime> lessonTimes = new ArrayList<>();
 
     public LessonsTimeSchedule() {
     }

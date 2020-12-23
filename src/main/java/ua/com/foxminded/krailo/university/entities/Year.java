@@ -1,14 +1,15 @@
 package ua.com.foxminded.krailo.university.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Year {
 
     private String name;
     private Speciality speciality;
-    private List<Subject> subjects;
-    private List<Student> students;
-    private List<Group> groups;
+    private List<Subject> subjects = new ArrayList<>();
+    private List<Student> students = new ArrayList<>();
+    private List<Group> groups = new ArrayList<>();
 
     public Year() {
     }

@@ -1,5 +1,6 @@
 package ua.com.foxminded.krailo.university.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Timetable {
@@ -7,7 +8,7 @@ public class Timetable {
     private String name;
     private Speciality speciality;
     private Year year;
-    private List<Lesson> lessons;
+    private List<Lesson> lessons = new ArrayList<>();
 
     public Timetable() {
     }

@@ -1,5 +1,6 @@
 package ua.com.foxminded.krailo.university.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Speciality {
@@ -7,8 +8,7 @@ public class Speciality {
     private String id;
     private String name;
     private Faculty faculty;
-    private List<Year> years;
-
+    private List<Year> years = new ArrayList<>();
     public Speciality() {
     }
 

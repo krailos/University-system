@@ -1,11 +1,12 @@
 package ua.com.foxminded.krailo.university.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Department {
 
     private String name;
-    private List<Teacher> teachers;
+    private List<Teacher> teachers= new ArrayList<>();
 
     public Department() {
 

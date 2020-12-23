@@ -1,13 +1,14 @@
 package ua.com.foxminded.krailo.university.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Faculty {
 
     private String id;
     private String name;
-    private List<Department> departments;
-    private List<Speciality> specialities;
+    private List<Department> departments = new ArrayList<>();
+    private List<Speciality> specialities = new ArrayList<>();
     private DeansOffice deansOffice;
 
     public Faculty() {
@@ -62,6 +63,5 @@ public class Faculty {
     public String toString() {
 	return name;
     }
-
 
 }

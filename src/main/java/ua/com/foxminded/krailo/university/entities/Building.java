@@ -1,12 +1,13 @@
 package ua.com.foxminded.krailo.university.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Building {
 
     private String name;
     private String address;
-    private List<Audience> audiences;
+    private List<Audience> audiences = new ArrayList<>();
 
     public Building() {
     }

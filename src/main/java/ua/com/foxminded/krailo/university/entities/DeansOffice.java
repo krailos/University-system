@@ -1,5 +1,6 @@
 package ua.com.foxminded.krailo.university.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DeansOffice {
@@ -7,8 +8,8 @@ public class DeansOffice {
     private String name;
     private Faculty faculty;
     private UniversityOffice universityOffice;
-    private List<Timetable> timetables;
-    private List<Vocation> vocations;
+    private List<Timetable> timetables = new ArrayList<>();
+    private List<Vocation> vocations = new ArrayList<>();
 
     public DeansOffice() {
     }

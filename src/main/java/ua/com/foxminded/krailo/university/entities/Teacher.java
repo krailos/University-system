@@ -1,5 +1,6 @@
 package ua.com.foxminded.krailo.university.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,7 +11,7 @@ public class Teacher {
     private String lastName;
     private Date birthDate;
     private Department department;
-    private List<Subject> subjects;
+    private List<Subject> subjects = new ArrayList<>();
     private String phone;
     private String address;
     private String email;

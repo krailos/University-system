@@ -1,10 +1,8 @@
 package ua.com.foxminded.krailo.university.entities;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.print.attribute.standard.MediaSize.NA;
 
 public class Lesson {
 
@@ -13,7 +11,7 @@ public class Lesson {
     private Audience audience;
     private LessonTime lessonTime;
     private Teacher teacher;
-    private List<Group> groups;
+    private List<Group> groups = new ArrayList<>();
 
     public Lesson() {
     }

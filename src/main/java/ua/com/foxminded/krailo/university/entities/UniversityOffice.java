@@ -1,14 +1,15 @@
 package ua.com.foxminded.krailo.university.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UniversityOffice {
 
     private String name;
     private String address;
-    private List<Faculty> faculties;
-    private List<Building> building;
-    private List<Holiday> holidays;
+    private List<Faculty> faculties = new ArrayList<>();
+    private List<Building> building = new ArrayList<>();
+    private List<Holiday> holidays = new ArrayList<>();
 
 
     public UniversityOffice() {
