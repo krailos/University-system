@@ -38,7 +38,6 @@ public class Main {
 	System.out.println("example data for faculty with id=61 is loaded");
 	UniversityAdmin universityAdmin = new UniversityAdmin(app.universityOffice);
 	FacultyAdmin facultyAdmin = new FacultyAdmin(universityAdmin.getFacultyById("61"), universityAdmin);
-
 	Scanner scanner = new Scanner(System.in);
 	boolean exit = false;
 	while (exit != true) {
@@ -210,7 +209,7 @@ public class Main {
 		break;
 	    case 6:
 		System.out.println("enter rank");
-		Double rank = scanner.nextDouble();
+		String rank = scanner.next();
 		student.setRank(rank);
 		break;
 	    case 0:

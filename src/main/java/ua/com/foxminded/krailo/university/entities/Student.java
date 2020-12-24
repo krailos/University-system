@@ -15,7 +15,7 @@ public class Student {
     private String address;
     private String email;
     private Enum<Gender> gender;
-    private Double rank;
+    private String rank;
 
     public Student() {
     }
@@ -118,11 +118,11 @@ public class Student {
 	this.gender = gender;
     }
 
-    public Double getRank() {
+    public String getRank() {
 	return rank;
     }
 
-    public void setRank(Double rank) {
+    public void setRank(String rank) {
 	this.rank = rank;
     }
 
