@@ -115,7 +115,7 @@ public class Main {
 		break;
 	    case 2:
 		System.out.println("enter date use folowing date formatt d/mm/yyyy");
-		String studentsBirthDate = scanner.next();
+		String dateOfLesson = scanner.next();
 		System.out.println("enter subject name");
 		String subjectName = scanner.next();
 		System.out.println("enter building id");
@@ -126,8 +126,13 @@ public class Main {
 		String lesonNumber = scanner.next();
 		System.out.println("enter teacher id");
 		String teacherId = scanner.next();
-		
-		
+		Lesson lesson = facultyAdmin.createLesson(dateOfLesson, subjectName, buildingId, audienceName, lesonNumber, teacherId);
+		System.out.println("enter group name, from available:");
+		facultyAdmin.showGroupsNameByYearAndSpeciality(yearName, specialityId);
+		String groupName = scanner.next();
+		Group group = facultyAdmin.getGroupByNameAndSpecialityAndYear(groupName, specialityId, yearName);
+		facultyAdmin.addGroupToLesson(group, lesson);
+		timetable.getLessons().add(lesson);
 		break;
 	    case 0:
 		exitAddlessons=true;
@@ -137,11 +142,6 @@ public class Main {
 		break;
 	    }
 	}
-    }
-    
-    
-    private void addLesson (Scanner scanner, FacultyAdmin facultyAdmin) {
-	
     }
 
     private void deleteStudent(Scanner scanner, FacultyAdmin facultyAdmin) {
@@ -345,10 +345,10 @@ public class Main {
 	Building building = new Building("1", "Main building");
 	universityOffice.setBuildings(new ArrayList<>());
 	universityOffice.getBuildings().add(building);
-	Audience audience1 = new Audience("audience 1", building);
-	Audience audience2 = new Audience("audience 2", building);
-	Audience audience3 = new Audience("audience 3", building);
-	Audience audience4 = new Audience("audience 4", building);
+	Audience audience1 = new Audience("1", building);
+	Audience audience2 = new Audience("2", building);
+	Audience audience3 = new Audience("3", building);
+	Audience audience4 = new Audience("4", building);
 	building.setAudiences(new ArrayList<>());
 	building.getAudiences().add(audience1);
 	building.getAudiences().add(audience2);

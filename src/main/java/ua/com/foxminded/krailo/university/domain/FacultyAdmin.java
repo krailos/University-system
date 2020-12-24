@@ -40,6 +40,10 @@ public class FacultyAdmin {
     public void setUniversityAdmin(UniversityAdmin universityAdmin) {
 	this.universityAdmin = universityAdmin;
     }
+    
+    public void addGroupToLesson (Group group, Lesson lesson) {
+	lesson.getGroups().add(group);
+    }
 
     public Lesson createLesson(String dateOfLesson, String subjectName, String buildingId, String audienceName,
 	    String lessonTimeNumber, String teacherId) {
