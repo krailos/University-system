@@ -62,11 +62,11 @@ public class DeansOffice {
     }
 
     public LessonsTimeSchedule getLessonsTimeSchedule() {
-        return lessonsTimeSchedule;
+	return lessonsTimeSchedule;
     }
 
     public void setLessonsTimeSchedule(LessonsTimeSchedule lessonsTimeSchedule) {
-        this.lessonsTimeSchedule = lessonsTimeSchedule;
+	this.lessonsTimeSchedule = lessonsTimeSchedule;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package ua.com.foxminded.krailo.university.entities;
 
-import java.sql.Time;
 import java.time.LocalTime;
 
 public class LessonTime {
@@ -45,7 +44,7 @@ public class LessonTime {
 
     @Override
     public String toString() {
-	return "from: "+startTime+" - "+"to: "+endTime;
+	return "from: " + startTime + " - " + "to: " + endTime;
     }
 
 }

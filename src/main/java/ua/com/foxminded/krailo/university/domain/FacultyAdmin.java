@@ -40,8 +40,13 @@ public class FacultyAdmin {
     public void setUniversityAdmin(UniversityAdmin universityAdmin) {
 	this.universityAdmin = universityAdmin;
     }
-    
-    public void addGroupToLesson (Group group, Lesson lesson) {
+
+    public void showSubjectbySpecialityIdAndYearName(String specialityId, String yearName) {
+	Year year = getYearByYearNameAndSpecialityId(yearName, specialityId);
+	year.getSubjects().stream().forEach(s -> System.out.print(s.getName() + "; "));
+    }
+
+    public void addGroupToLesson(Group group, Lesson lesson) {
 	lesson.getGroups().add(group);
     }
 

@@ -114,25 +114,7 @@ public class Main {
 		System.out.println(facultyAdmin.showTimetable(timetable));
 		break;
 	    case 2:
-		System.out.println("enter date use folowing date formatt d/mm/yyyy");
-		String dateOfLesson = scanner.next();
-		System.out.println("enter subject name");
-		String subjectName = scanner.next();
-		System.out.println("enter building id");
-		String buildingId = scanner.next();
-		System.out.println("enter audience name");
-		String audienceName = scanner.next();
-		System.out.println("enter lesson number");
-		String lesonNumber = scanner.next();
-		System.out.println("enter teacher id");
-		String teacherId = scanner.next();
-		Lesson lesson = facultyAdmin.createLesson(dateOfLesson, subjectName, buildingId, audienceName, lesonNumber, teacherId);
-		System.out.println("enter group name, from available:");
-		facultyAdmin.showGroupsNameByYearAndSpeciality(yearName, specialityId);
-		String groupName = scanner.next();
-		Group group = facultyAdmin.getGroupByNameAndSpecialityAndYear(groupName, specialityId, yearName);
-		facultyAdmin.addGroupToLesson(group, lesson);
-		timetable.getLessons().add(lesson);
+		addLesson(scanner, facultyAdmin, specialityId, yearName, timetable);
 		break;
 	    case 0:
 		exitAddlessons=true;
@@ -144,6 +126,29 @@ public class Main {
 	}
     }
 
+    private void addLesson (Scanner scanner, FacultyAdmin facultyAdmin, String specialityId, String yearName, Timetable timetable ) {
+	System.out.println("enter date use folowing date formatt d/mm/yyyy");
+	String dateOfLesson = scanner.next();
+	System.out.println("enter subject name");
+	facultyAdmin.showSubjectbySpecialityIdAndYearName(specialityId, yearName);
+	String subjectName = scanner.next();
+	System.out.println("enter building id");
+	String buildingId = scanner.next();
+	System.out.println("enter audience name");
+	String audienceName = scanner.next();
+	System.out.println("enter lesson number");
+	String lesonNumber = scanner.next();
+	System.out.println("enter teacher id");
+	String teacherId = scanner.next();
+	Lesson lesson = facultyAdmin.createLesson(dateOfLesson, subjectName, buildingId, audienceName, lesonNumber, teacherId);
+	System.out.println("enter group name, from available:");
+	facultyAdmin.showGroupsNameByYearAndSpeciality(yearName, specialityId);
+	String groupName = scanner.next();
+	Group group = facultyAdmin.getGroupByNameAndSpecialityAndYear(groupName, specialityId, yearName);
+	facultyAdmin.addGroupToLesson(group, lesson);
+	timetable.getLessons().add(lesson);
+    }
+    
     private void deleteStudent(Scanner scanner, FacultyAdmin facultyAdmin) {
 	System.out.println("enter student id");
 	String studentsId = scanner.next();

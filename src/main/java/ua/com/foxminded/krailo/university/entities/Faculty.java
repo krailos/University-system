@@ -60,7 +60,6 @@ public class Faculty {
     public void setDeansOffice(DeansOffice deansOffice) {
 	this.deansOffice = deansOffice;
     }
-    
 
     @Override
     public String toString() {

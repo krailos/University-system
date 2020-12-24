@@ -11,7 +11,6 @@ public class UniversityOffice {
     private List<Building> buildings = new ArrayList<>();
     private List<Holiday> holidays = new ArrayList<>();
 
-
     public UniversityOffice() {
     }
 
@@ -19,7 +18,6 @@ public class UniversityOffice {
 	this.name = name;
     }
 
-    
     public String getName() {
 	return name;
     }
@@ -51,19 +49,18 @@ public class UniversityOffice {
     public void setHolidays(List<Holiday> holidays) {
 	this.holidays = holidays;
     }
-    
+
     public List<Building> getBuildings() {
-        return buildings;
+	return buildings;
     }
 
     public void setBuildings(List<Building> building) {
-        this.buildings = building;
+	this.buildings = building;
     }
 
     @Override
     public String toString() {
 	return name;
     }
- 
 
 }
