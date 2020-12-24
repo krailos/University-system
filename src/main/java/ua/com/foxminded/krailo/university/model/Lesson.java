@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.university.entities;
+package ua.com.foxminded.krailo.university.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

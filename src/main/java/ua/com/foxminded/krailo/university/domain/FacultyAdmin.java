@@ -5,19 +5,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import ua.com.foxminded.krailo.university.entities.Audience;
-import ua.com.foxminded.krailo.university.entities.Building;
-import ua.com.foxminded.krailo.university.entities.Faculty;
-import ua.com.foxminded.krailo.university.entities.Group;
-import ua.com.foxminded.krailo.university.entities.Lesson;
-import ua.com.foxminded.krailo.university.entities.LessonTime;
-import ua.com.foxminded.krailo.university.entities.Speciality;
-import ua.com.foxminded.krailo.university.entities.Student;
-import ua.com.foxminded.krailo.university.entities.Subject;
-import ua.com.foxminded.krailo.university.entities.Teacher;
-import ua.com.foxminded.krailo.university.entities.Timetable;
-import ua.com.foxminded.krailo.university.entities.Vocation;
-import ua.com.foxminded.krailo.university.entities.Year;
+import ua.com.foxminded.krailo.university.model.Audience;
+import ua.com.foxminded.krailo.university.model.Building;
+import ua.com.foxminded.krailo.university.model.Faculty;
+import ua.com.foxminded.krailo.university.model.Group;
+import ua.com.foxminded.krailo.university.model.Lesson;
+import ua.com.foxminded.krailo.university.model.LessonTime;
+import ua.com.foxminded.krailo.university.model.Speciality;
+import ua.com.foxminded.krailo.university.model.Student;
+import ua.com.foxminded.krailo.university.model.Subject;
+import ua.com.foxminded.krailo.university.model.Teacher;
+import ua.com.foxminded.krailo.university.model.Timetable;
+import ua.com.foxminded.krailo.university.model.Vocation;
+import ua.com.foxminded.krailo.university.model.Year;
 
 public class FacultyAdmin {
 

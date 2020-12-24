@@ -1,17 +1,18 @@
-package ua.com.foxminded.krailo.university.entities;
+package ua.com.foxminded.krailo.university.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Subject {
+public class Department {
 
     private String name;
-    private List<Teacher> teachers = new ArrayList<>();
+    private List<Teacher> teachers= new ArrayList<>();
 
-    public Subject() {
+    public Department() {
+
     }
 
-    public Subject(String name) {
+    public Department(String name) {
 	this.name = name;
     }
 
@@ -30,10 +31,13 @@ public class Subject {
     public void setTeachers(List<Teacher> teachers) {
 	this.teachers = teachers;
     }
-    
+
     @Override
     public String toString() {
-        return name;
+	return name;
     }
+    
+ 
+
 
 }

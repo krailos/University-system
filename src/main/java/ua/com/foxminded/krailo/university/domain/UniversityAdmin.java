@@ -3,10 +3,10 @@ package ua.com.foxminded.krailo.university.domain;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import ua.com.foxminded.krailo.university.entities.Building;
-import ua.com.foxminded.krailo.university.entities.Faculty;
-import ua.com.foxminded.krailo.university.entities.Holiday;
-import ua.com.foxminded.krailo.university.entities.UniversityOffice;
+import ua.com.foxminded.krailo.university.model.Building;
+import ua.com.foxminded.krailo.university.model.Faculty;
+import ua.com.foxminded.krailo.university.model.Holiday;
+import ua.com.foxminded.krailo.university.model.UniversityOffice;
 
 public class UniversityAdmin {
 
