@@ -4,12 +4,14 @@ public class Audience {
 
     private String name;
     private Integer capacity;
+    private Building building;
 
     public Audience() {
     }
 
-    public Audience(String name) {
+    public Audience(String name, Building building) {
 	this.name = name;
+	this.building = building;
     }
 
     public String getName() {
@@ -27,10 +29,18 @@ public class Audience {
     public void setCapacity(Integer capacity) {
 	this.capacity = capacity;
     }
-    
+
+    public Building getBuilding() {
+	return building;
+    }
+
+    public void setBuilding(Building building) {
+	this.building = building;
+    }
+
     @Override
     public String toString() {
-        return name;
+	return name;
     }
 
 }

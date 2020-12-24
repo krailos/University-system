@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Building {
 
+    private String id;
     private String name;
     private String address;
     private List<Audience> audiences = new ArrayList<>();
@@ -12,7 +13,8 @@ public class Building {
     public Building() {
     }
 
-    public Building(String name) {
+    public Building(String id, String name) {
+	this.id = id;
 	this.name = name;
     }
 
@@ -38,6 +40,14 @@ public class Building {
 
     public void setAudiences(List<Audience> audiences) {
 	this.audiences = audiences;
+    }
+
+    public String getId() {
+	return id;
+    }
+
+    public void setId(String id) {
+	this.id = id;
     }
 
     @Override

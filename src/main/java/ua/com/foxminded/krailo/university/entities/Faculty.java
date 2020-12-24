@@ -7,6 +7,7 @@ public class Faculty {
 
     private String id;
     private String name;
+    private UniversityOffice office;
     private List<Department> departments = new ArrayList<>();
     private List<Speciality> specialities = new ArrayList<>();
     private DeansOffice deansOffice;
@@ -14,9 +15,10 @@ public class Faculty {
     public Faculty() {
     }
 
-    public Faculty(String id, String name) {
+    public Faculty(String id, String name, UniversityOffice office) {
 	this.id = id;
 	this.name = name;
+	this.office = office;
     }
 
     public String getId() {
@@ -58,6 +60,7 @@ public class Faculty {
     public void setDeansOffice(DeansOffice deansOffice) {
 	this.deansOffice = deansOffice;
     }
+    
 
     @Override
     public String toString() {

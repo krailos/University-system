@@ -8,7 +8,7 @@ public class UniversityOffice {
     private String name;
     private String address;
     private List<Faculty> faculties = new ArrayList<>();
-    private List<Building> building = new ArrayList<>();
+    private List<Building> buildings = new ArrayList<>();
     private List<Holiday> holidays = new ArrayList<>();
 
 
@@ -52,12 +52,12 @@ public class UniversityOffice {
 	this.holidays = holidays;
     }
     
-    public List<Building> getBuilding() {
-        return building;
+    public List<Building> getBuildings() {
+        return buildings;
     }
 
-    public void setBuilding(List<Building> building) {
-        this.building = building;
+    public void setBuildings(List<Building> building) {
+        this.buildings = building;
     }
 
     @Override

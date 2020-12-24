@@ -9,6 +9,7 @@ public class DeansOffice {
     private Faculty faculty;
     private UniversityOffice universityOffice;
     private List<Timetable> timetables = new ArrayList<>();
+    private LessonsTimeSchedule lessonsTimeSchedule;
     private List<Vocation> vocations = new ArrayList<>();
 
     public DeansOffice() {
@@ -58,6 +59,14 @@ public class DeansOffice {
 
     public void setUniversityOffice(UniversityOffice universityOffice) {
 	this.universityOffice = universityOffice;
+    }
+
+    public LessonsTimeSchedule getLessonsTimeSchedule() {
+        return lessonsTimeSchedule;
+    }
+
+    public void setLessonsTimeSchedule(LessonsTimeSchedule lessonsTimeSchedule) {
+        this.lessonsTimeSchedule = lessonsTimeSchedule;
     }
 
     @Override
