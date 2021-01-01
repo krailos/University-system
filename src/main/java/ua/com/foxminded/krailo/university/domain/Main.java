@@ -17,6 +17,7 @@ public class Main {
 	HolidayDao holidayDao  = context.getBean(HolidayDao.class);
 	Holiday holiday = holidayDao.findById(1);
 	System.out.println(holiday);
+	System.out.println(holidayDao.findAll());
 	
     }
 

@@ -1,6 +1,7 @@
 package ua.com.foxminded.krailo.university.dao;
 
 import java.sql.ResultSet;
+import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,11 +15,11 @@ public class HolidayDao {
     private static final String SQL_SELECT_HOLIDAYS_BY_ID = "SELECT holiday_id, holiday_name, holiday_date  FROM holidays WHERE holiday_id = ?";
 
     private RowMapper<Holiday> holidayRowMapper = (ResultSet rs, int rowNum) -> {
-	    Holiday holiday = new Holiday();
-	    holiday.setId(rs.getInt("holiday_id"));
-	    holiday.setName(rs.getString("holiday_name"));
-	    holiday.setDate((rs.getDate("holiday_date").toLocalDate()));
-	    return holiday;
+	Holiday holiday = new Holiday();
+	holiday.setId(rs.getInt("holiday_id"));
+	holiday.setName(rs.getString("holiday_name"));
+	holiday.setDate((rs.getDate("holiday_date").toLocalDate()));
+	return holiday;
     };
 
     private JdbcTemplate jdbcTemplate;
@@ -35,5 +36,8 @@ public class HolidayDao {
 	return getJdbcTemplate().queryForObject(SQL_SELECT_HOLIDAYS_BY_ID, new Object[] { id }, holidayRowMapper);
     }
 
+    public List<Holiday> findAll() {
+	return getJdbcTemplate().query(SQL_SELECT_HOLIDAYS, holidayRowMapper);
+    }
 
 }
