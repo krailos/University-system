@@ -2,24 +2,34 @@ package ua.com.foxminded.krailo.university.model;
 
 public class Audience {
 
-    private String name;
-    private Integer capacity;
+    private String number;
     private Building building;
+    private Integer capacity;
+    private String description;
 
     public Audience() {
     }
 
-    public Audience(String name, Building building) {
-	this.name = name;
+    public Audience(String number, Building building) {
+	this.number = number;
 	this.building = building;
     }
 
-    public String getName() {
-	return name;
+    
+    public String getNumber() {
+        return number;
     }
 
-    public void setName(String name) {
-	this.name = name;
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Integer getCapacity() {
@@ -40,7 +50,7 @@ public class Audience {
 
     @Override
     public String toString() {
-	return name;
+	return description;
     }
 
 }
