@@ -19,6 +19,18 @@ public class Main {
 	System.out.println(holiday);
 	System.out.println(holidayDao.findAll());
 	
+//	Holiday holiday2 = new Holiday("Eater", LocalDate.of(2021, 05, 02));
+//	holidayDao.addHoliday(holiday2);
+	
+//	holidayDao.updateName("Christmas", 3);
+//	holidayDao.updateDate(LocalDate.of(2021, 01, 07), 3);
+
+//	holidayDao.deleteById(10);
+//	System.out.println(holidayDao.findAll());
+
+	
+	
+	
     }
 
 }
