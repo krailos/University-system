@@ -61,11 +61,11 @@ public class HolidayDao {
 	getNamedParameterJdbcTemplate().update(SQL_INSERT_HOLIDAY_NAMED_PARAMETERS, namedParameters);
     }
     
-    public void updateName (String name, int id) {
+    public void updateNameById (String name, int id) {
 	getJdbcTemplate().update(SQL_UPDATE_HOLIDAY_NAME_BY_ID, name, id);
     }
     
-    public void updateDate (LocalDate date , int id) {
+    public void updateDateById (LocalDate date , int id) {
  	getJdbcTemplate().update(SQL_UPDATE_HOLIDAY_DATE_BY_ID, Date.valueOf(date), id);
      }
 

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Building {
 
-    private String id;
+    private int id;
     private String name;
     private String address;
     private List<Audience> audiences = new ArrayList<>();
@@ -13,9 +13,9 @@ public class Building {
     public Building() {
     }
 
-    public Building(String id, String name) {
-	this.id = id;
+    public Building(String name, String address) {
 	this.name = name;
+	this.address = address;
     }
 
     public String getName() {
@@ -42,17 +42,17 @@ public class Building {
 	this.audiences = audiences;
     }
 
-    public String getId() {
+    public int getId() {
 	return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
 	this.id = id;
     }
 
     @Override
     public String toString() {
-	return name;
+	return id + "-" + name + "-" + address;
     }
 
 }
