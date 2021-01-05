@@ -6,19 +6,15 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ScriptRunnerDao {
 
+    @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    public JdbcTemplate getJdbcTemplate() {
-	return jdbcTemplate;
-    }
-
-    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-	this.jdbcTemplate = jdbcTemplate;
-    }
 
     public void runScript(String fileName) {
 	String sql = "";
@@ -30,7 +26,7 @@ public class ScriptRunnerDao {
 	} catch (URISyntaxException e) {
 	    e.printStackTrace();
 	}
-	getJdbcTemplate().execute(sql);
+	jdbcTemplate.execute(sql);
     }
 
 }
