@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.krailo.university.model.Audience;
+import ua.com.foxminded.krailo.university.model.Building;
 
 @Repository
 public class AudienceDao {
@@ -16,8 +17,19 @@ public class AudienceDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     
+    @Autowired
+    private AudienceRowMapper audienceRowMapper;
+    
+    @Autowired
+    private BuildingDao buildingDao;
+    
     public List<Audience> findAudiencesByBuildingId (int buildingId){
-	 return jdbcTemplate.query(SQL_SELECT_AUDIENCES_BY_BUILDING, new AudienceRowMapper(), buildingId);
+	 List<Audience> audiences = jdbcTemplate.query(SQL_SELECT_AUDIENCES_BY_BUILDING, audienceRowMapper, buildingId);
+	 Building building = buildingDao.findById(buildingId);
+	for (Audience audience : audiences) {
+	    audience.setBuilding(building);
+	} 
+	 return audiences;
     }
     
     

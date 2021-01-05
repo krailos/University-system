@@ -12,10 +12,10 @@ import ua.com.foxminded.krailo.university.util.PropertyLoader;
 
 @Configuration
 @ComponentScan(basePackages = "ua.com.foxminded.krailo.university")
-public class UniversityOfficeConfig { 
-    
+public class UniversityOfficeConfig {
+
     @Bean
-    public DataSource getDataSource () {
+    public DataSource getDataSource() {
 	DriverManagerDataSource dataSource = new DriverManagerDataSource();
 	dataSource.setDriverClassName(PropertyLoader.getProperties("jdbc.driver"));
 	dataSource.setUrl(PropertyLoader.getProperties("jdbc.url"));
@@ -23,10 +23,11 @@ public class UniversityOfficeConfig {
 	dataSource.setPassword(PropertyLoader.getProperties("jdbc.password"));
 	return dataSource;
     }
-    
+
     @Bean
-    public JdbcTemplate getJdbcTemplate (DataSource dataSource) {
-	return new JdbcTemplate(dataSource);
+    public JdbcTemplate getJdbcTemplate(DataSource dataSource) {
+	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+	return jdbcTemplate;
     }
-        
+
 }
