@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-	<BUILDINGS building_id='1' building_name='Building 1' building_address='Address 1'/>
-	<BUILDINGS building_id='2' building_name='Building 2' building_address='Address 2'/>
-	<BUILDINGS building_id='3' building_name='Building 3' building_address='Address 3'/>
+	<BUILDINGS_ADD building_id='1' building_name='Building 1' building_address='Address 1'/>
+	<BUILDINGS_ADD building_id='2' building_name='Building 2' building_address='Address 2'/>
+	<BUILDINGS_ADD building_id='3' building_name='Building 3' building_address='Address 3'/>
+	<BUILDINGS_DELETE building_id='1' building_name='Building 1' building_address='Address 1'/>
+	<BUILDINGS_DELETE building_id='2' building_name='Building 2' building_address='Address 2'/>
+	<AUDIENCES_ADD audience_id='1' audience_number='1' building_id='1' audience_capacity='300' audience_description='description1'/>
+	<AUDIENCES_ADD audience_id='2' audience_number='1' building_id='2' audience_capacity='120' audience_description='description1'/>
+	<AUDIENCES_ADD audience_id='3' audience_number='2' building_id='2' audience_capacity='120' audience_description='description2'/>
+	<AUDIENCES_ADD audience_id='4' audience_number='3' building_id='2' audience_capacity='120' audience_description='description3'/>
 </dataset>

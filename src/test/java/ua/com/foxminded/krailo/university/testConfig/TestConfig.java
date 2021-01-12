@@ -9,17 +9,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
+import ua.com.foxminded.krailo.university.dao.AudienceDao;
 import ua.com.foxminded.krailo.university.dao.BuildingDao;
 
 @Configuration
 @ComponentScan("ua.com.foxminded.krailo.university")
 public class TestConfig {
  
-    @Bean
-    public BuildingDao getBuildingDao() {
-	return new BuildingDao();
-    }
-    
     @Bean
     public DataSource getDataSource() {
 	return new EmbeddedDatabaseBuilder().generateUniqueName(true).setType(EmbeddedDatabaseType.H2)
@@ -30,6 +26,16 @@ public class TestConfig {
     public JdbcTemplate getJdbcTemplate(DataSource dataSource) {
 	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 	return jdbcTemplate;
+    }
+    
+    @Bean
+    public BuildingDao getBuildingDao() {
+	return new BuildingDao();
+    }
+    
+    @Bean
+    public AudienceDao getAudienceDao () {
+	return new AudienceDao();
     }
         
 }

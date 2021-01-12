@@ -19,14 +19,15 @@ import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Building;
 import ua.com.foxminded.krailo.university.testConfig.TestConfig;
 
 @SpringJUnitConfig(TestConfig.class)
-class BuildingDaoTest extends DataSourceBasedDBTestCase {
+class AudienceDaoTest extends DataSourceBasedDBTestCase {
 
     @Autowired
-    private BuildingDao buildingDao;
+    private AudienceDao audienceDao;
     @Autowired
     private DataSource dataSource;
     private IDataSet iDataSet;
@@ -53,39 +54,21 @@ class BuildingDaoTest extends DataSourceBasedDBTestCase {
     }
 
     @Test
-    void givenNewBulding_whenAdd_thanAdded() throws Exception {
-	Building building = new Building("Building 3", "Address 3");
-	buildingDao.addBuilding(building);
-	ITable expected = getDataSet().getTable("BUILDINGS_ADD");
-	ITable actual = getConnection().createDataSet().getTable("BUILDINGS");
+    void givenNewAudience_whenAdd_thanAdded() throws Exception {
+	Audience audience = new Audience(4, "3", new Building(2,"name", "address"), 120, "description3");
+	audienceDao.addAudience(audience);
+	ITable expected = getDataSet().getTable("AUDIENCES_ADD");
+	ITable actual = getConnection().createDataSet().getTable("AUDIENCES");
 	Assertion.assertEquals(expected, actual);
     }
-
+    
     @Test
-    void givenId_whenFind_thanFinded() {
+    void givenBuildingId_whenFind_thanFinded () {
 	Building building = new Building(1, "Building 1", "Address 1");
-	Building expected = building;
-	Building actual = buildingDao.findById(1);
+	List<Audience> audiences = Arrays.asList(new Audience(1, "1", building, 300, "description1"));
+	List<Audience> expected = audiences;
+	List<Audience> actual = audienceDao.findAudiencesByBuildingId(1);
 	assertEquals(expected, actual);
     }
-
-    @Test
-    void givenBuildingsTable_whenFindAll_thanFinded() {
-	List<Building> buildings = Arrays.asList(new Building(1, "Building 1", "Address 1"),
-		new Building(2, "Building 2", "Address 2"));
-	List<Building> expected = buildings;
-	List<Building> actual = buildingDao.findAll();
-	assertEquals(expected, actual);
-    }
-    
-    @Test
-    void givenId_whenDelete_thanDeleted() throws Exception {
-	buildingDao.deleteById(3);
-	ITable expected = getDataSet().getTable("BUILDINGS_DELETE");
-	ITable actual = getConnection().createDataSet().getTable("BUILDINGS");
-	Assertion.assertEquals(expected, actual);
-    }
-    
-    
 
 }
