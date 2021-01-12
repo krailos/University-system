@@ -43,7 +43,7 @@ public class AudienceDao {
 	return audiences;
     }
 
-    public List<Audience> findAllAudiences() {
+    public List<Audience> findAll() {
 	return jdbcTemplate.query(SQL_SELECT_ALL_AUDIENCES, audienceRowMapper);
     }
 
@@ -55,5 +55,5 @@ public class AudienceDao {
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
     }
-
+ 
 }

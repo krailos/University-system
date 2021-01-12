@@ -1,3 +1,6 @@
+INSERT INTO holidays (holiday_id, holiday_name, holiday_date) VALUES
+('1', 'Holiday 1', DATE '2021-01-01'),
+('2', 'Holiday 2', DATE '2021-01-07');
 
 INSERT INTO buildings (building_id, building_name, building_address) VALUES 
 ('1', 'Building 1', 'Address 1'),

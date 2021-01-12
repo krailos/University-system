@@ -27,7 +27,7 @@ public class Main {
 	AudienceDao audienceDao = context.getBean(AudienceDao.class);
 	System.out.println(audienceDao.findAudiencesByBuildingId(2));
 	System.out.println(buildingDao.findById(2).getAudiences());
-	System.out.println(audienceDao.findAllAudiences());
+	System.out.println(audienceDao.findAll());
 	
 	Audience audience = audienceDao.findById(1);
 	System.out.println(audience);

@@ -51,7 +51,7 @@ class BuildingDaoTest extends DataSourceBasedDBTestCase {
 	populator.addScript(new ClassPathResource("dataTest.sql"));
 	DatabasePopulatorUtils.execute(populator, dataSource);
     }
-
+ 
     @Test
     void givenNewBulding_whenAdd_thanAdded() throws Exception {
 	Building building = new Building("Building 3", "Address 3");

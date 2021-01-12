@@ -21,7 +21,7 @@ public class HolidayDao {
     private static final String SQL_UPDATE_HOLIDAY_NAME_BY_ID = "UPDATE holidays SET holiday_name = ? WHERE holiday_id = ?";
     private static final String SQL_UPDATE_HOLIDAY_DATE_BY_ID = "UPDATE holidays SET holiday_date = ? WHERE holiday_id = ?";
     private static final String SQL_DELETE_HOLIDAY_BY_ID = "DELETE FROM holidays WHERE holiday_id = ?";
-
+ 
     private RowMapper<Holiday> holidayRowMapper = (ResultSet rs, int rowNum) -> {
 	Holiday holiday = new Holiday();
 	holiday.setId(rs.getInt("holiday_id"));
@@ -40,7 +40,7 @@ public class HolidayDao {
 	return jdbcTemplate.query(SQL_SELECT_HOLIDAYS, holidayRowMapper);
     }
 
-    public void createHoliday(Holiday holiday) {
+    public void addHoliday(Holiday holiday) {
 	jdbcTemplate.update(SQL_INSERT_HOLIDAY, holiday.getName(), Date.valueOf(holiday.getDate()));
     }
 

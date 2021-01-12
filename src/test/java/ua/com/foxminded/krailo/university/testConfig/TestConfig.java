@@ -11,6 +11,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import ua.com.foxminded.krailo.university.dao.AudienceDao;
 import ua.com.foxminded.krailo.university.dao.BuildingDao;
+import ua.com.foxminded.krailo.university.dao.HolidayDao;
 
 @Configuration
 @ComponentScan("ua.com.foxminded.krailo.university")
@@ -36,6 +37,11 @@ public class TestConfig {
     @Bean
     public AudienceDao getAudienceDao () {
 	return new AudienceDao();
+    }
+    
+    @Bean
+    public HolidayDao getHolidayDao () {
+	return new HolidayDao();
     }
         
 }

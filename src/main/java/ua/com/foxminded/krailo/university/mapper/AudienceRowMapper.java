@@ -22,3 +22,4 @@ public class AudienceRowMapper implements RowMapper<Audience> {
     }
 
 }
+ 
