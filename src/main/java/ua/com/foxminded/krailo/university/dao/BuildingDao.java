@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import ua.com.foxminded.krailo.university.mapper.BuildingRowMapper;
 import ua.com.foxminded.krailo.university.model.Building;
 
 @Repository
@@ -18,7 +19,7 @@ public class BuildingDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    
+     
     @Autowired
     private BuildingRowMapper buildingRowMapper;
     
@@ -32,7 +33,7 @@ public class BuildingDao {
     }
 
     public void addBuilding(Building building) {
-	jdbcTemplate.update(SQL_INSERT_BUILDING, building.getName(), building.getAudiences());
+	jdbcTemplate.update(SQL_INSERT_BUILDING, building.getName(), building.getAddress());
     }
 
     public void deleteById(int id) {

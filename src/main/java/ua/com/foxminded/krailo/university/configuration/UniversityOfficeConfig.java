@@ -11,7 +11,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import ua.com.foxminded.krailo.university.util.PropertyLoader;
 
 @Configuration
-@ComponentScan(basePackages = "ua.com.foxminded.krailo.university")
+@ComponentScan("ua.com.foxminded.krailo.university")
 public class UniversityOfficeConfig {
 
     @Bean

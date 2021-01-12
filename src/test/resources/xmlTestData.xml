@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<BUILDINGS building_id='1' building_name='Building 1' building_address='Address 1'/>
+	<BUILDINGS building_id='2' building_name='Building 2' building_address='Address 2'/>
+	<BUILDINGS building_id='3' building_name='Building 3' building_address='Address 3'/>
+</dataset>
