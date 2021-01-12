@@ -20,7 +20,7 @@ public class DeansOffice {
 	this.faculty = faculty;
 	this.universityOffice = universityOffice;
     }
-
+ 
     public String getName() {
 	return name;
     }

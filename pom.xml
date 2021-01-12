@@ -16,6 +16,8 @@
 		<spring-context.version>5.1.5.RELEASE</spring-context.version>
 		<spring-test.version>5.1.5.RELEASE</spring-test.version>
 		<dbunit.version>2.7.0</dbunit.version>
+		<slf4j.version>2.0.0-alpha1</slf4j.version>
+		<slf4j-simple.version>2.0.0-alpha1</slf4j-simple.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -65,6 +67,17 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<version>${spring-test.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${slf4j-simple.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

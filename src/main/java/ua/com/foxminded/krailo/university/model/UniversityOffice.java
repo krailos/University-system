@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UniversityOffice {
-
+ 
     private String name;
     private String address;
     private List<Faculty> faculties = new ArrayList<>();

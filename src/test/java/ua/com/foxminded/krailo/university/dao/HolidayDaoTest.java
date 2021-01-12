@@ -14,6 +14,8 @@ import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
@@ -25,6 +27,8 @@ import ua.com.foxminded.krailo.university.testConfig.TestConfig;
 
 @SpringJUnitConfig(TestConfig.class)
 class HolidayDaoTest extends DataSourceBasedDBTestCase {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(HolidayDaoTest.class);
 
     @Autowired
     private HolidayDao holidayDao;
@@ -83,18 +87,20 @@ class HolidayDaoTest extends DataSourceBasedDBTestCase {
 	ITable actual = getConnection().createDataSet().getTable("holidays");
 	Assertion.assertEquals(expected, actual);
     }
-    
+
     @Test
     void givenNameAndId_whenUpdeteName_thanUpdated() throws Exception {
-	holidayDao.updateNameById("Holiday update", 1);;
+	holidayDao.updateNameById("Holiday update", 1);
+	;
 	ITable expected = getDataSet().getTable("HOLIDAYS_UPDATE_NAME");
 	ITable actual = getConnection().createDataSet().getTable("holidays");
 	Assertion.assertEquals(expected, actual);
     }
-    
+
     @Test
     void givendATEAndId_whenUpdetedATE_thanUpdated() throws Exception {
-	holidayDao.updateDateById(LocalDate.of(2021, 01,  02), 1);;
+	holidayDao.updateDateById(LocalDate.of(2021, 01, 02), 2);
+	;
 	ITable expected = getDataSet().getTable("HOLIDAYS_UPDATE_DATE");
 	ITable actual = getConnection().createDataSet().getTable("holidays");
 	Assertion.assertEquals(expected, actual);

@@ -5,8 +5,9 @@ import java.util.List;
 
 public class Department {
 
+    private int id;
     private String name;
-    private List<Teacher> teachers= new ArrayList<>();
+    private List<Teacher> teachers = new ArrayList<>();
 
     public Department() {
 
@@ -14,6 +15,14 @@ public class Department {
 
     public Department(String name) {
 	this.name = name;
+    }
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
     }
 
     public String getName() {
@@ -36,8 +45,5 @@ public class Department {
     public String toString() {
 	return name;
     }
-    
- 
-
 
 }

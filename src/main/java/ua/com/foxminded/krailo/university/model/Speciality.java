@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Speciality {
 
-    private String id;
+    private String id; 
     private String name;
     private Faculty faculty;
     private List<Year> years = new ArrayList<>();

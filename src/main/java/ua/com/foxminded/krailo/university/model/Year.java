@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Year {
 
+    private int id;
     private String name;
     private Speciality speciality;
     private List<Subject> subjects = new ArrayList<>();
@@ -17,6 +18,14 @@ public class Year {
     public Year(String name, Speciality speciality) {
 	this.name = name;
 	this.speciality = speciality;
+    }
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
     }
 
     public String getName() {
