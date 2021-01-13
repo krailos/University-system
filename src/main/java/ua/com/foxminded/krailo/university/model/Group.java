@@ -8,16 +8,14 @@ public class Group {
     private int id;
     private String name;
     private Year year;
-    private Speciality speciality;
     private List<Student> students = new ArrayList<>();
 
     public Group() {
     }
 
-    public Group(String name, Year year, Speciality speciality) {
+    public Group(String name, Year year) {
 	this.name = name;
 	this.year = year;
-	this.speciality = speciality;
     }
 
     public int getId() {
@@ -44,14 +42,6 @@ public class Group {
 	this.year = year;
     }
 
-    public Speciality getSpeciality() {
-	return speciality;
-    }
-
-    public void setSpeciality(Speciality speciality) {
-	this.speciality = speciality;
-    }
-
     public List<Student> getStudents() {
 	return students;
     }
@@ -70,7 +60,6 @@ public class Group {
 	final int prime = 31;
 	int result = 1;
 	result = prime * result + ((name == null) ? 0 : name.hashCode());
-	result = prime * result + ((speciality == null) ? 0 : speciality.hashCode());
 	result = prime * result + ((students == null) ? 0 : students.hashCode());
 	result = prime * result + ((year == null) ? 0 : year.hashCode());
 	return result;
@@ -89,11 +78,6 @@ public class Group {
 	    if (other.name != null)
 		return false;
 	} else if (!name.equals(other.name))
-	    return false;
-	if (speciality == null) {
-	    if (other.speciality != null)
-		return false;
-	} else if (!speciality.equals(other.speciality))
 	    return false;
 	if (students == null) {
 	    if (other.students != null)

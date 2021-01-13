@@ -5,11 +5,12 @@ import java.util.List;
 
 public class DeansOffice {
 
+    private int id;
     private String name;
-    private Faculty faculty;
     private UniversityOffice universityOffice;
+    private List<Faculty> faculties;
     private List<Timetable> timetables = new ArrayList<>();
-    private LessonsTimeSchedule lessonsTimeSchedule;
+    private List<LessonsTimeSchedule> lessonsTimeSchedules;
     private List<Vocation> vocations = new ArrayList<>();
 
     public DeansOffice() {
@@ -17,24 +18,30 @@ public class DeansOffice {
 
     public DeansOffice(String name, Faculty faculty, UniversityOffice universityOffice) {
 	this.name = name;
-	this.faculty = faculty;
-	this.universityOffice = universityOffice;
     }
- 
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
+    }
+
+    public List<Faculty> getFaculties() {
+	return faculties;
+    }
+
+    public void setFaculties(List<Faculty> faculties) {
+	this.faculties = faculties;
+    }
+
     public String getName() {
 	return name;
     }
 
     public void setName(String name) {
 	this.name = name;
-    }
-
-    public Faculty getFaculty() {
-	return faculty;
-    }
-
-    public void setFaculty(Faculty faculty) {
-	this.faculty = faculty;
     }
 
     public List<Timetable> getTimetables() {
@@ -61,12 +68,12 @@ public class DeansOffice {
 	this.universityOffice = universityOffice;
     }
 
-    public LessonsTimeSchedule getLessonsTimeSchedule() {
-	return lessonsTimeSchedule;
+    public List<LessonsTimeSchedule> getLessonsTimeSchedules() {
+	return lessonsTimeSchedules;
     }
 
-    public void setLessonsTimeSchedule(LessonsTimeSchedule lessonsTimeSchedule) {
-	this.lessonsTimeSchedule = lessonsTimeSchedule;
+    public void setLessonsTimeSchedules(List<LessonsTimeSchedule> lessonsTimeSchedules) {
+	this.lessonsTimeSchedules = lessonsTimeSchedules;
     }
 
     @Override

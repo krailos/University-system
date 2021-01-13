@@ -20,7 +20,7 @@ public class Year {
 	this.speciality = speciality;
     }
 
-    public int getId() {
+    public int getId() { 
 	return id;
     }
 

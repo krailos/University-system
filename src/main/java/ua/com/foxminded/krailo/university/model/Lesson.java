@@ -12,6 +12,7 @@ public class Lesson {
     private Audience audience;
     private LessonTime lessonTime;
     private Teacher teacher;
+    private Timetable timetable;
     private List<Group> groups = new ArrayList<>();
 
     public Lesson() {
@@ -73,6 +74,14 @@ public class Lesson {
 	this.teacher = teacher;
     }
 
+    public Timetable getTimetable() {
+	return timetable;
+    }
+
+    public void setTimetable(Timetable timetable) {
+	this.timetable = timetable;
+    }
+
     public List<Group> getGroups() {
 	return groups;
     }
@@ -83,7 +92,7 @@ public class Lesson {
 
     @Override
     public String toString() {
-	return lessonTime.getLesson() + " " + subject + " " + lessonTime + " " + audience + " " + teacher;
+	return lessonTime.getLessonOrder() + " " + subject + " " + lessonTime + " " + audience + " " + teacher;
     }
 
 }

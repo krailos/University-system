@@ -6,7 +6,7 @@ import java.util.List;
 public class Speciality {
 
     private String id; 
-    private String name;
+    private String name; 
     private Faculty faculty;
     private List<Year> years = new ArrayList<>();
     public Speciality() {
@@ -16,7 +16,7 @@ public class Speciality {
 	this.id = id;
 	this.name = name;
 	this.faculty = faculty;
-    }
+    } 
 
     public String getId() {
 	return id;

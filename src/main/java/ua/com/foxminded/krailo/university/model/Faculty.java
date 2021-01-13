@@ -12,7 +12,7 @@ public class Faculty {
     private List<Speciality> specialities = new ArrayList<>();
     private DeansOffice deansOffice;
 
-    public Faculty() {
+    public Faculty() { 
     }
 
     public Faculty(int id, String name, UniversityOffice office) {
