@@ -7,7 +7,7 @@ public class Holiday {
     private int id;
     private String name;
     private LocalDate date;
-
+ 
     public Holiday() {
     }
 

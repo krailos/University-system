@@ -5,8 +5,9 @@ import java.util.List;
 
 public class Group {
 
+    private int id;
     private String name;
-    private Year year; 
+    private Year year;
     private Speciality speciality;
     private List<Student> students = new ArrayList<>();
 
@@ -17,6 +18,14 @@ public class Group {
 	this.name = name;
 	this.year = year;
 	this.speciality = speciality;
+    }
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
     }
 
     public String getName() {

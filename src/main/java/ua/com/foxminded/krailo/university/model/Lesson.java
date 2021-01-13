@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Lesson {
 
+    private int id;
     private LocalDate date;
     private Subject subject;
     private Audience audience;
@@ -22,6 +23,14 @@ public class Lesson {
 	this.audience = audience;
 	this.lessonTime = lessonTime;
 	this.teacher = teacher;
+    }
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
     }
 
     public LocalDate getDate() {
@@ -74,7 +83,7 @@ public class Lesson {
 
     @Override
     public String toString() {
-	return lessonTime.getLessonNumber() + " " + subject + " " + lessonTime + " " + audience + " " + teacher;
+	return lessonTime.getLesson() + " " + subject + " " + lessonTime + " " + audience + " " + teacher;
     }
 
 }

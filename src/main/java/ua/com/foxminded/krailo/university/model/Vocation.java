@@ -4,8 +4,9 @@ import java.time.LocalDate;
 
 public class Vocation {
 
+    private int id;
     private String kind;
-    private LocalDate applayingDate;
+    private LocalDate applyingDate;
     private Teacher teacher;
     private LocalDate start;
     private LocalDate end;
@@ -13,13 +14,37 @@ public class Vocation {
     public Vocation() {
     }
 
-    public Vocation(String kind, LocalDate applayingDate, Teacher teacher, LocalDate startVocation,
+    public Vocation(String kind, LocalDate applyingDate, Teacher teacher, LocalDate startVocation,
 	    LocalDate endVocation) {
 	this.kind = kind;
-	this.applayingDate = applayingDate;
+	this.applyingDate = applyingDate;
 	this.teacher = teacher;
 	this.start = startVocation;
 	this.end = endVocation;
+    }
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
+    }
+
+    public LocalDate getStart() {
+	return start;
+    }
+
+    public void setStart(LocalDate start) {
+	this.start = start;
+    }
+
+    public LocalDate getEnd() {
+	return end;
+    }
+
+    public void setEnd(LocalDate end) {
+	this.end = end;
     }
 
     public String getKind() {
@@ -30,12 +55,12 @@ public class Vocation {
 	this.kind = kind;
     }
 
-    public LocalDate getApplayingDate() {
-	return applayingDate;
+    public LocalDate getApplyingDate() {
+	return applyingDate;
     }
 
-    public void setApplayingDate(LocalDate applayingDate) {
-	this.applayingDate = applayingDate;
+    public void setApplyingDate(LocalDate applyingDate) {
+	this.applyingDate = applyingDate;
     }
 
     public Teacher getTeacher() {
@@ -46,25 +71,9 @@ public class Vocation {
 	this.teacher = teacher;
     }
 
-    public LocalDate getStartVocation() {
-	return start;
-    }
-
-    public void setStartVocation(LocalDate startVocation) {
-	this.start = startVocation;
-    }
-
-    public LocalDate getEndVocation() {
-	return end;
-    }
-
-    public void setEndVocation(LocalDate endVocation) {
-	this.end = endVocation;
-    }
-    
     @Override
     public String toString() {
-        return teacher.toString() + " " + kind + " from " + start + " till " + end;
+	return teacher.toString() + " " + kind + " from " + start + " till " + end;
     }
 
 }

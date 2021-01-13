@@ -4,7 +4,8 @@ import java.time.LocalDate;
 
 public class Student {
 
-    private String id;
+    private int id;
+    private String studentId;
     private String firstName;
     private String lastName;
     private LocalDate birthDate;
@@ -20,9 +21,8 @@ public class Student {
     public Student() {
     }
 
-    public Student(String id, String firstName, String lastName, Faculty faculty, Speciality speciality) {
-	super();
-	this.id = id;
+    public Student(String studentsId, String firstName, String lastName, Faculty faculty, Speciality speciality) {
+	this.studentId = studentsId;
 	this.firstName = firstName;
 	this.lastName = lastName;
 	this.faculty = faculty;
@@ -30,12 +30,20 @@ public class Student {
 	this.group = group;
     }
 
-    public String getId() {
+    public int getId() {
 	return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
 	this.id = id;
+    }
+
+    public String getStudentId() {
+	return studentId;
+    }
+
+    public void setStudentId(String id) {
+	this.studentId = id;
     }
 
     public String getFirstName() {
@@ -128,9 +136,9 @@ public class Student {
 
     @Override
     public String toString() {
-	return "Student [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", birthDate=" + birthDate
-		+ ", faculty=" + faculty + ", speciality=" + speciality + ", group=" + group + ", phone=" + phone
-		+ ", address=" + address + ", email=" + email + ", gender=" + gender + ", rank=" + rank + "]";
+	return "Student [id=" + studentId + ", firstName=" + firstName + ", lastName=" + lastName + ", birthDate="
+		+ birthDate + ", faculty=" + faculty + ", speciality=" + speciality + ", group=" + group + ", phone="
+		+ phone + ", address=" + address + ", email=" + email + ", gender=" + gender + ", rank=" + rank + "]";
     }
 
 }

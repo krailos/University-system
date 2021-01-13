@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Timetable {
 
+    private int id;
     private String name;
     private Speciality speciality;
     private Year year;
@@ -17,6 +18,14 @@ public class Timetable {
 	this.name = name;
 	this.speciality = speciality;
 	this.year = year;
+    }
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
     }
 
     public String getName() {

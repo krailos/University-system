@@ -8,6 +8,18 @@ DROP TABLE IF EXISTS departments CASCADE;
 DROP TABLE IF EXISTS faculties CASCADE;
 DROP TABLE IF EXISTS specialities CASCADE;
 DROP TABLE IF EXISTS years CASCADE;
+DROP TABLE IF EXISTS groups CASCADE;
+DROP TABLE IF EXISTS lesson_times CASCADE;
+DROP TABLE IF EXISTS students CASCADE;
+DROP TABLE IF EXISTS subjects CASCADE;
+DROP TABLE IF EXISTS teachers CASCADE;
+DROP TABLE IF EXISTS timetables CASCADE;
+DROP TABLE IF EXISTS teachers CASCADE;
+DROP TABLE IF EXISTS vocations CASCADE;
+DROP TABLE IF EXISTS lessons CASCADE;
+
+DROP TYPE gender CASCADE;
+CREATE TYPE gender AS enum ('male', 'female');
 
 CREATE TABLE holidays (
 	holiday_id serial NOT NULL,
@@ -83,5 +95,85 @@ CREATE TABLE years (
 	CONSTRAINT years__pkey PRIMARY KEY (year_id)
 );
 
+CREATE TABLE groups (
+	group_id serial NOT NULL,
+	group_name character varying (50) NOT NULL,
+	year_id int REFERENCES years (year_id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	speciality_id int REFERENCES specialities (speciality_id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	CONSTRAINT groups__pkey PRIMARY KEY (group_id)
+);
 
+CREATE TABLE lesson_times (
+	lesson_time_id serial NOT NULL,
+	lesson_time_lesson character varying (50) NOT NULL,
+	lesson_time_starttime time NOT NULL,
+	lesson_time_endtime time NOT NULL,
+	lessons_timeschedule_id int REFERENCES lessons_timeschedule (lessons_timeschedule_id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	CONSTRAINT lesson_times__pkey PRIMARY KEY (lesson_time_id)
+);
 
+CREATE TABLE students (
+	student_id serial NOT NULL,
+	student_studentid character varying (50) NOT NULL,
+	student_first_name character varying (50) NOT NULL,
+	student_last_name character varying (50) NOT NULL,
+	student_birthday date NOT NULL,
+	student_phone character varying (50) NOT NULL,
+	student_address character varying (50) NOT NULL,
+	student_email character varying (50) NOT NULL,
+	student_rank character varying (50) NOT NULL,	
+	speciality_id int REFERENCES specialities (speciality_id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	faculty_id int REFERENCES faculties (faculty_id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	group_id int REFERENCES groups (group_id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	student_gender gender,
+	CONSTRAINT students__pkey PRIMARY KEY (student_id)
+);
+
+CREATE TABLE subjects (
+	subject_id serial NOT NULL,
+	subject_name character varying (50) NOT NULL,
+	CONSTRAINT subjects__pkey PRIMARY KEY (subject_id)
+);
+
+CREATE TABLE teachers (
+	teacher_id serial NOT NULL,
+	teacher_teacherid character varying (50) NOT NULL,
+	teacher_first_name character varying (50) NOT NULL,
+	teacher_last_name character varying (50) NOT NULL,
+	teacher_birthday date NOT NULL,
+	teacher_phone character varying (50) NOT NULL,
+	teacher_address character varying (50) NOT NULL,
+	teacher_email character varying (50) NOT NULL,
+	teacher_degree character varying (50) NOT NULL,	
+	department_id int REFERENCES departments (department_id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	teacher_gender gender,
+	CONSTRAINT teachets__pkey PRIMARY KEY (teacher_id)
+);
+
+CREATE TABLE timetables (
+	timetable_id serial NOT NULL,
+	timetable_name character varying (50) NOT NULL,
+	speciality_id int REFERENCES specialities (speciality_id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	year_id int REFERENCES years (year_id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	CONSTRAINT timetables__pkey PRIMARY KEY (timetable_id)
+);
+
+CREATE TABLE vocations (
+	vocation_id serial NOT NULL,
+	vocation_kind character varying (50) NOT NULL,
+	vocation_applyingDate date NOT NULL,
+	vocation_start date NOT NULL,
+	vocation_end date NOT NULL,
+	teacher_id int REFERENCES teachers (teacher_id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	CONSTRAINT teachers__pkey PRIMARY KEY (teacher_id)
+);
+
+CREATE TABLE lessons (
+	lesson_id serial NOT NULL,
+	lesson_date date NOT NULL,
+	teacher_id int REFERENCES teachers (teacher_id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	subject_id int REFERENCES subjects (subject_id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	audience_id int REFERENCES audiences (audience_id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	lesson_time_id int REFERENCES lesson_times (lesson_time_id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	CONSTRAINT lessons__pkey PRIMARY KEY (lesson_id)
+);

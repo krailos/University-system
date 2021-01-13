@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Subject {
 
+    private int id; 
     private String name;
     private List<Teacher> teachers = new ArrayList<>();
 
@@ -13,6 +14,14 @@ public class Subject {
 
     public Subject(String name) {
 	this.name = name;
+    }
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
     }
 
     public String getName() {
@@ -30,10 +39,10 @@ public class Subject {
     public void setTeachers(List<Teacher> teachers) {
 	this.teachers = teachers;
     }
-    
+
     @Override
     public String toString() {
-        return name;
+	return name;
     }
 
 }

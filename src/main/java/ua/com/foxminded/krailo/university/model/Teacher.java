@@ -6,7 +6,8 @@ import java.util.List;
 
 public class Teacher {
 
-    private String id;
+    private int id;
+    private String teacherId;
     private String firstName;
     private String lastName;
     private Date birthDate;
@@ -21,18 +22,26 @@ public class Teacher {
     public Teacher() {
     }
 
-    public Teacher(String id, String firstName, String lastName) {
-	this.id = id;
+    public Teacher(String teacherId, String firstName, String lastName) {
+	this.teacherId = teacherId;
 	this.firstName = firstName;
 	this.lastName = lastName;
     }
 
-    public String getId() {
+    public int getId() {
 	return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
 	this.id = id;
+    }
+
+    public String getTeacherId() {
+	return teacherId;
+    }
+
+    public void setTeacherId(String id) {
+	this.teacherId = id;
     }
 
     public String getFirstName() {

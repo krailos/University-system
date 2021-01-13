@@ -4,26 +4,36 @@ import java.time.LocalTime;
 
 public class LessonTime {
 
-    private String lessonNumber;
+    private int id;
+    private String lesson;
     private LocalTime startTime;
     private LocalTime endTime;
+    private LessonsTimeSchedule lessonsTimeSchedule;
 
     public LessonTime() {
     }
 
-    public LessonTime(String lessonNumber, LocalTime startTime, LocalTime endTime) {
+    public LessonTime(String lesson, LocalTime startTime, LocalTime endTime) {
 	super();
-	this.lessonNumber = lessonNumber;
+	this.lesson = lesson;
 	this.startTime = startTime;
 	this.endTime = endTime;
     }
 
-    public String getLessonNumber() {
-	return lessonNumber;
+    public int getId() {
+	return id;
     }
 
-    public void setLessonNumber(String lessonNumber) {
-	this.lessonNumber = lessonNumber;
+    public void setId(int id) {
+	this.id = id;
+    }
+
+    public String getLesson() {
+	return lesson;
+    }
+
+    public void setLesson(String lesson) {
+	this.lesson = lesson;
     }
 
     public LocalTime getStartTime() {
@@ -40,6 +50,14 @@ public class LessonTime {
 
     public void setEndTime(LocalTime endTime) {
 	this.endTime = endTime;
+    }
+
+    public LessonsTimeSchedule getLessonsTimeSchedule() {
+	return lessonsTimeSchedule;
+    }
+
+    public void setLessonsTimeSchedule(LessonsTimeSchedule lessonsTimeSchedule) {
+	this.lessonsTimeSchedule = lessonsTimeSchedule;
     }
 
     @Override
