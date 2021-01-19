@@ -5,12 +5,12 @@
 	<BUILDINGS_ADD building_id='3' building_name='Building 3' building_address='Address 3'/>
 	<BUILDINGS_DELETE building_id='1' building_name='Building 1' building_address='Address 1'/>
 	<BUILDINGS_DELETE building_id='2' building_name='Building 2' building_address='Address 2'/>
-	<AUDIENCES_ADD audience_id='1' audience_number='1' building_id='1' audience_capacity='300' audience_description='description1'/>
-	<AUDIENCES_ADD audience_id='2' audience_number='1' building_id='2' audience_capacity='120' audience_description='description1'/>
-	<AUDIENCES_ADD audience_id='3' audience_number='2' building_id='2' audience_capacity='120' audience_description='description2'/>
-	<AUDIENCES_ADD audience_id='4' audience_number='3' building_id='2' audience_capacity='120' audience_description='description3'/>
-	<AUDIENCES_DELETE audience_id='1' audience_number='1' building_id='1' audience_capacity='300' audience_description='description1'/>
-	<AUDIENCES_DELETE audience_id='2' audience_number='1' building_id='2' audience_capacity='120' audience_description='description1'/>
+	<AUDIENCES_ADD id='1' number='1' building_id='1' capacity='300' description='description1'/>
+	<AUDIENCES_ADD id='2' number='1' building_id='2' capacity='120' description='description1'/>
+	<AUDIENCES_ADD id='3' number='2' building_id='2' capacity='120' description='description2'/>
+	<AUDIENCES_ADD id='4' number='3' building_id='2' capacity='120' description='description3'/>
+	<AUDIENCES_DELETE id='1' audience_number='1' building_id='1' audience_capacity='300' audience_description='description1'/>
+	<AUDIENCES_DELETE id='2' audience_number='1' building_id='2' audience_capacity='120' audience_description='description1'/>
 	<HOLIDAYS_ADD holiday_id='1' holiday_name='Holiday 1' holiday_date='2021-01-01'/>
 	<HOLIDAYS_ADD holiday_id='2' holiday_name='Holiday 2' holiday_date='2021-01-07'/>
 	<HOLIDAYS_ADD holiday_id='3' holiday_name='Holiday 3' holiday_date='2021-01-19'/>

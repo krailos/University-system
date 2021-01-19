@@ -14,9 +14,9 @@ public class BuildingRowMapper implements RowMapper<Building> {
     @Override
     public Building mapRow(ResultSet rs, int rowNum) throws SQLException {
 	Building building = new Building();
-	building.setId(rs.getInt("building_id"));
-	building.setName(rs.getString("building_name"));
-	building.setAddress(rs.getString("building_address"));
+	building.setId(rs.getInt("id"));
+	building.setName(rs.getString("name"));
+	building.setAddress(rs.getString("address"));
 	return building;
     }
 

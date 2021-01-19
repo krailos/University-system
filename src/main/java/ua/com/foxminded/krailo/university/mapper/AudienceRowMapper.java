@@ -6,18 +6,26 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import ua.com.foxminded.krailo.university.dao.BuildingDao;
 import ua.com.foxminded.krailo.university.model.Audience;
 
 @Component
 public class AudienceRowMapper implements RowMapper<Audience> {
     
+    private BuildingDao buildingDao;
+    
+    public AudienceRowMapper(BuildingDao buildingDao) {
+	this.buildingDao = buildingDao;
+    }
+
     @Override
     public Audience mapRow(ResultSet rs, int rowNum) throws SQLException {
 	Audience audience = new Audience();
-	audience.setId(rs.getInt("audience_id"));
-	audience.setNumber(rs.getString("audience_number"));
-	audience.setCapacity(rs.getInt("audience_capacity"));
-	audience.setDescription(rs.getString("audience_description"));
+	audience.setId(rs.getInt("id"));
+	audience.setNumber(rs.getString("number"));
+	audience.setBuilding(buildingDao.findById(rs.getInt("building_id")));
+	audience.setCapacity(rs.getInt("capacity"));
+	audience.setDescription(rs.getString("description"));
 	return audience;
     }
 

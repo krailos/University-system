@@ -12,21 +12,21 @@ import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.krailo.university.model.Holiday;
 
-@Component
+@Component 
 public class HolidayDao {
 
-    private static final String SQL_SELECT_HOLIDAYS = "SELECT holiday_id, holiday_name, holiday_date  FROM holidays ORDER BY holiday_id";
-    private static final String SQL_SELECT_HOLIDAY_BY_ID = "SELECT holiday_id, holiday_name, holiday_date  FROM holidays WHERE holiday_id = ?";
-    private static final String SQL_INSERT_HOLIDAY = "INSERT INTO holidays ( holiday_name, holiday_date) VALUES (?, ?)";
-    private static final String SQL_UPDATE_HOLIDAY_NAME_BY_ID = "UPDATE holidays SET holiday_name = ? WHERE holiday_id = ?";
-    private static final String SQL_UPDATE_HOLIDAY_DATE_BY_ID = "UPDATE holidays SET holiday_date = ? WHERE holiday_id = ?";
-    private static final String SQL_DELETE_HOLIDAY_BY_ID = "DELETE FROM holidays WHERE holiday_id = ?";
+    private static final String SQL_SELECT_HOLIDAYS = "SELECT * FROM holidays ORDER BY id";
+    private static final String SQL_SELECT_HOLIDAY_BY_ID = "SELECT * FROM holidays WHERE id = ?";
+    private static final String SQL_INSERT_HOLIDAY = "INSERT INTO holidays ( name, date) VALUES (?, ?)";
+    private static final String SQL_UPDATE_HOLIDAY_NAME_BY_ID = "UPDATE holidays SET name = ? WHERE holiday_id = ?";
+    private static final String SQL_UPDATE_HOLIDAY_DATE_BY_ID = "UPDATE holidays SET date = ? WHERE holiday_id = ?";
+    private static final String SQL_DELETE_HOLIDAY_BY_ID = "DELETE FROM holidays WHERE id = ?";
  
     private RowMapper<Holiday> holidayRowMapper = (ResultSet rs, int rowNum) -> {
 	Holiday holiday = new Holiday();
-	holiday.setId(rs.getInt("holiday_id"));
-	holiday.setName(rs.getString("holiday_name"));
-	holiday.setDate((rs.getDate("holiday_date").toLocalDate()));
+	holiday.setId(rs.getInt("id"));
+	holiday.setName(rs.getString("name"));
+	holiday.setDate((rs.getDate("date").toLocalDate()));
 	return holiday;
     };
     @Autowired

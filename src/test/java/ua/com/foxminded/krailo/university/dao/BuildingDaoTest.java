@@ -20,9 +20,9 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import ua.com.foxminded.krailo.university.model.Building;
-import ua.com.foxminded.krailo.university.testConfig.TestConfig;
+import ua.com.foxminded.krailo.university.testConfig.ConfigTest;
 
-@SpringJUnitConfig(TestConfig.class)
+@SpringJUnitConfig(ConfigTest.class)
 class BuildingDaoTest extends DataSourceBasedDBTestCase {
 
     @Autowired

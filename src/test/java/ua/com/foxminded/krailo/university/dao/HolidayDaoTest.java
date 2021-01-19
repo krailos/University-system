@@ -23,9 +23,9 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import ua.com.foxminded.krailo.university.model.Holiday;
-import ua.com.foxminded.krailo.university.testConfig.TestConfig;
+import ua.com.foxminded.krailo.university.testConfig.ConfigTest;
 
-@SpringJUnitConfig(TestConfig.class)
+@SpringJUnitConfig(ConfigTest.class)
 class HolidayDaoTest extends DataSourceBasedDBTestCase {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HolidayDaoTest.class);

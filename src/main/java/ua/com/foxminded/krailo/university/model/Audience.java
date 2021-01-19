@@ -24,6 +24,13 @@ public class Audience {
 	this.description = description;
     }
     
+    public Audience(String number, Building building, int capacity, String description) {
+	this.number = number;
+	this.building = building;
+	this.capacity = capacity;
+	this.description = description;
+    }
+    
     public int getId() {
 	return id;
     }

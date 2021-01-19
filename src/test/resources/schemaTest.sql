@@ -17,10 +17,10 @@ CREATE TABLE buildings (
 );
 
 CREATE TABLE audiences (
-	audience_id serial NOT NULL,
-	audience_number character varying (50) NOT NULL,
+	id serial NOT NULL,
+	number character varying (50) NOT NULL,
 	building_id int  NOT NULL,
-	audience_capacity int NOT NULL,
-	audience_description character varying (50),
-	UNIQUE (audience_number, building_id)
+	capacity int NOT NULL,
+	description character varying (50),
+	UNIQUE (number, building_id)
 );
