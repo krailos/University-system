@@ -18,8 +18,7 @@ public class ConfigTest {
  
     @Bean
     public DataSource getDataSource() {
-	return new EmbeddedDatabaseBuilder().generateUniqueName(true).setType(EmbeddedDatabaseType.H2)
-		.setScriptEncoding("UTF-8").ignoreFailedDrops(true).addScript("schemaTest.sql").build();
+	return new EmbeddedDatabaseBuilder().generateUniqueName(true).setType(EmbeddedDatabaseType.H2).build();
     }
               
 }

@@ -14,10 +14,10 @@ import ua.com.foxminded.krailo.university.model.Audience;
 @Repository
 public class AudienceDao {
 
-    private static final String SQL_SELECT_AUDIENCE_BY_ID = "SELECT * FROM audiences  WHERE audience_id = ?";
+    private static final String SQL_SELECT_AUDIENCE_BY_ID = "SELECT * FROM audiences  WHERE id = ?";
     private static final String SQL_SELECT_AUDIENCES_BY_BUILDING = "SELECT * FROM audiences WHERE building_id = ?";
     private static final String SQL_SELECT_ALL_AUDIENCES = "SELECT * FROM audiences";
-    private static final String SQL_DELETE_BY_ID = "DELETE FROM audiences WHERE audience_id = ?";
+    private static final String SQL_DELETE_BY_ID = "DELETE FROM audiences WHERE id = ?";
     private static final String SQL_UPDATE = "";
 
     private JdbcTemplate jdbcTemplate;
@@ -58,10 +58,10 @@ public class AudienceDao {
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
     }
-
+    
     private void setSimpleJdbcInsert() {
 	simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getDataSource()).withTableName("audiences")
-		.usingGeneratedKeyColumns("audience_id");
+		.usingGeneratedKeyColumns("id");
     }
 
 }

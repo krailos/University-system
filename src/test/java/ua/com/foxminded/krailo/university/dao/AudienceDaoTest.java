@@ -1,101 +1,63 @@
 package ua.com.foxminded.krailo.university.dao;
 
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.sql.DataSource;
-
-import org.dbunit.Assertion;
-import org.dbunit.DataSourceBasedDBTestCase;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.ITable;
-import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Building;
 import ua.com.foxminded.krailo.university.testConfig.ConfigTest;
 
 @SpringJUnitConfig(ConfigTest.class) 
-@Sql({"schema.sql", "dataTest.sql"})
-class AudienceDaoTest extends DataSourceBasedDBTestCase {
+@Sql({"classpath:schema.sql", "classpath:dataTest.sql"})
+class AudienceDaoTest {
 
     @Autowired
     private AudienceDao audienceDao;
     @Autowired
-    private DataSource dataSource;
-    private IDataSet iDataSet;
-
-    @Override
-    protected IDataSet getDataSet() throws Exception {
-	iDataSet = new FlatXmlDataSetBuilder()
-		.build(getClass().getClassLoader().getResourceAsStream("xmlTestData.xml"));
-	return iDataSet;
-    }
-
-    @Override
-    protected DataSource getDataSource() {
-	return dataSource;
-    }
-
-    @BeforeEach
-    public void init() throws SQLException {
-	ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-	populator.addScript(new ClassPathResource("schemaTest.sql"));
-	populator.addScript(new ClassPathResource("dataTest.sql"));
-	DatabasePopulatorUtils.execute(populator, dataSource);
-    }
+    private JdbcTemplate jdbcTemplate;
 
     @Test
     void givenNewAudience_whenCreate_thanCreated() throws Exception {
 	Audience audience = new Audience("3", new Building(2, "name", "address"), 120, "description3");
 	audienceDao.create(audience);
-//	ITable expected = getDataSet().getTable("AUDIENCES_ADD");
-//	ITable actual = getConnection().createDataSet().getTable("AUDIENCES");
-//	Assertion.assertEquals(expected, actual);
+	int expected = 1;
+	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "Audiences", "id =" + audience.getId());
+	assertEquals(expected, actual);
     }
 
     @Test
     void givenBuildingId_whenFind_thanFinded() {
-	Building building = new Building(1, "Building 1", "Address 1");
-	List<Audience> audiences = Arrays.asList(new Audience(1, "1", building, 300, "description1"));
-	List<Audience> expected = audiences;
-	List<Audience> actual = audienceDao.findByBuildingId(1);
-	System.out.println(actual);
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "Audiences", "building_id = 1");
+	int actual = audienceDao.findByBuildingId(1).size();
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenBuldings_whenFindAll_thanFinded() {
-	List<Audience> audiences = Arrays.asList(new Audience(1, "1", null, 300, "description1"),
-		new Audience(2, "1", null, 120, "description1"), new Audience(3, "2", null, 120, "description2"));
-	List<Audience> expected = audiences;
-	List<Audience> actual = audienceDao.findAll();
+	int expected = JdbcTestUtils.countRowsInTable(jdbcTemplate, "Audiences");
+	int actual = audienceDao.findAll().size();
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenId_whenFind_thanFinded () {
-	Building building = new Building(1, "Building 1", "Address 1");
-	Audience expected = new Audience(1, "1", building, 300, "description1");
-	Audience actual = audienceDao.findById(1);
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "Audiences", "id = 1");
+	int actual = audienceDao.findById(1).getId();
 	assertEquals(expected, actual);
     }
     
     @Test
     void givenId_whenDelete_thanDeleted () throws Exception {
 	audienceDao.deleteById(3);
-	ITable expected = getDataSet().getTable("AUDIENCES_DELETE");
-	ITable actual = getConnection().createDataSet().getTable("AUDIENCES");
-	Assertion.assertEquals(expected, actual);
+	int expected = 2;
+	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "Audiences");
+	assertEquals(expected, actual);
     }
     
 }
