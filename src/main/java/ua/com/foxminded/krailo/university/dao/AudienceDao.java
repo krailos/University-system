@@ -18,7 +18,6 @@ public class AudienceDao {
     private static final String SQL_SELECT_AUDIENCES_BY_BUILDING = "SELECT * FROM audiences WHERE building_id = ?";
     private static final String SQL_SELECT_ALL_AUDIENCES = "SELECT * FROM audiences";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM audiences WHERE id = ?";
-    private static final String SQL_UPDATE = "";
 
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Audience> audienceRowMapper;
@@ -46,7 +45,7 @@ public class AudienceDao {
 
     public void create(Audience audience) {
 	setSimpleJdbcInsert();
-	Map<String, Object> parameters = new HashMap<String, Object>(2);
+	Map<String, Object> parameters = new HashMap<String, Object>();
 	parameters.put("number", audience.getNumber());
 	parameters.put("building_id", audience.getBuilding().getId());
 	parameters.put("capacity", audience.getCapacity());
@@ -58,7 +57,7 @@ public class AudienceDao {
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
     }
-    
+
     private void setSimpleJdbcInsert() {
 	simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getDataSource()).withTableName("audiences")
 		.usingGeneratedKeyColumns("id");

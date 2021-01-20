@@ -66,11 +66,11 @@ INSERT INTO timetables (name, year_id) VALUES
 ('timetable for first year finance', '1'),
 ('timetable for first year banking', '2');
 
-INSERT INTO lessons (date, lesson_time_id, subject_id, teacher_id, audience_id, group_id, timetable_id) VALUES 
-('01.02.2021', '1', '1', '1', '1', '1', '1'),
-('01.02.2021', '2', '2', '2', '2', '1', '1'),
-('01.02.2021', '1', '3', '3', '3', '2', '2'),
-('01.02.2021', '2', '4', '4', '4', '2', '2');
+INSERT INTO lessons (date, lesson_time_id, subject_id, teacher_id, audience_id, timetable_id) VALUES 
+('01.02.2021', '1', '1', '1', '1', '1'),
+('01.02.2021', '2', '2', '2', '2', '1'),
+('01.02.2021', '1', '3', '3', '3', '2'),
+('01.02.2021', '2', '4', '4', '4', '2');
 
 INSERT INTO vocations (kind, applying_date, start_date, end_date, teacher_id) VALUES 
 ('annual', '01.10.2020', '01.08.2021', '14.08.2021', '1');

@@ -2,7 +2,6 @@ package ua.com.foxminded.krailo.university.configuration;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -13,13 +12,16 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
 @ComponentScan("ua.com.foxminded.krailo.university")
-@PropertySource("classpath:config.properties") 
+@PropertySource("classpath:config.properties")
 public class ConfigUniversityOffice {
-    
-    @Autowired
+
     private Environment env;
 
-    @Bean 
+    public ConfigUniversityOffice(Environment env) {
+	this.env = env;
+    }
+
+    @Bean
     public DataSource dataSource() {
 	DriverManagerDataSource dataSource = new DriverManagerDataSource();
 	dataSource.setDriverClassName(env.getProperty("jdbc.driver"));
@@ -32,7 +34,7 @@ public class ConfigUniversityOffice {
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
 	return new JdbcTemplate(dataSource);
-	
+
     }
 
 }
