@@ -13,8 +13,8 @@ import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Building;
 import ua.com.foxminded.krailo.university.testConfig.ConfigTest;
 
-@SpringJUnitConfig(ConfigTest.class) 
-@Sql({"classpath:schema.sql", "classpath:dataTest.sql"})
+@SpringJUnitConfig(ConfigTest.class)
+@Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
 class AudienceDaoTest {
 
     @Autowired
@@ -46,18 +46,28 @@ class AudienceDaoTest {
     }
 
     @Test
-    void givenId_whenFind_thanFinded () {
+    void givenId_whenFind_thanFinded() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "Audiences", "id = 1");
 	int actual = audienceDao.findById(1).getId();
 	assertEquals(expected, actual);
     }
     
     @Test
-    void givenId_whenDelete_thanDeleted () throws Exception {
+    void givenNewFieldsOfAudience_whenUpdate_thenUpdated() {
+	Audience audience = new Audience(1, "new", new Building(1, "", ""), 1, "new");
+	audienceDao.update(audience);
+	int expected = 1;
+	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "audiences",
+		"number = 'new' AND building_id = 1 AND capacity = 1 AND description = 'new'");
+	assertEquals(expected, actual);
+    }
+	
+    @Test
+    void givenId_whenDelete_thanDeleted() throws Exception {
 	audienceDao.deleteById(3);
 	int expected = 2;
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "Audiences");
 	assertEquals(expected, actual);
     }
-    
+
 }

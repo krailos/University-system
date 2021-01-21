@@ -1,14 +1,13 @@
 package ua.com.foxminded.krailo.university.dao;
 
 import java.sql.Date;
-import java.time.LocalDate;
-import java.util.HashMap;
+import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.krailo.university.model.Holiday;
@@ -18,13 +17,12 @@ public class HolidayDao {
 
     private static final String SQL_SELECT_HOLIDAYS = "SELECT * FROM holidays ORDER BY id";
     private static final String SQL_SELECT_HOLIDAY_BY_ID = "SELECT * FROM holidays WHERE id = ?";
-    private static final String SQL_UPDATE_HOLIDAY_NAME_BY_ID = "UPDATE holidays SET name = ? WHERE id = ?";
-    private static final String SQL_UPDATE_HOLIDAY_DATE_BY_ID = "UPDATE holidays SET date = ? WHERE id = ?";
+    private static final String SQL_UPDATE_HOLIDAY_BY_ID = "UPDATE holidays SET name = ?, date = ? WHERE id = ?";
     private static final String SQL_DELETE_HOLIDAY_BY_ID = "DELETE FROM holidays WHERE id = ?";
+    private static final String SQL_INSERT_HOLIDAY = "INSERT INTO holidays (name, date) VALUES (?, ?)";
 
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Holiday> holidayRowMapper;
-    private SimpleJdbcInsert simpleJdbcInsert;
 
     public HolidayDao(JdbcTemplate jdbcTemplate, RowMapper<Holiday> holidayRowMapper) {
 	this.jdbcTemplate = jdbcTemplate;
@@ -40,28 +38,23 @@ public class HolidayDao {
     }
 
     public void create(Holiday holiday) {
-	setSimpleJdbcInsert();
-	Map<String, Object> parameters = new HashMap<String, Object>();
-	parameters.put("name", holiday.getName());
-	parameters.put("date", holiday.getDate());
-	Number holidayId = simpleJdbcInsert.executeAndReturnKey(parameters);
-	holiday.setId(holidayId.intValue());
+	KeyHolder keyHolder = new GeneratedKeyHolder();
+	jdbcTemplate.update(connection -> {
+	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_HOLIDAY, new String[] { "id" });
+	    ps.setString(1, holiday.getName());
+	    ps.setDate(2, Date.valueOf(holiday.getDate()));
+	    return ps;
+	}, keyHolder);
+	holiday.setId(keyHolder.getKey().intValue());
     }
-
-    public void updateNameById(String name, int id) {
-	jdbcTemplate.update(SQL_UPDATE_HOLIDAY_NAME_BY_ID, name, id);
-    }
-
-    public void updateDateById(LocalDate date, int id) {
-	jdbcTemplate.update(SQL_UPDATE_HOLIDAY_DATE_BY_ID, Date.valueOf(date), id);
+    
+    public void update(Holiday holiday) {
+	jdbcTemplate.update(SQL_UPDATE_HOLIDAY_BY_ID, holiday.getName(), Date.valueOf(holiday.getDate()),
+		holiday.getId());
     }
 
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_HOLIDAY_BY_ID, id);
     }
 
-    private void setSimpleJdbcInsert() {
-	simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getDataSource()).withTableName("buildings")
-		.usingGeneratedKeyColumns("id");
-    }
 }

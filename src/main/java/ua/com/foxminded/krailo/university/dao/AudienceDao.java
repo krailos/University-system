@@ -1,12 +1,12 @@
 package ua.com.foxminded.krailo.university.dao;
 
-import java.util.HashMap;
+import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.krailo.university.model.Audience;
@@ -18,10 +18,11 @@ public class AudienceDao {
     private static final String SQL_SELECT_AUDIENCES_BY_BUILDING = "SELECT * FROM audiences WHERE building_id = ?";
     private static final String SQL_SELECT_ALL_AUDIENCES = "SELECT * FROM audiences";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM audiences WHERE id = ?";
+    private static final String SQL_INSERT_AUDIENCE = "INSERT INTO audiences (number, building_id, capacity, description) VALUES (?, ?, ?, ?)";
+    private static final String SQL_UPDATE_BY_ID = "UPDATE audiences SET number = ?, building_id = ?, capacity = ?, description = ? where id = ?";
 
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Audience> audienceRowMapper;
-    private SimpleJdbcInsert simpleJdbcInsert;
 
     public AudienceDao(JdbcTemplate jdbcTemplate, RowMapper<Audience> audienceRowMapper) {
 	this.jdbcTemplate = jdbcTemplate;
@@ -29,14 +30,11 @@ public class AudienceDao {
     }
 
     public Audience findById(int id) {
-	Audience audience = jdbcTemplate.queryForObject(SQL_SELECT_AUDIENCE_BY_ID, new Object[] { id },
-		audienceRowMapper);
-	return audience;
+	return jdbcTemplate.queryForObject(SQL_SELECT_AUDIENCE_BY_ID, new Object[] { id }, audienceRowMapper);
     }
 
     public List<Audience> findByBuildingId(int buildingId) {
-	List<Audience> audiences = jdbcTemplate.query(SQL_SELECT_AUDIENCES_BY_BUILDING, audienceRowMapper, buildingId);
-	return audiences;
+	return jdbcTemplate.query(SQL_SELECT_AUDIENCES_BY_BUILDING, audienceRowMapper, buildingId);
     }
 
     public List<Audience> findAll() {
@@ -44,23 +42,25 @@ public class AudienceDao {
     }
 
     public void create(Audience audience) {
-	setSimpleJdbcInsert();
-	Map<String, Object> parameters = new HashMap<String, Object>();
-	parameters.put("number", audience.getNumber());
-	parameters.put("building_id", audience.getBuilding().getId());
-	parameters.put("capacity", audience.getCapacity());
-	parameters.put("description", audience.getDescription());
-	Number audienceId = simpleJdbcInsert.executeAndReturnKey(parameters);
-	audience.setId(audienceId.intValue());
+	KeyHolder keyHolder = new GeneratedKeyHolder();
+	jdbcTemplate.update(connection -> {
+	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_AUDIENCE, new String[] { "id" });
+	    ps.setString(1, audience.getNumber());
+	    ps.setInt(2, audience.getBuilding().getId());
+	    ps.setInt(3, audience.getCapacity());
+	    ps.setString(4, audience.getDescription());
+	    return ps;
+	}, keyHolder);
+	audience.setId(keyHolder.getKey().intValue());
+    }
+
+    public void update(Audience audience) {
+	jdbcTemplate.update(SQL_UPDATE_BY_ID, audience.getNumber(), audience.getBuilding().getId(),
+		audience.getCapacity(), audience.getDescription(), audience.getId());
     }
 
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
-    }
-
-    private void setSimpleJdbcInsert() {
-	simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getDataSource()).withTableName("audiences")
-		.usingGeneratedKeyColumns("id");
     }
 
 }

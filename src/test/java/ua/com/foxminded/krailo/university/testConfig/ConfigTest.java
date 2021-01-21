@@ -9,11 +9,11 @@ import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
-import ua.com.foxminded.krailo.university.configuration.ConfigUniversityOffice;
+import ua.com.foxminded.krailo.university.configuration.UniversityConfig;
 
 @Configuration
 @ComponentScan("ua.com.foxminded.krailo.university")
-@Import({ConfigUniversityOffice.class})
+@Import({UniversityConfig.class})
 public class ConfigTest {
  
     @Bean
