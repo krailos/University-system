@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UniversityOffice {
- 
+
+    private int id;
     private String name;
     private String address;
     private List<Faculty> faculties = new ArrayList<>();
@@ -14,8 +15,23 @@ public class UniversityOffice {
     public UniversityOffice() {
     }
 
-    public UniversityOffice(String name) {
+    public UniversityOffice(int id, String name, String address) {
+	this.id = id;
 	this.name = name;
+	this.address = address;
+    }
+
+    public UniversityOffice(String name, String address) {
+	this.name = name;
+	this.address = address;
+    }
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
     }
 
     public String getName() {

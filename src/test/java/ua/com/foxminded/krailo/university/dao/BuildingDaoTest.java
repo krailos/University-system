@@ -23,9 +23,12 @@ class BuildingDaoTest {
     
     
     @Test
-    void test() {
+    void givenNewBuilding_whenCreate_thenCreated() {
 	Building building = new Building("Building 3", "Address 3");
 	buildingDao.create(building);
+	int expected = 3;
+	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "buildings");
+	assertEquals(expected, actual);
     }
     
     @Test
@@ -36,5 +39,28 @@ class BuildingDaoTest {
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "buildings", " name = 'new' and address = 'new'");
 	assertEquals(expected, actual);
     }
+    
+    @Test
+    void givenId_whenFindById_thenFound() {
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "buildings", "id = 1");
+	int actual = buildingDao.findById(1).getId();
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenBuildings_whenFindAll_thenFound() {
+	int expected = JdbcTestUtils.countRowsInTable(jdbcTemplate, "buildings");
+	int actual = buildingDao.findAll().size();
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenId_whenDeleteById_thenDeleted() throws Exception {
+	buildingDao.deleteById(2);
+	int expected = 1;
+	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "buildings");
+	assertEquals(expected, actual);
+    }
+
 
 }

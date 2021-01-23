@@ -22,7 +22,7 @@ INSERT INTO deans_office (name, university_office_id) VALUES
 INSERT INTO departments (name) VALUES 
 ('department of finance');
 
-INSERT INTO faculties (name, deance_office_id) VALUES 
+INSERT INTO faculties (name, deans_office_id) VALUES 
 ('financial faculty', '1');
 
 INSERT INTO specialities (name, faculty_id) VALUES 

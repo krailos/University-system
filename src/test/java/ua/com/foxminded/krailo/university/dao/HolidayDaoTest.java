@@ -38,7 +38,29 @@ class HolidayDaoTest {
 	holidayDao.update(holiday);
 	int expected = 1;
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "holidays",
-		"name = 'new' AND date = '2001.01.01'");
+		"name = 'new' AND date = '2001-01-01'");
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenId_whenFindById_thenFound() {
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "holidays", "id = 1");
+	int actual = holidayDao.findById(1).getId();
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenHolidays_whenFindAll_thenFound() {
+	int expected = JdbcTestUtils.countRowsInTable(jdbcTemplate, "holidays");
+	int actual = holidayDao.findAll().size();
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenId_whenDeleteById_thenDeleted() throws Exception {
+	holidayDao.deleteById(2);
+	int expected = 1;
+	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "holidays");
 	assertEquals(expected, actual);
     }
 

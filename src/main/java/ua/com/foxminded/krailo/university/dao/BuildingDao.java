@@ -55,8 +55,4 @@ public class BuildingDao {
 	jdbcTemplate.update(SQL_DELETE_BUILDING_BY_ID, id);
     }
 
-    public Building findByIdForAudience(int id) {
-	return jdbcTemplate.queryForObject(SQL_SELECT_BUILDING_BY_ID, new Object[] { id }, buildingRowMapper);
-    }
-
 }

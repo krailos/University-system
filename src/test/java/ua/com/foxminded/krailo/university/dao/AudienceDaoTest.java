@@ -23,7 +23,7 @@ class AudienceDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    void givenNewAudience_whenCreate_thanCreated() throws Exception {
+    void givenNewAudience_whenCreate_thenCreated() throws Exception {
 	Audience audience = new Audience("3", new Building(2, "name", "address"), 120, "description3");
 	audienceDao.create(audience);
 	int expected = 1;
@@ -32,21 +32,21 @@ class AudienceDaoTest {
     }
 
     @Test
-    void givenBuildingId_whenFind_thanFinded() {
+    void givenBuildingId_whenFindByBuildingId_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "Audiences", "building_id = 1");
 	int actual = audienceDao.findByBuildingId(1).size();
 	assertEquals(expected, actual);
     }
 
     @Test
-    void givenBuldings_whenFindAll_thanFinded() {
+    void givenBuldings_whenFindAll_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTable(jdbcTemplate, "Audiences");
 	int actual = audienceDao.findAll().size();
 	assertEquals(expected, actual);
     }
 
     @Test
-    void givenId_whenFind_thanFinded() {
+    void givenId_whenFindById_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "Audiences", "id = 1");
 	int actual = audienceDao.findById(1).getId();
 	assertEquals(expected, actual);
@@ -63,7 +63,7 @@ class AudienceDaoTest {
     }
 	
     @Test
-    void givenId_whenDelete_thanDeleted() throws Exception {
+    void givenId_whenDelete_thenDeleted() throws Exception {
 	audienceDao.deleteById(3);
 	int expected = 2;
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "Audiences");

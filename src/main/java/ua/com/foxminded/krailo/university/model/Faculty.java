@@ -7,18 +7,22 @@ public class Faculty {
 
     private int id;
     private String name;
-    private UniversityOffice office;
     private List<Department> departments = new ArrayList<>();
     private List<Speciality> specialities = new ArrayList<>();
     private DeansOffice deansOffice;
 
-    public Faculty() { 
+    public Faculty() {
     }
 
-    public Faculty(int id, String name, UniversityOffice office) {
+    public Faculty(int id, String name, DeansOffice deansOffice) {
 	this.id = id;
 	this.name = name;
-	this.office = office;
+	this.deansOffice = deansOffice;
+    }
+
+    public Faculty(String name, DeansOffice deansOffice) {
+	this.name = name;
+	this.deansOffice = deansOffice;
     }
 
     public int getId() {

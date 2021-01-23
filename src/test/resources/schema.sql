@@ -18,7 +18,7 @@ DROP TABLE IF EXISTS teachers CASCADE;
 DROP TABLE IF EXISTS lessons CASCADE;
 DROP TABLE IF EXISTS vocations CASCADE;
 
-DROP TYPE gender CASCADE;
+DROP TYPE IF EXISTS gender CASCADE;
 CREATE TYPE gender AS enum ('male', 'female');
 
 CREATE TABLE holidays (
@@ -38,7 +38,7 @@ CREATE TABLE buildings (
 CREATE TABLE audiences (
 	id serial NOT NULL,
 	number character varying (50) NOT NULL,
-	building_id int REFERENCES buildings (id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	building_id int REFERENCES buildings (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	capacity int NOT NULL,
 	description character varying (50),
 	UNIQUE (number, building_id),
@@ -55,7 +55,7 @@ CREATE TABLE university_office (
 CREATE TABLE deans_office (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
-	university_office_id int REFERENCES university_office (id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	university_office_id int REFERENCES university_office (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT deans_office__pkey PRIMARY KEY (id)
 );
 
@@ -68,14 +68,14 @@ CREATE TABLE departments (
 CREATE TABLE faculties (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
-	deance_office_id int REFERENCES deans_office (id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	deans_office_id int REFERENCES deans_office (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT faculties__pkey PRIMARY KEY (id)
 );
 
 CREATE TABLE specialities (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
-	faculty_id int REFERENCES faculties (id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	faculty_id int REFERENCES faculties (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT specialities__pkey PRIMARY KEY (id)
 );
 
@@ -83,14 +83,14 @@ CREATE TABLE specialities (
 CREATE TABLE years (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
-	speciality_id int REFERENCES specialities (id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	speciality_id int REFERENCES specialities (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT years__pkey PRIMARY KEY (id)
 );
 
 CREATE TABLE groups (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
-	year_id int REFERENCES years (id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	year_id int REFERENCES years (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT groups__pkey PRIMARY KEY (id)
 );
 
@@ -105,7 +105,7 @@ CREATE TABLE lesson_times (
 	order_number character varying (50) NOT NULL,
 	start_time time NOT NULL,
 	end_time time NOT NULL,
-	lessons_timeschedule_id int REFERENCES lessons_timeschedule (id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	lessons_timeschedule_id int REFERENCES lessons_timeschedule (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT lesson_times__pkey PRIMARY KEY (id)
 );
 
@@ -120,7 +120,7 @@ CREATE TABLE students (
 	email character varying (50) NOT NULL,
 	rank character varying (50) NOT NULL,	
 	gender gender,
-	group_id int REFERENCES groups (id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	group_id int REFERENCES groups (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT students__pkey PRIMARY KEY (id)
 );
 
@@ -141,25 +141,25 @@ CREATE TABLE teachers (
 	email character varying (50) NOT NULL,
 	degree character varying (50) NOT NULL,	
 	gender gender,
-	department_id int REFERENCES departments (id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	department_id int REFERENCES departments (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT teachets__pkey PRIMARY KEY (id)
 );
 
 CREATE TABLE timetables (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
-	year_id int REFERENCES years (id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	year_id int REFERENCES years (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT timetables__pkey PRIMARY KEY (id)
 );
 
 CREATE TABLE lessons (
 	id serial NOT NULL,
 	date date NOT NULL,
-	lesson_time_id int REFERENCES lesson_times (id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
-	subject_id int REFERENCES subjects (id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
-	teacher_id int REFERENCES teachers (id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
-	audience_id int REFERENCES audiences (id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,	
-	timetable_id int REFERENCES timetables (id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,	
+	lesson_time_id int REFERENCES lesson_times (id) ON UPDATE CASCADE ON DELETE CASCADE,
+	subject_id int REFERENCES subjects (id) ON UPDATE CASCADE ON DELETE CASCADE,
+	teacher_id int REFERENCES teachers (id) ON UPDATE CASCADE ON DELETE CASCADE,
+	audience_id int REFERENCES audiences (id) ON UPDATE CASCADE ON DELETE CASCADE,	
+	timetable_id int REFERENCES timetables (id) ON UPDATE CASCADE ON DELETE CASCADE,	
 	CONSTRAINT lessons__pkey PRIMARY KEY (id)
 );
 
@@ -169,6 +169,6 @@ CREATE TABLE vocations (
 	applying_date date NOT NULL,
 	start_date date NOT NULL,
 	end_date date NOT NULL,
-	teacher_id int REFERENCES teachers (id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+	teacher_id int REFERENCES teachers (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT teachers__pkey PRIMARY KEY (id)
 );

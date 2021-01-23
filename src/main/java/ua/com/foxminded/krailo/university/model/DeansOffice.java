@@ -16,8 +16,15 @@ public class DeansOffice {
     public DeansOffice() {
     }
 
-    public DeansOffice(String name, Faculty faculty, UniversityOffice universityOffice) {
+    public DeansOffice(int id, String name, UniversityOffice universityOffice) {
+	this.id = id;
 	this.name = name;
+	this.universityOffice = universityOffice;
+    }
+
+    public DeansOffice(String name, UniversityOffice universityOffice) {
+	this.name = name;
+	this.universityOffice = universityOffice;
     }
 
     public int getId() {
