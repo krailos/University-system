@@ -9,18 +9,18 @@ import org.springframework.stereotype.Repository;
 import ua.com.foxminded.krailo.university.model.Faculty;
 
 @Repository
-public class FacultiesDao {
+public class FacultyDao {
 
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM faculties WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM faculties";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM faculties WHERE id = ?";
-    private static final String SQL_INSERT_DEANS_OFFICE = "INSERT INTO faculties (name, deance_office_id) VALUES (?, ?)";
-    private static final String SQL_UPDATE_BY_ID = "UPDATE deans_office SET name = ?, deance_office_id = ? where id = ?";
+    private static final String SQL_INSERT_DEANS_OFFICE = "INSERT INTO faculties (name, deans_office_id) VALUES (?, ?)";
+    private static final String SQL_UPDATE_BY_ID = "UPDATE faculties SET name = ?, deans_office_id = ? where id = ?";
 
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Faculty> facultyRowMapper;
 
-    public FacultiesDao(JdbcTemplate jdbcTemplate, RowMapper<Faculty> facultyRowMapper) {
+    public FacultyDao(JdbcTemplate jdbcTemplate, RowMapper<Faculty> facultyRowMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.facultyRowMapper = facultyRowMapper;
     }
