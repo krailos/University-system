@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS lessons CASCADE;
 DROP TABLE IF EXISTS vocations CASCADE;
 
 DROP TYPE IF EXISTS gender CASCADE;
-CREATE TYPE gender AS enum ('male', 'female');
+CREATE TYPE gender AS enum ('MALE', 'FEMALE');
 
 CREATE TABLE holidays (
 	id serial NOT NULL,

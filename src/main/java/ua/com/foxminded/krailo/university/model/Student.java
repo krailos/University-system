@@ -9,24 +9,43 @@ public class Student {
     private String firstName;
     private String lastName;
     private LocalDate birthDate;
-    private Faculty faculty;
-    private Speciality speciality;
-    private Group group;
     private String phone;
     private String address;
     private String email;
-    private Gender gender;
     private String rank;
+    private Gender gender;
+    private Group group;
 
     public Student() {
     }
 
-    public Student(String studentsId, String firstName, String lastName, Faculty faculty, Speciality speciality) {
-	this.studentId = studentsId;
+    public Student(int id, String studentId, String firstName, String lastName, LocalDate birthDate, String phone,
+	    String address, String email, String rank, Gender gender, Group group) {
+	super();
+	this.id = id;
+	this.studentId = studentId;
 	this.firstName = firstName;
 	this.lastName = lastName;
-	this.faculty = faculty;
-	this.speciality = speciality;
+	this.birthDate = birthDate;
+	this.phone = phone;
+	this.address = address;
+	this.email = email;
+	this.rank = rank;
+	this.gender = gender;
+	this.group = group;
+    }
+
+    public Student(String studentId, String firstName, String lastName, LocalDate birthDate, String phone,
+	    String address, String email, String rank, Gender gender, Group group) {
+	this.studentId = studentId;
+	this.firstName = firstName;
+	this.lastName = lastName;
+	this.birthDate = birthDate;
+	this.phone = phone;
+	this.address = address;
+	this.email = email;
+	this.rank = rank;
+	this.gender = gender;
 	this.group = group;
     }
 
@@ -68,22 +87,6 @@ public class Student {
 
     public void setBirthDate(LocalDate birthDate) {
 	this.birthDate = birthDate;
-    }
-
-    public Faculty getFaculty() {
-	return faculty;
-    }
-
-    public void setFaculty(Faculty faculty) {
-	this.faculty = faculty;
-    }
-
-    public Speciality getSpeciality() {
-	return speciality;
-    }
-
-    public void setSpeciality(Speciality speciality) {
-	this.speciality = speciality;
     }
 
     public Group getGroup() {
@@ -137,8 +140,8 @@ public class Student {
     @Override
     public String toString() {
 	return "Student [id=" + studentId + ", firstName=" + firstName + ", lastName=" + lastName + ", birthDate="
-		+ birthDate + ", faculty=" + faculty + ", speciality=" + speciality + ", group=" + group + ", phone="
-		+ phone + ", address=" + address + ", email=" + email + ", gender=" + gender + ", rank=" + rank + "]";
+		+ birthDate + ", group=" + group + ", phone=" + phone + ", address=" + address + ", email=" + email
+		+ ", gender=" + gender + ", rank=" + rank + "]";
     }
 
 }

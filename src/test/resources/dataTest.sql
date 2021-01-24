@@ -46,3 +46,12 @@ INSERT INTO lessons_timeschedule (name) VALUES
 INSERT INTO lesson_times (order_number, start_time, end_time, lessons_timeschedule_id) VALUES 
 ('first lesson', '08:30:00', '09:45:00', '1'),
 ('second lesson', '08:30:00', '09:45:00', '1');
+
+INSERT INTO students (student_id, first_name, last_name, birth_date, phone,
+address, email, rank, gender, group_id) VALUES 
+('1id', 'student first name 1', 'student last name 1', DATE '2000-01-01', '0670000001', 'address 1', 'email 1', '0', 'MALE', '1' ),
+('2id', 'student first name 2', 'student last name 2', DATE '2002-02-02', '0670000002', 'address 2', 'email 2', '0', 'FEMALE', '2' );
+
+INSERT INTO subjects (name) VALUES 
+('subject 1'),
+('subject 2'),
