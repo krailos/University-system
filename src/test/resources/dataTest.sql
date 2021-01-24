@@ -26,3 +26,19 @@ INSERT INTO departments (name) VALUES
 INSERT INTO faculties (name, deans_office_id) VALUES 
 ('faculty 1', '1'),
 ('faculty 2', '1');
+
+INSERT INTO specialities (name, faculty_id) VALUES 
+('speciality 1', '1'),
+('speciality 2', '1');
+
+INSERT INTO years (name, speciality_id) VALUES 
+('year 1', '1'),
+('year 2', '1');
+
+INSERT INTO groups (name, year_id) VALUES 
+('group 1', '1'),
+('group 2', '1');
+
+INSERT INTO lessons_timeschedule (name) VALUES 
+('lessons time schedule 1'),
+('lessons time schedule 2');

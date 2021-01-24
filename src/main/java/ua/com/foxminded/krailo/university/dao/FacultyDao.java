@@ -14,7 +14,7 @@ public class FacultyDao {
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM faculties WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM faculties";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM faculties WHERE id = ?";
-    private static final String SQL_INSERT_DEANS_OFFICE = "INSERT INTO faculties (name, deans_office_id) VALUES (?, ?)";
+    private static final String SQL_INSERT_FACULTY = "INSERT INTO faculties (name, deans_office_id) VALUES (?, ?)";
     private static final String SQL_UPDATE_BY_ID = "UPDATE faculties SET name = ?, deans_office_id = ? where id = ?";
 
     private JdbcTemplate jdbcTemplate;
@@ -26,7 +26,7 @@ public class FacultyDao {
     }
 
     public void create(Faculty faculty) {
-	jdbcTemplate.update(SQL_INSERT_DEANS_OFFICE, faculty.getName(), faculty.getDeansOffice().getId());
+	jdbcTemplate.update(SQL_INSERT_FACULTY, faculty.getName(), faculty.getDeansOffice().getId());
 
     }
 

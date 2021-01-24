@@ -5,25 +5,33 @@ import java.util.List;
 
 public class Speciality {
 
-    private String id; 
-    private String name; 
+    private int id;
+    private String name;
     private Faculty faculty;
     private List<Year> years = new ArrayList<>();
+
     public Speciality() {
     }
 
-    public Speciality(String id, String name, Faculty faculty) {
+    public Speciality(int id, String name, Faculty faculty) {
+	super();
 	this.id = id;
 	this.name = name;
 	this.faculty = faculty;
-    } 
+    }
 
-    public String getId() {
+    public int getId() {
 	return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
 	this.id = id;
+    }
+
+    public Speciality(String name, Faculty faculty) {
+	super();
+	this.name = name;
+	this.faculty = faculty;
     }
 
     public String getName() {
@@ -49,7 +57,6 @@ public class Speciality {
     public void setYears(List<Year> years) {
 	this.years = years;
     }
-
 
     @Override
     public String toString() {

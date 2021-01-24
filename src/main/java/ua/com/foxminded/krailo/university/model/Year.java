@@ -15,12 +15,19 @@ public class Year {
     public Year() {
     }
 
+    public Year(int id, String name, Speciality speciality) {
+	super();
+	this.id = id;
+	this.name = name;
+	this.speciality = speciality;
+    }
+
     public Year(String name, Speciality speciality) {
 	this.name = name;
 	this.speciality = speciality;
     }
 
-    public int getId() { 
+    public int getId() {
 	return id;
     }
 

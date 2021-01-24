@@ -13,6 +13,13 @@ public class Group {
     public Group() {
     }
 
+    public Group(int id, String name, Year year) {
+	super();
+	this.id = id;
+	this.name = name;
+	this.year = year;
+    }
+
     public Group(String name, Year year) {
 	this.name = name;
 	this.year = year;
