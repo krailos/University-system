@@ -5,7 +5,7 @@ import java.time.LocalTime;
 public class LessonTime {
 
     private int id;
-    private String lessonOrder;
+    private String orderNumber;
     private LocalTime startTime;
     private LocalTime endTime;
     private LessonsTimeSchedule lessonsTimeSchedule;
@@ -13,22 +13,35 @@ public class LessonTime {
     public LessonTime() {
     }
 
-    public LessonTime(String lessonOrder, LocalTime startTime, LocalTime endTime) {
-	this.lessonOrder = lessonOrder;
+    public LessonTime(int id, String orderNumber, LocalTime startTime, LocalTime endTime,
+	    LessonsTimeSchedule lessonsTimeSchedule) {
+	super();
+	this.id = id;
+	this.orderNumber = orderNumber;
 	this.startTime = startTime;
 	this.endTime = endTime;
+	this.lessonsTimeSchedule = lessonsTimeSchedule;
+    }
+
+    public LessonTime(String orderNumber, LocalTime startTime, LocalTime endTime,
+	    LessonsTimeSchedule lessonsTimeSchedule) {
+	super();
+	this.orderNumber = orderNumber;
+	this.startTime = startTime;
+	this.endTime = endTime;
+	this.lessonsTimeSchedule = lessonsTimeSchedule;
     }
 
     public int getId() {
 	return id;
     }
 
-    public String getLessonOrder() {
-	return lessonOrder;
+    public String getOrderNumber() {
+	return orderNumber;
     }
 
-    public void setLessonOrder(String lessonOrder) {
-	this.lessonOrder = lessonOrder;
+    public void setOrderNumber(String lessonOrder) {
+	this.orderNumber = lessonOrder;
     }
 
     public void setId(int id) {

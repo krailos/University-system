@@ -42,3 +42,7 @@ INSERT INTO groups (name, year_id) VALUES
 INSERT INTO lessons_timeschedule (name) VALUES 
 ('lessons time schedule 1'),
 ('lessons time schedule 2');
+
+INSERT INTO lesson_times (order_number, start_time, end_time, lessons_timeschedule_id) VALUES 
+('first lesson', '08:30:00', '09:45:00', '1'),
+('second lesson', '08:30:00', '09:45:00', '1');

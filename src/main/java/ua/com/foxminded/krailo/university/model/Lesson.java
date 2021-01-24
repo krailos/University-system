@@ -92,7 +92,7 @@ public class Lesson {
 
     @Override
     public String toString() {
-	return lessonTime.getLessonOrder() + " " + subject + " " + lessonTime + " " + audience + " " + teacher;
+	return lessonTime.getOrderNumber() + " " + subject + " " + lessonTime + " " + audience + " " + teacher;
     }
 
 }
