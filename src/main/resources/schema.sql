@@ -17,6 +17,7 @@ DROP TABLE IF EXISTS timetables CASCADE;
 DROP TABLE IF EXISTS teachers CASCADE;
 DROP TABLE IF EXISTS lessons CASCADE;
 DROP TABLE IF EXISTS vocations CASCADE;
+DROP TABLE IF EXISTS lessons_groups CASCADE;
 
 DROP TYPE IF EXISTS gender CASCADE;
 CREATE TYPE gender AS enum ('male', 'female');
@@ -173,3 +174,9 @@ CREATE TABLE vocations (
 	teacher_id int REFERENCES teachers (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT teachers__pkey PRIMARY KEY (id)
 );
+
+CREATE TABLE lessons_groups (
+	lesson_id int REFERENCES lessons (id) ON UPDATE CASCADE ON DELETE CASCADE,
+	group_id int REFERENCES groups (id) ON UPDATE CASCADE ON DELETE CASCADE,
+	UNIQUE (lesson_id, group_id)
+); 

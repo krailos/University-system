@@ -72,3 +72,7 @@ INSERT INTO lessons (date, lesson_time_id, subject_id, teacher_id, audience_id, 
 INSERT INTO vocations (kind, applying_date, start_date, end_date, teacher_id) VALUES
 ('Vocation 1', DATE '2021-01-01', DATE '2021-02-02', DATE '2021-03-03', '1'),
 ('Vocation 2', DATE '2022-01-01', DATE '2022-02-02', DATE '2022-03-03', '2');
+
+INSERT INTO lessons_groups (lesson_id, group_id) VALUES 
+('1', '1'),
+('2', '2');

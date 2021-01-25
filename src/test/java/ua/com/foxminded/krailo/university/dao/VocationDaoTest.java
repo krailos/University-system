@@ -51,7 +51,7 @@ class VocationDaoTest {
     }
 
     @Test
-    void givenHolidays_whenFindAll_thenFound() {
+    void givenVocations_whenFindAll_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTable(jdbcTemplate, "vocations");
 	int actual = vocationDao.findAll().size();
 	assertEquals(expected, actual);
