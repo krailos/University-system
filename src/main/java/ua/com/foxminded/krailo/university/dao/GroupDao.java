@@ -25,15 +25,12 @@ public class GroupDao {
 	this.groupRowMapper = groupRowMapper;
     }
 
-    public void create(Group  group) {
+    public void create(Group group) {
 	jdbcTemplate.update(SQL_INSERT_GROUP, group.getName(), group.getYear().getId());
-
     }
 
-    public void update(Group  group) {
-	jdbcTemplate.update(SQL_UPDATE_BY_ID, group.getName(), group.getYear().getId(),
-		group.getId());
-
+    public void update(Group group) {
+	jdbcTemplate.update(SQL_UPDATE_BY_ID, group.getName(), group.getYear().getId(), group.getId());
     }
 
     public Group findById(int id) {
@@ -46,7 +43,6 @@ public class GroupDao {
 
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
-
     }
-
+    
 }

@@ -34,8 +34,10 @@ INSERT INTO years (name, speciality_id) VALUES
 ('year first', '2');
 
 INSERT INTO groups (name, year_id) VALUES 
-('group first', '1'),
-('group first', '2');
+('group 1', '1'),
+('group 2', '1'),
+('group 1', '2'),
+('group 2', '2');
 
 INSERT INTO lessons_timeschedule (name) VALUES 
 ('schedule of lessons schedule');
@@ -77,4 +79,6 @@ INSERT INTO vocations (kind, applying_date, start_date, end_date, teacher_id) VA
 
 INSERT INTO lessons_groups (lesson_id, group_id) VALUES 
 ('1', '1'),
-('2', '2');
+('1', '2'),
+('2', '3'),
+('2', '4');

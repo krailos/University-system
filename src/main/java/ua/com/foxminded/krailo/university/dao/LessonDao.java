@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
 
 @Component
@@ -20,13 +21,16 @@ public class LessonDao {
     private static final String SQL_UPDATE_BY_ID = "UPDATE lessons SET date = ?, lesson_time_id = ?, subject_id = ?, teacher_id = ?, audience_id = ?, timetable_id = ? WHERE id = ?";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM lessons WHERE id = ?";
     private static final String SQL_INSERT_LESSON = "INSERT INTO lessons (date, lesson_time_id, subject_id, teacher_id, audience_id, timetable_id) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String SQL_SELECT_GROUPD_ID_BY_LESSON_ID = "SELECT lessons.id, lessons_groups.group_id  FROM lessons JOIN lessons_groups  ON (lessons.id=lessons_groups.lesson_id) WHERE id = ?";
 
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Lesson> lessonRowMapper;
+    private RowMapper<Group> groupFromGroupIdRowMapper;
 
-    public LessonDao(JdbcTemplate jdbcTemplate, RowMapper<Lesson> lessonRowMapper) {
+    public LessonDao(JdbcTemplate jdbcTemplate, RowMapper<Lesson> lessonRowMapper, RowMapper<Group> groupFromGroupIdRowMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.lessonRowMapper = lessonRowMapper;
+	this.groupFromGroupIdRowMapper=groupFromGroupIdRowMapper;
     }
 
     public Lesson findById(int id) {
@@ -61,5 +65,8 @@ public class LessonDao {
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
     }
-
+   
+    public List<Group> findGroupsByLessonId(Lesson lesson) {
+   	return jdbcTemplate.query(SQL_SELECT_GROUPD_ID_BY_LESSON_ID, new Object [] {lesson.getId()}, groupFromGroupIdRowMapper);
+       }
 }
