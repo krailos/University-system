@@ -13,7 +13,6 @@ public class Subject {
     }
 
     public Subject(int id, String name) {
-	super();
 	this.id = id;
 	this.name = name;
     }

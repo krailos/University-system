@@ -107,7 +107,10 @@ public class Lesson {
 
     @Override
     public String toString() {
-	return lessonTime.getOrderNumber() + " " + subject + " " + lessonTime + " " + audience + " " + teacher;
+	return "Lesson [id=" + id + ", date=" + date + ", lessonTime=" + lessonTime.getId() + ", subject=" + subject.getId()
+		+ ", audience=" + audience.getId() + ", teacher=" + teacher.getId() + ", timetable=" + timetable.getId() + ", groups=" + groups
+		+ "]";
     }
+
 
 }
