@@ -12,7 +12,6 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.krailo.university.model.Audience;
-import ua.com.foxminded.krailo.university.model.Holiday;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.LessonTime;
 import ua.com.foxminded.krailo.university.model.Subject;
@@ -30,9 +29,9 @@ class LessonDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    void givenNewHoliday_whenCreate_thenCreated() {
-	Lesson lesson = new Lesson(LocalDate.of(2000, 01, 01), new LessonTime(1, null, null,null,null), new Subject(1, null), 
-		 new Audience(1, null, null, 0, null), new Teacher(1, null, null,null,null, null, null, null,null,null, null), new Timetable(1, null, null,null));
+    void givenNewLesson_whenCreate_thenCreated() {
+	Lesson lesson = new Lesson(LocalDate.of(2000, 01, 01), new LessonTime(1), new Subject(1, null), 
+		 new Audience(1), new Teacher(1), new Timetable(1));
 	lessonDao.create(lesson);
 	int expected = 3;
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "lessons");
@@ -40,12 +39,13 @@ class LessonDaoTest {
     }
 
     @Test
-    void givenNewFieldsOfHoliday_whenUpdate_thenUpdated() {
-	Holiday holiday = new Holiday(1, "new", LocalDate.of(2001, 01, 01));
-	lessonDao.update(holiday);
+    void givenNewFieldsOfLesson_whenUpdate_thenUpdated() {
+	Lesson lesson = new Lesson(1, LocalDate.of(2000, 01, 01), new LessonTime(1), new Subject(1, null), 
+		 new Audience(1), new Teacher(1), new Timetable(1));
+	lessonDao.update(lesson);
 	int expected = 1;
-	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "holidays",
-		"name = 'new' AND date = '2001-01-01'");
+	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons",
+		"date = '2000-01-01' AND lesson_time_id = 1 AND subject_id = 1 AND teacher_id = 1 AND audience_id = 1 AND timetable_id = 1");
 	assertEquals(expected, actual);
     }
 
@@ -57,17 +57,17 @@ class LessonDaoTest {
     }
 
     @Test
-    void givenHolidays_whenFindAll_thenFound() {
-	int expected = JdbcTestUtils.countRowsInTable(jdbcTemplate, "holidays");
+    void givenLessons_whenFindAll_thenFound() {
+	int expected = JdbcTestUtils.countRowsInTable(jdbcTemplate, "lessons");
 	int actual = lessonDao.findAll().size();
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenId_whenDeleteById_thenDeleted() throws Exception {
-	lessonDao.deleteById(2);
+	lessonDao.deleteById(1);
 	int expected = 1;
-	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "holidays");
+	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "lessons");
 	assertEquals(expected, actual);
     }
 

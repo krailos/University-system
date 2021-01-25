@@ -14,6 +14,10 @@ public class Timetable {
     public Timetable() {
     }
 
+    public Timetable(int id) {
+	this.id = id;
+    }
+
     public Timetable(int id, String name, Year year, Speciality speciality) {
 	super();
 	this.id = id;

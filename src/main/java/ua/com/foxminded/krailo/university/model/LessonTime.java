@@ -13,6 +13,10 @@ public class LessonTime {
     public LessonTime() {
     }
 
+    public LessonTime(int id) {
+	this.id = id;
+    }
+
     public LessonTime(int id, String orderNumber, LocalTime startTime, LocalTime endTime,
 	    LessonsTimeSchedule lessonsTimeSchedule) {
 	super();

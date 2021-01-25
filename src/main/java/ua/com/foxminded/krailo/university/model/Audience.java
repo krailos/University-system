@@ -11,6 +11,10 @@ public class Audience {
     public Audience() {
     }
 
+    public Audience(int id) {
+	this.id = id;
+    }
+
     public Audience(String number, Building building) {
 	this.number = number;
 	this.building = building;
@@ -23,14 +27,14 @@ public class Audience {
 	this.capacity = capacity;
 	this.description = description;
     }
-    
+
     public Audience(String number, Building building, int capacity, String description) {
 	this.number = number;
 	this.building = building;
 	this.capacity = capacity;
 	this.description = description;
     }
-    
+
     public int getId() {
 	return id;
     }

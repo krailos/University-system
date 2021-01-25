@@ -22,6 +22,10 @@ public class Teacher {
     public Teacher() {
     }
 
+    public Teacher(int id) {
+	this.id = id;
+    }
+
     public Teacher(int id, String teacherId, String firstName, String lastName, LocalDate birthDate, String phone,
 	    String address, String email, String degree, Gender gender, Department department) {
 	this.id = id;
@@ -149,8 +153,6 @@ public class Teacher {
     public void setDegree(String degree) {
 	this.degree = degree;
     }
-
-  
 
     @Override
     public String toString() {
