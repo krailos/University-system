@@ -27,7 +27,7 @@ public class VocationRowMapper implements RowMapper<Vocation> {
 	vocation.setApplyingDate(rs.getObject("applying_date", LocalDate.class));
 	vocation.setStart(rs.getObject("start_date", LocalDate.class));
 	vocation.setEnd(rs.getObject("end_date", LocalDate.class));
-	vocation.setTeacher(teacherDao.findById(vocation.getTeacher().getId()));
+	vocation.setTeacher(teacherDao.findById(rs.getInt("teacher_id")));
 	return vocation;
     }
 

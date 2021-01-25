@@ -52,7 +52,9 @@ public class VocationDao {
     }
 
     public void update(Vocation vocation) {
-	jdbcTemplate.update(SQL_UPDATE_BY_ID, vocation.getKind(), Date.valueOf(vocation.getApplyingDate()), Date.valueOf(vocation.getStart()), Date.valueOf(vocation.getEnd()), vocation.getTeacher().getId()), vocation.getId());
+	jdbcTemplate.update(SQL_UPDATE_BY_ID, vocation.getKind(), Date.valueOf(vocation.getApplyingDate()),
+		Date.valueOf(vocation.getStart()), Date.valueOf(vocation.getEnd()), vocation.getTeacher().getId(),
+		vocation.getId());
     }
 
     public void deleteById(int id) {
