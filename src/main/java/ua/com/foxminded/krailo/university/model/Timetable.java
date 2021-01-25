@@ -7,17 +7,26 @@ public class Timetable {
 
     private int id;
     private String name;
-    private Speciality speciality;
     private Year year;
+    private Speciality speciality;
     private List<Lesson> lessons = new ArrayList<>();
 
     public Timetable() {
     }
 
-    public Timetable(String name, Speciality speciality, Year year) {
+    public Timetable(int id, String name, Year year, Speciality speciality) {
+	super();
+	this.id = id;
 	this.name = name;
-	this.speciality = speciality;
 	this.year = year;
+	this.speciality = speciality;
+    }
+
+    public Timetable(String name, Year year, Speciality speciality) {
+	super();
+	this.name = name;
+	this.year = year;
+	this.speciality = speciality;
     }
 
     public int getId() {

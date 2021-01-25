@@ -149,6 +149,7 @@ CREATE TABLE timetables (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
 	year_id int REFERENCES years (id) ON UPDATE CASCADE ON DELETE CASCADE,
+	speciality_id int REFERENCES specialities (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT timetables__pkey PRIMARY KEY (id)
 );
 
