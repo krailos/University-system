@@ -64,3 +64,7 @@ address, email, degree, gender, department_id) VALUES
 INSERT INTO timetables (name, year_id, speciality_id) VALUES 
 ('timetable 1', '1', '1'),
 ('timetable 2', '2', '2');
+
+INSERT INTO lessons (date, lesson_time_id, subject_id, teacher_id, audience_id, timetable_id) VALUES 
+(DATE '2021-01-01', '1', '1', '1', '1', '1'),
+(DATE '2021-01-01', '2', '2', '2', '2', '1');

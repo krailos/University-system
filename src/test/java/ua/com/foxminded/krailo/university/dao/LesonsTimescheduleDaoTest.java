@@ -17,7 +17,7 @@ import ua.com.foxminded.krailo.university.testConfig.ConfigTest;
 class LesonsTimescheduleDaoTest {
 
     @Autowired
-    private LessonsTimescheduleDao lessonsTimesceduleDao;
+    private LessonTimescheduleDao lessonsTimesceduleDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

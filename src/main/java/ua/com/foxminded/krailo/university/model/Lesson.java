@@ -8,9 +8,9 @@ public class Lesson {
 
     private int id;
     private LocalDate date;
+    private LessonTime lessonTime;
     private Subject subject;
     private Audience audience;
-    private LessonTime lessonTime;
     private Teacher teacher;
     private Timetable timetable;
     private List<Group> groups = new ArrayList<>();
@@ -18,12 +18,27 @@ public class Lesson {
     public Lesson() {
     }
 
-    public Lesson(LocalDate date, Subject subject, Audience audience, LessonTime lessonTime, Teacher teacher) {
+    public Lesson(int id, LocalDate date, LessonTime lessonTime, Subject subject, Audience audience, Teacher teacher,
+	    Timetable timetable) {
+	super();
+	this.id = id;
 	this.date = date;
+	this.lessonTime = lessonTime;
 	this.subject = subject;
 	this.audience = audience;
-	this.lessonTime = lessonTime;
 	this.teacher = teacher;
+	this.timetable = timetable;
+    }
+
+    public Lesson(LocalDate date, LessonTime lessonTime, Subject subject, Audience audience, Teacher teacher,
+	    Timetable timetable) {
+	super();
+	this.date = date;
+	this.lessonTime = lessonTime;
+	this.subject = subject;
+	this.audience = audience;
+	this.teacher = teacher;
+	this.timetable = timetable;
     }
 
     public int getId() {

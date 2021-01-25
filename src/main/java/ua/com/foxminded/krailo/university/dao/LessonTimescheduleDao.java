@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import ua.com.foxminded.krailo.university.model.LessonsTimeSchedule;
 
 @Repository
-public class LessonsTimescheduleDao {
+public class LessonTimescheduleDao {
 
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM lessons_timeschedule WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM lessons_timeschedule  ";
@@ -20,7 +20,7 @@ public class LessonsTimescheduleDao {
     private JdbcTemplate jdbcTemplate;
     private RowMapper<LessonsTimeSchedule> lessonsTimeScheduleRowMapper;
 
-    public LessonsTimescheduleDao(JdbcTemplate jdbcTemplate,  RowMapper<LessonsTimeSchedule> lessonsTimescheduleRowMapper) {
+    public LessonTimescheduleDao(JdbcTemplate jdbcTemplate,  RowMapper<LessonsTimeSchedule> lessonsTimescheduleRowMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.lessonsTimeScheduleRowMapper = lessonsTimescheduleRowMapper;
     }
