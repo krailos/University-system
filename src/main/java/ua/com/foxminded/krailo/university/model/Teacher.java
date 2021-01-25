@@ -1,7 +1,7 @@
 package ua.com.foxminded.krailo.university.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Teacher {
@@ -10,22 +10,48 @@ public class Teacher {
     private String teacherId;
     private String firstName;
     private String lastName;
-    private Date birthDate;
+    private LocalDate birthDate;
     private Department department;
     private List<Subject> subjects = new ArrayList<>();
     private String phone;
     private String address;
     private String email;
-    private String gender;
+    private Gender gender;
     private String degree;
 
     public Teacher() {
     }
 
-    public Teacher(String teacherId, String firstName, String lastName) {
+    public Teacher(int id, String teacherId, String firstName, String lastName, LocalDate birthDate, String phone,
+	    String address, String email, String degree, Gender gender, Department department) {
+	this.id = id;
 	this.teacherId = teacherId;
 	this.firstName = firstName;
 	this.lastName = lastName;
+	this.birthDate = birthDate;
+	this.phone = phone;
+	this.address = address;
+	this.email = email;
+	this.degree = degree;
+	this.gender = gender;
+	this.department = department;
+    }
+
+    public Teacher(String teacherId, String firstName, String lastName, LocalDate birthDate, String phone,
+	    String address, String email, String degree, Gender gender, Department department) {
+	super();
+	this.teacherId = teacherId;
+	this.firstName = firstName;
+	this.lastName = lastName;
+	this.birthDate = birthDate;
+
+	this.phone = phone;
+	this.address = address;
+	this.email = email;
+
+	this.degree = degree;
+	this.gender = gender;
+	this.department = department;
     }
 
     public int getId() {
@@ -60,11 +86,11 @@ public class Teacher {
 	this.lastName = lastName;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
 	return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
 	this.birthDate = birthDate;
     }
 
@@ -108,11 +134,11 @@ public class Teacher {
 	this.email = email;
     }
 
-    public String getGender() {
+    public Gender getGender() {
 	return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
 	this.gender = gender;
     }
 
@@ -124,9 +150,14 @@ public class Teacher {
 	this.degree = degree;
     }
 
+  
+
     @Override
     public String toString() {
-	return firstName + " " + lastName;
+	return "Teacher [id=" + id + ", teacherId=" + teacherId + ", firstName=" + firstName + ", lastName=" + lastName
+		+ ", birthDate=" + birthDate + ", department=" + department + ", subjects=" + subjects + ", phone="
+		+ phone + ", address=" + address + ", email=" + email + ", gender=" + gender + ", degree=" + degree
+		+ "]";
     }
 
     @Override

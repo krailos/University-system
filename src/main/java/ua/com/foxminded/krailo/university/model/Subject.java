@@ -5,11 +5,17 @@ import java.util.List;
 
 public class Subject {
 
-    private int id; 
+    private int id;
     private String name;
     private List<Teacher> teachers = new ArrayList<>();
 
     public Subject() {
+    }
+
+    public Subject(int id, String name) {
+	super();
+	this.id = id;
+	this.name = name;
     }
 
     public Subject(String name) {

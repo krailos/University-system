@@ -54,4 +54,9 @@ address, email, rank, gender, group_id) VALUES
 
 INSERT INTO subjects (name) VALUES 
 ('subject 1'),
-('subject 2'),
+('subject 2');
+
+INSERT INTO teachers (teacher_id, first_name, last_name, birth_date, phone,
+address, email, degree, gender, department_id) VALUES 
+('1id', 'first name 1', 'last name 1', DATE '2000-01-01', '0670000001', 'address 1', 'email 1', '0', 'MALE', '1' ),
+('2id', 'first name 2', 'last name 2', DATE '2002-02-02', '0670000002', 'address 2', 'email 2', '0', 'FEMALE', '1' );
