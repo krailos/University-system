@@ -12,6 +12,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.krailo.university.model.Audience;
+import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.LessonTime;
 import ua.com.foxminded.krailo.university.model.Subject;
@@ -30,8 +31,8 @@ class LessonDaoTest {
 
     @Test
     void givenNewLesson_whenCreate_thenCreated() {
-	Lesson lesson = new Lesson(LocalDate.of(2000, 01, 01), new LessonTime(1), new Subject(1, null), 
-		 new Audience(1), new Teacher(1), new Timetable(1));
+	Lesson lesson = new Lesson(LocalDate.of(2000, 01, 01), new LessonTime(1), new Subject(1, null), new Audience(1),
+		new Teacher(1), new Timetable(1));
 	lessonDao.create(lesson);
 	int expected = 3;
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "lessons");
@@ -40,8 +41,8 @@ class LessonDaoTest {
 
     @Test
     void givenNewFieldsOfLesson_whenUpdate_thenUpdated() {
-	Lesson lesson = new Lesson(1, LocalDate.of(2000, 01, 01), new LessonTime(1), new Subject(1, null), 
-		 new Audience(1), new Teacher(1), new Timetable(1));
+	Lesson lesson = new Lesson(1, LocalDate.of(2000, 01, 01), new LessonTime(1), new Subject(1, null),
+		new Audience(1), new Teacher(1), new Timetable(1));
 	lessonDao.update(lesson);
 	int expected = 1;
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons",
@@ -70,13 +71,24 @@ class LessonDaoTest {
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "lessons");
 	assertEquals(expected, actual);
     }
-    
+
     @Test
     void givenLesson_whenFindGroupsByLessonId_thenFound() {
-	Lesson lesson = new Lesson(1, LocalDate.of(2000, 01, 01), new LessonTime(1), new Subject(1, null), 
-		 new Audience(1), new Teacher(1), new Timetable(1));
+	Lesson lesson = new Lesson(1, LocalDate.of(2000, 01, 01), new LessonTime(1), new Subject(1, null),
+		new Audience(1), new Teacher(1), new Timetable(1));
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons_groups", "lesson_id = 1");
 	int actual = lessonDao.findGroupsByLessonId(lesson).size();
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenGroup_whenAddGroupToLesson_thenAdded() {
+	Lesson lesson = new Lesson(1, LocalDate.of(2000, 01, 01), new LessonTime(1), new Subject(1, null),
+		new Audience(1), new Teacher(1), new Timetable(1));
+	Group group = new Group(2, null, null);
+	lessonDao.addGroupToLesson(lesson, group);
+	int expected = 2;
+	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "lessons_groups");
 	assertEquals(expected, actual);
     }
 }
