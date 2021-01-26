@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.krailo.university.model.UniversityOffice;
 
 @Component
-public class UniversityOfficeRowMapper  implements RowMapper<UniversityOffice> {
+public class UniversityOfficeRowMapper implements RowMapper<UniversityOffice> {
 
     @Override
     public UniversityOffice mapRow(ResultSet rs, int rowNum) throws SQLException {

@@ -15,13 +15,12 @@ import ua.com.foxminded.krailo.university.testConfig.ConfigTest;
 @SpringJUnitConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
 class BuildingDaoTest {
-    
+
     @Autowired
     private BuildingDao buildingDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    
-    
+
     @Test
     void givenNewBuilding_whenCreate_thenCreated() {
 	Building building = new Building("Building 3", "Address 3");
@@ -30,16 +29,17 @@ class BuildingDaoTest {
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "buildings");
 	assertEquals(expected, actual);
     }
-    
+
     @Test
     void givenNewFieldsOfBuilding_whenUpdate_thenUpdated() {
 	Building building = new Building(1, "new", "new");
 	buildingDao.update(building);
 	int expected = 1;
-	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "buildings", " name = 'new' and address = 'new'");
+	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "buildings",
+		" name = 'new' and address = 'new'");
 	assertEquals(expected, actual);
     }
-    
+
     @Test
     void givenId_whenFindById_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "buildings", "id = 1");
@@ -61,6 +61,5 @@ class BuildingDaoTest {
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "buildings");
 	assertEquals(expected, actual);
     }
-
 
 }

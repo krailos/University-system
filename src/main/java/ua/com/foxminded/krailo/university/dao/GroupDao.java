@@ -1,9 +1,12 @@
 package ua.com.foxminded.krailo.university.dao;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.krailo.university.model.Group;
@@ -26,7 +29,14 @@ public class GroupDao {
     }
 
     public void create(Group group) {
-	jdbcTemplate.update(SQL_INSERT_GROUP, group.getName(), group.getYear().getId());
+	KeyHolder keyHolder = new GeneratedKeyHolder();
+	jdbcTemplate.update(connection -> {
+	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_GROUP, new String[] { "id" });
+	    ps.setString(1, group.getName());
+	    ps.setInt(2, group.getYear().getId());
+	    return ps;
+	}, keyHolder);
+	group.setId(keyHolder.getKey().intValue());
     }
 
     public void update(Group group) {
@@ -44,5 +54,5 @@ public class GroupDao {
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
     }
-    
+
 }

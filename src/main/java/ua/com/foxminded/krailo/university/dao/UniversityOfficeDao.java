@@ -1,9 +1,12 @@
 package ua.com.foxminded.krailo.university.dao;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.krailo.university.model.UniversityOffice;
@@ -19,37 +22,38 @@ public class UniversityOfficeDao {
 
     private JdbcTemplate jdbcTemplate;
     private RowMapper<UniversityOffice> universityOfficeRowMapper;
-    
+
     public UniversityOfficeDao(JdbcTemplate jdbcTemplate, RowMapper<UniversityOffice> universityOfficeRowMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.universityOfficeRowMapper = universityOfficeRowMapper;
     }
-    
-    public UniversityOffice findById (int id) {
-	return jdbcTemplate.queryForObject(SQL_SELECT_BY_ID, new Object [] {id}, universityOfficeRowMapper);
+
+    public UniversityOffice findById(int id) {
+	return jdbcTemplate.queryForObject(SQL_SELECT_BY_ID, new Object[] { id }, universityOfficeRowMapper);
     }
-    
-    public List<UniversityOffice> findAll () {
+
+    public List<UniversityOffice> findAll() {
 	return jdbcTemplate.query(SQL_SELECT_ALL, universityOfficeRowMapper);
     }
 
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
-	
     }
 
     public void update(UniversityOffice universityOffice) {
-	jdbcTemplate.update(SQL_UPDATE_BY_ID, universityOffice.getName(), universityOffice.getAddress(), universityOffice.getId());
-	
+	jdbcTemplate.update(SQL_UPDATE_BY_ID, universityOffice.getName(), universityOffice.getAddress(),
+		universityOffice.getId());
     }
 
     public void create(UniversityOffice universityOffice) {
-	jdbcTemplate.update(SQL_INSERT_UNIVERSITY_OFFICE, universityOffice.getName(), universityOffice.getAddress());
-	
+	KeyHolder keyHolder = new GeneratedKeyHolder();
+	jdbcTemplate.update(connection -> {
+	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_UNIVERSITY_OFFICE, new String[] { "id" });
+	    ps.setString(1, universityOffice.getName());
+	    ps.setString(2, universityOffice.getAddress());
+	    return ps;
+	}, keyHolder);
+	universityOffice.setId(keyHolder.getKey().intValue());
     }
-    
-    
 
-    
-    
 }

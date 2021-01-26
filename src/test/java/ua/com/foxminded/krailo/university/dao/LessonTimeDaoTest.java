@@ -26,7 +26,8 @@ class LessonTimeDaoTest {
 
     @Test
     void givenNewLessonTime_whenCreate_thenCreated() {
-	LessonTime lessonTime = new LessonTime("new", LocalTime.of(12, 00), LocalTime.of(12, 45), new LessonsTimeSchedule(1, "new"));
+	LessonTime lessonTime = new LessonTime("new", LocalTime.of(12, 00), LocalTime.of(12, 45),
+		new LessonsTimeSchedule(1, "new"));
 	lessonTimeDao.create(lessonTime);
 	int expected = 3;
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "lesson_times");
@@ -35,7 +36,8 @@ class LessonTimeDaoTest {
 
     @Test
     void givenNewFieldsOfLossonTime_whenUpdate_tnenUpdated() {
-	LessonTime lessonTime = new LessonTime(1, "new", LocalTime.of(12, 00), LocalTime.of(12, 45), new LessonsTimeSchedule(1, "new"));
+	LessonTime lessonTime = new LessonTime(1, "new", LocalTime.of(12, 00), LocalTime.of(12, 45),
+		new LessonsTimeSchedule(1, "new"));
 	lessonTimeDao.update(lessonTime);
 	int expected = 1;
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lesson_times",

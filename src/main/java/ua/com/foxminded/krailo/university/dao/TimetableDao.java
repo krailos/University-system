@@ -1,9 +1,12 @@
 package ua.com.foxminded.krailo.university.dao;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.krailo.university.model.Timetable;
@@ -26,7 +29,17 @@ public class TimetableDao {
     }
 
     public void create(Timetable timetable) {
-	jdbcTemplate.update(SQL_INSERT_FACULTY, timetable.getName(), timetable.getYear().getId(), timetable.getSpeciality().getId());
+	//jdbcTemplate.update(SQL_INSERT_FACULTY, timetable.getName(), timetable.getYear().getId(), timetable.getSpeciality().getId());
+	
+	KeyHolder keyHolder = new GeneratedKeyHolder();
+	jdbcTemplate.update(connection -> {
+	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_FACULTY, new String[] { "id" });
+	    ps.setString(1, timetable.getName());
+	    ps.setInt(2, timetable.getYear().getId());
+	    ps.setInt(3, timetable.getSpeciality().getId());
+	    return ps;
+	}, keyHolder);
+	timetable.setId(keyHolder.getKey().intValue());
 
     }
 

@@ -1,10 +1,13 @@
 package ua.com.foxminded.krailo.university.dao;
 
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.krailo.university.model.Teacher;
@@ -27,10 +30,22 @@ public class TeacherDao {
     }
 
     public void create(Teacher teacher) {
-	jdbcTemplate.update(SQL_INSERT_TEACHER, teacher.getTeacherId(), teacher.getFirstName(), teacher.getLastName(),
-		Date.valueOf(teacher.getBirthDate()), teacher.getPhone(), teacher.getEmail(), teacher.getAddress(),
-		teacher.getDegree(), teacher.getGender().toString(), teacher.getDepartment().getId());
-
+	KeyHolder keyHolder = new GeneratedKeyHolder();
+	jdbcTemplate.update(connection -> {
+	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_TEACHER, new String[] { "id" });
+	    ps.setString(1, teacher.getTeacherId());
+	    ps.setString(2, teacher.getFirstName());
+	    ps.setString(3, teacher.getLastName());
+	    ps.setDate(4, Date.valueOf(teacher.getBirthDate()));
+	    ps.setString(5, teacher.getPhone());
+	    ps.setString(6, teacher.getEmail());
+	    ps.setString(7, teacher.getAddress());
+	    ps.setString(8, teacher.getDegree());
+	    ps.setString(9, teacher.getGender().toString());
+	    ps.setInt(10, teacher.getDepartment().getId());
+	    return ps;
+	}, keyHolder);
+	teacher.setId(keyHolder.getKey().intValue());
     }
 
     public void update(Teacher teacher) {
@@ -49,7 +64,6 @@ public class TeacherDao {
 
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
-
     }
 
 }

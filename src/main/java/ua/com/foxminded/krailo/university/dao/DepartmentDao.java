@@ -1,9 +1,12 @@
 package ua.com.foxminded.krailo.university.dao;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.krailo.university.model.Department;
@@ -26,8 +29,13 @@ public class DepartmentDao {
     }
 
     public void create(Department department) {
-	jdbcTemplate.update(SQL_INSERT_DEPARTMENT, department.getName());
-
+	KeyHolder keyHolder = new GeneratedKeyHolder();
+	jdbcTemplate.update(connection -> {
+	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_DEPARTMENT, new String[] { "id" });
+	    ps.setString(1, department.getName());
+	    return ps;
+	}, keyHolder);
+	department.setId(keyHolder.getKey().intValue());
     }
 
     public void update(Department department) {

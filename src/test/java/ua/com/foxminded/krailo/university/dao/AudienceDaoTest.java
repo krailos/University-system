@@ -51,7 +51,7 @@ class AudienceDaoTest {
 	int actual = audienceDao.findById(1).getId();
 	assertEquals(expected, actual);
     }
-    
+
     @Test
     void givenNewFieldsOfAudience_whenUpdate_thenUpdated() {
 	Audience audience = new Audience(1, "new", new Building(1, "", ""), 1, "new");
@@ -61,7 +61,7 @@ class AudienceDaoTest {
 		"number = 'new' AND building_id = 1 AND capacity = 1 AND description = 'new'");
 	assertEquals(expected, actual);
     }
-	
+
     @Test
     void givenId_whenDelete_thenDeleted() throws Exception {
 	audienceDao.deleteById(3);

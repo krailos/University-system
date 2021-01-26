@@ -36,8 +36,7 @@ class YearDaoTest {
 	Year year = new Year(1, "new", new Speciality(1, "new", null));
 	yearDao.update(year);
 	int expected = 1;
-	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "years",
-		"name = 'new' AND id = 1");
+	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "years", "name = 'new' AND id = 1");
 	assertEquals(expected, actual);
     }
 

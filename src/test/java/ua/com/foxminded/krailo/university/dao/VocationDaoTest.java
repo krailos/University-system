@@ -26,7 +26,8 @@ class VocationDaoTest {
 
     @Test
     void givenNewVocation_whenCreate_thenCreated() {
-	Vocation vocation = new Vocation("new", LocalDate.of(2000, 01, 01), LocalDate.of(2000, 02, 02), LocalDate.of(2000, 03, 03), new Teacher(1));
+	Vocation vocation = new Vocation("new", LocalDate.of(2000, 01, 01), LocalDate.of(2000, 02, 02),
+		LocalDate.of(2000, 03, 03), new Teacher(1));
 	vocationDao.create(vocation);
 	int expected = 3;
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "vocations");
@@ -35,7 +36,8 @@ class VocationDaoTest {
 
     @Test
     void givenNewFieldsOfVocation_whenUpdate_thenUpdated() {
-	Vocation vocation = new Vocation(1, "new", LocalDate.of(2000, 01, 01), LocalDate.of(2000, 02, 02), LocalDate.of(2000, 03, 03), new Teacher(1));
+	Vocation vocation = new Vocation(1, "new", LocalDate.of(2000, 01, 01), LocalDate.of(2000, 02, 02),
+		LocalDate.of(2000, 03, 03), new Teacher(1));
 	vocationDao.update(vocation);
 	int expected = 1;
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "vocations",

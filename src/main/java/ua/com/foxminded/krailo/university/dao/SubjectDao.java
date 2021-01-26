@@ -1,9 +1,12 @@
 package ua.com.foxminded.krailo.university.dao;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.krailo.university.model.Subject;
@@ -26,8 +29,13 @@ public class SubjectDao {
     }
 
     public void create(Subject subject) {
-	jdbcTemplate.update(SQL_INSERT_DEPARTMENT, subject.getName());
-
+	KeyHolder keyHolder = new GeneratedKeyHolder();
+	jdbcTemplate.update(connection -> {
+	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_DEPARTMENT, new String[] { "id" });
+	    ps.setString(1, subject.getName());
+	    return ps;
+	}, keyHolder);
+	subject.setId(keyHolder.getKey().intValue());
     }
 
     public void update(Subject subject) {
@@ -45,7 +53,6 @@ public class SubjectDao {
 
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
-
     }
 
 }

@@ -11,9 +11,9 @@ import ua.com.foxminded.krailo.university.model.Audience;
 
 @Component
 public class AudienceRowMapper implements RowMapper<Audience> {
-    
+
     private BuildingDao buildingDao;
-    
+
     public AudienceRowMapper(BuildingDao buildingDao) {
 	this.buildingDao = buildingDao;
     }
@@ -30,4 +30,3 @@ public class AudienceRowMapper implements RowMapper<Audience> {
     }
 
 }
- 

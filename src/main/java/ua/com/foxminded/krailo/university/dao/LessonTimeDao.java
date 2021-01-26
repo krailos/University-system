@@ -1,10 +1,13 @@
 package ua.com.foxminded.krailo.university.dao;
 
+import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.krailo.university.model.LessonTime;
@@ -27,8 +30,16 @@ public class LessonTimeDao {
     }
 
     public void create(LessonTime lessonTime) {
-	jdbcTemplate.update(SQL_INSERT_SPECIALITY, lessonTime.getOrderNumber(), Time.valueOf(lessonTime.getStartTime()),  Time.valueOf(lessonTime.getEndTime()), 
-		lessonTime.getLessonsTimeSchedule().getId());
+	KeyHolder keyHolder = new GeneratedKeyHolder();
+	jdbcTemplate.update(connection -> {
+	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_SPECIALITY, new String[] { "id" });
+	    ps.setString(1, lessonTime.getOrderNumber());
+	    ps.setTime(2, Time.valueOf(lessonTime.getStartTime()));
+	    ps.setTime(3, Time.valueOf(lessonTime.getEndTime()));
+	    ps.setInt(4, lessonTime.getLessonsTimeSchedule().getId());
+	    return ps;
+	}, keyHolder);
+	lessonTime.setId(keyHolder.getKey().intValue());
 
     }
 

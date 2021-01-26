@@ -1,9 +1,12 @@
 package ua.com.foxminded.krailo.university.dao;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.krailo.university.model.Year;
@@ -25,15 +28,19 @@ public class YearDao {
 	this.yearRowMapper = yearRowMapper;
     }
 
-    public void create(Year  year) {
-	jdbcTemplate.update(SQL_INSERT_YEAR, year.getName(), year.getSpeciality().getId());
-
+    public void create(Year year) {
+	KeyHolder keyHolder = new GeneratedKeyHolder();
+	jdbcTemplate.update(connection -> {
+	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_YEAR, new String[] { "id" });
+	    ps.setString(1, year.getName());
+	    ps.setInt(2, year.getSpeciality().getId());
+	    return ps;
+	}, keyHolder);
+	year.setId(keyHolder.getKey().intValue());
     }
 
     public void update(Year year) {
-	jdbcTemplate.update(SQL_UPDATE_BY_ID, year.getName(), year.getSpeciality().getId(),
-		year.getId());
-
+	jdbcTemplate.update(SQL_UPDATE_BY_ID, year.getName(), year.getSpeciality().getId(), year.getId());
     }
 
     public Year findById(int id) {
@@ -46,7 +53,6 @@ public class YearDao {
 
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
-
     }
 
 }

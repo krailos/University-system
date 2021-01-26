@@ -16,7 +16,7 @@ public class TimetableRowMapper implements RowMapper<Timetable> {
     private YearDao yearDao;
     private SpecialityDao specialityDao;
 
-    public TimetableRowMapper(YearDao yearDao, SpecialityDao specialityDao ) {
+    public TimetableRowMapper(YearDao yearDao, SpecialityDao specialityDao) {
 	this.yearDao = yearDao;
 	this.specialityDao = specialityDao;
     }

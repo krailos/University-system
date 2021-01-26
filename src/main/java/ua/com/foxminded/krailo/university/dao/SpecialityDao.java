@@ -1,9 +1,12 @@
 package ua.com.foxminded.krailo.university.dao;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.krailo.university.model.Speciality;
@@ -26,14 +29,19 @@ public class SpecialityDao {
     }
 
     public void create(Speciality speciality) {
-	jdbcTemplate.update(SQL_INSERT_SPECIALITY, speciality.getName(), speciality.getFaculty().getId());
-
+	KeyHolder keyHolder = new GeneratedKeyHolder();
+	jdbcTemplate.update(connection -> {
+	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_SPECIALITY, new String[] { "id" });
+	    ps.setString(1, speciality.getName());
+	    ps.setInt(2, speciality.getFaculty().getId());
+	    return ps;
+	}, keyHolder);
+	speciality.setId(keyHolder.getKey().intValue());
     }
 
     public void update(Speciality speciality) {
 	jdbcTemplate.update(SQL_UPDATE_BY_ID, speciality.getName(), speciality.getFaculty().getId(),
 		speciality.getId());
-
     }
 
     public Speciality findById(int id) {
@@ -46,7 +54,6 @@ public class SpecialityDao {
 
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
-
     }
 
 }

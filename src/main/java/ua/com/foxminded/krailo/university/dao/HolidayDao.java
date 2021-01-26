@@ -47,7 +47,7 @@ public class HolidayDao {
 	}, keyHolder);
 	holiday.setId(keyHolder.getKey().intValue());
     }
-    
+
     public void update(Holiday holiday) {
 	jdbcTemplate.update(SQL_UPDATE_HOLIDAY_BY_ID, holiday.getName(), Date.valueOf(holiday.getDate()),
 		holiday.getId());

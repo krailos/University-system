@@ -12,15 +12,14 @@ import ua.com.foxminded.krailo.university.configuration.UniversityConfig;
 
 @Component
 public class Main {
-    
+
     public static void main(String[] args) {
-	AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
-		UniversityConfig.class);
+	AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(UniversityConfig.class);
 	ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
 	populator.addScript(new ClassPathResource("schema.sql"));
 	populator.addScript(new ClassPathResource("data.sql"));
-	DatabasePopulatorUtils.execute(populator,  (DataSource) context.getBean("dataSource"));
-	System.out.println("ok");
+	DatabasePopulatorUtils.execute(populator, (DataSource) context.getBean("dataSource"));
+	System.out.println("data populated");
 	context.close();
     }
 }
