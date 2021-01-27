@@ -72,7 +72,7 @@ class SubjectDaoTest {
     @Test
     void givenTeacherId_whenFindSubjectsByTeacherId_thenFound() {
 	Teacher teacher = new Teacher(1);
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers_subjects", "teacher_id = 1");
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "subjects", "id = 1 OR id = 2" );
 
 	int actual = subjectDao.findSubjectsByTeacherId(teacher.getId()).size();
 
