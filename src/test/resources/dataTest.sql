@@ -74,4 +74,7 @@ INSERT INTO vocations (kind, applying_date, start_date, end_date, teacher_id) VA
 ('Vocation 2', DATE '2022-01-01', DATE '2022-02-02', DATE '2022-03-03', '2');
 
 INSERT INTO lessons_groups (lesson_id, group_id) VALUES 
-('1', '1');
+('1', '1'),
+('1', '2'),
+('2', '1'),
+('2', '2');

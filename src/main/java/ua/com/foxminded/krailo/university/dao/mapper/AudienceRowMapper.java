@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.university.mapper;
+package ua.com.foxminded.krailo.university.dao.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -20,19 +20,17 @@ public class LessonDao {
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM lessons WHERE id = ?";
     private static final String SQL_UPDATE_BY_ID = "UPDATE lessons SET date = ?, lesson_time_id = ?, subject_id = ?, teacher_id = ?, audience_id = ?, timetable_id = ? WHERE id = ?";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM lessons WHERE id = ?";
-    private static final String SQL_INSERT_LESSON = "INSERT INTO lessons (date, lesson_time_id, subject_id, teacher_id, audience_id, timetable_id) VALUES (?, ?, ?, ?, ?, ?)";
-    private static final String SQL_SELECT_GROUPD_ID_BY_LESSON_ID = "SELECT lessons.id, lessons_groups.group_id  FROM lessons JOIN lessons_groups  ON (lessons.id=lessons_groups.lesson_id) WHERE lessons.id = ?";
-    private static final String SQL_INSERT_GROUP_TO_LESSONS_GROUPS = "INSERT INTO lessons_groups (lesson_id, group_id) VALUES (?, ?)";
-
+    private static final String SQL_INSERT_INTO_LESSONS = "INSERT INTO lessons (date, lesson_time_id, subject_id, teacher_id, audience_id, timetable_id) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String SQL_INSERT_INTO_LESSONS_GROUPS = "INSERT INTO lessons_groups (lesson_id, group_id) VALUES (?, ?)";
+    private static final String SQL_DELETE_LESSONS_GROUPD_BY_ID = "DELETE FROM lessons_groups WHERE lesson_id = ?";
+    
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Lesson> lessonRowMapper;
-    private RowMapper<Group> groupFromGroupIdRowMapper;
 
     public LessonDao(JdbcTemplate jdbcTemplate, RowMapper<Lesson> lessonRowMapper,
 	    RowMapper<Group> groupFromGroupIdRowMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.lessonRowMapper = lessonRowMapper;
-	this.groupFromGroupIdRowMapper = groupFromGroupIdRowMapper;
     }
 
     public Lesson findById(int id) {
@@ -46,7 +44,7 @@ public class LessonDao {
     public void create(Lesson lesson) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 	jdbcTemplate.update(connection -> {
-	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_LESSON, new String[] { "id" });
+	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_INTO_LESSONS, new String[] { "id" });
 	    ps.setDate(1, Date.valueOf(lesson.getDate()));
 	    ps.setInt(2, lesson.getLessonTime().getId());
 	    ps.setInt(3, lesson.getSubject().getId());
@@ -56,32 +54,24 @@ public class LessonDao {
 	    return ps;
 	}, keyHolder);
 	lesson.setId(keyHolder.getKey().intValue());
+	for (Group group : lesson.getGroups()) {
+	    jdbcTemplate.update(SQL_INSERT_INTO_LESSONS_GROUPS, lesson.getId(), group.getId());
+	}
+	
     }
 
     public void update(Lesson lesson) {
 	jdbcTemplate.update(SQL_UPDATE_BY_ID, Date.valueOf(lesson.getDate()), lesson.getLessonTime().getId(),
 		lesson.getSubject().getId(), lesson.getTeacher().getId(), lesson.getAudience().getId(),
 		lesson.getTimetable().getId(), lesson.getId());
+	jdbcTemplate.update(SQL_DELETE_LESSONS_GROUPD_BY_ID, lesson.getId());	
+	for (Group group : lesson.getGroups()) {
+	    jdbcTemplate.update(SQL_INSERT_INTO_LESSONS_GROUPS, lesson.getId(), group.getId());
+	}
     }
 
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
     }
 
-    public List<Group> findGroupsByLessonId(Lesson lesson) {
-	return jdbcTemplate.query(SQL_SELECT_GROUPD_ID_BY_LESSON_ID, new Object[] { lesson.getId() },
-		groupFromGroupIdRowMapper);
-    }
-
-    public int addGroupToLesson(Lesson lesson, Group group) {
-	KeyHolder keyHolder = new GeneratedKeyHolder();
-	jdbcTemplate.update(connection -> {
-	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_GROUP_TO_LESSONS_GROUPS,
-		    new String[] { "id" });
-	    ps.setInt(1, lesson.getId());
-	    ps.setInt(2, group.getId());
-	    return ps;
-	}, keyHolder);
-	return keyHolder.getKey().intValue();
-    }
 }

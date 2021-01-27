@@ -8,7 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import ua.com.foxminded.krailo.university.mapper.BuildingRowMapper;
+import ua.com.foxminded.krailo.university.dao.mapper.BuildingRowMapper;
 import ua.com.foxminded.krailo.university.model.Building;
 
 @Repository

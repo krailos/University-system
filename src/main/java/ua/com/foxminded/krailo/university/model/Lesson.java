@@ -20,7 +20,6 @@ public class Lesson {
 
     public Lesson(int id, LocalDate date, LessonTime lessonTime, Subject subject, Audience audience, Teacher teacher,
 	    Timetable timetable) {
-	super();
 	this.id = id;
 	this.date = date;
 	this.lessonTime = lessonTime;
@@ -32,7 +31,6 @@ public class Lesson {
 
     public Lesson(LocalDate date, LessonTime lessonTime, Subject subject, Audience audience, Teacher teacher,
 	    Timetable timetable) {
-	super();
 	this.date = date;
 	this.lessonTime = lessonTime;
 	this.subject = subject;
@@ -107,10 +105,9 @@ public class Lesson {
 
     @Override
     public String toString() {
-	return "Lesson [id=" + id + ", date=" + date + ", lessonTime=" + lessonTime.getId() + ", subject=" + subject.getId()
-		+ ", audience=" + audience.getId() + ", teacher=" + teacher.getId() + ", timetable=" + timetable.getId() + ", groups=" + groups
-		+ "]";
+	return "Lesson [id=" + id + ", date=" + date + ", lessonTime=" + lessonTime.getId() + ", subject="
+		+ subject.getId() + ", audience=" + audience.getId() + ", teacher=" + teacher.getId() + ", timetable="
+		+ timetable.getId() + ", groups=" + groups + "]";
     }
-
 
 }

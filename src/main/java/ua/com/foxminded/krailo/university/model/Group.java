@@ -13,6 +13,10 @@ public class Group {
     public Group() {
     }
 
+    public Group(int id) {
+	this.id = id;
+    }
+
     public Group(int id, String name, Year year) {
 	super();
 	this.id = id;
@@ -97,11 +101,6 @@ public class Group {
 	} else if (!year.equals(other.year))
 	    return false;
 	return true;
-    }
-
-    public void addStudentToGroup(Student student) {
-	student.setGroup(this);
-	students.add(student);
     }
 
 }

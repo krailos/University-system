@@ -176,7 +176,6 @@ CREATE TABLE vocations (
 );
 
 CREATE TABLE lessons_groups (
-	id serial NOT NULL,
 	lesson_id int REFERENCES lessons (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	group_id int REFERENCES groups (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	UNIQUE (lesson_id, group_id)

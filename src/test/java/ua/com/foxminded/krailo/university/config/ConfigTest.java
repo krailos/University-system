@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.university.testConfig;
+package ua.com.foxminded.krailo.university.config;
 
 import javax.sql.DataSource;
 
@@ -21,8 +21,6 @@ public class ConfigTest {
 	dataSource.setUsername("sa");
 	dataSource.setPassword("");
 	return dataSource;
-	
-	//return new EmbeddedDatabaseBuilder().generateUniqueName(true).setType(EmbeddedDatabaseType.H2).build();
     }
               
 }
