@@ -78,7 +78,7 @@ class GroupDaoTest {
     }
 
     @Test
-    void givenLesson_whenFindGroupsByLessonId_thenFound() {
+    void givenLessonId_whenFindGroupsByLessonId_thenFound() {
 	Lesson lesson = new Lesson(1, LocalDate.of(2000, 01, 01), new LessonTime(1), new Subject(1, null),
 		new Audience(1), new Teacher(1), new Timetable(1));
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons_groups", "lesson_id = 1");

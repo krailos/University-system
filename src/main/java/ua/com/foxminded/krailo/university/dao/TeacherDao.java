@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
 
 @Repository
@@ -20,6 +21,9 @@ public class TeacherDao {
     private static final String SQL_DELETE_BY_ID = "DELETE FROM teachers WHERE id = ?";
     private static final String SQL_INSERT_TEACHER = "INSERT INTO teachers (teacher_id, first_name, last_name, birth_date, phone, address, email, degree, gender, department_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE_BY_ID = "UPDATE teachers SET teacher_id = ?, first_name = ?, last_name = ?, birth_date = ?, phone = ?, address = ?, email = ?, degree = ?, gender = ?, department_id = ? WHERE id = ?";
+    private static final String SQL_SELECT_TEACHERS_BY_SUBJECT_ID = "SELECT * FROM teachers_subjects JOIN teachers ON (teachers_subjects.teacher_id = teachers.id) WHERE teachers_subjects.subject_id = ?";
+    private static final String SQL_INSERT_INTO_TEACHERS_SUBJECTS = "INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES (?, ?)";
+    private static final String SQL_DELETE_TEACHERS_SUBJECTS_BY_TEACHER_ID = "DELETE FROM teachers_subjects WHERE teacher_id = ?";
 
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Teacher> teacherRowMapper;
@@ -46,12 +50,19 @@ public class TeacherDao {
 	    return ps;
 	}, keyHolder);
 	teacher.setId(keyHolder.getKey().intValue());
+	for (Subject subject : teacher.getSubjects()) {
+	    jdbcTemplate.update(SQL_INSERT_INTO_TEACHERS_SUBJECTS, teacher.getId(), subject.getId());
+	}
     }
 
     public void update(Teacher teacher) {
 	jdbcTemplate.update(SQL_UPDATE_BY_ID, teacher.getTeacherId(), teacher.getFirstName(), teacher.getLastName(),
 		Date.valueOf(teacher.getBirthDate()), teacher.getPhone(), teacher.getAddress(), teacher.getEmail(),
 		teacher.getDegree(), teacher.getGender().toString(), teacher.getDepartment().getId(), teacher.getId());
+	jdbcTemplate.update(SQL_DELETE_TEACHERS_SUBJECTS_BY_TEACHER_ID, teacher.getId());
+	for (Subject subject : teacher.getSubjects()) {
+	    jdbcTemplate.update(SQL_INSERT_INTO_TEACHERS_SUBJECTS, teacher.getId(), subject.getId());
+	}
     }
 
     public Teacher findById(int id) {
@@ -64,6 +75,10 @@ public class TeacherDao {
 
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
+    }
+
+    public List<Teacher> findTeacherBySubjectId(int id) {
+	return jdbcTemplate.query(SQL_SELECT_TEACHERS_BY_SUBJECT_ID, new Object[] { id }, teacherRowMapper);
     }
 
 }

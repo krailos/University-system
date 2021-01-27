@@ -11,6 +11,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.model.Subject;
+import ua.com.foxminded.krailo.university.model.Teacher;
 
 @SpringJUnitConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
@@ -66,6 +67,16 @@ class SubjectDaoTest {
 
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "subjects");
 	assertEquals(1, actual);
+    }
+    
+    @Test
+    void givenTeacherId_whenFindSubjectsByTeacherId_thenFound() {
+	Teacher teacher = new Teacher(1);
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers_subjects", "teacher_id = 1");
+
+	int actual = subjectDao.findSubjectsByTeacherId(teacher.getId()).size();
+
+	assertEquals(expected, actual);
     }
 
 }

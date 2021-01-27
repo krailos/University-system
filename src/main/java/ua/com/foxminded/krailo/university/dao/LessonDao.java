@@ -22,7 +22,7 @@ public class LessonDao {
     private static final String SQL_DELETE_BY_ID = "DELETE FROM lessons WHERE id = ?";
     private static final String SQL_INSERT_INTO_LESSONS = "INSERT INTO lessons (date, lesson_time_id, subject_id, teacher_id, audience_id, timetable_id) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String SQL_INSERT_INTO_LESSONS_GROUPS = "INSERT INTO lessons_groups (lesson_id, group_id) VALUES (?, ?)";
-    private static final String SQL_DELETE_LESSONS_GROUPD_BY_ID = "DELETE FROM lessons_groups WHERE lesson_id = ?";
+    private static final String SQL_DELETE_LESSONS_GROUPD_BY_LESSON_ID = "DELETE FROM lessons_groups WHERE lesson_id = ?";
     
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Lesson> lessonRowMapper;
@@ -64,7 +64,7 @@ public class LessonDao {
 	jdbcTemplate.update(SQL_UPDATE_BY_ID, Date.valueOf(lesson.getDate()), lesson.getLessonTime().getId(),
 		lesson.getSubject().getId(), lesson.getTeacher().getId(), lesson.getAudience().getId(),
 		lesson.getTimetable().getId(), lesson.getId());
-	jdbcTemplate.update(SQL_DELETE_LESSONS_GROUPD_BY_ID, lesson.getId());	
+	jdbcTemplate.update(SQL_DELETE_LESSONS_GROUPD_BY_LESSON_ID, lesson.getId());	
 	for (Group group : lesson.getGroups()) {
 	    jdbcTemplate.update(SQL_INSERT_INTO_LESSONS_GROUPS, lesson.getId(), group.getId());
 	}

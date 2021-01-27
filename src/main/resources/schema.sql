@@ -18,6 +18,7 @@ DROP TABLE IF EXISTS teachers CASCADE;
 DROP TABLE IF EXISTS lessons CASCADE;
 DROP TABLE IF EXISTS vocations CASCADE;
 DROP TABLE IF EXISTS lessons_groups CASCADE;
+DROP TABLE IF EXISTS teachers_subjects CASCADE;
 
 DROP TYPE IF EXISTS gender CASCADE;
 CREATE TYPE gender AS enum ('male', 'female');
@@ -79,7 +80,6 @@ CREATE TABLE specialities (
 	faculty_id int REFERENCES faculties (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT specialities__pkey PRIMARY KEY (id)
 );
-
 
 CREATE TABLE years (
 	id serial NOT NULL,
@@ -180,3 +180,9 @@ CREATE TABLE lessons_groups (
 	group_id int REFERENCES groups (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	UNIQUE (lesson_id, group_id)
 ); 
+
+CREATE TABLE teachers_subjects (
+	teacher_id int REFERENCES teachers (id) ON UPDATE CASCADE ON DELETE CASCADE,
+	subject_id int REFERENCES subjects (id) ON UPDATE CASCADE ON DELETE CASCADE,
+	UNIQUE (teacher_id, subject_id)
+);

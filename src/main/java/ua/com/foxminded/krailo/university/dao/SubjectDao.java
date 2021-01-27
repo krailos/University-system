@@ -19,6 +19,7 @@ public class SubjectDao {
     private static final String SQL_DELETE_BY_ID = "DELETE FROM subjects WHERE id = ?";
     private static final String SQL_INSERT_DEPARTMENT = "INSERT INTO subjects (name) VALUES (?)";
     private static final String SQL_UPDATE_BY_ID = "UPDATE subjects  SET name = ? where id = ?";
+    private static final String SQL_SELECT_SUBJECTS_BY_TEACHER_ID = "SELECT * FROM teachers_subjects JOIN subjects ON (teachers_subjects.subject_id = subjects.id) WHERE teachers_subjects.teacher_id = ?";
 
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Subject> subjectRowMapper;
@@ -53,6 +54,10 @@ public class SubjectDao {
 
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
+    }
+
+    public List<Subject> findSubjectsByTeacherId(int id) {
+	return jdbcTemplate.query(SQL_SELECT_SUBJECTS_BY_TEACHER_ID, new Object[] { id }, subjectRowMapper);
     }
 
 }
