@@ -46,7 +46,7 @@ public class LessonDao {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_INTO_LESSONS, new String[] { "id" });
-	    ps.setDate(1, Date.valueOf(lesson.getDate()));
+	    ps.setObject(1, lesson.getDate());
 	    ps.setInt(2, lesson.getLessonTime().getId());
 	    ps.setInt(3, lesson.getSubject().getId());
 	    ps.setInt(4, lesson.getTeacher().getId());

@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.krailo.university.dao.DepartmentDao;
+import ua.com.foxminded.krailo.university.dao.SubjectDao;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Teacher;
 
@@ -15,9 +16,11 @@ import ua.com.foxminded.krailo.university.model.Teacher;
 public class TeacherRowMapper implements RowMapper<Teacher> {
 
     private DepartmentDao departmentDao;
+    private SubjectDao subjectDao;
 
-    public TeacherRowMapper(DepartmentDao departmentDao) {
+    public TeacherRowMapper(DepartmentDao departmentDao, SubjectDao subjectDao) {
 	this.departmentDao = departmentDao;
+	this.subjectDao = subjectDao;
     }
 
     @Override
@@ -34,6 +37,7 @@ public class TeacherRowMapper implements RowMapper<Teacher> {
 	teacher.setDegree(rs.getString("degree"));
 	teacher.setGender(Gender.valueOf(rs.getString("gender")));
 	teacher.setDepartment(departmentDao.findById(rs.getInt("department_id")));
+	teacher.setSubjects(subjectDao.findSubjectsByTeacherId(teacher.getId()));
 	return teacher;
     }
 

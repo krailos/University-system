@@ -42,7 +42,7 @@ public class HolidayDao {
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_HOLIDAY, new String[] { "id" });
 	    ps.setString(1, holiday.getName());
-	    ps.setDate(2, Date.valueOf(holiday.getDate()));
+	    ps.setObject(2, holiday.getDate());
 	    return ps;
 	}, keyHolder);
 	holiday.setId(keyHolder.getKey().intValue());

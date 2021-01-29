@@ -66,6 +66,14 @@ public class Teacher {
 	this.id = id;
     }
 
+    public List<Subject> getSubjects() {
+	return subjects;
+    }
+
+    public void setSubjects(List<Subject> subjects) {
+	this.subjects = subjects;
+    }
+
     public String getTeacherId() {
 	return teacherId;
     }
@@ -104,14 +112,6 @@ public class Teacher {
 
     public void setDepartment(Department department) {
 	this.department = department;
-    }
-
-    public List<Subject> getSubjects() {
-	return subjects;
-    }
-
-    public void setSubjects(List<Subject> subjects) {
-	this.subjects = subjects;
     }
 
     public String getPhone() {

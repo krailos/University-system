@@ -47,7 +47,7 @@ public class Subject {
 
     @Override
     public String toString() {
-	return name;
+	return "id = " + id + " " + "name = " + name;
     }
 
 }

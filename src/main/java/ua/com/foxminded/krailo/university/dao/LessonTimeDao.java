@@ -34,8 +34,8 @@ public class LessonTimeDao {
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_SPECIALITY, new String[] { "id" });
 	    ps.setString(1, lessonTime.getOrderNumber());
-	    ps.setTime(2, Time.valueOf(lessonTime.getStartTime()));
-	    ps.setTime(3, Time.valueOf(lessonTime.getEndTime()));
+	    ps.setObject(2, lessonTime.getStartTime());
+	    ps.setObject(3, lessonTime.getEndTime());
 	    ps.setInt(4, lessonTime.getLessonsTimeSchedule().getId());
 	    return ps;
 	}, keyHolder);
@@ -44,8 +44,8 @@ public class LessonTimeDao {
     }
 
     public void update(LessonTime lessonTime) {
-	jdbcTemplate.update(SQL_UPDATE_BY_ID, lessonTime.getOrderNumber(), Time.valueOf(lessonTime.getStartTime()),  Time.valueOf(lessonTime.getEndTime()),
-		lessonTime.getLessonsTimeSchedule().getId(), lessonTime.getId());
+	jdbcTemplate.update(SQL_UPDATE_BY_ID, lessonTime.getOrderNumber(), Time.valueOf(lessonTime.getStartTime()),
+		Time.valueOf(lessonTime.getEndTime()), lessonTime.getLessonsTimeSchedule().getId(), lessonTime.getId());
 
     }
 
