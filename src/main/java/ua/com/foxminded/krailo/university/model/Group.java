@@ -63,7 +63,7 @@ public class Group {
 
     @Override
     public String toString() {
-	return name + " " + year;
+	return "id = " + id + " " + "name = " + name + " " + "year = " + year;
     }
 
     @Override

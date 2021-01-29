@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.krailo.university.dao.AudienceDao;
+import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.LessonTimeDao;
 import ua.com.foxminded.krailo.university.dao.SubjectDao;
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
@@ -22,14 +23,16 @@ public class LessonRowMapper implements RowMapper<Lesson> {
     private TeacherDao teacherDao;
     private AudienceDao audienceDao;
     private TimetableDao timetableDao;
+    private GroupDao groupDao;
 
     public LessonRowMapper(LessonTimeDao lessonTimeDao, SubjectDao subjectDao, TeacherDao teacherDao,
-	    AudienceDao audienceDao, TimetableDao timetableDao) {
+	    AudienceDao audienceDao, TimetableDao timetableDao, GroupDao groupDao) {
 	this.lessonTimeDao = lessonTimeDao;
 	this.subjectDao = subjectDao;
 	this.teacherDao = teacherDao;
 	this.audienceDao = audienceDao;
 	this.timetableDao = timetableDao;
+	this.groupDao = groupDao;
     }
 
     @Override
@@ -42,6 +45,7 @@ public class LessonRowMapper implements RowMapper<Lesson> {
 	lesson.setTeacher(teacherDao.findById(rs.getInt("teacher_id")));
 	lesson.setAudience(audienceDao.findById(rs.getInt("audience_id")));
 	lesson.setTimetable(timetableDao.findById(rs.getInt("timetable_id")));
+	lesson.setGroups(groupDao.findGroupsByLessonId(lesson.getId()));
 	return lesson;
     }
 

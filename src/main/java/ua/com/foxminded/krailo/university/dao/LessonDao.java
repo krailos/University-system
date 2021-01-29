@@ -3,6 +3,7 @@ package ua.com.foxminded.krailo.university.dao;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -22,8 +23,8 @@ public class LessonDao {
     private static final String SQL_DELETE_BY_ID = "DELETE FROM lessons WHERE id = ?";
     private static final String SQL_INSERT_INTO_LESSONS = "INSERT INTO lessons (date, lesson_time_id, subject_id, teacher_id, audience_id, timetable_id) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String SQL_INSERT_INTO_LESSONS_GROUPS = "INSERT INTO lessons_groups (lesson_id, group_id) VALUES (?, ?)";
-    private static final String SQL_DELETE_LESSONS_GROUPD_BY_LESSON_ID = "DELETE FROM lessons_groups WHERE lesson_id = ?";
-    
+    private static final String SQL_DELETE_LESSONS_GROUPS_BY_LESSON_ID_GROUP_ID = "DELETE FROM lessons_groups WHERE lesson_id = ? AND group_id = ?";
+
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Lesson> lessonRowMapper;
 
@@ -57,15 +58,20 @@ public class LessonDao {
 	for (Group group : lesson.getGroups()) {
 	    jdbcTemplate.update(SQL_INSERT_INTO_LESSONS_GROUPS, lesson.getId(), group.getId());
 	}
-	
     }
 
     public void update(Lesson lesson) {
 	jdbcTemplate.update(SQL_UPDATE_BY_ID, Date.valueOf(lesson.getDate()), lesson.getLessonTime().getId(),
 		lesson.getSubject().getId(), lesson.getTeacher().getId(), lesson.getAudience().getId(),
 		lesson.getTimetable().getId(), lesson.getId());
-	jdbcTemplate.update(SQL_DELETE_LESSONS_GROUPD_BY_LESSON_ID, lesson.getId());	
-	for (Group group : lesson.getGroups()) {
+	List<Group> groupsForDelete = findById(lesson.getId()).getGroups().stream()
+		.filter(g -> !lesson.getGroups().contains(g)).collect(Collectors.toList());
+	List<Group> groupsForInsert = lesson.getGroups().stream()
+		.filter(g -> !findById(lesson.getId()).getGroups().contains(g)).collect(Collectors.toList());
+	for (Group group : groupsForDelete) {
+	    jdbcTemplate.update(SQL_DELETE_LESSONS_GROUPS_BY_LESSON_ID_GROUP_ID, lesson.getId(), group.getId());
+	}
+	for (Group group : groupsForInsert) {
 	    jdbcTemplate.update(SQL_INSERT_INTO_LESSONS_GROUPS, lesson.getId(), group.getId());
 	}
     }

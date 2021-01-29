@@ -19,8 +19,7 @@ public class GroupDao {
     private static final String SQL_DELETE_BY_ID = "DELETE FROM groups WHERE id = ?";
     private static final String SQL_INSERT_GROUP = "INSERT INTO groups (name, year_id) VALUES (?, ?)";
     private static final String SQL_UPDATE_BY_ID = "UPDATE groups SET name = ?, year_id = ? where id = ?";
-    private static final String SQL_SELECT_GROUPD_ID_BY_LESSON_ID = "SELECT lessons_groups.lesson_id, lessons_groups.group_id, groups.id, groups.name, groups.year_id FROM lessons_groups "
-	    + "JOIN groups ON (lessons_groups.group_id = groups.id) WHERE lessons_groups.lesson_id = ?";
+    private static final String SQL_SELECT_GROUPD_ID_BY_LESSON_ID = "SELECT id, name, year_id FROM groups JOIN lessons_groups ON (groups.id = lessons_groups.group_id ) WHERE lessons_groups.lesson_id = ?";
 
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Group> groupRowMapper;

@@ -39,10 +39,10 @@ class TeacherDaoTest {
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "teachers");
 	assertEquals(3, actual);
     }
-    
+
     @Test
     void givenNewTeacherWithSubjects_whenCreate_thenNewRowsInTableTeachersSubjectsCreated() {
-	List<Subject> subjects = new ArrayList<>(Arrays.asList(new Subject(1, ""), new Subject(2,"")));
+	List<Subject> subjects = new ArrayList<>(Arrays.asList(new Subject(1, ""), new Subject(2, "")));
 	Teacher teacher = new Teacher("new", "new", "new", LocalDate.of(2000, 01, 01), "new", "new", "new", "new",
 		Gender.MALE, new Department(1, "new"));
 	teacher.setSubjects(subjects);
@@ -53,7 +53,6 @@ class TeacherDaoTest {
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers_subjects", "teacher_id = 3");
 	assertEquals(expected, actual);
     }
-
 
     @Test
     void givenNewFieldsOfTeacher_whenUpdate_tnenUpdated() {
@@ -66,10 +65,10 @@ class TeacherDaoTest {
 		"teacher_id = 'new' AND first_name  = 'new' AND last_name = 'new' AND birth_date = '2000-01-01' AND phone = 'new' AND address = 'new' AND email = 'new'AND degree = 'new'  AND gender = 'MALE' AND id = 1");
 	assertEquals(1, actual);
     }
-    
+
     @Test
     void givenNewSubjectsOfTeacher_whenUpdate_thenUpdated() {
-	List<Subject> subjects = new ArrayList<>(Arrays.asList(new Subject(2,"")));
+	List<Subject> subjects = new ArrayList<>(Arrays.asList(new Subject(2, "")));
 	Teacher teacher = new Teacher(1, "new", "new", "new", LocalDate.of(2000, 01, 01), "new", "new", "new", "new",
 		Gender.MALE, new Department(1, "new"));
 	teacher.setSubjects(subjects);
@@ -117,5 +116,5 @@ class TeacherDaoTest {
 
 	assertEquals(expected, actual);
     }
-    
+
 }
