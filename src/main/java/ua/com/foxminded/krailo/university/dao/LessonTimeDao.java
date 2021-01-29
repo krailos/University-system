@@ -1,7 +1,6 @@
 package ua.com.foxminded.krailo.university.dao;
 
 import java.sql.PreparedStatement;
-import java.sql.Time;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -44,8 +43,8 @@ public class LessonTimeDao {
     }
 
     public void update(LessonTime lessonTime) {
-	jdbcTemplate.update(SQL_UPDATE_BY_ID, lessonTime.getOrderNumber(), Time.valueOf(lessonTime.getStartTime()),
-		Time.valueOf(lessonTime.getEndTime()), lessonTime.getLessonsTimeSchedule().getId(), lessonTime.getId());
+	jdbcTemplate.update(SQL_UPDATE_BY_ID, lessonTime.getOrderNumber(), lessonTime.getStartTime(),
+		lessonTime.getEndTime(), lessonTime.getLessonsTimeSchedule().getId(), lessonTime.getId());
 
     }
 

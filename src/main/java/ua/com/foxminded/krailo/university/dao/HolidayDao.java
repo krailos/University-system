@@ -1,6 +1,5 @@
 package ua.com.foxminded.krailo.university.dao;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
 
@@ -49,7 +48,7 @@ public class HolidayDao {
     }
 
     public void update(Holiday holiday) {
-	jdbcTemplate.update(SQL_UPDATE_HOLIDAY_BY_ID, holiday.getName(), Date.valueOf(holiday.getDate()),
+	jdbcTemplate.update(SQL_UPDATE_HOLIDAY_BY_ID, holiday.getName(), holiday.getDate(),
 		holiday.getId());
     }
 

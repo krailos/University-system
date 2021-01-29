@@ -1,6 +1,5 @@
 package ua.com.foxminded.krailo.university.dao;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,7 +60,7 @@ public class LessonDao {
     }
 
     public void update(Lesson lesson) {
-	jdbcTemplate.update(SQL_UPDATE_BY_ID, Date.valueOf(lesson.getDate()), lesson.getLessonTime().getId(),
+	jdbcTemplate.update(SQL_UPDATE_BY_ID, lesson.getDate(), lesson.getLessonTime().getId(),
 		lesson.getSubject().getId(), lesson.getTeacher().getId(), lesson.getAudience().getId(),
 		lesson.getTimetable().getId(), lesson.getId());
 	List<Group> groupsForDelete = findById(lesson.getId()).getGroups().stream()
