@@ -83,7 +83,7 @@ class GroupDaoTest {
 		new Audience(1), new Teacher(1), new Timetable(1));
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons_groups", "lesson_id = 1");
 
-	int actual = groupDao.findGroupsByLessonId(lesson.getId()).size();
+	int actual = groupDao.findByLessonId(lesson.getId()).size();
 
 	assertEquals(expected, actual);
     }

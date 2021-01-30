@@ -3,7 +3,6 @@ package ua.com.foxminded.krailo.university.dao;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,7 +22,7 @@ public class TeacherDao {
     private static final String SQL_INSERT_TEACHER = "INSERT INTO teachers (teacher_id, first_name, last_name, birth_date, phone, address, email, degree, gender, department_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE_BY_ID = "UPDATE teachers SET teacher_id = ?, first_name = ?, last_name = ?, birth_date = ?, phone = ?, address = ?, email = ?, degree = ?, gender = ?, department_id = ? WHERE id = ?";
     private static final String SQL_SELECT_TEACHERS_BY_SUBJECT_ID = "SELECT id, teachers.teacher_id, first_name, last_name, birth_date, phone, address, email, degree, gender, department_id  FROM teachers JOIN  teachers_subjects ON (teachers.id = teachers_subjects.teacher_id ) WHERE teachers_subjects.subject_id = ?";
-    private static final String SQL_INSERT_INTO_TEACHERS_SUBJECTS = "INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES (?, ?)";
+    private static final String SQL_INSERT_TEACHERS_SUBJECTS = "INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES (?, ?)";
     private static final String SQL_DELETE_TEACHERS_SUBJECTS_BY_TEACHER_ID_SUBJECT_ID = "DELETE FROM teachers_subjects WHERE teacher_id = ? AND subject_id = ?";
 
     private JdbcTemplate jdbcTemplate;
@@ -52,7 +51,7 @@ public class TeacherDao {
 	}, keyHolder);
 	teacher.setId(keyHolder.getKey().intValue());
 	for (Subject subject : teacher.getSubjects()) {
-	    jdbcTemplate.update(SQL_INSERT_INTO_TEACHERS_SUBJECTS, teacher.getId(), subject.getId());
+	    jdbcTemplate.update(SQL_INSERT_TEACHERS_SUBJECTS, teacher.getId(), subject.getId());
 	}
     }
 
@@ -60,17 +59,11 @@ public class TeacherDao {
 	jdbcTemplate.update(SQL_UPDATE_BY_ID, teacher.getTeacherId(), teacher.getFirstName(), teacher.getLastName(),
 		Date.valueOf(teacher.getBirthDate()), teacher.getPhone(), teacher.getAddress(), teacher.getEmail(),
 		teacher.getDegree(), teacher.getGender().toString(), teacher.getDepartment().getId(), teacher.getId());
-	List<Subject> subjectsForDelete = findById(teacher.getId()).getSubjects().stream()
-		.filter(s -> !teacher.getSubjects().contains(s)).collect(Collectors.toList());
-	List<Subject> subjectsForInsert = teacher.getSubjects().stream()
-		.filter(s -> !findById(teacher.getId()).getSubjects().contains(s)).collect(Collectors.toList());
-	for (Subject subject : subjectsForDelete) {
-	    jdbcTemplate.update(SQL_DELETE_TEACHERS_SUBJECTS_BY_TEACHER_ID_SUBJECT_ID, teacher.getId(),
-		    subject.getId());
-	}
-	for (Subject subject : subjectsForInsert) {
-	    jdbcTemplate.update(SQL_INSERT_INTO_TEACHERS_SUBJECTS, teacher.getId(), subject.getId());
-	}
+	List<Subject> subjectsOld = findById(teacher.getId()).getSubjects();
+	subjectsOld.stream().filter(s -> !teacher.getSubjects().contains(s)).forEach(s -> jdbcTemplate
+		.update(SQL_DELETE_TEACHERS_SUBJECTS_BY_TEACHER_ID_SUBJECT_ID, teacher.getId(), s.getId()));
+	teacher.getSubjects().stream().filter(s -> !subjectsOld.contains(s))
+		.forEach(s -> jdbcTemplate.update(SQL_INSERT_TEACHERS_SUBJECTS, teacher.getId(), s.getId()));
     }
 
     public Teacher findById(int id) {
@@ -85,7 +78,7 @@ public class TeacherDao {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
     }
 
-    public List<Teacher> findTeacherBySubjectId(int id) {
+    public List<Teacher> findBySubjectId(int id) {
 	return jdbcTemplate.query(SQL_SELECT_TEACHERS_BY_SUBJECT_ID, new Object[] { id }, teacherRowMapper);
     }
 

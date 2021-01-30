@@ -2,7 +2,6 @@ package ua.com.foxminded.krailo.university.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -63,16 +62,11 @@ public class LessonDao {
 	jdbcTemplate.update(SQL_UPDATE_BY_ID, lesson.getDate(), lesson.getLessonTime().getId(),
 		lesson.getSubject().getId(), lesson.getTeacher().getId(), lesson.getAudience().getId(),
 		lesson.getTimetable().getId(), lesson.getId());
-	List<Group> groupsForDelete = findById(lesson.getId()).getGroups().stream()
-		.filter(g -> !lesson.getGroups().contains(g)).collect(Collectors.toList());
-	List<Group> groupsForInsert = lesson.getGroups().stream()
-		.filter(g -> !findById(lesson.getId()).getGroups().contains(g)).collect(Collectors.toList());
-	for (Group group : groupsForDelete) {
-	    jdbcTemplate.update(SQL_DELETE_LESSONS_GROUPS_BY_LESSON_ID_GROUP_ID, lesson.getId(), group.getId());
-	}
-	for (Group group : groupsForInsert) {
-	    jdbcTemplate.update(SQL_INSERT_INTO_LESSONS_GROUPS, lesson.getId(), group.getId());
-	}
+	List<Group> subjectsOld = findById(lesson.getId()).getGroups();
+	subjectsOld.stream().filter(g -> !lesson.getGroups().contains(g)).forEach(
+		g -> jdbcTemplate.update(SQL_DELETE_LESSONS_GROUPS_BY_LESSON_ID_GROUP_ID, lesson.getId(), g.getId()));
+	lesson.getGroups().stream().filter(g -> !subjectsOld.contains(g))
+		.forEach(g -> jdbcTemplate.update(SQL_INSERT_INTO_LESSONS_GROUPS, lesson.getId(), g.getId()));
     }
 
     public void deleteById(int id) {

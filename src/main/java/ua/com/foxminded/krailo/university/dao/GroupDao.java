@@ -56,7 +56,7 @@ public class GroupDao {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
     }
 
-    public List<Group> findGroupsByLessonId(int id) {
+    public List<Group> findByLessonId(int id) {
 	return jdbcTemplate.query(SQL_SELECT_GROUPD_ID_BY_LESSON_ID, new Object[] { id }, groupRowMapper);
     }
 
