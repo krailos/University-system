@@ -62,10 +62,10 @@ public class LessonDao {
 	jdbcTemplate.update(SQL_UPDATE_BY_ID, lesson.getDate(), lesson.getLessonTime().getId(),
 		lesson.getSubject().getId(), lesson.getTeacher().getId(), lesson.getAudience().getId(),
 		lesson.getTimetable().getId(), lesson.getId());
-	List<Group> subjectsOld = findById(lesson.getId()).getGroups();
-	subjectsOld.stream().filter(g -> !lesson.getGroups().contains(g)).forEach(
+	List<Group> groupsOld = findById(lesson.getId()).getGroups();
+	groupsOld.stream().filter(g -> !lesson.getGroups().contains(g)).forEach(
 		g -> jdbcTemplate.update(SQL_DELETE_LESSONS_GROUPS_BY_LESSON_ID_GROUP_ID, lesson.getId(), g.getId()));
-	lesson.getGroups().stream().filter(g -> !subjectsOld.contains(g))
+	lesson.getGroups().stream().filter(g -> !groupsOld.contains(g))
 		.forEach(g -> jdbcTemplate.update(SQL_INSERT_INTO_LESSONS_GROUPS, lesson.getId(), g.getId()));
     }
 
