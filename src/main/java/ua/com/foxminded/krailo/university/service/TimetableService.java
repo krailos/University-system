@@ -1,6 +1,7 @@
 package ua.com.foxminded.krailo.university.service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -14,11 +15,7 @@ import ua.com.foxminded.krailo.university.dao.SubjectDao;
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
 import ua.com.foxminded.krailo.university.dao.TimetableDao;
 import ua.com.foxminded.krailo.university.dao.YearDao;
-import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Lesson;
-import ua.com.foxminded.krailo.university.model.LessonTime;
-import ua.com.foxminded.krailo.university.model.Subject;
-import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Timetable;
 import ua.com.foxminded.krailo.university.model.Year;
 
@@ -65,32 +62,16 @@ public class TimetableService {
     public void addLesson(LocalDate date, int timeTableId, int subjectId, int audienceId, int lessonTimeId,
 	    int teacherId) {
 	Lesson lesson = new Lesson();
+	List<Lesson> lessons = lessonDao.findAll();
 	lesson.setDate(date);
-	Timetable timetable = timetableDao.findById(timeTableId);
-	lesson.setTimetable(timetable);
-	Subject subject = subjectDao.findById(subjectId);
-	if (timetable.getYear().getSubjects().contains(subject)) {
-	    lesson.setSubject(subject);
-	} else {
-	    throw new RuntimeException("year doesn't cintain subject that you want to add");
-	}
-	Audience audience = audienceDao.findById(audienceId);
+	lesson.setTimetable(timetableDao.findById(timeTableId));
+	lesson.setSubject(subjectDao.findById(subjectId));
+	checkSubject(lesson);
 	lesson.setAudience(audienceDao.findById(audienceId));
-	LessonTime lessonTime = lessonTimeDao.findById(lessonTimeId);
-	if (lessonDao.findAll().stream().filter(t -> date.equals(t.getDate()))
-		.filter(t -> audience.equals(t.getAudience())).filter(l -> lessonTime.equals(l.getLessonTime()))
-		.count() > 0) {
-	    throw new RuntimeException("this lesson time is already booked");
-	} else {
-	    lesson.setLessonTime(lessonTime);
-	}
-	Teacher teacher = teacherDao.findById(teacherId);
-	if (lessonDao.findAll().stream().filter(t -> date.equals(t.getDate()))
-		.filter(l -> lessonTime.equals(l.getLessonTime())).filter(l -> teacher.equals(l.getTeacher()))
-		.count() > 0) {
-	    throw new RuntimeException("this teacher has a lesson at this time");
-	}
-	lesson.setTeacher(teacher);
+	lesson.setLessonTime(lessonTimeDao.findById(lessonTimeId));
+	checkLessonTime(lessons, lesson);
+	lesson.setTeacher(teacherDao.findById(teacherId));
+	checkTeacher(lessons, lesson);
 	lessonDao.create(lesson);
     }
 
@@ -103,7 +84,27 @@ public class TimetableService {
     public void updateLesson(Lesson lesson) {
 	lessonDao.update(lesson);
     }
-    
-    private setDate
-    
+
+    private void checkSubject(Lesson lesson) {
+	if (!lesson.getTimetable().getYear().getSubjects().contains(lesson.getSubject())) {
+	    throw new RuntimeException("year doesn't cintain subject that you want to add");
+	}
+    }
+
+    private void checkLessonTime(List<Lesson> lessons, Lesson lesson) {
+	if (lessons.stream().filter(l -> lesson.getDate().equals(l.getDate()))
+		.filter(l -> lesson.getAudience().equals(l.getAudience()))
+		.filter(l -> lesson.getLessonTime().equals(l.getLessonTime())).count() > 0) {
+	    throw new RuntimeException("this lesson time is already booked");
+	}
+    }
+
+    private void checkTeacher(List<Lesson> lessons, Lesson lesson) {
+	if (lessons.stream().filter(l -> lesson.getDate().equals(l.getDate()))
+		.filter(l -> lesson.getLessonTime().equals(l.getLessonTime())).filter(l -> lesson.getTeacher().equals(l.getTeacher()))
+		.count() > 0) {
+	    throw new RuntimeException("this teacher has a lesson at this time");
+	}
+    }
+
 }
