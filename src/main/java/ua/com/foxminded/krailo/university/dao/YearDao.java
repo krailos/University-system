@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @Repository
@@ -19,6 +20,8 @@ public class YearDao {
     private static final String SQL_DELETE_BY_ID = "DELETE FROM years WHERE id = ?";
     private static final String SQL_INSERT_YEAR = "INSERT INTO years (name, speciality_id) VALUES (?, ?)";
     private static final String SQL_UPDATE_BY_ID = "UPDATE years SET name = ?, speciality_id = ? where id = ?";
+    private static final String SQL_INSERT_INTO_YEARS_SUBJECTS = "INSERT INTO years_subjects (year_id, subject_id) VALUES (?, ?)";
+    private static final String SQL_DELETE_YEARS_SUBJECTS_BY_LESSON_ID_GROUP_ID = "DELETE FROM years_subjects WHERE year_id = ? AND subject_id = ?";
 
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Year> yearRowMapper;
@@ -37,10 +40,21 @@ public class YearDao {
 	    return ps;
 	}, keyHolder);
 	year.setId(keyHolder.getKey().intValue());
+	System.out.println(year);
+	for (Subject subject : year.getSubjects()) {
+	    jdbcTemplate.update(SQL_INSERT_INTO_YEARS_SUBJECTS, year.getId(), subject.getId());
+	}
     }
 
     public void update(Year year) {
 	jdbcTemplate.update(SQL_UPDATE_BY_ID, year.getName(), year.getSpeciality().getId(), year.getId());
+
+	List<Subject> subjectsOld = findById(year.getId()).getSubjects();
+	subjectsOld.stream().filter(s -> !year.getSubjects().contains(s)).forEach(
+		s -> jdbcTemplate.update(SQL_DELETE_YEARS_SUBJECTS_BY_LESSON_ID_GROUP_ID, year.getId(), s.getId()));
+	year.getSubjects().stream().filter(s -> !subjectsOld.contains(s))
+		.forEach(s -> jdbcTemplate.update(SQL_INSERT_INTO_YEARS_SUBJECTS, year.getId(), s.getId()));
+
     }
 
     public Year findById(int id) {

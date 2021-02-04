@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.AudienceDao;
+import ua.com.foxminded.krailo.university.dao.BuildingDao;
+import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.LessonTimeDao;
 import ua.com.foxminded.krailo.university.dao.SpecialityDao;
@@ -31,10 +33,12 @@ public class TimetableService {
     private SubjectDao subjectDao;
     private TeacherDao teacherDao;
     private AudienceDao audienceDao;
+    private BuildingDao buildingDao;
+    private GroupDao groupDao;
 
     public TimetableService(TimetableDao timetableDao, LessonDao lessonDao, YearDao yearDao,
 	    SpecialityDao specialityDao, LessonTimeDao lessonTimeDao, SubjectDao subjectDao, TeacherDao teacherDao,
-	    AudienceDao audienceDao) {
+	    AudienceDao audienceDao, BuildingDao buildingDao, GroupDao groupDao) {
 	super();
 	this.timetableDao = timetableDao;
 	this.lessonDao = lessonDao;
@@ -44,6 +48,8 @@ public class TimetableService {
 	this.subjectDao = subjectDao;
 	this.teacherDao = teacherDao;
 	this.audienceDao = audienceDao;
+	this.buildingDao = buildingDao;
+	this.groupDao = groupDao;
     }
 
     public void addTimetable(String name, int yearId) {
@@ -56,20 +62,48 @@ public class TimetableService {
 	timetableDao.create(timetable);
     }
 
-    public void addLessonToTimetable(LocalDate date, int lissonTimeId, int subjectId, int teacherId, int audienceId,
-	    int timeTableId) {
+    public void addLesson(LocalDate date, int timeTableId, int subjectId, int audienceId, int lessonTimeId,
+	    int teacherId) {
 	Lesson lesson = new Lesson();
 	lesson.setDate(date);
-	LessonTime lessonTime = lessonTimeDao.findById(lissonTimeId);
-	lesson.setLessonTime(lessonTime);
-	Subject subject = subjectDao.findById(subjectId);
-	lesson.setSubject(subject);
-	Teacher teacher = teacherDao.findById(teacherId);
-	lesson.setTeacher(teacher);
-	Audience audience = audienceDao.findById(audienceId);
-	lesson.setAudience(audience);
 	Timetable timetable = timetableDao.findById(timeTableId);
 	lesson.setTimetable(timetable);
+	Subject subject = subjectDao.findById(subjectId);
+	if (timetable.getYear().getSubjects().contains(subject)) {
+	    lesson.setSubject(subject);
+	} else {
+	    throw new RuntimeException("year doesn't cintain subject that you want to add");
+	}
+	Audience audience = audienceDao.findById(audienceId);
+	lesson.setAudience(audienceDao.findById(audienceId));
+	LessonTime lessonTime = lessonTimeDao.findById(lessonTimeId);
+	if (lessonDao.findAll().stream().filter(t -> date.equals(t.getDate()))
+		.filter(t -> audience.equals(t.getAudience())).filter(l -> lessonTime.equals(l.getLessonTime()))
+		.count() > 0) {
+	    throw new RuntimeException("this lesson time is already booked");
+	} else {
+	    lesson.setLessonTime(lessonTime);
+	}
+	Teacher teacher = teacherDao.findById(teacherId);
+	if (lessonDao.findAll().stream().filter(t -> date.equals(t.getDate()))
+		.filter(l -> lessonTime.equals(l.getLessonTime())).filter(l -> teacher.equals(l.getTeacher()))
+		.count() > 0) {
+	    throw new RuntimeException("this teacher has a lesson at this time");
+	}
+	lesson.setTeacher(teacher);
 	lessonDao.create(lesson);
     }
+
+    public void addGroupToLesson(int lessonId, int groupId) {
+	Lesson lesson = lessonDao.findById(lessonId);
+	lesson.getGroups().add(groupDao.findById(groupId));
+	lessonDao.update(lesson);
+    }
+
+    public void updateLesson(Lesson lesson) {
+	lessonDao.update(lesson);
+    }
+    
+    private setDate
+    
 }

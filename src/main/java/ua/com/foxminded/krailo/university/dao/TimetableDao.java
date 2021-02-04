@@ -17,8 +17,8 @@ public class TimetableDao {
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM timetables WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM timetables";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM timetables WHERE id = ?";
-    private static final String SQL_INSERT_FACULTY = "INSERT INTO timetables (name, year_id, speciality_id) VALUES (?, ?, ?)";
-    private static final String SQL_UPDATE_BY_ID = "UPDATE timetables SET name = ?, year_id = ?, speciality_id = ? where id = ?";
+    private static final String SQL_INSERT_FACULTY = "INSERT INTO timetables (name, year_id) VALUES (?, ?)";
+    private static final String SQL_UPDATE_BY_ID = "UPDATE timetables SET name = ?, year_id = ? where id = ?";
 
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Timetable> timetableRowMapper;
@@ -29,14 +29,11 @@ public class TimetableDao {
     }
 
     public void create(Timetable timetable) {
-	//jdbcTemplate.update(SQL_INSERT_FACULTY, timetable.getName(), timetable.getYear().getId(), timetable.getSpeciality().getId());
-	
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_FACULTY, new String[] { "id" });
 	    ps.setString(1, timetable.getName());
 	    ps.setInt(2, timetable.getYear().getId());
-	    ps.setInt(3, timetable.getSpeciality().getId());
 	    return ps;
 	}, keyHolder);
 	timetable.setId(keyHolder.getKey().intValue());
@@ -44,9 +41,7 @@ public class TimetableDao {
     }
 
     public void update(Timetable timetable) {
-	jdbcTemplate.update(SQL_UPDATE_BY_ID, timetable.getName(), timetable.getYear().getId(), timetable.getSpeciality().getId(),
-		timetable.getId());
-
+	jdbcTemplate.update(SQL_UPDATE_BY_ID, timetable.getName(), timetable.getYear().getId(), timetable.getId());
     }
 
     public Timetable findById(int id) {

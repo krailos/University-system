@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.krailo.university.dao.SpecialityDao;
 import ua.com.foxminded.krailo.university.dao.YearDao;
 import ua.com.foxminded.krailo.university.model.Timetable;
 
@@ -14,11 +13,9 @@ import ua.com.foxminded.krailo.university.model.Timetable;
 public class TimetableRowMapper implements RowMapper<Timetable> {
 
     private YearDao yearDao;
-    private SpecialityDao specialityDao;
 
-    public TimetableRowMapper(YearDao yearDao, SpecialityDao specialityDao) {
+    public TimetableRowMapper(YearDao yearDao) {
 	this.yearDao = yearDao;
-	this.specialityDao = specialityDao;
     }
 
     @Override
@@ -27,7 +24,6 @@ public class TimetableRowMapper implements RowMapper<Timetable> {
 	timetable.setId(rs.getInt("id"));
 	timetable.setName(rs.getString("name"));
 	timetable.setYear(yearDao.findById(rs.getInt("year_id")));
-	timetable.setSpeciality(specialityDao.findById(rs.getInt("speciality_id")));
 	return timetable;
     }
 

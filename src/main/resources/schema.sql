@@ -19,9 +19,10 @@ DROP TABLE IF EXISTS lessons CASCADE;
 DROP TABLE IF EXISTS vocations CASCADE;
 DROP TABLE IF EXISTS lessons_groups CASCADE;
 DROP TABLE IF EXISTS teachers_subjects CASCADE;
+DROP TABLE IF EXISTS years_subjects CASCADE;
 
 DROP TYPE IF EXISTS gender CASCADE;
-CREATE TYPE gender AS enum ('male', 'female');
+CREATE TYPE gender AS enum ('MALE', 'FEMALE');
 
 CREATE TABLE holidays (
 	id serial NOT NULL,
@@ -150,7 +151,6 @@ CREATE TABLE timetables (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
 	year_id int REFERENCES years (id) ON UPDATE CASCADE ON DELETE CASCADE,
-	speciality_id int REFERENCES specialities (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT timetables__pkey PRIMARY KEY (id)
 );
 
@@ -186,3 +186,11 @@ CREATE TABLE teachers_subjects (
 	subject_id int REFERENCES subjects (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	UNIQUE (teacher_id, subject_id)
 );
+
+CREATE TABLE years_subjects (
+	year_id int REFERENCES years (id) ON UPDATE CASCADE ON DELETE CASCADE,
+	subject_id int REFERENCES subjects (id) ON UPDATE CASCADE ON DELETE CASCADE,
+	UNIQUE (year_id, subject_id)
+);
+
+

@@ -40,7 +40,7 @@ class TimetableDaoTest {
 	timetableDao.update(timetable);
 
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "timetables",
-		"name = 'new' AND year_id = 1 AND speciality_id = 1");
+		"name = 'new' AND year_id = 1");
 	assertEquals(1, actual);
     }
 

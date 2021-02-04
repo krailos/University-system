@@ -12,6 +12,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
+import ua.com.foxminded.krailo.university.model.Year;
 
 @SpringJUnitConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
@@ -29,7 +30,7 @@ class SubjectDaoTest {
 	subjectDao.create(subject);
 
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "subjects");
-	assertEquals(3, actual);
+	assertEquals(5, actual);
     }
 
     @Test
@@ -66,7 +67,7 @@ class SubjectDaoTest {
 	subjectDao.deleteById(1);
 
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "subjects");
-	assertEquals(1, actual);
+	assertEquals(3, actual);
     }
     
     @Test
@@ -75,6 +76,16 @@ class SubjectDaoTest {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "subjects", "id = 1 OR id = 2" );
 
 	int actual = subjectDao.findSubjectsByTeacherId(teacher.getId()).size();
+
+	assertEquals(expected, actual);
+    }
+    
+    @Test
+    void givenYearId_whenFindSubjectsByYearId_thenFound() {
+	Year year = new Year(1, "", null);
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "subjects", "id = 1 OR id = 2" );
+
+	int actual = subjectDao.findSubjectsByYearId(year.getId()).size();
 
 	assertEquals(expected, actual);
     }

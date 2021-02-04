@@ -2,6 +2,10 @@ package ua.com.foxminded.krailo.university.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,6 +15,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.model.Speciality;
+import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @SpringJUnitConfig(ConfigTest.class)
@@ -33,6 +38,19 @@ class YearDaoTest {
     }
 
     @Test
+    void givenNewYearWithSubjects_whenCreate_thenNewRowsInYearsSubjectsCreated() {
+	List<Subject> subjects = new ArrayList<>(Arrays.asList(new Subject(1, " "), new Subject(2, " ")));
+	Year year = new Year("new", new Speciality(1, "new", null));
+	year.setSubjects(subjects);
+
+	yearDao.create(year);
+
+	int expected = 2;
+	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "years_subjects", "year_id = 3");
+	assertEquals(expected, actual);
+    }
+
+    @Test
     void givenNewFieldsOfYear_whenUpdate_tnenUpdated() {
 	Year year = new Year(1, "new", new Speciality(1, "new", null));
 
@@ -40,6 +58,19 @@ class YearDaoTest {
 
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "years", "name = 'new' AND id = 1");
 	assertEquals(1, actual);
+    }
+
+    @Test
+    void givenNewSubjectsOfYear_whenUpdate_thenNewRowsInYearsSubjectsUpdated() {
+	List<Subject> subjects = new ArrayList<>(Arrays.asList(new Subject(3, " "), new Subject(4, " ")));
+	Year year = new Year(1, "", new Speciality(1, "new", null));
+	year.setSubjects(subjects);
+
+	yearDao.update(year);
+
+	int expected = 2;
+	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "years_subjects", "year_id = 1");
+	assertEquals(expected, actual);
     }
 
     @Test

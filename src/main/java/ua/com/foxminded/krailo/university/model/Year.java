@@ -77,7 +77,10 @@ public class Year {
 
     @Override
     public String toString() {
-	return name;
+	return "Year [id=" + id + ", name=" + name + ", speciality=" + speciality + ", subjects=" + subjects
+		+ ", students=" + students + ", groups=" + groups + "]";
     }
+
+ 
 
 }

@@ -33,6 +33,12 @@ public class Timetable {
 	this.speciality = speciality;
     }
 
+    public Timetable(String name, Year year) {
+	super();
+	this.name = name;
+	this.year = year;
+    }
+
     public int getId() {
 	return id;
     }
@@ -71,6 +77,12 @@ public class Timetable {
 
     public void setLessons(List<Lesson> lessons) {
 	this.lessons = lessons;
+    }
+
+    @Override
+    public String toString() {
+	return "Timetable [id=" + id + ", name=" + name + ", year=" + year + ", speciality=" + speciality + ", lessons="
+		+ lessons + "]";
     }
 
 }

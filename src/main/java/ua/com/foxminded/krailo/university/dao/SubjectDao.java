@@ -20,7 +20,8 @@ public class SubjectDao {
     private static final String SQL_INSERT_DEPARTMENT = "INSERT INTO subjects (name) VALUES (?)";
     private static final String SQL_UPDATE_BY_ID = "UPDATE subjects  SET name = ? where id = ?";
     private static final String SQL_SELECT_SUBJECTS_BY_TEACHER_ID = "SELECT id, name FROM subjects JOIN teachers_subjects  ON (teachers_subjects.subject_id = subjects.id) WHERE teachers_subjects.teacher_id = ?";
-
+    private static final String SQL_SELECT_SUBJECTS_BY_YEAR_ID = "SELECT id, name FROM subjects JOIN years_subjects ON (years_subjects.subject_id = subjects.id) WHERE years_subjects.year_id = ?";
+    
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Subject> subjectRowMapper;
 
@@ -60,4 +61,8 @@ public class SubjectDao {
 	return jdbcTemplate.query(SQL_SELECT_SUBJECTS_BY_TEACHER_ID, new Object[] { id }, subjectRowMapper);
     }
 
+    public List<Subject> findSubjectsByYearId(int id) {
+	return jdbcTemplate.query(SQL_SELECT_SUBJECTS_BY_TEACHER_ID, new Object[] { id }, subjectRowMapper);
+    }
+    
 }

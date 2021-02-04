@@ -54,16 +54,18 @@ address, email, rank, gender, group_id) VALUES
 
 INSERT INTO subjects (name) VALUES 
 ('subject 1'),
-('subject 2');
+('subject 2'),
+('subject 3'),
+('subject 4');
 
 INSERT INTO teachers (teacher_id, first_name, last_name, birth_date, phone,
 address, email, degree, gender, department_id) VALUES 
 ('1id', 'first name 1', 'last name 1', DATE '2000-01-01', '0670000001', 'address 1', 'email 1', '0', 'MALE', '1' ),
 ('2id', 'first name 2', 'last name 2', DATE '2002-02-02', '0670000002', 'address 2', 'email 2', '0', 'FEMALE', '1' );
 
-INSERT INTO timetables (name, year_id, speciality_id) VALUES 
-('timetable 1', '1', '1'),
-('timetable 2', '2', '2');
+INSERT INTO timetables (name, year_id) VALUES 
+('timetable 1', '1'),
+('timetable 2', '2');
 
 INSERT INTO lessons (date, lesson_time_id, subject_id, teacher_id, audience_id, timetable_id) VALUES 
 (DATE '2021-01-01', '1', '1', '1', '1', '1'),
@@ -84,3 +86,9 @@ INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES
 ('1', '2'),
 ('2', '1'),
 ('2', '2');
+
+INSERT INTO years_subjects (year_id, subject_id) VALUES 
+('1', '1'),
+('1', '2'),
+('2', '3'),
+('2', '4');

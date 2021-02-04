@@ -77,6 +77,46 @@ public class LessonTime {
     }
 
     @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
+	result = prime * result + id;
+	result = prime * result + ((orderNumber == null) ? 0 : orderNumber.hashCode());
+	result = prime * result + ((startTime == null) ? 0 : startTime.hashCode());
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	LessonTime other = (LessonTime) obj;
+	if (endTime == null) {
+	    if (other.endTime != null)
+		return false;
+	} else if (!endTime.equals(other.endTime))
+	    return false;
+	if (id != other.id)
+	    return false;
+	if (orderNumber == null) {
+	    if (other.orderNumber != null)
+		return false;
+	} else if (!orderNumber.equals(other.orderNumber))
+	    return false;
+	if (startTime == null) {
+	    if (other.startTime != null)
+		return false;
+	} else if (!startTime.equals(other.startTime))
+	    return false;
+	return true;
+    }
+
+    @Override
     public String toString() {
 	return "from: " + startTime + " - " + "to: " + endTime;
     }

@@ -30,8 +30,8 @@ INSERT INTO specialities (name, faculty_id) VALUES
 ('banking', '1');
 
 INSERT INTO years (name, speciality_id) VALUES 
-('year first', '1'),
-('year first', '2');
+('first', '1'),
+('first', '2');
 
 INSERT INTO groups (name, year_id) VALUES 
 ('group 1', '1'),
@@ -64,9 +64,9 @@ address, email, degree, gender, department_id ) VALUES
 ('3t', 'teacher first name 3', 'teacher last name 3', '03.01.1970', '0680000003', 'address 3', 'email 3', 'professor', 'male', '1'),
 ('4t', 'teacher first name 4', 'teacher last name 4', '04.01.1970', '0680000004', 'address 4', 'email 4', 'professor', 'male', '1');
 
-INSERT INTO timetables (name, year_id, speciality_id) VALUES 
-('timetable for first year finance', '1', '1'),
-('timetable for first year banking', '2', '2');
+INSERT INTO timetables (name, year_id) VALUES 
+('timetable for first year finance', '1'),
+('timetable for first year banking', '2');
 
 INSERT INTO lessons (date, lesson_time_id, subject_id, teacher_id, audience_id, timetable_id) VALUES 
 ('01.02.2021', '1', '1', '1', '1', '1'),
@@ -89,3 +89,9 @@ INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES
 ('2', '1'),
 ('3', '2'),
 ('4', '2');
+
+INSERT INTO years_subjects (year_id, subject_id) VALUES 
+('1', '1'),
+('1', '2'),
+('2', '3'),
+('2', '4');
