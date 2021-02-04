@@ -54,9 +54,18 @@ public class TimetableService {
 	timetable.setName(name);
 	Year year = yearDao.findById(yearId);
 	timetable.setYear(year);
-	timetable.setYear(year);
 	timetable.setSpeciality(year.getSpeciality());
 	timetableDao.create(timetable);
+    }
+
+    public Timetable getTimetable(int timetableId) {
+	Timetable timetable = timetableDao.findById(timetableId);
+	timetable.setLessons(lessonDao.findByTimetableId(timetableId));
+	return timetable;
+    }
+
+    public void deleteTimetable(int id) {
+	timetableDao.deleteById(id);
     }
 
     public void addLesson(LocalDate date, int timeTableId, int subjectId, int audienceId, int lessonTimeId,
@@ -75,19 +84,22 @@ public class TimetableService {
 	lessonDao.create(lesson);
     }
 
-    public void addGroupToLesson(int lessonId, int groupId) {
-	Lesson lesson = lessonDao.findById(lessonId);
+    public void addGroupToLesson(Lesson lesson, int groupId) {
 	lesson.getGroups().add(groupDao.findById(groupId));
 	lessonDao.update(lesson);
     }
 
     public void updateLesson(Lesson lesson) {
+	List<Lesson> lessons = lessonDao.findAll();
+	checkSubject(lesson);
+	checkLessonTime(lessons, lesson);
+	checkTeacher(lessons, lesson);
 	lessonDao.update(lesson);
     }
 
     private void checkSubject(Lesson lesson) {
 	if (!lesson.getTimetable().getYear().getSubjects().contains(lesson.getSubject())) {
-	    throw new RuntimeException("year doesn't cintain subject that you want to add");
+	    throw new RuntimeException("this subject doesn't register for this year");
 	}
     }
 
@@ -101,9 +113,9 @@ public class TimetableService {
 
     private void checkTeacher(List<Lesson> lessons, Lesson lesson) {
 	if (lessons.stream().filter(l -> lesson.getDate().equals(l.getDate()))
-		.filter(l -> lesson.getLessonTime().equals(l.getLessonTime())).filter(l -> lesson.getTeacher().equals(l.getTeacher()))
-		.count() > 0) {
-	    throw new RuntimeException("this teacher has a lesson at this time");
+		.filter(l -> lesson.getLessonTime().equals(l.getLessonTime()))
+		.filter(l -> lesson.getTeacher().equals(l.getTeacher())).count() > 0) {
+	    throw new RuntimeException("this teacher has already got a lesson at this time");
 	}
     }
 

@@ -108,9 +108,16 @@ class LessonDaoTest {
 
 	lessonDao.deleteById(1);
 
-	int expected = 1;
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "lessons");
-	assertEquals(expected, actual);
+	assertEquals(1, actual);
+    }
+
+    @Test
+    void givenTimetableId_whenFindByTimetableId_thenFound() {
+
+	int actual = lessonDao.findByTimetableId(1).size();
+
+	assertEquals(1, actual);
     }
 
 }

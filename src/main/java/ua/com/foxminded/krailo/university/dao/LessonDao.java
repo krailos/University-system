@@ -22,7 +22,8 @@ public class LessonDao {
     private static final String SQL_INSERT_INTO_LESSONS = "INSERT INTO lessons (date, lesson_time_id, subject_id, teacher_id, audience_id, timetable_id) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String SQL_INSERT_INTO_LESSONS_GROUPS = "INSERT INTO lessons_groups (lesson_id, group_id) VALUES (?, ?)";
     private static final String SQL_DELETE_LESSONS_GROUPS_BY_LESSON_ID_GROUP_ID = "DELETE FROM lessons_groups WHERE lesson_id = ? AND group_id = ?";
-
+    private static final String SQL_SELECT_BY_TIMETABLE_ID = "SELECT * FROM lessons WHERE timetable_id = ?";
+   
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Lesson> lessonRowMapper;
 
@@ -71,6 +72,10 @@ public class LessonDao {
 
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
+    }
+    
+    public List<Lesson> findByTimetableId (int id){
+	return jdbcTemplate.query(SQL_SELECT_BY_TIMETABLE_ID, lessonRowMapper, id);
     }
 
 }
