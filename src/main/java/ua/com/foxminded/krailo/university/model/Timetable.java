@@ -33,8 +33,13 @@ public class Timetable {
 	this.speciality = speciality;
     }
 
+    public Timetable(int id, String name, Year year) {
+	this.id = id;
+	this.name = name;
+	this.year = year;
+    }
+
     public Timetable(String name, Year year) {
-	super();
 	this.name = name;
 	this.year = year;
     }
