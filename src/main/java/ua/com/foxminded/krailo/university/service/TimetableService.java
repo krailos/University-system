@@ -37,6 +37,14 @@ public class TimetableService {
 	return timetable;
     }
 
+    public List<Timetable> getAll() {
+	List<Timetable> timetables = timetableDao.findAll();
+	for (Timetable timetable : timetables) {
+	    timetable.setLessons(lessonDao.findByTimetableId(timetable.getId()));
+	}
+	return timetables;
+    }
+
     public void update(Timetable timetable) {
 	checkYear(timetable.getYear());
 	timetableDao.update(timetable);
