@@ -6,15 +6,12 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.AudienceDao;
-import ua.com.foxminded.krailo.university.dao.BuildingDao;
 import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.LessonTimeDao;
-import ua.com.foxminded.krailo.university.dao.SpecialityDao;
 import ua.com.foxminded.krailo.university.dao.SubjectDao;
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
 import ua.com.foxminded.krailo.university.dao.TimetableDao;
-import ua.com.foxminded.krailo.university.dao.YearDao;
 import ua.com.foxminded.krailo.university.model.Lesson;
 
 @Service
@@ -22,28 +19,20 @@ public class LessonService {
 
     private TimetableDao timetableDao;
     private LessonDao lessonDao;
-    private YearDao yearDao;
-    private SpecialityDao specialityDao;
     private LessonTimeDao lessonTimeDao;
     private SubjectDao subjectDao;
     private TeacherDao teacherDao;
     private AudienceDao audienceDao;
-    private BuildingDao buildingDao;
     private GroupDao groupDao;
 
-    public LessonService(TimetableDao timetableDao, LessonDao lessonDao, YearDao yearDao, SpecialityDao specialityDao,
-	    LessonTimeDao lessonTimeDao, SubjectDao subjectDao, TeacherDao teacherDao, AudienceDao audienceDao,
-	    BuildingDao buildingDao, GroupDao groupDao) {
-	super();
+    public LessonService(TimetableDao timetableDao, LessonDao lessonDao, LessonTimeDao lessonTimeDao,
+	    SubjectDao subjectDao, TeacherDao teacherDao, AudienceDao audienceDao, GroupDao groupDao) {
 	this.timetableDao = timetableDao;
 	this.lessonDao = lessonDao;
-	this.yearDao = yearDao;
-	this.specialityDao = specialityDao;
 	this.lessonTimeDao = lessonTimeDao;
 	this.subjectDao = subjectDao;
 	this.teacherDao = teacherDao;
 	this.audienceDao = audienceDao;
-	this.buildingDao = buildingDao;
 	this.groupDao = groupDao;
     }
 
@@ -75,6 +64,14 @@ public class LessonService {
 	lessonDao.update(lesson);
     }
 
+    public Lesson getById(int id) {
+	return lessonDao.findById(id);
+    }
+
+    public List<Lesson> getAll() {
+	return lessonDao.findAll();
+    }
+
     private void checkSubject(Lesson lesson) {
 	if (!lesson.getTimetable().getYear().getSubjects().contains(lesson.getSubject())) {
 	    throw new RuntimeException("this subject doesn't register for this year");
@@ -96,4 +93,5 @@ public class LessonService {
 	    throw new RuntimeException("this teacher has already got a lesson at this time");
 	}
     }
+
 }

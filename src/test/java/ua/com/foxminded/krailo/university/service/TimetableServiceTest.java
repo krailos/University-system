@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
@@ -19,6 +21,7 @@ import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Timetable;
 import ua.com.foxminded.krailo.university.model.Year;
 
+@ExtendWith(MockitoExtension.class)
 @SpringJUnitConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
 class TimetableServiceTest {
@@ -43,25 +46,16 @@ class TimetableServiceTest {
     }
 
     @Test
-    void givenTimetableWithYearWithWrongSubjects_whenUpdate_thenUpdated() {
+    void givenTimetableWithYearWithWrongSubjects_whenUpdate_thenThrowException() {
 	List<Subject> subjects = new ArrayList<>(Arrays.asList(new Subject(1, "subject 1")));
 	Year year = new Year(1, "new", null);
 	year.setSubjects(subjects);
 	Timetable timetable = new Timetable(1, "new", year);
 	assertThrows(RuntimeException.class, () -> {
-	    
+
 	    timetableService.update(timetable);
-	    
+
 	});
-    }
-
-    @Test
-    void givenTimetableId_whenDeleteById_thenDeleted() {
-
-	timetableService.deleteById(1);
-
-	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "timetables");
-	assertEquals(1, actual);
     }
 
 }
