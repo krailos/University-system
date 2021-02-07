@@ -11,17 +11,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Group;
@@ -35,20 +30,102 @@ import ua.com.foxminded.krailo.university.model.Timetable;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @ExtendWith(MockitoExtension.class)
-@SpringJUnitConfig(ConfigTest.class)
-@Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
 class LessonServiceTest {
 
-    @Autowired
     @InjectMocks
     private LessonService lessonService;
     @Mock
     private LessonDao lessonDao;
-    private List<Lesson> lessons;
 
-    @BeforeEach
-    public void createLessons() {
-	lessons = new ArrayList<>();
+    @Test
+    void givenLessonId_whenGetById_thenMethodRunOneTime() {
+	when(lessonDao.findById(any(Integer.class))).thenReturn(new Lesson());
+
+	lessonService.getById(1);
+
+	verify(lessonDao).findById(any(Integer.class));
+    }
+
+    @Test
+    void givenLessons_whenGetAll_thenMethodRunOneTime() {
+	when(lessonDao.findAll()).thenReturn(new ArrayList<>());
+
+	lessonService.getAll();
+
+	verify(lessonDao).findAll();
+    }
+
+    @Test
+    void givenLessonWhithAllCorrectedFields_whenCreate_thenCreated() {
+	List<Lesson> lessons = createLessons();
+	when(lessonDao.findAll()).thenReturn(lessons);
+	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), new LessonTime(), lessons.get(1).getSubject(),
+		new Audience(), new Teacher(), lessons.get(1).getTimetable());
+
+	lessonService.create(lesson);
+
+	verify(lessonDao, times(1)).create(lesson);
+    }
+
+    @Test
+    void givenLessonWithRepeatedLessonTime_whenCreate_thenNotCreated() {
+	List<Lesson> lessons = createLessons();
+	when(lessonDao.findAll()).thenReturn(lessons);
+	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), lessons.get(1).getLessonTime(),
+		lessons.get(1).getSubject(), lessons.get(1).getAudience(), new Teacher(),
+		lessons.get(1).getTimetable());
+
+	lessonService.create(lesson);
+
+	verify(lessonDao, times(0)).create(lesson);
+    }
+
+    @Test
+    void givenLessonWithWrongSubject_whenCreate_thenNotCreated() {
+	List<Lesson> lessons = createLessons();
+	when(lessonDao.findAll()).thenReturn(lessons);
+	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), new LessonTime(), new Subject(), new Audience(),
+		new Teacher(), lessons.get(1).getTimetable());
+
+	lessonService.create(lesson);
+
+	verify(lessonDao, times(0)).create(lesson);
+    }
+
+    @Test
+    void givenLessonWithWrongTeacher_whenCreate_thenNotCreated() {
+	List<Lesson> lessons = createLessons();
+	when(lessonDao.findAll()).thenReturn(lessons);
+	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), lessons.get(1).getLessonTime(),
+		lessons.get(1).getSubject(), new Audience(), lessons.get(1).getTeacher(),
+		lessons.get(1).getTimetable());
+
+	lessonService.create(lesson);
+
+	verify(lessonDao, times(0)).create(lesson);
+    }
+
+    @Test
+    void givenLessonWithWrongAudienceCapacity_whenCreate_thenNotCreated() {
+	List<Lesson> lessons = createLessons();
+	when(lessonDao.findAll()).thenReturn(lessons);
+	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), new LessonTime(), lessons.get(1).getSubject(),
+		lessons.get(1).getAudience(), new Teacher(), lessons.get(1).getTimetable());
+	Group group = new Group();
+	group.getStudents().add(new Student());
+	group.getStudents().add(new Student());
+	group.getStudents().add(new Student());
+	group.getStudents().add(new Student());
+	group.getStudents().add(new Student());
+	lesson.getGroups().add(group);
+
+	lessonService.create(lesson);
+
+	verify(lessonDao, times(0)).create(lesson);
+    }
+
+    private List<Lesson> createLessons() {
+	List<Lesson> lessons = new ArrayList<>();
 	Year year = new Year();
 	Subject subject1 = new Subject(1, "sub1");
 	Subject subject2 = new Subject(2, "sub2");
@@ -76,85 +153,7 @@ class LessonServiceTest {
 	lesson2.getGroups().add(group2);
 	lessons.add(lesson1);
 	lessons.add(lesson2);
-    }
-
-    @Test
-    void givenLessonId_whenGetById_thenMethodRunOneTime() {
-	when(lessonDao.findById(any(Integer.class))).thenReturn(new Lesson());
-
-	lessonService.getById(1);
-
-	verify(lessonDao).findById(any(Integer.class));
-    }
-
-    @Test
-    void givenLessons_whenGetAll_thenMethodRunOneTime() {
-	when(lessonDao.findAll()).thenReturn(new ArrayList<>());
-
-	lessonService.getAll();
-
-	verify(lessonDao).findAll();
-    }
-
-    @Test
-    void givenLessonWhithAllCorrectedFields_whenCreate_thenCreated() {
-	when(lessonDao.findAll()).thenReturn(lessons);
-	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), new LessonTime(), lessons.get(1).getSubject(),
-		new Audience(), new Teacher(), lessons.get(1).getTimetable());
-
-	lessonService.create(lesson);
-
-	verify(lessonDao, times(0)).create(lesson);
-    }
-
-    @Test
-    void givenLessonWithRepeatedLessonTime_whenCreate_thenNotCreated() {
-	when(lessonDao.findAll()).thenReturn(lessons);
-	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), lessons.get(1).getLessonTime(),
-		lessons.get(1).getSubject(), lessons.get(1).getAudience(), new Teacher(),
-		lessons.get(1).getTimetable());
-
-	lessonService.create(lesson);
-
-	verify(lessonDao, times(0)).create(lesson);
-    }
-
-    @Test
-    void givenLessonWithWrongSubject_whenCreate_thenNotCreated() {
-	when(lessonDao.findAll()).thenReturn(lessons);
-	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), new LessonTime(), new Subject(), new Audience(),
-		new Teacher(), lessons.get(1).getTimetable());
-
-	lessonService.create(lesson);
-
-	verify(lessonDao, times(0)).create(lesson);
-    }
-
-    @Test
-    void givenLessonWithWrongTeacher_whenCreate_thenNotCreated() {
-	when(lessonDao.findAll()).thenReturn(lessons);
-	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), lessons.get(1).getLessonTime(),
-		lessons.get(1).getSubject(), new Audience(), lessons.get(1).getTeacher(),
-		lessons.get(1).getTimetable());
-
-	lessonService.create(lesson);
-
-	verify(lessonDao, times(0)).create(lesson);
-    }
-
-    @Test
-    void givenLessonWithWrongAudienceCapacity_whenCreate_thenNotCreated() {
-	when(lessonDao.findAll()).thenReturn(lessons);
-	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), new LessonTime(), lessons.get(1).getSubject(),
-		lessons.get(1).getAudience(), new Teacher(), lessons.get(1).getTimetable());
-	Group group = new Group();
-	group.setStudents(
-		Arrays.asList(new Student(1), new Student(2), new Student(3), new Student(4), new Student(5)));
-	lesson.getGroups().add(group);
-	
-	lessonService.create(lesson);
-
-	verify(lessonDao, times(0)).create(lesson);
+	return lessons;
     }
 
 }
