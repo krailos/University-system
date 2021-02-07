@@ -40,9 +40,8 @@ public class YearDao {
 	    return ps;
 	}, keyHolder);
 	year.setId(keyHolder.getKey().intValue());
-	System.out.println(year);
 	for (Subject subject : year.getSubjects()) {
-	    jdbcTemplate.update(SQL_INSERT_INTO_YEARS_SUBJECTS, year.getId(), subject.getId());
+	    addSubjectToYear(subject, year);
 	}
     }
 
@@ -67,6 +66,9 @@ public class YearDao {
 
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
+    }
+    private void addSubjectToYear(Subject subject, Year year) {
+	jdbcTemplate.update(SQL_INSERT_INTO_YEARS_SUBJECTS, year.getId(), subject.getId());
     }
 
 }

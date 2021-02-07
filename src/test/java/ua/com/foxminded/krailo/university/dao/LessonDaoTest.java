@@ -87,9 +87,18 @@ class LessonDaoTest {
 
     @Test
     void givenId_whenFindById_thenFound() {
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "holidays", "id = 1");
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons", "id = 1");
 
 	int actual = lessonDao.findById(1).getId();
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenId_whenFindById_thenAllGroupsForLessonFound() {
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons_groups", "lesson_id = 1");
+
+	int actual = lessonDao.findById(1).getGroups().size();
 
 	assertEquals(expected, actual);
     }

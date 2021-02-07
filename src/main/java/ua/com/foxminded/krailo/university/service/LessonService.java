@@ -1,53 +1,30 @@
 package ua.com.foxminded.krailo.university.service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import ua.com.foxminded.krailo.university.dao.AudienceDao;
 import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
-import ua.com.foxminded.krailo.university.dao.LessonTimeDao;
-import ua.com.foxminded.krailo.university.dao.SubjectDao;
-import ua.com.foxminded.krailo.university.dao.TeacherDao;
-import ua.com.foxminded.krailo.university.dao.TimetableDao;
 import ua.com.foxminded.krailo.university.model.Lesson;
 
 @Service
 public class LessonService {
 
-    private TimetableDao timetableDao;
     private LessonDao lessonDao;
-    private LessonTimeDao lessonTimeDao;
-    private SubjectDao subjectDao;
-    private TeacherDao teacherDao;
-    private AudienceDao audienceDao;
     private GroupDao groupDao;
 
-    public LessonService(TimetableDao timetableDao, LessonDao lessonDao, LessonTimeDao lessonTimeDao,
-	    SubjectDao subjectDao, TeacherDao teacherDao, AudienceDao audienceDao, GroupDao groupDao) {
-	this.timetableDao = timetableDao;
+    public LessonService(LessonDao lessonDao, GroupDao groupDao) {
 	this.lessonDao = lessonDao;
-	this.lessonTimeDao = lessonTimeDao;
-	this.subjectDao = subjectDao;
-	this.teacherDao = teacherDao;
-	this.audienceDao = audienceDao;
 	this.groupDao = groupDao;
     }
 
-    public void add(LocalDate date, int timeTableId, int subjectId, int audienceId, int lessonTimeId, int teacherId) {
-	Lesson lesson = new Lesson();
+    public void create(Lesson lesson) {
 	List<Lesson> lessons = lessonDao.findAll();
-	lesson.setDate(date);
-	lesson.setTimetable(timetableDao.findById(timeTableId));
-	lesson.setSubject(subjectDao.findById(subjectId));
-	checkSubject(lesson);
-	lesson.setAudience(audienceDao.findById(audienceId));
-	lesson.setLessonTime(lessonTimeDao.findById(lessonTimeId));
-	checkLessonTime(lessons, lesson);
-	lesson.setTeacher(teacherDao.findById(teacherId));
-	checkTeacher(lessons, lesson);
+	checkBySubject(lesson);
+	checkByLessonTime(lessons, lesson);
+	checkByTeacher(lessons, lesson);
+	checkByGroupCapacity(lesson);
 	lessonDao.create(lesson);
     }
 
@@ -58,9 +35,10 @@ public class LessonService {
 
     public void update(Lesson lesson) {
 	List<Lesson> lessons = lessonDao.findAll();
-	checkSubject(lesson);
-	checkLessonTime(lessons, lesson);
-	checkTeacher(lessons, lesson);
+	checkBySubject(lesson);
+	checkByLessonTime(lessons, lesson);
+	checkByTeacher(lessons, lesson);
+	checkByGroupCapacity(lesson);
 	lessonDao.update(lesson);
     }
 
@@ -72,25 +50,32 @@ public class LessonService {
 	return lessonDao.findAll();
     }
 
-    private void checkSubject(Lesson lesson) {
+    private void checkBySubject(Lesson lesson) {
 	if (!lesson.getTimetable().getYear().getSubjects().contains(lesson.getSubject())) {
-	    throw new RuntimeException("this subject doesn't register for this year");
+	    return;
 	}
     }
 
-    private void checkLessonTime(List<Lesson> lessons, Lesson lesson) {
+    private void checkByLessonTime(List<Lesson> lessons, Lesson lesson) {
 	if (lessons.stream().filter(l -> lesson.getDate().equals(l.getDate()))
 		.filter(l -> lesson.getAudience().equals(l.getAudience()))
 		.filter(l -> lesson.getLessonTime().equals(l.getLessonTime())).count() > 0) {
-	    throw new RuntimeException("this lesson time is already booked");
+	    return;
 	}
     }
 
-    private void checkTeacher(List<Lesson> lessons, Lesson lesson) {
+    private void checkByTeacher(List<Lesson> lessons, Lesson lesson) {
 	if (lessons.stream().filter(l -> lesson.getDate().equals(l.getDate()))
 		.filter(l -> lesson.getLessonTime().equals(l.getLessonTime()))
 		.filter(l -> lesson.getTeacher().equals(l.getTeacher())).count() > 0) {
-	    throw new RuntimeException("this teacher has already got a lesson at this time");
+	    return;
+	}
+    }
+
+    private void checkByGroupCapacity(Lesson lesson) {
+	if (lesson.getAudience().getCapacity() < lesson.getGroups().stream().mapToInt(g -> g.getStudents().size())
+		.sum()) {
+	    return;
 	}
     }
 

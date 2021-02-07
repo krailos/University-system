@@ -1,35 +1,40 @@
 package ua.com.foxminded.krailo.university.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.time.LocalDate;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
+import ua.com.foxminded.krailo.university.dao.LessonDao;
+import ua.com.foxminded.krailo.university.model.Lesson;
 
+@ExtendWith(MockitoExtension.class)
 @SpringJUnitConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
 class LessonServiceTest {
 
     @Autowired
+    @InjectMocks
     private LessonService lessonService;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-    
+    @Mock
+    private LessonDao lessonDao;
+
     @Test
-    void givenDateTimetableIdSubjectIdAudienceIdLessonTimeIdTeachher_whenCreateLesson_thenCreated() {
-	
-	lessonService.add(LocalDate.of(2021, 01, 01), 1, 1, 3, 2, 1);
-	
-	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "lessons");
-	assertEquals(3, actual);
+    void givenLessonId_whenGetById_thenGot() {
+	when(lessonDao.findById(any(Integer.class))).thenReturn(new Lesson());
+
+	lessonService.getById(1);
+
+	verify(lessonDao).findById(any(Integer.class));
     }
-    
 
 }

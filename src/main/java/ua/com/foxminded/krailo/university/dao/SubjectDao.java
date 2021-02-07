@@ -57,11 +57,11 @@ public class SubjectDao {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
     }
 
-    public List<Subject> findSubjectsByTeacherId(int id) {
+    public List<Subject> findByTeacherId(int id) {
 	return jdbcTemplate.query(SQL_SELECT_SUBJECTS_BY_TEACHER_ID, new Object[] { id }, subjectRowMapper);
     }
 
-    public List<Subject> findSubjectsByYearId(int id) {
+    public List<Subject> findByYearId(int id) {
 	return jdbcTemplate.query(SQL_SELECT_SUBJECTS_BY_TEACHER_ID, new Object[] { id }, subjectRowMapper);
     }
     

@@ -4,11 +4,11 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import ua.com.foxminded.krailo.university.dao.mapper.LessonRowMapper;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
 
@@ -23,12 +23,11 @@ public class LessonDao {
     private static final String SQL_INSERT_INTO_LESSONS_GROUPS = "INSERT INTO lessons_groups (lesson_id, group_id) VALUES (?, ?)";
     private static final String SQL_DELETE_LESSONS_GROUPS_BY_LESSON_ID_GROUP_ID = "DELETE FROM lessons_groups WHERE lesson_id = ? AND group_id = ?";
     private static final String SQL_SELECT_BY_TIMETABLE_ID = "SELECT * FROM lessons WHERE timetable_id = ?";
-   
-    private JdbcTemplate jdbcTemplate;
-    private RowMapper<Lesson> lessonRowMapper;
 
-    public LessonDao(JdbcTemplate jdbcTemplate, RowMapper<Lesson> lessonRowMapper,
-	    RowMapper<Group> groupFromGroupIdRowMapper) {
+    private JdbcTemplate jdbcTemplate;
+    private LessonRowMapper lessonRowMapper;
+
+    public LessonDao(JdbcTemplate jdbcTemplate, LessonRowMapper lessonRowMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.lessonRowMapper = lessonRowMapper;
     }
@@ -73,8 +72,12 @@ public class LessonDao {
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
     }
-    
-    public List<Lesson> findByTimetableId (int id){
+
+    public List<Lesson> findByTimetableId(int id) {
+	return jdbcTemplate.query(SQL_SELECT_BY_TIMETABLE_ID, lessonRowMapper, id);
+    }
+
+    public List<Lesson> findByTimetableIdLessTimetable(int id) {
 	return jdbcTemplate.query(SQL_SELECT_BY_TIMETABLE_ID, lessonRowMapper, id);
     }
 

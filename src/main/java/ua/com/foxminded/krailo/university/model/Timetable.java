@@ -18,16 +18,12 @@ public class Timetable {
 	this.id = id;
     }
 
-    public Timetable(int id, String name, Year year, Speciality speciality) {
-	super();
-	this.id = id;
+    public Timetable(String name, Year year) {
 	this.name = name;
 	this.year = year;
-	this.speciality = speciality;
     }
 
     public Timetable(String name, Year year, Speciality speciality) {
-	super();
 	this.name = name;
 	this.year = year;
 	this.speciality = speciality;
@@ -39,9 +35,11 @@ public class Timetable {
 	this.year = year;
     }
 
-    public Timetable(String name, Year year) {
+    public Timetable(int id, String name, Year year, Speciality speciality) {
+	this.id = id;
 	this.name = name;
 	this.year = year;
+	this.speciality = speciality;
     }
 
     public int getId() {

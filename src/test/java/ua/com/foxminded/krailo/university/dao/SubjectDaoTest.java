@@ -75,7 +75,7 @@ class SubjectDaoTest {
 	Teacher teacher = new Teacher(1);
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "subjects", "id = 1 OR id = 2" );
 
-	int actual = subjectDao.findSubjectsByTeacherId(teacher.getId()).size();
+	int actual = subjectDao.findByTeacherId(teacher.getId()).size();
 
 	assertEquals(expected, actual);
     }
@@ -85,7 +85,7 @@ class SubjectDaoTest {
 	Year year = new Year(1, "", null);
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "subjects", "id = 1 OR id = 2" );
 
-	int actual = subjectDao.findSubjectsByYearId(year.getId()).size();
+	int actual = subjectDao.findByYearId(year.getId()).size();
 
 	assertEquals(expected, actual);
     }

@@ -17,7 +17,6 @@ public class YearRowMapper implements RowMapper<Year> {
     private SubjectDao subjectDao;
 
     public YearRowMapper(SpecialityDao specialityDao, SubjectDao subjectDao) {
-	super();
 	this.specialityDao = specialityDao;
 	this.subjectDao = subjectDao;
     }
@@ -28,7 +27,7 @@ public class YearRowMapper implements RowMapper<Year> {
 	year.setId(rs.getInt("id"));
 	year.setName(rs.getString("name"));
 	year.setSpeciality(specialityDao.findById(rs.getInt("speciality_id")));
-	year.setSubjects(subjectDao.findSubjectsByYearId(rs.getInt("id")));
+	year.setSubjects(subjectDao.findByYearId(rs.getInt("id")));
 	return year;
     }
 

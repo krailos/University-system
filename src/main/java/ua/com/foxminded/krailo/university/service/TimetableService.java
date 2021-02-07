@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.TimetableDao;
-import ua.com.foxminded.krailo.university.dao.YearDao;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.Timetable;
 import ua.com.foxminded.krailo.university.model.Year;
@@ -16,31 +15,26 @@ public class TimetableService {
 
     private TimetableDao timetableDao;
     private LessonDao lessonDao;
-    private YearDao yearDao;
 
-    public TimetableService(TimetableDao timetableDao, LessonDao lessonDao, YearDao yearDao) {
+    public TimetableService(TimetableDao timetableDao, LessonDao lessonDao) {
 	this.timetableDao = timetableDao;
 	this.lessonDao = lessonDao;
-	this.yearDao = yearDao;
     }
 
-    public void add(String name, int yearId) {
-	Timetable timetable = new Timetable();
-	timetable.setName(name);
-	timetable.setYear(yearDao.findById(yearId));
+    public void create(Timetable timetable) {
 	timetableDao.create(timetable);
     }
 
     public Timetable getById(int timetableId) {
 	Timetable timetable = timetableDao.findById(timetableId);
-	timetable.setLessons(lessonDao.findByTimetableId(timetableId));
+	addLessonsToTimetable(timetable);
 	return timetable;
     }
 
     public List<Timetable> getAll() {
 	List<Timetable> timetables = timetableDao.findAll();
 	for (Timetable timetable : timetables) {
-	    timetable.setLessons(lessonDao.findByTimetableId(timetable.getId()));
+	    addLessonsToTimetable(timetable);
 	}
 	return timetables;
     }
@@ -57,8 +51,12 @@ public class TimetableService {
     private void checkYear(Year year) {
 	List<Lesson> lessons = lessonDao.findAll();
 	if (lessons.stream().map(l -> l.getSubject()).filter(s -> !year.getSubjects().contains(s)).count() > 0) {
-	    throw new RuntimeException("some subjects from lessons don't register in this year");
+	    return;
 	}
+    }
+
+    private void addLessonsToTimetable(Timetable timetable) {
+	timetable.setLessons(lessonDao.findByTimetableId(timetable.getId()));
     }
 
 }
