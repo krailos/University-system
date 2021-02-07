@@ -88,4 +88,14 @@ class GroupDaoTest {
 	assertEquals(expected, actual);
     }
 
+    @Test
+    void givenYearId_whenFindByYearId_thenFound() {
+	Year year = new Year(1, "", null);
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "groups", "year_id = 1");
+
+	int actual = groupDao.findByYearId(year.getId()).size();
+
+	assertEquals(expected, actual);
+    }
+
 }

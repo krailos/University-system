@@ -19,8 +19,9 @@ public class GroupDao {
     private static final String SQL_DELETE_BY_ID = "DELETE FROM groups WHERE id = ?";
     private static final String SQL_INSERT_GROUP = "INSERT INTO groups (name, year_id) VALUES (?, ?)";
     private static final String SQL_UPDATE_BY_ID = "UPDATE groups SET name = ?, year_id = ? where id = ?";
-    private static final String SQL_SELECT_GROUPD_ID_BY_LESSON_ID = "SELECT id, name, year_id FROM groups JOIN lessons_groups ON (groups.id = lessons_groups.group_id ) WHERE lessons_groups.lesson_id = ?";
-
+    private static final String SQL_SELECT_GROUPS_BY_LESSON_ID = "SELECT id, name, year_id FROM groups JOIN lessons_groups ON (groups.id = lessons_groups.group_id ) WHERE lessons_groups.lesson_id = ?";
+    private static final String SQL_SELECT_GROUPS_BY_YEAR_ID = "SELECT * FROM groups WHERE year_id = ?";
+    
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Group> groupRowMapper;
 
@@ -57,7 +58,11 @@ public class GroupDao {
     }
 
     public List<Group> findByLessonId(int id) {
-	return jdbcTemplate.query(SQL_SELECT_GROUPD_ID_BY_LESSON_ID, new Object[] { id }, groupRowMapper);
+	return jdbcTemplate.query(SQL_SELECT_GROUPS_BY_LESSON_ID, new Object[] { id }, groupRowMapper);
+    }
+    
+    public List<Group> findByYearId (int id){
+	return jdbcTemplate.query(SQL_SELECT_GROUPS_BY_YEAR_ID, groupRowMapper, id);
     }
 
 }

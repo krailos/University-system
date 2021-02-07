@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Group;
@@ -36,6 +37,8 @@ class LessonServiceTest {
     private LessonService lessonService;
     @Mock
     private LessonDao lessonDao;
+    @Mock
+    private GroupDao groupDao;
 
     @Test
     void givenLessonId_whenGetById_thenMethodRunOneTime() {
@@ -106,18 +109,25 @@ class LessonServiceTest {
     }
 
     @Test
-    void givenLessonWithWrongAudienceCapacity_whenCreate_thenNotCreated() {
+    void givenLessonWithWrongGroup_whenCreate_thenNotCreated() {
 	List<Lesson> lessons = createLessons();
 	when(lessonDao.findAll()).thenReturn(lessons);
 	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), new LessonTime(), lessons.get(1).getSubject(),
 		lessons.get(1).getAudience(), new Teacher(), lessons.get(1).getTimetable());
-	Group group = new Group();
-	group.getStudents().add(new Student());
-	group.getStudents().add(new Student());
-	group.getStudents().add(new Student());
-	group.getStudents().add(new Student());
-	group.getStudents().add(new Student());
-	lesson.getGroups().add(group);
+	lesson.getGroups().add(new Group());
+
+	lessonService.create(lesson);
+
+	verify(lessonDao, times(0)).create(lesson);
+    }
+
+    @Test
+    void givenLessonWithWrongAudienceCapacity_whenCreate_thenNotCreated() {
+	List<Lesson> lessons = createLessons();
+	when(lessonDao.findAll()).thenReturn(lessons);
+	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), new LessonTime(), lessons.get(1).getSubject(),
+		new Audience("new", null, 1, ""), new Teacher(), lessons.get(1).getTimetable());
+	lesson.getGroups().add(lessons.get(0).getGroups().get(0));
 
 	lessonService.create(lesson);
 
@@ -127,6 +137,11 @@ class LessonServiceTest {
     private List<Lesson> createLessons() {
 	List<Lesson> lessons = new ArrayList<>();
 	Year year = new Year();
+	Group group1 = new Group(1);
+	Group group2 = new Group(2);
+	group1.setStudents(Arrays.asList(new Student(1), new Student(2)));
+	group2.setStudents(Arrays.asList(new Student(3), new Student(4)));
+	year.setGroups(Arrays.asList(group1,group2));	
 	Subject subject1 = new Subject(1, "sub1");
 	Subject subject2 = new Subject(2, "sub2");
 	year.setSubjects(Arrays.asList(subject1, subject2));
@@ -138,11 +153,7 @@ class LessonServiceTest {
 	LessonTime lessonTime2 = new LessonTime(2, "second", LocalTime.of(9, 45), LocalTime.of(10, 30),
 		lessonsTimeSchedule);
 	Teacher teacher1 = new Teacher(1);
-	Teacher teacher2 = new Teacher(2);
-	Group group1 = new Group(1);
-	group1.setStudents(Arrays.asList(new Student(1), new Student(2)));
-	Group group2 = new Group(2);
-	group2.setStudents(Arrays.asList(new Student(3), new Student(4)));
+	Teacher teacher2 = new Teacher(2);	
 	Lesson lesson1 = new Lesson(1, LocalDate.of(2021, 01, 01), lessonTime1, subject1, audience, teacher1,
 		timetable);
 	lesson1.getGroups().add(group1);

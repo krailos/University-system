@@ -25,6 +25,7 @@ public class LessonService {
 	checkBySubject(lesson);
 	checkByLessonTime(lessons, lesson);
 	checkByTeacher(lessons, lesson);
+	checkByGroup(lesson);
 	checkByGroupCapacity(lesson);
 	if (checkPassed) {
 	    lessonDao.create(lesson);
@@ -80,6 +81,13 @@ public class LessonService {
 	}
     }
 
+    private void checkByGroup(Lesson lesson) {
+	if (lesson.getGroups().stream().filter(g ->!lesson.getTimetable().getYear().getGroups().contains(g)).count() > 0) {
+	    System.out.println("coz group");
+	    checkPassed = false;
+	}
+    }
+
     private void checkByGroupCapacity(Lesson lesson) {
 	if (lesson.getAudience().getCapacity() < lesson.getGroups().stream().mapToInt(g -> g.getStudents().size())
 		.sum()) {
@@ -87,5 +95,5 @@ public class LessonService {
 	    checkPassed = false;
 	}
     }
-
+    
 }
