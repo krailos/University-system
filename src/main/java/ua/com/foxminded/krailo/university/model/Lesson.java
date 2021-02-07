@@ -18,9 +18,8 @@ public class Lesson {
     public Lesson() {
     }
 
-    public Lesson(int id, LocalDate date, LessonTime lessonTime, Subject subject, Audience audience, Teacher teacher,
+    public Lesson(LocalDate date, LessonTime lessonTime, Subject subject, Audience audience, Teacher teacher,
 	    Timetable timetable) {
-	this.id = id;
 	this.date = date;
 	this.lessonTime = lessonTime;
 	this.subject = subject;
@@ -29,8 +28,9 @@ public class Lesson {
 	this.timetable = timetable;
     }
 
-    public Lesson(LocalDate date, LessonTime lessonTime, Subject subject, Audience audience, Teacher teacher,
+    public Lesson(int id, LocalDate date, LessonTime lessonTime, Subject subject, Audience audience, Teacher teacher,
 	    Timetable timetable) {
+	this.id = id;
 	this.date = date;
 	this.lessonTime = lessonTime;
 	this.subject = subject;

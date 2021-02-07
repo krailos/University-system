@@ -19,10 +19,12 @@ public class Student {
     public Student() {
     }
 
-    public Student(int id, String studentId, String firstName, String lastName, LocalDate birthDate, String phone,
-	    String address, String email, String rank, Gender gender, Group group) {
-	super();
+    public Student(int id) {
 	this.id = id;
+    }
+
+    public Student(String studentId, String firstName, String lastName, LocalDate birthDate, String phone,
+	    String address, String email, String rank, Gender gender, Group group) {
 	this.studentId = studentId;
 	this.firstName = firstName;
 	this.lastName = lastName;
@@ -35,8 +37,9 @@ public class Student {
 	this.group = group;
     }
 
-    public Student(String studentId, String firstName, String lastName, LocalDate birthDate, String phone,
+    public Student(int id, String studentId, String firstName, String lastName, LocalDate birthDate, String phone,
 	    String address, String email, String rank, Gender gender, Group group) {
+	this.id = id;
 	this.studentId = studentId;
 	this.firstName = firstName;
 	this.lastName = lastName;

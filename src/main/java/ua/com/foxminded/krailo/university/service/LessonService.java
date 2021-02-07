@@ -13,6 +13,7 @@ public class LessonService {
 
     private LessonDao lessonDao;
     private GroupDao groupDao;
+    private boolean checkPassed = true;
 
     public LessonService(LessonDao lessonDao, GroupDao groupDao) {
 	this.lessonDao = lessonDao;
@@ -25,7 +26,9 @@ public class LessonService {
 	checkByLessonTime(lessons, lesson);
 	checkByTeacher(lessons, lesson);
 	checkByGroupCapacity(lesson);
-	lessonDao.create(lesson);
+	if (checkPassed) {
+	    lessonDao.create(lesson);
+	}
     }
 
     public void addGroup(Lesson lesson, int groupId) {
@@ -39,7 +42,9 @@ public class LessonService {
 	checkByLessonTime(lessons, lesson);
 	checkByTeacher(lessons, lesson);
 	checkByGroupCapacity(lesson);
-	lessonDao.update(lesson);
+	if (checkPassed) {
+	    lessonDao.update(lesson);
+	}
     }
 
     public Lesson getById(int id) {
@@ -52,7 +57,8 @@ public class LessonService {
 
     private void checkBySubject(Lesson lesson) {
 	if (!lesson.getTimetable().getYear().getSubjects().contains(lesson.getSubject())) {
-	    return;
+	    System.out.println("coz subject");
+	    checkPassed = false;
 	}
     }
 
@@ -60,7 +66,8 @@ public class LessonService {
 	if (lessons.stream().filter(l -> lesson.getDate().equals(l.getDate()))
 		.filter(l -> lesson.getAudience().equals(l.getAudience()))
 		.filter(l -> lesson.getLessonTime().equals(l.getLessonTime())).count() > 0) {
-	    return;
+	    System.out.println("coz lessontime");
+	    checkPassed = false;
 	}
     }
 
@@ -68,14 +75,16 @@ public class LessonService {
 	if (lessons.stream().filter(l -> lesson.getDate().equals(l.getDate()))
 		.filter(l -> lesson.getLessonTime().equals(l.getLessonTime()))
 		.filter(l -> lesson.getTeacher().equals(l.getTeacher())).count() > 0) {
-	    return;
+	    System.out.println("coz teacher");
+	    checkPassed = false;
 	}
     }
 
     private void checkByGroupCapacity(Lesson lesson) {
 	if (lesson.getAudience().getCapacity() < lesson.getGroups().stream().mapToInt(g -> g.getStudents().size())
 		.sum()) {
-	    return;
+	    System.out.println("coz capacity");
+	    checkPassed = false;
 	}
     }
 

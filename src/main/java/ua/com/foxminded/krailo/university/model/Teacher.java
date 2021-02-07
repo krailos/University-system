@@ -26,9 +26,8 @@ public class Teacher {
 	this.id = id;
     }
 
-    public Teacher(int id, String teacherId, String firstName, String lastName, LocalDate birthDate, String phone,
+    public Teacher(String teacherId, String firstName, String lastName, LocalDate birthDate, String phone,
 	    String address, String email, String degree, Gender gender, Department department) {
-	this.id = id;
 	this.teacherId = teacherId;
 	this.firstName = firstName;
 	this.lastName = lastName;
@@ -41,18 +40,16 @@ public class Teacher {
 	this.department = department;
     }
 
-    public Teacher(String teacherId, String firstName, String lastName, LocalDate birthDate, String phone,
+    public Teacher(int id, String teacherId, String firstName, String lastName, LocalDate birthDate, String phone,
 	    String address, String email, String degree, Gender gender, Department department) {
-	super();
+	this.id = id;
 	this.teacherId = teacherId;
 	this.firstName = firstName;
 	this.lastName = lastName;
 	this.birthDate = birthDate;
-
 	this.phone = phone;
 	this.address = address;
 	this.email = email;
-
 	this.degree = degree;
 	this.gender = gender;
 	this.department = department;
@@ -166,8 +163,18 @@ public class Teacher {
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
+	result = prime * result + ((address == null) ? 0 : address.hashCode());
+	result = prime * result + ((birthDate == null) ? 0 : birthDate.hashCode());
+	result = prime * result + ((degree == null) ? 0 : degree.hashCode());
+	result = prime * result + ((department == null) ? 0 : department.hashCode());
+	result = prime * result + ((email == null) ? 0 : email.hashCode());
 	result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+	result = prime * result + ((gender == null) ? 0 : gender.hashCode());
+	result = prime * result + id;
 	result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+	result = prime * result + ((phone == null) ? 0 : phone.hashCode());
+	result = prime * result + ((subjects == null) ? 0 : subjects.hashCode());
+	result = prime * result + ((teacherId == null) ? 0 : teacherId.hashCode());
 	return result;
     }
 
@@ -180,15 +187,59 @@ public class Teacher {
 	if (getClass() != obj.getClass())
 	    return false;
 	Teacher other = (Teacher) obj;
+	if (address == null) {
+	    if (other.address != null)
+		return false;
+	} else if (!address.equals(other.address))
+	    return false;
+	if (birthDate == null) {
+	    if (other.birthDate != null)
+		return false;
+	} else if (!birthDate.equals(other.birthDate))
+	    return false;
+	if (degree == null) {
+	    if (other.degree != null)
+		return false;
+	} else if (!degree.equals(other.degree))
+	    return false;
+	if (department == null) {
+	    if (other.department != null)
+		return false;
+	} else if (!department.equals(other.department))
+	    return false;
+	if (email == null) {
+	    if (other.email != null)
+		return false;
+	} else if (!email.equals(other.email))
+	    return false;
 	if (firstName == null) {
 	    if (other.firstName != null)
 		return false;
 	} else if (!firstName.equals(other.firstName))
 	    return false;
+	if (gender != other.gender)
+	    return false;
+	if (id != other.id)
+	    return false;
 	if (lastName == null) {
 	    if (other.lastName != null)
 		return false;
 	} else if (!lastName.equals(other.lastName))
+	    return false;
+	if (phone == null) {
+	    if (other.phone != null)
+		return false;
+	} else if (!phone.equals(other.phone))
+	    return false;
+	if (subjects == null) {
+	    if (other.subjects != null)
+		return false;
+	} else if (!subjects.equals(other.subjects))
+	    return false;
+	if (teacherId == null) {
+	    if (other.teacherId != null)
+		return false;
+	} else if (!teacherId.equals(other.teacherId))
 	    return false;
 	return true;
     }

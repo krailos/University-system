@@ -17,19 +17,17 @@ public class LessonTime {
 	this.id = id;
     }
 
-    public LessonTime(int id, String orderNumber, LocalTime startTime, LocalTime endTime,
+    public LessonTime(String orderNumber, LocalTime startTime, LocalTime endTime,
 	    LessonsTimeSchedule lessonsTimeSchedule) {
-	super();
-	this.id = id;
 	this.orderNumber = orderNumber;
 	this.startTime = startTime;
 	this.endTime = endTime;
 	this.lessonsTimeSchedule = lessonsTimeSchedule;
     }
 
-    public LessonTime(String orderNumber, LocalTime startTime, LocalTime endTime,
+    public LessonTime(int id, String orderNumber, LocalTime startTime, LocalTime endTime,
 	    LessonsTimeSchedule lessonsTimeSchedule) {
-	super();
+	this.id = id;
 	this.orderNumber = orderNumber;
 	this.startTime = startTime;
 	this.endTime = endTime;

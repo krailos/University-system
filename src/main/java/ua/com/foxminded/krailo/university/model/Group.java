@@ -18,7 +18,6 @@ public class Group {
     }
 
     public Group(int id, String name, Year year) {
-	super();
 	this.id = id;
 	this.name = name;
 	this.year = year;
