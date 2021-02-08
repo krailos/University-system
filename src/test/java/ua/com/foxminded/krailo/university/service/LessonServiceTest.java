@@ -1,7 +1,7 @@
 package ua.com.foxminded.krailo.university.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -52,11 +52,12 @@ class LessonServiceTest {
 
     @Test
     void givenLessons_whenGetAll_thenGotAll() {
-	when(lessonDao.findAll()).thenReturn(new ArrayList<>());
+	List<Lesson> lessons = new ArrayList<>();
+	when(lessonDao.findAll()).thenReturn(lessons);
 
-	lessonService.getAll();
-
-	verify(lessonDao, atLeast(1)).findAll();
+	List <Lesson> actual =  lessonService.getAll();
+	
+	assertEquals(lessons, actual);
     }
 
     @Test
