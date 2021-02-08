@@ -55,8 +55,8 @@ class LessonServiceTest {
 	List<Lesson> lessons = new ArrayList<>();
 	when(lessonDao.findAll()).thenReturn(lessons);
 
-	List <Lesson> actual =  lessonService.getAll();
-	
+	List<Lesson> actual = lessonService.getAll();
+
 	assertEquals(lessons, actual);
     }
 
