@@ -12,7 +12,7 @@ import ua.com.foxminded.krailo.university.configuration.UniversityConfig;
 @Configuration
 @Import(UniversityConfig.class)
 public class ConfigTest {
- 
+
     @Bean
     public DataSource dataSource() {
 	DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -22,5 +22,5 @@ public class ConfigTest {
 	dataSource.setPassword("");
 	return dataSource;
     }
-              
+
 }
