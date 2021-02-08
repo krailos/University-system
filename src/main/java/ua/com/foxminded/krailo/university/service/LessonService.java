@@ -65,8 +65,7 @@ public class LessonService {
 
     private void checkBySubject(Lesson lesson) {
 	if (!lesson.getTimetable().getYear().getSubjects().contains(lesson.getSubject())) {
-	    System.out.println("coz subject");
-	    checkPass = false;
+	       checkPass = false;
 	}
     }
 
@@ -74,8 +73,7 @@ public class LessonService {
 	if (lessons.stream().filter(l -> lesson.getDate().equals(l.getDate()))
 		.filter(l -> lesson.getAudience().equals(l.getAudience()))
 		.filter(l -> lesson.getLessonTime().equals(l.getLessonTime())).count() > 0) {
-	    System.out.println("coz lessontime");
-	    checkPass = false;
+	       checkPass = false;
 	}
     }
 
@@ -83,23 +81,20 @@ public class LessonService {
 	if (lessons.stream().filter(l -> lesson.getDate().equals(l.getDate()))
 		.filter(l -> lesson.getLessonTime().equals(l.getLessonTime()))
 		.filter(l -> lesson.getTeacher().equals(l.getTeacher())).count() > 0) {
-	    System.out.println("coz teacher");
-	    checkPass = false;
+	      checkPass = false;
 	}
     }
 
     private void checkByGroup(Lesson lesson) {
 	if (lesson.getGroups().stream().filter(g ->!lesson.getTimetable().getYear().getGroups().contains(g)).count() > 0) {
-	    System.out.println("coz group");
-	    checkPass = false;
+	       checkPass = false;
 	}
     }
 
     private void checkByGroupCapacity(Lesson lesson) {
 	if (lesson.getAudience().getCapacity() < lesson.getGroups().stream().mapToInt(g -> g.getStudents().size())
 		.sum()) {
-	    System.out.println("coz capacity");
-	    checkPass = false;
+	     checkPass = false;
 	}
     }
     
