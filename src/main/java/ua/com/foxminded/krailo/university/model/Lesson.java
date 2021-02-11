@@ -18,6 +18,10 @@ public class Lesson {
     public Lesson() {
     }
 
+    public Lesson(int id) {
+	this.id = id;
+    }
+
     public Lesson(LocalDate date, LessonTime lessonTime, Subject subject, Audience audience, Teacher teacher,
 	    Timetable timetable) {
 	this.date = date;
@@ -101,6 +105,70 @@ public class Lesson {
 
     public void setGroups(List<Group> groups) {
 	this.groups = groups;
+    }
+
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((audience == null) ? 0 : audience.hashCode());
+	result = prime * result + ((date == null) ? 0 : date.hashCode());
+	result = prime * result + ((groups == null) ? 0 : groups.hashCode());
+	result = prime * result + id;
+	result = prime * result + ((lessonTime == null) ? 0 : lessonTime.hashCode());
+	result = prime * result + ((subject == null) ? 0 : subject.hashCode());
+	result = prime * result + ((teacher == null) ? 0 : teacher.hashCode());
+	result = prime * result + ((timetable == null) ? 0 : timetable.hashCode());
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Lesson other = (Lesson) obj;
+	if (audience == null) {
+	    if (other.audience != null)
+		return false;
+	} else if (!audience.equals(other.audience))
+	    return false;
+	if (date == null) {
+	    if (other.date != null)
+		return false;
+	} else if (!date.equals(other.date))
+	    return false;
+	if (groups == null) {
+	    if (other.groups != null)
+		return false;
+	} else if (!groups.equals(other.groups))
+	    return false;
+	if (id != other.id)
+	    return false;
+	if (lessonTime == null) {
+	    if (other.lessonTime != null)
+		return false;
+	} else if (!lessonTime.equals(other.lessonTime))
+	    return false;
+	if (subject == null) {
+	    if (other.subject != null)
+		return false;
+	} else if (!subject.equals(other.subject))
+	    return false;
+	if (teacher == null) {
+	    if (other.teacher != null)
+		return false;
+	} else if (!teacher.equals(other.teacher))
+	    return false;
+	if (timetable == null) {
+	    if (other.timetable != null)
+		return false;
+	} else if (!timetable.equals(other.timetable))
+	    return false;
+	return true;
     }
 
     @Override

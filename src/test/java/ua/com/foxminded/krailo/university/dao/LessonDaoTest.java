@@ -129,4 +129,14 @@ class LessonDaoTest {
 	assertEquals(1, actual);
     }
 
+    @Test
+    void givenLesson_whenFindByDate_thenFound() {
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons", "date = '2021-01-01'");
+	Lesson lesson = new Lesson();
+	lesson.setDate(LocalDate.of(2021, 01, 01));
+	
+	int actual = lessonDao.findByDate(lesson).size();
+
+	assertEquals(expected, actual);
+    }
 }

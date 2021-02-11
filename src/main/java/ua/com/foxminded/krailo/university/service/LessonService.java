@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
+import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
 
 @Service
@@ -13,7 +14,6 @@ public class LessonService {
 
     private LessonDao lessonDao;
     private GroupDao groupDao;
-    private boolean checkPass = true;
 
     public LessonService(LessonDao lessonDao, GroupDao groupDao) {
 	this.lessonDao = lessonDao;
@@ -21,34 +21,24 @@ public class LessonService {
     }
 
     public void create(Lesson lesson) {
-	List<Lesson> lessons = lessonDao.findAll();
-	checkBySubject(lesson);
-	checkByLessonTime(lessons, lesson);
-	checkByTeacher(lessons, lesson);
-	checkByGroup(lesson);
-	checkByGroupCapacity(lesson);
-	if (checkPass) {
+	List<Lesson> lessons = lessonDao.findByDate(lesson);
+	if (checkBySubject(lesson) && checkByLessonTime(lessons, lesson) && checkByTeacher(lessons, lesson)
+		&& checkByGroup(lesson) && checkByGroupCapacity(lesson)) {
 	    lessonDao.create(lesson);
 	}
-	checkPass = true;
+    }
+
+    public void update(Lesson lesson) {
+	List<Lesson> lessons = lessonDao.findByDate(lesson);
+	if (checkBySubject(lesson) && checkByLessonTime(lessons, lesson) && checkByTeacher(lessons, lesson)
+		&& checkByGroup(lesson) && checkByGroupCapacity(lesson)) {
+	    lessonDao.create(lesson);
+	}
     }
 
     public void addGroup(Lesson lesson, int groupId) {
 	lesson.getGroups().add(groupDao.findById(groupId));
 	lessonDao.update(lesson);
-    }
-
-    public void update(Lesson lesson) {
-	List<Lesson> lessons = lessonDao.findAll();
-	checkBySubject(lesson);
-	checkByLessonTime(lessons, lesson);
-	checkByTeacher(lessons, lesson);
-	checkByGroup(lesson);
-	checkByGroupCapacity(lesson);
-	if (checkPass) {
-	    lessonDao.update(lesson);
-	}
-	checkPass = true;
     }
 
     public Lesson getById(int id) {
@@ -63,40 +53,27 @@ public class LessonService {
 	lessonDao.deleteById(id);
     }
 
-    private void checkBySubject(Lesson lesson) {
-	if (!lesson.getTimetable().getYear().getSubjects().contains(lesson.getSubject())) {
-	    checkPass = false;
-	}
+    private boolean checkBySubject(Lesson lesson) {
+	return lesson.getTimetable().getYear().getSubjects().contains(lesson.getSubject());
     }
 
-    private void checkByLessonTime(List<Lesson> lessons, Lesson lesson) {
-	if (lessons.stream().filter(l -> lesson.getDate().equals(l.getDate()))
-		.filter(l -> lesson.getAudience().equals(l.getAudience()))
-		.filter(l -> lesson.getLessonTime().equals(l.getLessonTime())).count() > 0) {
-	    checkPass = false;
-	}
+    private boolean checkByLessonTime(List<Lesson> lessons, Lesson lesson) {
+	return lessons.stream().filter(l -> lesson.getAudience().equals(l.getAudience())).map(Lesson::getLessonTime)
+		.noneMatch(t -> t.equals(lesson.getLessonTime()));
     }
 
-    private void checkByTeacher(List<Lesson> lessons, Lesson lesson) {
-	if (lessons.stream().filter(l -> lesson.getDate().equals(l.getDate()))
-		.filter(l -> lesson.getLessonTime().equals(l.getLessonTime()))
-		.filter(l -> lesson.getTeacher().equals(l.getTeacher())).count() > 0) {
-	    checkPass = false;
-	}
+    private boolean checkByTeacher(List<Lesson> lessons, Lesson lesson) {
+	return lessons.stream().filter(l -> lesson.getLessonTime().equals(l.getLessonTime())).map(Lesson::getTeacher)
+		.noneMatch(t -> t.equals(lesson.getTeacher()));
     }
 
-    private void checkByGroup(Lesson lesson) {
-	if (lesson.getGroups().stream().filter(g -> !lesson.getTimetable().getYear().getGroups().contains(g))
-		.count() > 0) {
-	    checkPass = false;
-	}
+    private boolean checkByGroup(Lesson lesson) {
+	return lesson.getGroups().stream().allMatch(g -> lesson.getTimetable().getYear().getGroups().contains(g));
     }
 
-    private void checkByGroupCapacity(Lesson lesson) {
-	if (lesson.getAudience().getCapacity() < lesson.getGroups().stream().mapToInt(g -> g.getStudents().size())
-		.sum()) {
-	    checkPass = false;
-	}
+    private boolean checkByGroupCapacity(Lesson lesson) {
+	return (lesson.getAudience().getCapacity() >= lesson.getGroups().stream().map(Group::getStudents)
+		.mapToInt(List::size).sum());
     }
 
 }
