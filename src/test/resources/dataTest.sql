@@ -33,7 +33,8 @@ INSERT INTO specialities (name, faculty_id) VALUES
 
 INSERT INTO years (name, speciality_id) VALUES 
 ('year 1', '1'),
-('year 2', '1');
+('year 2', '1'),
+('year 3', '1');
 
 INSERT INTO groups (name, year_id) VALUES 
 ('group 1', '1'),

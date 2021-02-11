@@ -86,7 +86,8 @@ CREATE TABLE years (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
 	speciality_id int REFERENCES specialities (id) ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT years__pkey PRIMARY KEY (id)
+	CONSTRAINT years__pkey PRIMARY KEY (id),
+	UNIQUE (name, speciality_id)
 );
 
 CREATE TABLE groups (
@@ -151,7 +152,8 @@ CREATE TABLE timetables (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
 	year_id int REFERENCES years (id) ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT timetables__pkey PRIMARY KEY (id)
+	CONSTRAINT timetables__pkey PRIMARY KEY (id),
+	UNIQUE (year_id)
 );
 
 CREATE TABLE lessons (

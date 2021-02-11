@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
@@ -13,11 +12,9 @@ import ua.com.foxminded.krailo.university.model.Lesson;
 public class LessonService {
 
     private LessonDao lessonDao;
-    private GroupDao groupDao;
 
-    public LessonService(LessonDao lessonDao, GroupDao groupDao) {
+    public LessonService(LessonDao lessonDao) {
 	this.lessonDao = lessonDao;
-	this.groupDao = groupDao;
     }
 
     public void create(Lesson lesson) {
@@ -32,13 +29,8 @@ public class LessonService {
 	List<Lesson> lessons = lessonDao.findByDate(lesson);
 	if (checkBySubject(lesson) && checkByLessonTime(lessons, lesson) && checkByTeacher(lessons, lesson)
 		&& checkByGroup(lesson) && checkByGroupCapacity(lesson)) {
-	    lessonDao.create(lesson);
+	    lessonDao.update(lesson);
 	}
-    }
-
-    public void addGroup(Lesson lesson, int groupId) {
-	lesson.getGroups().add(groupDao.findById(groupId));
-	lessonDao.update(lesson);
     }
 
     public Lesson getById(int id) {
@@ -49,8 +41,8 @@ public class LessonService {
 	return lessonDao.findAll();
     }
 
-    public void deleteById(int id) {
-	lessonDao.deleteById(id);
+    public void deleteById(Lesson lesson) {
+	lessonDao.deleteById(lesson.getId());
     }
 
     private boolean checkBySubject(Lesson lesson) {

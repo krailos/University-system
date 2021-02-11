@@ -48,8 +48,8 @@ INSERT INTO lesson_times (order_number, start_time, end_time, lessons_timeschedu
 
 INSERT INTO students (student_id, first_name, last_name, birth_date, phone,
 address, email, rank, gender, group_id) VALUES 
-('1f', 'student first name 1', 'student last name 1', '01.01.2000', '0670000001', 'address 1', 'email 1', '0', 'male', '1' ),
-('1b', 'student first name 2', 'student last name 2', '02.01.2000', '0670000002', 'address 2', 'email 2', '0', 'male', '2' );
+('1f', 'student first name 1', 'student last name 1', '01.01.2000', '0670000001', 'address 1', 'email 1', '0', 'MALE', '1' ),
+('1b', 'student first name 2', 'student last name 2', '02.01.2000', '0670000002', 'address 2', 'email 2', '0', 'MALE', '2' );
 
 INSERT INTO subjects (name) VALUES 
 ('subject 1'),
@@ -59,10 +59,10 @@ INSERT INTO subjects (name) VALUES
 
 INSERT INTO teachers (teacher_id, first_name, last_name, birth_date, phone,
 address, email, degree, gender, department_id ) VALUES 
-('1t', 'teacher first name 1', 'teacher last name 1', '01.01.1970', '0680000001', 'address 1', 'email 1', 'professor', 'male', '1'),
-('2t', 'teacher first name 2', 'teacher last name 2', '02.01.1970', '0680000002', 'address 2', 'email 2', 'professor', 'male', '1'),
-('3t', 'teacher first name 3', 'teacher last name 3', '03.01.1970', '0680000003', 'address 3', 'email 3', 'professor', 'male', '1'),
-('4t', 'teacher first name 4', 'teacher last name 4', '04.01.1970', '0680000004', 'address 4', 'email 4', 'professor', 'male', '1');
+('1t', 'teacher first name 1', 'teacher last name 1', '01.01.1970', '0680000001', 'address 1', 'email 1', 'professor', 'MALE', '1'),
+('2t', 'teacher first name 2', 'teacher last name 2', '02.01.1970', '0680000002', 'address 2', 'email 2', 'professor', 'MALE', '1'),
+('3t', 'teacher first name 3', 'teacher last name 3', '03.01.1970', '0680000003', 'address 3', 'email 3', 'professor', 'MALE', '1'),
+('4t', 'teacher first name 4', 'teacher last name 4', '04.01.1970', '0680000004', 'address 4', 'email 4', 'professor', 'MALE', '1');
 
 INSERT INTO timetables (name, year_id) VALUES 
 ('timetable for first year finance', '1'),

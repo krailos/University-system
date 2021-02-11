@@ -34,7 +34,7 @@ class YearDaoTest {
 	yearDao.create(year);
 
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "years");
-	assertEquals(3, actual);
+	assertEquals(4, actual);
     }
 
     @Test
@@ -46,7 +46,7 @@ class YearDaoTest {
 	yearDao.create(year);
 
 	int expected = 2;
-	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "years_subjects", "year_id = 3");
+	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "years_subjects", "year_id = 2");
 	assertEquals(expected, actual);
     }
 
@@ -97,7 +97,7 @@ class YearDaoTest {
 	yearDao.deleteById(1);
 
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "years");
-	assertEquals(1, actual);
+	assertEquals(2, actual);
     }
 
 }

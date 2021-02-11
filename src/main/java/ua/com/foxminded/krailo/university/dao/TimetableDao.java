@@ -17,8 +17,9 @@ public class TimetableDao {
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM timetables WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM timetables";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM timetables WHERE id = ?";
-    private static final String SQL_INSERT_FACULTY = "INSERT INTO timetables (name, year_id) VALUES (?, ?)";
+    private static final String SQL_INSERT = "INSERT INTO timetables (name, year_id) VALUES (?, ?)";
     private static final String SQL_UPDATE_BY_ID = "UPDATE timetables SET name = ?, year_id = ? where id = ?";
+    private static final String SQL_SELECT_BY_YEAR = "SELECT * FROM timetables where year_id = ?";
 
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Timetable> timetableRowMapper;
@@ -31,7 +32,7 @@ public class TimetableDao {
     public void create(Timetable timetable) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 	jdbcTemplate.update(connection -> {
-	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_FACULTY, new String[] { "id" });
+	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT, new String[] { "id" });
 	    ps.setString(1, timetable.getName());
 	    ps.setInt(2, timetable.getYear().getId());
 	    return ps;
@@ -54,7 +55,10 @@ public class TimetableDao {
 
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
+    }
 
+    public List<Timetable> findByYear(Timetable timetable) {
+	return jdbcTemplate.query(SQL_SELECT_BY_YEAR, timetableRowMapper, timetable.getYear().getId());
     }
 
 }

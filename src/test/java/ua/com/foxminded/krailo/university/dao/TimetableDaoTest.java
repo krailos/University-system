@@ -25,7 +25,7 @@ class TimetableDaoTest {
 
     @Test
     void givenNewTimetable_whenCreate_thenCreated() {
-	Timetable timetable = new Timetable("new", new Year(1, "new", null), new Speciality(1, "new", null));
+	Timetable timetable = new Timetable("new", new Year(3, "new", null), new Speciality(1, "new", null));
 
 	timetableDao.create(timetable);
 
@@ -68,6 +68,15 @@ class TimetableDaoTest {
 	timetableDao.deleteById(1);
 
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "timetables");
+	assertEquals(1, actual);
+    }
+    
+    @Test void givenTimemtable_whenGetByYear_thanGot(){
+	Timetable timetable = new Timetable();
+	timetable.setYear(new Year(1, "", null));
+	
+	int actual = timetableDao.findByYear(timetable).size();
+	
 	assertEquals(1, actual);
     }
 

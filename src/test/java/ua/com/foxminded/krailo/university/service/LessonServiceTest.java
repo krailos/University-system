@@ -3,7 +3,6 @@ package ua.com.foxminded.krailo.university.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -66,9 +65,10 @@ class LessonServiceTest {
 
     @Test
     void givenLessonId_whenDeleteById_thenDeleted() {
+	Lesson lesson = new Lesson(1);
 	doNothing().when(lessonDao).deleteById(1);
 
-	lessonService.deleteById(1);
+	lessonService.deleteById(lesson);
 
 	verify(lessonDao).deleteById(1);
     }
@@ -79,10 +79,10 @@ class LessonServiceTest {
 	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), new LessonTime(), lessons.get(1).getSubject(),
 		new Audience(), new Teacher(), lessons.get(1).getTimetable());
 	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
-	
+
 	lessonService.create(lesson);
 
-	verify(lessonDao, times(1)).create(lesson);
+	verify(lessonDao).create(lesson);
     }
 
     @Test
@@ -104,12 +104,11 @@ class LessonServiceTest {
 	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), new LessonTime(), new Subject(), new Audience(),
 		new Teacher(), lessons.get(1).getTimetable());
 	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
-	
+
 	lessonService.create(lesson);
 
 	verify(lessonDao, never()).create(lesson);
     }
-    
 
     @Test
     void givenLessonWithWrongTeacher_whenCreate_thenNotCreated() {
@@ -130,7 +129,7 @@ class LessonServiceTest {
 	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), new LessonTime(), lessons.get(1).getSubject(),
 		lessons.get(1).getAudience(), new Teacher(), lessons.get(1).getTimetable());
 	lesson.getGroups().add(new Group());
-	when(lessonDao.findByDate(lesson)).thenReturn(lessons);	
+	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
 
 	lessonService.create(lesson);
 
@@ -156,10 +155,10 @@ class LessonServiceTest {
 	Lesson lesson = new Lesson(1, LocalDate.of(2021, 01, 01), new LessonTime(), lessons.get(1).getSubject(),
 		new Audience(), new Teacher(), lessons.get(1).getTimetable());
 	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
-	
+
 	lessonService.update(lesson);
 
-	verify(lessonDao, times(1)).create(lesson);
+	verify(lessonDao).update(lesson);
     }
 
     @Test
@@ -181,12 +180,11 @@ class LessonServiceTest {
 	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), new LessonTime(), new Subject(), new Audience(),
 		new Teacher(), lessons.get(1).getTimetable());
 	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
-	
+
 	lessonService.update(lesson);
 
 	verify(lessonDao, never()).create(lesson);
     }
-    
 
     @Test
     void givenLessonWithWrongTeacher_whenUpdate_thenUpdated() {
@@ -207,7 +205,7 @@ class LessonServiceTest {
 	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), new LessonTime(), lessons.get(1).getSubject(),
 		lessons.get(1).getAudience(), new Teacher(), lessons.get(1).getTimetable());
 	lesson.getGroups().add(new Group());
-	when(lessonDao.findByDate(lesson)).thenReturn(lessons);	
+	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
 
 	lessonService.update(lesson);
 
@@ -226,8 +224,6 @@ class LessonServiceTest {
 
 	verify(lessonDao, never()).create(lesson);
     }
-
-  
 
     private List<Lesson> createLessons() {
 	List<Lesson> lessons = new ArrayList<>();
