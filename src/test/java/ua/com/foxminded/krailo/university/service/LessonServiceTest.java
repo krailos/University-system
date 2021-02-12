@@ -43,29 +43,34 @@ class LessonServiceTest {
 
     @Test
     void givenLessonId_whenGetById_thenGot() {
-	Lesson expected = new Lesson(1);
-	when(lessonDao.findById(1)).thenReturn(expected);
+	Lesson lesson = new Lesson(1, LocalDate.of(2021, 01, 01), new LessonTime(), new Subject(), new Audience(),
+		new Teacher(), null);
+	when(lessonDao.findById(1)).thenReturn(lesson);
 
 	Lesson actual = lessonService.getById(1);
 
+	Lesson expected = new Lesson(1, LocalDate.of(2021, 01, 01), new LessonTime(), new Subject(), new Audience(),
+		new Teacher(), null);
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenLessons_whenGetAll_thenGotAll() {
-	List<Lesson> expected = new ArrayList<>();
-	expected.add(new Lesson(1));
-	expected.add(new Lesson(2));
-	when(lessonDao.findAll()).thenReturn(expected);
+	List<Lesson> lessons = new ArrayList<>(Arrays.asList(new Lesson(1, LocalDate.of(2021, 01, 01), new LessonTime(), new Subject(), new Audience(),
+		new Teacher(), null)));
+	when(lessonDao.findAll()).thenReturn(lessons);
 
 	List<Lesson> actual = lessonService.getAll();
 
+	List<Lesson> expected = new ArrayList<>(Arrays.asList(new Lesson(1, LocalDate.of(2021, 01, 01), new LessonTime(), new Subject(), new Audience(),
+		new Teacher(), null)));
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenLessonId_whenDeleteById_thenDeleted() {
-	Lesson lesson = new Lesson(1);
+	Lesson lesson = new Lesson(1, LocalDate.of(2021, 01, 01), new LessonTime(), new Subject(), new Audience(),
+		new Teacher(), null);
 	doNothing().when(lessonDao).deleteById(1);
 
 	lessonService.deleteById(lesson);
