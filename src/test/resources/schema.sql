@@ -153,7 +153,7 @@ CREATE TABLE timetables (
 	name character varying (50) NOT NULL,
 	year_id int REFERENCES years (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT timetables__pkey PRIMARY KEY (id),
-	UNIQUE (year_id)
+	UNIQUE (name, year_id)
 );
 
 CREATE TABLE lessons (

@@ -10,7 +10,6 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.model.Speciality;
 import ua.com.foxminded.krailo.university.model.Timetable;
 import ua.com.foxminded.krailo.university.model.Year;
 
@@ -25,7 +24,7 @@ class TimetableDaoTest {
 
     @Test
     void givenNewTimetable_whenCreate_thenCreated() {
-	Timetable timetable = new Timetable("new", new Year(3, "new", null), new Speciality(1, "new", null));
+	Timetable timetable = new Timetable("new", new Year(3, "new", null));
 
 	timetableDao.create(timetable);
 
@@ -35,7 +34,7 @@ class TimetableDaoTest {
 
     @Test
     void givenNewFieldsOfTimetable_whenUpdate_tnenUpdated() {
-	Timetable timetable = new Timetable(1, "new", new Year(1, "new", null), new Speciality(1, "new", null));
+	Timetable timetable = new Timetable(1, "new", new Year(1, "new", null));
 
 	timetableDao.update(timetable);
 
