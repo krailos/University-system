@@ -19,6 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.AudienceDao;
 import ua.com.foxminded.krailo.university.model.Audience;
+import ua.com.foxminded.krailo.university.model.Building;
 
 @ExtendWith(MockitoExtension.class)
 @SpringJUnitConfig(ConfigTest.class)
@@ -67,6 +68,16 @@ class AudienceServiceTest {
 
 	List<Audience> actual = audienceService.getAll();
 	List<Audience> expected = new ArrayList<>(Arrays.asList(new Audience(1, "new", null, 100, "")));
+	assertEquals(expected, actual);
+    }
+    
+    @Test
+    void givenBuildingId_whenGetAll_thenGot() {
+	List<Audience> audiences = new ArrayList<>(Arrays.asList(new Audience(1, "new", new Building(1, "", ""), 100, "")));
+	when(audienceDao.findByBuildingId(1)).thenReturn(audiences);
+
+	List<Audience> actual = audienceService.getByBuildingId(1);
+	List<Audience> expected = new ArrayList<>(Arrays.asList(new Audience(1, "new", new Building(1, "", ""), 100, "")));
 	assertEquals(expected, actual);
     }
 

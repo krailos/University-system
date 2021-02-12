@@ -35,7 +35,8 @@ CREATE TABLE buildings (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
 	address character varying (100) NOT NULL,
-	CONSTRAINT building__pkey PRIMARY KEY (id)
+	CONSTRAINT building__pkey PRIMARY KEY (id),
+	UNIQUE(name, address)
 );
 
 CREATE TABLE audiences (

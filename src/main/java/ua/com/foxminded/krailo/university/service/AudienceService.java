@@ -31,10 +31,10 @@ public class AudienceService {
     public List<Audience> getAll() {
 	return audienceDao.findAll();
     }
-    
-    public List<Audience> getByBuildingId(Audience audience) {
- 	return audienceDao.findByBuildingId(audience.getId());
-     }
+
+    public List<Audience> getByBuildingId(int id) {
+	return audienceDao.findByBuildingId(id);
+    }
 
     public void delete(Audience audience) {
 	audienceDao.deleteById(audience.getId());

@@ -62,7 +62,7 @@ public class SubjectDao {
     }
 
     public List<Subject> findByYearId(int id) {
-	return jdbcTemplate.query(SQL_SELECT_SUBJECTS_BY_TEACHER_ID, new Object[] { id }, subjectRowMapper);
+	return jdbcTemplate.query(SQL_SELECT_SUBJECTS_BY_YEAR_ID, new Object[] { id }, subjectRowMapper);
     }
     
 }
