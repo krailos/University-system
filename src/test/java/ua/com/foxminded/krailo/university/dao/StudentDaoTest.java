@@ -65,6 +65,15 @@ class StudentDaoTest {
 
 	assertEquals(expected, actual);
     }
+    
+    @Test
+    void givenGroupId_whenFindByGroupId_thenFound() {
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "students", "group_id = 1");
+
+	int actual = studentDao.findByGroupId(1).size();
+
+	assertEquals(expected, actual);
+    }
 
     @Test
     void givenId_whenDeleteById_thenDeleted() {

@@ -19,12 +19,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.AudienceDao;
-import ua.com.foxminded.krailo.university.dao.BuildingDao;
 import ua.com.foxminded.krailo.university.dao.FacultyDao;
 import ua.com.foxminded.krailo.university.dao.SpecialityDao;
-import ua.com.foxminded.krailo.university.model.Audience;
-import ua.com.foxminded.krailo.university.model.Building;
 import ua.com.foxminded.krailo.university.model.DeansOffice;
 import ua.com.foxminded.krailo.university.model.Faculty;
 import ua.com.foxminded.krailo.university.model.Speciality;
@@ -51,7 +47,7 @@ class FacultyServiceTest {
     }
 
     @Test
-    void givenBuilding_whenUpdate_thanUpdeted() {
+    void givenFaculty_whenUpdate_thanUpdeted() {
 	Faculty faculty = new Faculty(1, "name", new DeansOffice("name", null));
 	doNothing().when(facultyDao).update(faculty);
 
@@ -61,7 +57,7 @@ class FacultyServiceTest {
     }
 
     @Test
-    void givenBuildingId_whenGetById_thenGot() {
+    void givenFacultyId_whenGetById_thenGot() {
 	Faculty faculty = new Faculty(1, "name", new DeansOffice("name", null));
 	List<Speciality> specialities = new ArrayList<>(
 		Arrays.asList(new Speciality(1, "name", faculty), new Speciality(2, "name", faculty)));
@@ -77,7 +73,7 @@ class FacultyServiceTest {
     }
 
     @Test
-    void givenBuildings_whenGetAll_thenGot() {
+    void givenFaculties_whenGetAll_thenGot() {
 	Faculty faculty = new Faculty(1, "name", new DeansOffice("name", null));
 	List<Faculty> faculties = new ArrayList<>(
 		Arrays.asList(new Faculty(1, "name", new DeansOffice("name", null)), new Faculty(2, "name", new DeansOffice("name", null))));
@@ -104,7 +100,7 @@ class FacultyServiceTest {
     }
 
     @Test
-    void givenBuildingId_whenDeleteById_thenDeleted() {
+    void givenFacultyId_whenDeleteById_thenDeleted() {
 	Faculty faculty = new Faculty(1, "name", new DeansOffice("name", null));
 	doNothing().when(facultyDao).deleteById(1);
 

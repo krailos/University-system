@@ -16,6 +16,7 @@ import ua.com.foxminded.krailo.university.model.Student;
 public class StudentDao {
 
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM students WHERE id = ?";
+    private static final String SQL_SELECT_BY_GROUO_ID = "SELECT * FROM students WHERE group_id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM students";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM students WHERE id = ?";
     private static final String SQL_INSERT_STUDENT = "INSERT INTO students (student_id, first_name, last_name, birth_date, phone, address, email, rank, gender, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -54,16 +55,20 @@ public class StudentDao {
 		student.getRank(), student.getGender().toString(), student.getGroup().getId(), student.getId());
     }
 
-    public Student findById(int id) {
-	return jdbcTemplate.queryForObject(SQL_SELECT_BY_ID, studentRowMapper, id);
+    public Student findById(int studentId) {
+	return jdbcTemplate.queryForObject(SQL_SELECT_BY_ID, studentRowMapper, studentId);
     }
 
     public List<Student> findAll() {
 	return jdbcTemplate.query(SQL_SELECT_ALL, studentRowMapper);
     }
+    
+    public List<Student> findByGroupId(int groupId) {
+	return jdbcTemplate.query(SQL_SELECT_BY_GROUO_ID, studentRowMapper, groupId);
+    }
 
-    public void deleteById(int id) {
-	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
+    public void deleteById(int studentId) {
+	jdbcTemplate.update(SQL_DELETE_BY_ID, studentId);
     }
 
 }
