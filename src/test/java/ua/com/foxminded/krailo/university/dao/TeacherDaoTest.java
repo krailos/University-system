@@ -108,11 +108,21 @@ class TeacherDaoTest {
     }
 
     @Test
-    void givenSubjectId_whenFindTeachersBySubjectId_thenFound() {
+    void givenSubjectId_whenFindBySubjectId_thenFound() {
 	Subject subject = new Subject(1, "");
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers", "id = 1 OR id = 2");
 
 	int actual = teacherDao.findBySubjectId(subject.getId()).size();
+
+	assertEquals(expected, actual);
+    }
+    
+    @Test
+    void givenDepertmentId_whenFindByDepartmentId_thenFound() {
+	Department department = new Department(1, "");
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers", "department_id = 1");
+
+	int actual = teacherDao.findByDepartmentId(department.getId()).size();
 
 	assertEquals(expected, actual);
     }

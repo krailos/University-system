@@ -3,7 +3,6 @@ package ua.com.foxminded.krailo.university.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -22,14 +21,8 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.AudienceDao;
 import ua.com.foxminded.krailo.university.dao.BuildingDao;
-import ua.com.foxminded.krailo.university.dao.LessonDao;
-import ua.com.foxminded.krailo.university.dao.TimetableDao;
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Building;
-import ua.com.foxminded.krailo.university.model.Lesson;
-import ua.com.foxminded.krailo.university.model.Speciality;
-import ua.com.foxminded.krailo.university.model.Timetable;
-import ua.com.foxminded.krailo.university.model.Year;
 
 @ExtendWith(MockitoExtension.class)
 @SpringJUnitConfig(ConfigTest.class)
@@ -65,11 +58,13 @@ class BuildingServiceTest {
     @Test
     void givenBuildingId_whenGetById_thenGot() {
 	Building building = new Building(1, "name", "address");
-	List<Audience> audiences = new ArrayList<>(Arrays.asList(new Audience(1, "new", null, 100, "")));
+	List<Audience> audiences = new ArrayList<>(
+		Arrays.asList(new Audience(1, "new", null, 100, ""), new Audience(1, "new", null, 100, "")));
 	when(buildingDao.findById(1)).thenReturn(building);
 	when(audienceDao.findByBuildingId(1)).thenReturn(audiences);
 	Building expected = new Building(1, "name", "address");
-	expected.setAudiences(new ArrayList<>(Arrays.asList(new Audience(1, "new", null, 100, ""))));
+	expected.setAudiences(new ArrayList<>(
+		Arrays.asList(new Audience(1, "new", null, 100, ""), new Audience(1, "new", null, 100, ""))));
 
 	Building actual = buildingService.getById(1);
 

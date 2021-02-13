@@ -146,7 +146,8 @@ CREATE TABLE teachers (
 	degree character varying (50) NOT NULL,	
 	gender gender,
 	department_id int REFERENCES departments (id) ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT teachets__pkey PRIMARY KEY (id)
+	CONSTRAINT teachets__pkey PRIMARY KEY (id),
+	UNIQUE(teacher_id)
 );
 
 CREATE TABLE timetables (

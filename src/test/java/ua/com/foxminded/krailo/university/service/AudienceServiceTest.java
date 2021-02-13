@@ -56,28 +56,34 @@ class AudienceServiceTest {
 	when(audienceDao.findById(1)).thenReturn(audience);
 
 	Audience actual = audienceService.getById(1);
-	Audience expected = new Audience(1, "new", null, 100, "");
 
+	Audience expected = new Audience(1, "new", null, 100, "");
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenAudiences_whenGetAll_thenGot() {
-	List<Audience> audiences = new ArrayList<>(Arrays.asList(new Audience(1, "new", null, 100, "")));
+	List<Audience> audiences = new ArrayList<>(
+		Arrays.asList(new Audience(1, "new", null, 100, ""), new Audience(2, "new", null, 100, "")));
 	when(audienceDao.findAll()).thenReturn(audiences);
 
 	List<Audience> actual = audienceService.getAll();
-	List<Audience> expected = new ArrayList<>(Arrays.asList(new Audience(1, "new", null, 100, "")));
+
+	List<Audience> expected = new ArrayList<>(
+		Arrays.asList(new Audience(1, "new", null, 100, ""), new Audience(2, "new", null, 100, "")));
 	assertEquals(expected, actual);
     }
-    
+
     @Test
-    void givenBuildingId_whenGetAll_thenGot() {
-	List<Audience> audiences = new ArrayList<>(Arrays.asList(new Audience(1, "new", new Building(1, "", ""), 100, "")));
+    void givenBuildingId_whenGetByBuilding_thenGot() {
+	List<Audience> audiences = new ArrayList<>(
+		Arrays.asList(new Audience(1, "new", new Building(1, "", ""), 100, "")));
 	when(audienceDao.findByBuildingId(1)).thenReturn(audiences);
 
 	List<Audience> actual = audienceService.getByBuildingId(1);
-	List<Audience> expected = new ArrayList<>(Arrays.asList(new Audience(1, "new", new Building(1, "", ""), 100, "")));
+
+	List<Audience> expected = new ArrayList<>(
+		Arrays.asList(new Audience(1, "new", new Building(1, "", ""), 100, "")));
 	assertEquals(expected, actual);
     }
 

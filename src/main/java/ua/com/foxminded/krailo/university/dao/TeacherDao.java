@@ -21,7 +21,8 @@ public class TeacherDao {
     private static final String SQL_DELETE_BY_ID = "DELETE FROM teachers WHERE id = ?";
     private static final String SQL_INSERT_TEACHER = "INSERT INTO teachers (teacher_id, first_name, last_name, birth_date, phone, address, email, degree, gender, department_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE_BY_ID = "UPDATE teachers SET teacher_id = ?, first_name = ?, last_name = ?, birth_date = ?, phone = ?, address = ?, email = ?, degree = ?, gender = ?, department_id = ? WHERE id = ?";
-    private static final String SQL_SELECT_TEACHERS_BY_SUBJECT_ID = "SELECT id, teachers.teacher_id, first_name, last_name, birth_date, phone, address, email, degree, gender, department_id  FROM teachers JOIN  teachers_subjects ON (teachers.id = teachers_subjects.teacher_id ) WHERE teachers_subjects.subject_id = ?";
+    private static final String SQL_SELECT_BY_SUBJECT_ID = "SELECT id, teachers.teacher_id, first_name, last_name, birth_date, phone, address, email, degree, gender, department_id  FROM teachers JOIN  teachers_subjects ON (teachers.id = teachers_subjects.teacher_id ) WHERE teachers_subjects.subject_id = ?";
+    private static final String SQL_SELECT_BY_DEPARTMENT_ID = "SELECT * FROM teachers WHERE department_id = ?";
     private static final String SQL_INSERT_TEACHERS_SUBJECTS = "INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES (?, ?)";
     private static final String SQL_DELETE_TEACHERS_SUBJECTS_BY_TEACHER_ID_SUBJECT_ID = "DELETE FROM teachers_subjects WHERE teacher_id = ? AND subject_id = ?";
 
@@ -79,7 +80,11 @@ public class TeacherDao {
     }
 
     public List<Teacher> findBySubjectId(int id) {
-	return jdbcTemplate.query(SQL_SELECT_TEACHERS_BY_SUBJECT_ID, new Object[] { id }, teacherRowMapper);
+	return jdbcTemplate.query(SQL_SELECT_BY_SUBJECT_ID, new Object[] { id }, teacherRowMapper);
+    }
+    
+    public List<Teacher> findByDepartmentId(int id) {
+	return jdbcTemplate.query(SQL_SELECT_BY_DEPARTMENT_ID, new Object[] { id }, teacherRowMapper);
     }
 
 }

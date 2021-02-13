@@ -6,10 +6,7 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.AudienceDao;
 import ua.com.foxminded.krailo.university.dao.BuildingDao;
-import ua.com.foxminded.krailo.university.dao.LessonDao;
-import ua.com.foxminded.krailo.university.dao.TimetableDao;
 import ua.com.foxminded.krailo.university.model.Building;
-import ua.com.foxminded.krailo.university.model.Timetable;
 
 @Service
 public class BuildingService {
