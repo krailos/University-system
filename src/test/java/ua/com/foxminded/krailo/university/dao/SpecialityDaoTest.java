@@ -60,6 +60,15 @@ class SpecialityDaoTest {
 
 	assertEquals(expected, actual);
     }
+    
+    @Test
+    void givenFaculyId_whenFindByFacultyId_thenFound() {
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "specialities", "faculty_id  = 1");
+
+	int actual = specialityDao.findByFacultyId(1).size();
+
+	assertEquals(expected, actual);
+    }
 
     @Test
     void givenId_whenDeleteById_thenDeleted() {

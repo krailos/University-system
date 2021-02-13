@@ -7,20 +7,20 @@ public class Faculty {
 
     private int id;
     private String name;
-    private List<Department> departments = new ArrayList<>();
-    private List<Speciality> specialities = new ArrayList<>();
     private DeansOffice deansOffice;
+    private List<Speciality> specialities = new ArrayList<>();
+ 
 
     public Faculty() {
     }
 
-    public Faculty(int id, String name, DeansOffice deansOffice) {
-	this.id = id;
+    public Faculty(String name, DeansOffice deansOffice) {
 	this.name = name;
 	this.deansOffice = deansOffice;
     }
 
-    public Faculty(String name, DeansOffice deansOffice) {
+    public Faculty(int id, String name, DeansOffice deansOffice) {
+	this.id = id;
 	this.name = name;
 	this.deansOffice = deansOffice;
     }
@@ -41,14 +41,6 @@ public class Faculty {
 	this.name = name;
     }
 
-    public List<Department> getDepartments() {
-	return departments;
-    }
-
-    public void setDepartments(List<Department> departments) {
-	this.departments = departments;
-    }
-
     public List<Speciality> getSpecialities() {
 	return specialities;
     }
@@ -63,6 +55,46 @@ public class Faculty {
 
     public void setDeansOffice(DeansOffice deansOffice) {
 	this.deansOffice = deansOffice;
+    }
+    
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((deansOffice == null) ? 0 : deansOffice.hashCode());
+	result = prime * result + id;
+	result = prime * result + ((name == null) ? 0 : name.hashCode());
+	result = prime * result + ((specialities == null) ? 0 : specialities.hashCode());
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Faculty other = (Faculty) obj;
+	if (deansOffice == null) {
+	    if (other.deansOffice != null)
+		return false;
+	} else if (!deansOffice.equals(other.deansOffice))
+	    return false;
+	if (id != other.id)
+	    return false;
+	if (name == null) {
+	    if (other.name != null)
+		return false;
+	} else if (!name.equals(other.name))
+	    return false;
+	if (specialities == null) {
+	    if (other.specialities != null)
+		return false;
+	} else if (!specialities.equals(other.specialities))
+	    return false;
+	return true;
     }
 
     @Override

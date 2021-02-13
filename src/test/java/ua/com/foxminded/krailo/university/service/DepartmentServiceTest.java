@@ -19,12 +19,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.AudienceDao;
-import ua.com.foxminded.krailo.university.dao.BuildingDao;
 import ua.com.foxminded.krailo.university.dao.DepartmentDao;
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
-import ua.com.foxminded.krailo.university.model.Audience;
-import ua.com.foxminded.krailo.university.model.Building;
 import ua.com.foxminded.krailo.university.model.Department;
 import ua.com.foxminded.krailo.university.model.Teacher;
 

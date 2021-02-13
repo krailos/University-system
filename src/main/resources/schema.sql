@@ -73,7 +73,8 @@ CREATE TABLE faculties (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
 	deans_office_id int REFERENCES deans_office (id) ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT faculties__pkey PRIMARY KEY (id)
+	CONSTRAINT faculties__pkey PRIMARY KEY (id),
+	UNIQUE(name, deans_office_id)
 );
 
 CREATE TABLE specialities (

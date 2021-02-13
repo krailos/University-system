@@ -15,6 +15,7 @@ import ua.com.foxminded.krailo.university.model.Speciality;
 public class SpecialityDao {
 
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM specialities WHERE id = ?";
+    private static final String SQL_SELECT_BY_FACULTY_ID = "SELECT * FROM specialities WHERE faculty_id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM specialities ";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM specialities WHERE id = ?";
     private static final String SQL_INSERT_SPECIALITY = "INSERT INTO specialities (name, faculty_id) VALUES (?, ?)";
@@ -52,6 +53,9 @@ public class SpecialityDao {
 	return jdbcTemplate.query(SQL_SELECT_ALL, specialityRowMapper);
     }
 
+    public List<Speciality> findByFacultyId(int id) {
+ 	return jdbcTemplate.query(SQL_SELECT_BY_FACULTY_ID, specialityRowMapper, id);
+     }
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
     }
