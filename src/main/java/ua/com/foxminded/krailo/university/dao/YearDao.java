@@ -17,6 +17,7 @@ public class YearDao {
 
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM years WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM years ";
+    private static final String SQL_SELECT_BY_SPECIALITY_ID = "SELECT * FROM years WHERE speciality_id = ? ";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM years WHERE id = ?";
     private static final String SQL_INSERT_YEAR = "INSERT INTO years (name, speciality_id) VALUES (?, ?)";
     private static final String SQL_UPDATE_BY_ID = "UPDATE years SET name = ?, speciality_id = ? where id = ?";
@@ -64,9 +65,14 @@ public class YearDao {
 	return jdbcTemplate.query(SQL_SELECT_ALL, yearRowMapper);
     }
 
+    public List<Year> findBySpecialityId(int id) {
+	return jdbcTemplate.query(SQL_SELECT_BY_SPECIALITY_ID, yearRowMapper, id);
+    }
+
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
     }
+
     private void addSubjectToYear(Subject subject, Year year) {
 	jdbcTemplate.update(SQL_INSERT_INTO_YEARS_SUBJECTS, year.getId(), subject.getId());
     }

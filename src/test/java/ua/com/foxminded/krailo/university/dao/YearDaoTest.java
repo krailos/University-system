@@ -92,6 +92,15 @@ class YearDaoTest {
     }
 
     @Test
+    void givenSpecialityId_whenFindBySpecialityId_thenFound() {
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "years", "speciality_id = 1");
+
+	int actual = yearDao.findBySpecialityId(1).size();
+
+	assertEquals(expected, actual);
+    }
+    
+    @Test
     void givenId_whenDeleteById_thenDeleted() {
 
 	yearDao.deleteById(1);

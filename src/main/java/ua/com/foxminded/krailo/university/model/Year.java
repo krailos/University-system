@@ -16,7 +16,6 @@ public class Year {
     }
 
     public Year(int id, String name, Speciality speciality) {
-	super();
 	this.id = id;
 	this.name = name;
 	this.speciality = speciality;
