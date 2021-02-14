@@ -1,7 +1,6 @@
 package ua.com.foxminded.krailo.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,7 +9,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,18 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.FacultyDao;
-import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
-import ua.com.foxminded.krailo.university.dao.SpecialityDao;
-import ua.com.foxminded.krailo.university.dao.StudentDao;
-import ua.com.foxminded.krailo.university.model.DeansOffice;
-import ua.com.foxminded.krailo.university.model.Faculty;
-import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Holiday;
-import ua.com.foxminded.krailo.university.model.Speciality;
-import ua.com.foxminded.krailo.university.model.Student;
-import ua.com.foxminded.krailo.university.model.Year;
 
 @ExtendWith(MockitoExtension.class)
 @SpringJUnitConfig(ConfigTest.class)

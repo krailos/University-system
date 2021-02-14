@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import ua.com.foxminded.krailo.university.dao.LessonTimeDao;
+import ua.com.foxminded.krailo.university.dao.LessonTimeScheduleDao;
 import ua.com.foxminded.krailo.university.model.LessonsTimeSchedule;
 
 @Component

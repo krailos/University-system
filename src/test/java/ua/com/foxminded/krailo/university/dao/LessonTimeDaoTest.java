@@ -64,6 +64,15 @@ class LessonTimeDaoTest {
 
 	assertEquals(expected, actual);
     }
+    
+    @Test
+    void givenLessonTimeScheduleId_whenFindByLessonsTimeScheduleId_thenFound() {
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lesson_times", "lessons_timeschedule_id = 1");
+
+	int actual = lessonTimeDao.findBylessonTimeScheduleId(1).size();
+
+	assertEquals(expected, actual);
+    }
 
     @Test
     void givenId_whenDeleteById_thenDeleted() {
