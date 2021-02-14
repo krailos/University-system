@@ -4,11 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import ua.com.foxminded.krailo.university.dao.FacultyDao;
 import ua.com.foxminded.krailo.university.dao.GroupDao;
-import ua.com.foxminded.krailo.university.dao.SpecialityDao;
 import ua.com.foxminded.krailo.university.dao.StudentDao;
-import ua.com.foxminded.krailo.university.model.Faculty;
 import ua.com.foxminded.krailo.university.model.Group;
 
 @Service
