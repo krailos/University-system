@@ -4,10 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import ua.com.foxminded.krailo.university.dao.FacultyDao;
 import ua.com.foxminded.krailo.university.dao.SpecialityDao;
 import ua.com.foxminded.krailo.university.dao.YearDao;
-import ua.com.foxminded.krailo.university.model.Faculty;
 import ua.com.foxminded.krailo.university.model.Speciality;
 
 @Service
@@ -30,17 +28,17 @@ public class SpecialityService {
     }
 
     public Speciality getById(int id) {
-	Speciality faculty = specialityDao.findById(id);
-	addSpecialitiesToFaculty(faculty);
-	return faculty;
+	Speciality speciality = specialityDao.findById(id);
+	addSpecialitiesToFaculty(speciality);
+	return speciality;
     }
 
     public List<Speciality> getAll() {
-	List<Speciality> faculties = specialityDao.findAll();
-	for (Speciality faculty : faculties) {
+	List<Speciality> specialities = specialityDao.findAll();
+	for (Speciality faculty : specialities) {
 	    addSpecialitiesToFaculty(faculty);
 	}
-	return faculties;
+	return specialities;
     }
 
     public void delete(Speciality speciality) {
