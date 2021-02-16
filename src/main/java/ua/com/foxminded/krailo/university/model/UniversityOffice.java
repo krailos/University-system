@@ -8,7 +8,7 @@ public class UniversityOffice {
     private int id;
     private String name;
     private String address;
-    private List<Faculty> faculties = new ArrayList<>();
+    private List<DeansOffice> deansOffices = new ArrayList<>();
     private List<Building> buildings = new ArrayList<>();
     private List<Holiday> holidays = new ArrayList<>();
 
@@ -50,14 +50,6 @@ public class UniversityOffice {
 	this.address = address;
     }
 
-    public List<Faculty> getFaculties() {
-	return faculties;
-    }
-
-    public void setFaculties(List<Faculty> faculties) {
-	this.faculties = faculties;
-    }
-
     public List<Holiday> getHolidays() {
 	return holidays;
     }
@@ -74,13 +66,21 @@ public class UniversityOffice {
 	this.buildings = building;
     }
 
+    public List<DeansOffice> getDeansOffices() {
+	return deansOffices;
+    }
+
+    public void setDeansOffices(List<DeansOffice> deansOffices) {
+	this.deansOffices = deansOffices;
+    }
+
     @Override
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
 	result = prime * result + ((address == null) ? 0 : address.hashCode());
 	result = prime * result + ((buildings == null) ? 0 : buildings.hashCode());
-	result = prime * result + ((faculties == null) ? 0 : faculties.hashCode());
+	result = prime * result + ((deansOffices == null) ? 0 : deansOffices.hashCode());
 	result = prime * result + ((holidays == null) ? 0 : holidays.hashCode());
 	result = prime * result + id;
 	result = prime * result + ((name == null) ? 0 : name.hashCode());
@@ -106,10 +106,10 @@ public class UniversityOffice {
 		return false;
 	} else if (!buildings.equals(other.buildings))
 	    return false;
-	if (faculties == null) {
-	    if (other.faculties != null)
+	if (deansOffices == null) {
+	    if (other.deansOffices != null)
 		return false;
-	} else if (!faculties.equals(other.faculties))
+	} else if (!deansOffices.equals(other.deansOffices))
 	    return false;
 	if (holidays == null) {
 	    if (other.holidays != null)
