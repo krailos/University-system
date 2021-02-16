@@ -71,8 +71,7 @@ class SubjectServiceTest {
 
     @Test
     void givenSubjects_whenGetAll_thenGot() {
-	List<Subject> subjects = new ArrayList<>(
-		Arrays.asList(new Subject(1, "name"), new Subject(2, "name")));
+	List<Subject> subjects = new ArrayList<>(Arrays.asList(new Subject(1, "name"), new Subject(2, "name")));
 	when(subjectDao.findAll()).thenReturn(subjects);
 	when(teacherDao.findBySubjectId(any(Integer.class)))
 		.thenAnswer(inv -> Arrays.stream(inv.getArguments()).map(o -> (int) o).map(i -> {
@@ -88,15 +87,14 @@ class SubjectServiceTest {
 
 	List<Subject> actual = subjectService.getAll();
 
-	List<Subject> expected = new ArrayList<>(
-		Arrays.asList(new Subject(1, "name"), new Subject(2, "name")));
+	List<Subject> expected = new ArrayList<>(Arrays.asList(new Subject(1, "name"), new Subject(2, "name")));
 	expected.get(0).setTeachers(new ArrayList<Teacher>(Arrays.asList(new Teacher(1))));
 	expected.get(1).setTeachers(new ArrayList<Teacher>(Arrays.asList(new Teacher(2))));
 	assertEquals(expected, actual);
     }
 
     @Test
-    void givenSubject_whenDeleteById_thenDeleted() {
+    void givenSubject_whenDelete_thenDeleted() {
 	Subject subject = new Subject(1, "name");
 	doNothing().when(subjectDao).deleteById(1);
 

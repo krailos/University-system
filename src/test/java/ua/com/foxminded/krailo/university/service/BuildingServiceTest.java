@@ -98,7 +98,7 @@ class BuildingServiceTest {
     }
 
     @Test
-    void givenBuildingId_whenDeleteById_thenDeleted() {
+    void givenBuilding_whenDelete_thenDeleted() {
 	Building building = new Building(1, "name", "address");
 	doNothing().when(buildingDao).deleteById(1);
 

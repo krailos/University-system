@@ -72,7 +72,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void givenBuildings_whenGetAll_thenGot() {
+    void givenGroups_whenGetAll_thenGot() {
 	List<Group> groups= new ArrayList<>(Arrays.asList(new Group(1, "name", new Year("name", null)),
 		new Group(2, "name", new Year("name", null))));
 	when(groupDao.findAll()).thenReturn(groups);
@@ -98,7 +98,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void givenBuildingId_whenDeleteById_thenDeleted() {
+    void givenGroup_whenDelete_thenDeleted() {
 	Group group = new Group(1, "name", new Year("name", null));
 	doNothing().when(groupDao).deleteById(1);
 

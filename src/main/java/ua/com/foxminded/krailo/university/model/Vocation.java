@@ -82,6 +82,58 @@ public class Vocation {
     }
 
     @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((applyingDate == null) ? 0 : applyingDate.hashCode());
+	result = prime * result + ((end == null) ? 0 : end.hashCode());
+	result = prime * result + id;
+	result = prime * result + ((kind == null) ? 0 : kind.hashCode());
+	result = prime * result + ((start == null) ? 0 : start.hashCode());
+	result = prime * result + ((teacher == null) ? 0 : teacher.hashCode());
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Vocation other = (Vocation) obj;
+	if (applyingDate == null) {
+	    if (other.applyingDate != null)
+		return false;
+	} else if (!applyingDate.equals(other.applyingDate))
+	    return false;
+	if (end == null) {
+	    if (other.end != null)
+		return false;
+	} else if (!end.equals(other.end))
+	    return false;
+	if (id != other.id)
+	    return false;
+	if (kind == null) {
+	    if (other.kind != null)
+		return false;
+	} else if (!kind.equals(other.kind))
+	    return false;
+	if (start == null) {
+	    if (other.start != null)
+		return false;
+	} else if (!start.equals(other.start))
+	    return false;
+	if (teacher == null) {
+	    if (other.teacher != null)
+		return false;
+	} else if (!teacher.equals(other.teacher))
+	    return false;
+	return true;
+    }
+
+    @Override
     public String toString() {
 	return teacher.toString() + " " + kind + " from " + start + " till " + end;
     }

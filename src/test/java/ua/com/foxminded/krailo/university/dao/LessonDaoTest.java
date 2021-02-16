@@ -22,6 +22,7 @@ import ua.com.foxminded.krailo.university.model.LessonTime;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Timetable;
+import ua.com.foxminded.krailo.university.model.Vocation;
 
 @SpringJUnitConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
@@ -39,9 +40,8 @@ class LessonDaoTest {
 
 	lessonDao.create(lesson);
 
-	int expected = 3;
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "lessons");
-	assertEquals(expected, actual);
+	assertEquals(7, actual);
     }
 
     @Test
@@ -53,9 +53,8 @@ class LessonDaoTest {
 
 	lessonDao.create(lesson);
 
-	int expected = 2;
-	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons_groups", "lesson_id = 3");
-	assertEquals(expected, actual);
+	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons_groups", "lesson_id = 1");
+	assertEquals(2, actual);
     }
 
     @Test
@@ -65,10 +64,9 @@ class LessonDaoTest {
 
 	lessonDao.update(lesson);
 
-	int expected = 1;
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons",
 		"date = '2000-01-01' AND lesson_time_id = 1 AND subject_id = 1 AND teacher_id = 1 AND audience_id = 1 AND timetable_id = 1");
-	assertEquals(expected, actual);
+	assertEquals(1, actual);
     }
 
     @Test
@@ -80,9 +78,8 @@ class LessonDaoTest {
 
 	lessonDao.update(lesson);
 
-	int expected = 1;
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons_groups", "lesson_id = 1");
-	assertEquals(expected, actual);
+	assertEquals(1, actual);
     }
 
     @Test
@@ -118,7 +115,7 @@ class LessonDaoTest {
 	lessonDao.deleteById(1);
 
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "lessons");
-	assertEquals(1, actual);
+	assertEquals(5, actual);
     }
 
     @Test
@@ -126,7 +123,7 @@ class LessonDaoTest {
 
 	int actual = lessonDao.findByTimetableId(1).size();
 
-	assertEquals(1, actual);
+	assertEquals(5, actual);
     }
 
     @Test
@@ -134,8 +131,19 @@ class LessonDaoTest {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons", "date = '2021-01-01'");
 	Lesson lesson = new Lesson();
 	lesson.setDate(LocalDate.of(2021, 01, 01));
-	
+
 	int actual = lessonDao.findByDate(lesson).size();
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenVocation_whenFindByVocationDate_thenFound() {
+	Vocation vocation = new Vocation(1, "kind", LocalDate.of(2020, 12, 31), LocalDate.of(2021, 01, 01),
+		LocalDate.of(2021, 01, 04), new Teacher(1));
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons", "date BETWEEN '2021-01-01' AND '2021-01-04'");
+
+	int actual = lessonDao.findByVocationDate(vocation).size();
 
 	assertEquals(expected, actual);
     }

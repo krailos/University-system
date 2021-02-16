@@ -62,27 +62,23 @@ class StudentServiceTest {
 
     @Test
     void givenStudents_whenGetAll_thenGot() {
-	List<Student> students = new ArrayList<>(
-		Arrays.asList(new Student(1), new Student(2)));
+	List<Student> students = new ArrayList<>(Arrays.asList(new Student(1), new Student(2)));
 	when(studentDao.findAll()).thenReturn(students);
 
 	List<Student> actual = studentService.getAll();
 
-	List<Student> expected =new ArrayList<>(
-		Arrays.asList(new Student(1), new Student(2)));
+	List<Student> expected = new ArrayList<>(Arrays.asList(new Student(1), new Student(2)));
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenStudentId_whenGetByGroupId_thenGot() {
-	List<Student> students = new ArrayList<>(
-		Arrays.asList(new Student(1), new Student(2)));
+	List<Student> students = new ArrayList<>(Arrays.asList(new Student(1), new Student(2)));
 	when(studentDao.findByGroupId(1)).thenReturn(students);
 
 	List<Student> actual = studentService.getByGroupId(1);
 
-	List<Student> expected =new ArrayList<>(
-		Arrays.asList(new Student(1), new Student(2)));
+	List<Student> expected = new ArrayList<>(Arrays.asList(new Student(1), new Student(2)));
 	assertEquals(expected, actual);
     }
 

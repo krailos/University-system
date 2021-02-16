@@ -95,7 +95,7 @@ class YearServiceTest {
     }
 
     @Test
-    void givenYearId_whenDeleteById_thenDeleted() {
+    void givenYear_whenDelete_thenDeleted() {
 	Year year = new Year(1, "name", null);
 	doNothing().when(yearDao).deleteById(1);
 

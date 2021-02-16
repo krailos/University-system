@@ -73,7 +73,7 @@ class LessonServiceTest {
 		new Teacher(), null);
 	doNothing().when(lessonDao).deleteById(1);
 
-	lessonService.deleteById(lesson);
+	lessonService.delete(lesson);
 
 	verify(lessonDao).deleteById(1);
     }

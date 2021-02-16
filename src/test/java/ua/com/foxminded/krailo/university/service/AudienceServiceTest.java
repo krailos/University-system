@@ -88,7 +88,7 @@ class AudienceServiceTest {
     }
 
     @Test
-    void givenAudienceId_whenDelete_thenDeleted() {
+    void givenAudience_whenDelete_thenDeleted() {
 	Audience audience = new Audience(1, "new", null, 100, "");
 	doNothing().when(audienceDao).deleteById(1);
 

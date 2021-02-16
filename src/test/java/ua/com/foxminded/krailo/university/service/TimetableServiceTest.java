@@ -124,7 +124,7 @@ class TimetableServiceTest {
     }
 
     @Test
-    void givenLessonId_whenDeleteById_thenDeleted() {
+    void givenTimetable_whenDelete_thenDeleted() {
 	Timetable timetable = new Timetable(1);
 	doNothing().when(timetableDao).deleteById(1);
 

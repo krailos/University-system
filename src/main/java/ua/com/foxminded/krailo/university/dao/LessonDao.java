@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.krailo.university.dao.mapper.LessonRowMapper;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
+import ua.com.foxminded.krailo.university.model.Vocation;
 
 @Component
 public class LessonDao {
@@ -25,6 +26,7 @@ public class LessonDao {
     private static final String SQL_DELETE_LESSONS_GROUPS_BY_LESSON_ID_GROUP_ID = "DELETE FROM lessons_groups WHERE lesson_id = ? AND group_id = ?";
     private static final String SQL_SELECT_BY_TIMETABLE_ID = "SELECT * FROM lessons WHERE timetable_id = ?";
     private static final String SQL_SELECT_BY_DATE = "SELECT * FROM lessons WHERE date = ?";
+    private static final String SQL_SELECT_BY_VOCATION_DATE = "SELECT * FROM lessons WHERE  date BETWEEN ? AND ?";
     
     private JdbcTemplate jdbcTemplate;
     private LessonRowMapper lessonRowMapper;
@@ -86,5 +88,9 @@ public class LessonDao {
     public List<Lesson> findByDate(Lesson lesson) {
   	return jdbcTemplate.query(SQL_SELECT_BY_DATE, lessonRowMapper,  Date.valueOf(lesson.getDate()));
       }
+
+    public List<Lesson> findByVocationDate(Vocation vocation) {
+	return jdbcTemplate.query(SQL_SELECT_BY_VOCATION_DATE, lessonRowMapper, vocation.getStart(), vocation.getEnd());
+    }
 
 }

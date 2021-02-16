@@ -62,19 +62,17 @@ class LessonTimeServiceTest {
 
     @Test
     void givenLessonTimes_whenGetAll_thenGot() {
-	List<LessonTime> lessonTimes = new ArrayList<>(Arrays.asList(new LessonTime(1),
-		new LessonTime(2)));
+	List<LessonTime> lessonTimes = new ArrayList<>(Arrays.asList(new LessonTime(1), new LessonTime(2)));
 	when(lessonTimeDao.findAll()).thenReturn(lessonTimes);
 
 	List<LessonTime> actual = lessonTimeService.getAll();
 
-	List<LessonTime> expected = new ArrayList<>(Arrays.asList(new LessonTime(1),
-		new LessonTime(2)));
+	List<LessonTime> expected = new ArrayList<>(Arrays.asList(new LessonTime(1), new LessonTime(2)));
 	assertEquals(expected, actual);
     }
 
     @Test
-    void givenLessonTimeId_whenDeleteById_thenDeleted() {
+    void givenLessonTime_whenDelete_thenDeleted() {
 	LessonTime lessonTime = new LessonTime(1);
 	doNothing().when(lessonTimeDao).deleteById(1);
 

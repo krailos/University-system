@@ -100,7 +100,7 @@ class FacultyServiceTest {
     }
 
     @Test
-    void givenFacultyId_whenDeleteById_thenDeleted() {
+    void givenFaculty_whenDelete_thenDeleted() {
 	Faculty faculty = new Faculty(1, "name", new DeansOffice("name", null));
 	doNothing().when(facultyDao).deleteById(1);
 

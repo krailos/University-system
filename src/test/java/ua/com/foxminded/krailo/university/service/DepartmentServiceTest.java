@@ -70,7 +70,7 @@ class DepartmentServiceTest {
     }
 
     @Test
-    void givenBuildings_whenGetAll_thenGot() {
+    void givenDepartments_whenGetAll_thenGot() {
 	List<Department> departments = new ArrayList<>(
 		Arrays.asList(new Department(1, "name"),new Department(2, "name")));
 	when(departmentDao.findAll()).thenReturn(departments);
@@ -96,7 +96,7 @@ class DepartmentServiceTest {
     }
 
     @Test
-    void givenBuildingId_whenDeleteById_thenDeleted() {
+    void givenDepartment_whenDelete_thenDeleted() {
 	Department department = new Department(1, "name");
 	doNothing().when(departmentDao).deleteById(1);
 

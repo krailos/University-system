@@ -76,7 +76,7 @@ class SpecialityServiceTest {
     @Test
     void givenSpecialities_whenGetAll_thenGot() {
 	Faculty faculty = new Faculty(1, "name", new DeansOffice("name", null));
-	List<Speciality> specialities= new ArrayList<>(
+	List<Speciality> specialities = new ArrayList<>(
 		Arrays.asList(new Speciality(1, "name", faculty), new Speciality(1, "name", faculty)));
 	when(specialityDao.findAll()).thenReturn(specialities);
 	when(yearDao.findBySpecialityId(any(Integer.class)))
@@ -93,7 +93,7 @@ class SpecialityServiceTest {
 
 	List<Speciality> actual = specialityService.getAll();
 
-	List<Speciality> expected =  new ArrayList<>(
+	List<Speciality> expected = new ArrayList<>(
 		Arrays.asList(new Speciality(1, "name", faculty), new Speciality(1, "name", faculty)));
 	expected.get(0).setYears(new ArrayList<Year>(Arrays.asList(new Year(1, "name", new Speciality()))));
 	expected.get(1).setYears(new ArrayList<Year>(Arrays.asList(new Year(1, "name", new Speciality()))));
@@ -101,7 +101,7 @@ class SpecialityServiceTest {
     }
 
     @Test
-    void givenSpecialityId_whenDeleteById_thenDeleted() {
+    void givenSpeciality_whenDelete_thenDeleted() {
 	Speciality speciality = new Speciality(1, "name", new Faculty("name", null));
 	doNothing().when(specialityDao).deleteById(1);
 

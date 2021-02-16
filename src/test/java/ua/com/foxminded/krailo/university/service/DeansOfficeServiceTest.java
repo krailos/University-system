@@ -75,7 +75,7 @@ class DeansOfficeServiceTest {
     }
 
     @Test
-    void givenAudienceId_whenDelete_thenDeleted() {
+    void givenDeansOffice_whenDelete_thenDeleted() {
 	DeansOffice deansOffice = new DeansOffice(1, "name", new UniversityOffice(1, "name", "address"));
 	doNothing().when(deansOfficeDao).deleteById(1);
 

@@ -98,7 +98,7 @@ class LessonTimeSceduleServiceTest {
     }
 
     @Test
-    void givenLessonsTimeScheduleId_whenDeleteById_thenDeleted() {
+    void givenLessonsTimeSchedule_whenDelete_thenDeleted() {
 	LessonsTimeSchedule lessonsTimeSchedule = new LessonsTimeSchedule(1, "name");
 	doNothing().when(lessonTimeScheduleDao).deleteById(1);
 

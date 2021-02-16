@@ -62,19 +62,17 @@ class TeacherServiceTest {
 
     @Test
     void givenTeachers_whenGetAll_thenGot() {
-	List<Teacher> teachers = new ArrayList<>(Arrays.asList(new Teacher(1),
-		new Teacher(1)));
+	List<Teacher> teachers = new ArrayList<>(Arrays.asList(new Teacher(1), new Teacher(1)));
 	when(teacherDao.findAll()).thenReturn(teachers);
 
 	List<Teacher> actual = teacherService.getAll();
 
-	List<Teacher> expected =new ArrayList<>(Arrays.asList(new Teacher(1),
-		new Teacher(1)));
+	List<Teacher> expected = new ArrayList<>(Arrays.asList(new Teacher(1), new Teacher(1)));
 	assertEquals(expected, actual);
     }
 
     @Test
-    void givenTeacher_whenDeleteById_thenDeleted() {
+    void givenTeacher_whenDelete_thenDeleted() {
 	Teacher teacher = new Teacher(1);
 	doNothing().when(teacherDao).deleteById(1);
 

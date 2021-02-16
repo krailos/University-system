@@ -14,7 +14,6 @@ public class YearService {
     private YearDao yearDao;
     private GroupDao groupDao;
 
-    
     public YearService(YearDao yearDao, GroupDao groupDao) {
 	this.yearDao = yearDao;
 	this.groupDao = groupDao;

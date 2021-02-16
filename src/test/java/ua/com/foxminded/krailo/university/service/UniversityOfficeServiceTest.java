@@ -43,7 +43,7 @@ class UniversityOfficeServiceTest {
 
     @Test
     void givenUniversityOffice_whenCereate_thanCreated() {
-	UniversityOffice universityOffice = new UniversityOffice("name","address");
+	UniversityOffice universityOffice = new UniversityOffice("name", "address");
 	doNothing().when(universityOfficeDao).create(universityOffice);
 
 	universityOfficeService.create(universityOffice);
@@ -53,7 +53,7 @@ class UniversityOfficeServiceTest {
 
     @Test
     void givenUniversityOffice_whenUpdate_thanUpdeted() {
-	UniversityOffice universityOffice = new UniversityOffice(1, "name","address");
+	UniversityOffice universityOffice = new UniversityOffice(1, "name", "address");
 	doNothing().when(universityOfficeDao).update(universityOffice);
 
 	universityOfficeService.update(universityOffice);
@@ -63,7 +63,7 @@ class UniversityOfficeServiceTest {
 
     @Test
     void givenUniversityOfficeId_whenGetById_thenGot() {
-	UniversityOffice universityOffice = new UniversityOffice(1, "name","address");
+	UniversityOffice universityOffice = new UniversityOffice(1, "name", "address");
 	List<DeansOffice> deansOffices = new ArrayList<>(Arrays.asList(new DeansOffice(1, "name", universityOffice)));
 	List<Holiday> holidays = new ArrayList<>(Arrays.asList(new Holiday(1, "name", null)));
 	List<Building> buildings = new ArrayList<>(Arrays.asList(new Building(1, "name", "address")));
@@ -71,7 +71,7 @@ class UniversityOfficeServiceTest {
 	when(deansOffice.findAll()).thenReturn(deansOffices);
 	when(holidayDao.findAll()).thenReturn(holidays);
 	when(buildingDao.findAll()).thenReturn(buildings);
-	UniversityOffice expected = new UniversityOffice(1, "name","address");
+	UniversityOffice expected = new UniversityOffice(1, "name", "address");
 	expected.setDeansOffices(new ArrayList<>(Arrays.asList(new DeansOffice(1, "name", universityOffice))));
 	expected.setHolidays(new ArrayList<>(Arrays.asList(new Holiday(1, "name", null))));
 	expected.setBuildings(new ArrayList<>(Arrays.asList(new Building(1, "name", "address"))));
@@ -83,9 +83,9 @@ class UniversityOfficeServiceTest {
 
     @Test
     void givenUniversityOffices_whenGetAll_thenGot() {
-	UniversityOffice universityOffice = new UniversityOffice(1, "name","address");
-	List<UniversityOffice> universityOffices = new ArrayList<>(Arrays.asList(new UniversityOffice(1, "name","address"),
-	new UniversityOffice(2, "name","address")));
+	UniversityOffice universityOffice = new UniversityOffice(1, "name", "address");
+	List<UniversityOffice> universityOffices = new ArrayList<>(
+		Arrays.asList(new UniversityOffice(1, "name", "address"), new UniversityOffice(2, "name", "address")));
 	List<DeansOffice> deansOffices = new ArrayList<>(Arrays.asList(new DeansOffice(1, "name", universityOffice)));
 	List<Holiday> holidays = new ArrayList<>(Arrays.asList(new Holiday(1, "name", null)));
 	List<Building> buildings = new ArrayList<>(Arrays.asList(new Building(1, "name", "address")));
@@ -96,21 +96,21 @@ class UniversityOfficeServiceTest {
 
 	List<UniversityOffice> actual = universityOfficeService.getAll();
 
-	List<UniversityOffice> expected =  new ArrayList<>(Arrays.asList(new UniversityOffice(1, "name","address"),
-		new UniversityOffice(2, "name","address")));
+	List<UniversityOffice> expected = new ArrayList<>(
+		Arrays.asList(new UniversityOffice(1, "name", "address"), new UniversityOffice(2, "name", "address")));
 	expected.get(0).setDeansOffices(new ArrayList<>(Arrays.asList(new DeansOffice(1, "name", universityOffice))));
 	expected.get(0).setHolidays(new ArrayList<>(Arrays.asList(new Holiday(1, "name", null))));
 	expected.get(0).setBuildings(new ArrayList<>(Arrays.asList(new Building(1, "name", "address"))));
 	expected.get(1).setDeansOffices(new ArrayList<>(Arrays.asList(new DeansOffice(1, "name", universityOffice))));
 	expected.get(1).setHolidays(new ArrayList<>(Arrays.asList(new Holiday(1, "name", null))));
 	expected.get(1).setBuildings(new ArrayList<>(Arrays.asList(new Building(1, "name", "address"))));
-	
+
 	assertEquals(expected, actual);
     }
 
     @Test
-    void givenUniversityOfficeId_whenDeleteById_thenDeleted() {
-	UniversityOffice universityOffice = new UniversityOffice(1, "name","address");
+    void givenUniversityOffice_whenDelete_thenDeleted() {
+	UniversityOffice universityOffice = new UniversityOffice(1, "name", "address");
 	doNothing().when(universityOfficeDao).deleteById(1);
 
 	universityOfficeService.delete(universityOffice);

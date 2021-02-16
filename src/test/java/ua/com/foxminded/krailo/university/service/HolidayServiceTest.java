@@ -31,7 +31,7 @@ class HolidayServiceTest {
     private HolidayService holidayService;
 
     @Test
-    void givenGroup_whenCereate_thanCreated() {
+    void givenHoliday_whenCereate_thanCreated() {
 	Holiday holiday = new Holiday("name", LocalDate.of(2021, 01, 01));
 	doNothing().when(holidayDao).create(holiday);
 
@@ -41,7 +41,7 @@ class HolidayServiceTest {
     }
 
     @Test
-    void givenGroup_whenUpdate_thanUpdeted() {
+    void givenHoliday_whenUpdate_thanUpdeted() {
 	Holiday holiday = new Holiday("name", LocalDate.of(2021, 01, 01));
 	doNothing().when(holidayDao).update(holiday);
 
@@ -51,7 +51,7 @@ class HolidayServiceTest {
     }
 
     @Test
-    void givenGroupId_whenGetById_thenGot() {
+    void givenHolidayId_whenGetById_thenGot() {
 	Holiday holiday = new Holiday(1, "name", LocalDate.of(2021, 01, 01));
 	when(holidayDao.findById(1)).thenReturn(holiday);
 	Holiday expected = new Holiday(1, "name", LocalDate.of(2021, 01, 01));
@@ -62,7 +62,7 @@ class HolidayServiceTest {
     }
 
     @Test
-    void givenBuildings_whenGetAll_thenGot() {
+    void givenHolidays_whenGetAll_thenGot() {
 	List<Holiday> holidays = new ArrayList<>(Arrays.asList(new Holiday(1, "name", LocalDate.of(2021, 01, 01)),
 		new Holiday(1, "name", LocalDate.of(2021, 01, 01))));
 	when(holidayDao.findAll()).thenReturn(holidays);
@@ -75,7 +75,7 @@ class HolidayServiceTest {
     }
 
     @Test
-    void givenBuildingId_whenDeleteById_thenDeleted() {
+    void givenHoliday_whenDelete_thenDeleted() {
 	Holiday holiday = new Holiday(1, "name", LocalDate.of(2021, 01, 01));
 	doNothing().when(holidayDao).deleteById(1);
 
