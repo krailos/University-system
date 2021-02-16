@@ -6,11 +6,8 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.BuildingDao;
 import ua.com.foxminded.krailo.university.dao.DeansOfficeDao;
-import ua.com.foxminded.krailo.university.dao.FacultyDao;
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
-import ua.com.foxminded.krailo.university.dao.SpecialityDao;
 import ua.com.foxminded.krailo.university.dao.UniversityOfficeDao;
-import ua.com.foxminded.krailo.university.model.Faculty;
 import ua.com.foxminded.krailo.university.model.UniversityOffice;
 
 @Service

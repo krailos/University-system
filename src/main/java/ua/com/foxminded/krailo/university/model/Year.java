@@ -9,7 +9,6 @@ public class Year {
     private String name;
     private Speciality speciality;
     private List<Subject> subjects = new ArrayList<>();
-    private List<Student> students = new ArrayList<>();
     private List<Group> groups = new ArrayList<>();
 
     public Year() {
@@ -66,14 +65,6 @@ public class Year {
 	this.groups = groups;
     }
 
-    public List<Student> getStudents() {
-	return students;
-    }
-
-    public void setStudents(List<Student> students) {
-	this.students = students;
-    }
-
     @Override
     public int hashCode() {
 	final int prime = 31;
@@ -82,7 +73,6 @@ public class Year {
 	result = prime * result + id;
 	result = prime * result + ((name == null) ? 0 : name.hashCode());
 	result = prime * result + ((speciality == null) ? 0 : speciality.hashCode());
-	result = prime * result + ((students == null) ? 0 : students.hashCode());
 	result = prime * result + ((subjects == null) ? 0 : subjects.hashCode());
 	return result;
     }
@@ -113,11 +103,6 @@ public class Year {
 		return false;
 	} else if (!speciality.equals(other.speciality))
 	    return false;
-	if (students == null) {
-	    if (other.students != null)
-		return false;
-	} else if (!students.equals(other.students))
-	    return false;
 	if (subjects == null) {
 	    if (other.subjects != null)
 		return false;
@@ -129,7 +114,7 @@ public class Year {
     @Override
     public String toString() {
 	return "Year [id=" + id + ", name=" + name + ", speciality=" + speciality + ", subjects=" + subjects
-		+ ", students=" + students + ", groups=" + groups + "]";
+		+ ", groups=" + groups + "]";
     }
 
 }
