@@ -29,7 +29,8 @@ class YearDaoTest {
 
     @Test
     void givenNewYear_whenCreate_thenCreated() {
-	Year year = new Year("new", new Speciality(1, "new", null));
+	Year year = new Year.YearBuilder().withName("new name")
+		.withSpeciality(new Speciality.SpecialityBuilder().withId(1).withName("new name").built()).built();
 
 	yearDao.create(year);
 
@@ -39,8 +40,11 @@ class YearDaoTest {
 
     @Test
     void givenNewYearWithSubjects_whenCreate_thenNewRowsInYearsSubjectsCreated() {
-	List<Subject> subjects = new ArrayList<>(Arrays.asList(new Subject(1, " "), new Subject(2, " ")));
-	Year year = new Year("new", new Speciality(1, "new", null));
+	Year year = new Year.YearBuilder().withName("new name")
+		.withSpeciality(new Speciality.SpecialityBuilder().withId(1).withName("new name").built()).built();
+	List<Subject> subjects = new ArrayList<>(
+		Arrays.asList(new Subject.SubjectBuilder().withId(3).withName("new subject").built(),
+			new Subject.SubjectBuilder().withId(4).withName("new subject").built()));
 	year.setSubjects(subjects);
 
 	yearDao.create(year);
@@ -52,18 +56,22 @@ class YearDaoTest {
 
     @Test
     void givenNewFieldsOfYear_whenUpdate_tnenUpdated() {
-	Year year = new Year(1, "new", new Speciality(1, "new", null));
+	Year year = new Year.YearBuilder().withId(1).withName("new name")
+		.withSpeciality(new Speciality.SpecialityBuilder().withId(1).withName("new name").built()).built();
 
 	yearDao.update(year);
 
-	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "years", "name = 'new' AND id = 1");
+	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "years", "name = 'new name' AND id = 1");
 	assertEquals(1, actual);
     }
 
     @Test
     void givenNewSubjectsOfYear_whenUpdate_thenNewRowsInYearsSubjectsUpdated() {
-	List<Subject> subjects = new ArrayList<>(Arrays.asList(new Subject(3, " "), new Subject(4, " ")));
-	Year year = new Year(1, "", new Speciality(1, "new", null));
+	Year year = new Year.YearBuilder().withId(1).withName("new name")
+		.withSpeciality(new Speciality.SpecialityBuilder().withId(1).withName("new name").built()).built();
+	List<Subject> subjects = new ArrayList<>(
+		Arrays.asList(new Subject.SubjectBuilder().withId(1).withName("new subject").built(),
+			new Subject.SubjectBuilder().withId(2).withName("new subject").built()));
 	year.setSubjects(subjects);
 
 	yearDao.update(year);
@@ -99,7 +107,7 @@ class YearDaoTest {
 
 	assertEquals(expected, actual);
     }
-    
+
     @Test
     void givenId_whenDeleteById_thenDeleted() {
 

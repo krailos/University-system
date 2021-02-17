@@ -26,8 +26,12 @@ class VocationDaoTest {
 
     @Test
     void givenNewVocation_whenCreate_thenCreated() {
-	Vocation vocation = new Vocation("new", LocalDate.of(2000, 01, 01), LocalDate.of(2000, 02, 02),
-		LocalDate.of(2000, 03, 03), new Teacher(1));
+	Vocation vocation = new Vocation.VocationBuilder().withKind("kind").
+		withApplyingDate(LocalDate.of(2000, 01, 01)).
+		withStartDate(LocalDate.of(2000, 02, 02)).
+		withEndDate(LocalDate.of(2000, 03, 03)).
+		withTeacher(new Teacher.TeacherBuilder().withId(1).built()).
+		built();
 	
 	vocationDao.create(vocation);
 	
@@ -37,13 +41,18 @@ class VocationDaoTest {
 
     @Test
     void givenNewFieldsOfVocation_whenUpdate_thenUpdated() {
-	Vocation vocation = new Vocation(1, "new", LocalDate.of(2000, 01, 01), LocalDate.of(2000, 02, 02),
-		LocalDate.of(2000, 03, 03), new Teacher(1));
+	Vocation vocation = new Vocation.VocationBuilder().withId(1).
+		withKind("kind").
+		withApplyingDate(LocalDate.of(2000, 01, 01)).
+		withStartDate(LocalDate.of(2000, 02, 02)).
+		withEndDate(LocalDate.of(2000, 03, 03)).
+		withTeacher(new Teacher.TeacherBuilder().withId(1).built()).
+		built();
 	
 	vocationDao.update(vocation);
 	
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "vocations",
-		"kind = 'new' AND applying_date = '2000-01-01' AND start_date = '2000-02-02' AND end_date = '2000-03-03'AND teacher_id = 1");
+		"kind = 'kind' AND applying_date = '2000-01-01' AND start_date = '2000-02-02' AND end_date = '2000-03-03'AND teacher_id = 1");
 	assertEquals(1, actual);
     }
 

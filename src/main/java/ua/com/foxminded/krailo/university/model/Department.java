@@ -1,7 +1,10 @@
 package ua.com.foxminded.krailo.university.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import ua.com.foxminded.krailo.university.model.Holiday.HolidayBuilder;
 
 public class Department {
 
@@ -9,17 +12,7 @@ public class Department {
     private String name;
     private List<Teacher> teachers = new ArrayList<>();
 
-    public Department() {
-    }
-
-    public Department(String name) {
-	this.name = name;
-    }
-
-    public Department(int id, String name) {
-	this.id = id;
-	this.name = name;
-    }
+  
 
     public int getId() {
 	return id;
@@ -44,6 +37,36 @@ public class Department {
     public void setTeachers(List<Teacher> teachers) {
 	this.teachers = teachers;
     }
+    
+public static class DepartmentBuilder {
+	
+	private Department department;
+
+	public DepartmentBuilder() {
+	    department = new Department();
+	}
+
+	public DepartmentBuilder withId(int id) {
+	    department.id = id;
+	    return this;
+	}
+
+	public DepartmentBuilder withName(String name) {
+	    department.name = name;
+	    return this;
+	}
+
+	public DepartmentBuilder withTeachers(List<Teacher> teachers) {
+	    department.teachers = teachers;
+	    return this;
+	}
+
+	public Department built() {
+	    return department;
+	}
+
+    }
+
 
     @Override
     public int hashCode() {

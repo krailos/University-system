@@ -24,7 +24,9 @@ class SpecialityDaoTest {
 
     @Test
     void givenNewSpeciality_whenCreate_thenCreated() {
-	Speciality speciality = new Speciality("new", new Faculty(1, "new", null));
+	Speciality speciality = new Speciality.SpecialityBuilder().withName("new name").
+		withFaculty(new Faculty.FacultyBuilder().withId(1).withName("new").withDeansOffice(null).built()).
+		built();
 
 	specialityDao.create(speciality);
 
@@ -34,12 +36,14 @@ class SpecialityDaoTest {
 
     @Test
     void givenNewFieldsOfFaculty_whenUpdate_tnenUpdated() {
-	Speciality speciality = new Speciality(1, "new", new Faculty(1, "new", null));
+	Speciality speciality = new Speciality.SpecialityBuilder().withId(1).withName("new name").
+		withFaculty(new Faculty.FacultyBuilder().withId(1).withName("new").withDeansOffice(null).built()).
+		built();
 
 	specialityDao.update(speciality);
 
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "specialities",
-		"name = 'new' AND faculty_id = 1");
+		"name = 'new name' AND faculty_id = 1");
 	assertEquals(1, actual);
     }
 

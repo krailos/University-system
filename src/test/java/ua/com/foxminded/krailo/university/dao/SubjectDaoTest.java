@@ -25,7 +25,7 @@ class SubjectDaoTest {
 
     @Test
     void givenNewSubject_whenCreate_thenCreated() {
-	Subject subject = new Subject("new");
+	Subject subject = new Subject.SubjectBuilder().withName("new subject").built();
 
 	subjectDao.create(subject);
 
@@ -35,11 +35,12 @@ class SubjectDaoTest {
 
     @Test
     void givenNewFieldsOfSubject_whenUpdate_tnenUpdated() {
-	Subject department = new Subject(1, "new");
+	Subject subject = new Subject.SubjectBuilder().withId(1).withName("new subject").built();
 
-	subjectDao.update(department);
 
-	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "subjects", "name = 'new'");
+	subjectDao.update(subject);
+
+	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "subjects", "name = 'new subject'");
 	assertEquals(1, actual);
     }
 
@@ -72,7 +73,7 @@ class SubjectDaoTest {
     
     @Test
     void givenTeacherId_whenFindSubjectsByTeacherId_thenFound() {
-	Teacher teacher = new Teacher(1);
+	Teacher teacher = new Teacher.TeacherBuilder().withId(1).built();
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "subjects", "id = 1 OR id = 2" );
 
 	int actual = subjectDao.findByTeacherId(teacher.getId()).size();
@@ -82,7 +83,7 @@ class SubjectDaoTest {
     
     @Test
     void givenYearId_whenFindSubjectsByYearId_thenFound() {
-	Year year = new Year(1, "", null);
+	Year year = new Year.YearBuilder().withId(1).withName("new year").built();
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "subjects", "id = 1 OR id = 2" );
 
 	int actual = subjectDao.findByYearId(year.getId()).size();

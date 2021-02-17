@@ -24,7 +24,9 @@ class TimetableDaoTest {
 
     @Test
     void givenNewTimetable_whenCreate_thenCreated() {
-	Timetable timetable = new Timetable("new", new Year(3, "new", null));
+	Timetable timetable = new Timetable.TimetableBuilder().withName("new name").
+		withYear(new Year.YearBuilder().withId(3).withName("new").built()).
+		built();
 
 	timetableDao.create(timetable);
 
@@ -34,12 +36,13 @@ class TimetableDaoTest {
 
     @Test
     void givenNewFieldsOfTimetable_whenUpdate_tnenUpdated() {
-	Timetable timetable = new Timetable(1, "new", new Year(1, "new", null));
-
+	Timetable timetable = new Timetable.TimetableBuilder().withId(1).withName("new name").
+		withYear(new Year.YearBuilder().withId(1).withName("new").built()).
+		built();
 	timetableDao.update(timetable);
 
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "timetables",
-		"name = 'new' AND year_id = 1");
+		"name = 'new name' AND year_id = 1");
 	assertEquals(1, actual);
     }
 
@@ -71,8 +74,9 @@ class TimetableDaoTest {
     }
     
     @Test void givenTimemtable_whenGetByYear_thanGot(){
-	Timetable timetable = new Timetable();
-	timetable.setYear(new Year(1, "", null));
+	Timetable timetable = new Timetable.TimetableBuilder().withId(1).withName("new name").
+		withYear(new Year.YearBuilder().withId(1).withName("new").built()).
+		built();
 	
 	int actual = timetableDao.findByYear(timetable).size();
 	

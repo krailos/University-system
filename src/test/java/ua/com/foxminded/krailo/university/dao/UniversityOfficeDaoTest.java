@@ -50,18 +50,20 @@ class UniversityOfficeDaoTest {
 
     @Test
     void givenNewFieldsOfUniversity_office_whenUpdate_thenUpdated() {
-	UniversityOffice universityOffice = new UniversityOffice(1, "new", "new");
+	UniversityOffice universityOffice = new UniversityOffice.UniversityOfficeBuilder().
+		withId(1).withName("new name").withAddress("new address").built();
 
 	universityOfficeDao.update(universityOffice);
 
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "university_office",
-		"name = 'new' AND address = 'new'");
+		"name = 'new name' AND address = 'new address'");
 	assertEquals(1, actual);
     }
 
     @Test
     void givenNewUniversity_office_whenCreate_thenCreated() {
-	UniversityOffice universityOffice = new UniversityOffice("new", "new");
+	UniversityOffice universityOffice = new UniversityOffice.UniversityOfficeBuilder().
+		withName("new name").withAddress("new address").built();
 
 	universityOfficeDao.create(universityOffice);
 

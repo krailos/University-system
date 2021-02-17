@@ -27,8 +27,18 @@ class StudentDaoTest {
 
     @Test
     void givenNewStudent_whenCreate_thenCreated() {
-	Student student = new Student("new", "new", "new", LocalDate.of(2000, 01, 01), "new", "new", "new", "new",
-		Gender.MALE, new Group(1, "new", null));
+	Student student = new Student.StudentBuilder().
+		withStudentId("student id").
+		withFirstName("first name").
+		withlastName("last name").
+		withBirthDate(LocalDate.of(2000, 01, 01)).
+		withAddress("address").
+		withPhone("phone").
+		withEmail("email").
+		withRank("rank").
+		withGender(Gender.MALE).
+		withGroup(new Group.GroupBuilder().withId(1).withName("group name").built()).
+		built();
 
 	studentDao.create(student);
 
@@ -38,13 +48,25 @@ class StudentDaoTest {
 
     @Test
     void givenNewFieldsOfStudents_whenUpdate_tnenUpdated() {
-	Student student = new Student(1, "new", "new", "new", LocalDate.of(2000, 01, 01), "new", "new", "new", "new",
-		Gender.MALE, new Group(1, "new", null));
+	Student student = new Student.StudentBuilder().
+		withId(1).
+		withStudentId("student id").
+		withFirstName("first name").
+		withlastName("last name").
+		withBirthDate(LocalDate.of(2000, 01, 01)).
+		withAddress("address").
+		withPhone("phone").
+		withEmail("email").
+		withRank("rank").
+		withGender(Gender.MALE).
+		withGroup(new Group.GroupBuilder().withId(1).withName("group name").built()).
+		built();
 
 	studentDao.update(student);
 
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "students",
-		"student_id = 'new' AND first_name  = 'new' AND last_name = 'new' AND birth_date = '2000-01-01' AND phone = 'new' AND address = 'new' AND email = 'new' AND gender = 'male' AND id = 1");
+		"student_id = 'student id' AND first_name  = 'first name' AND last_name = 'last name' AND birth_date = '2000-01-01'"
+		+ " AND phone = 'phone' AND address = 'address' AND email = 'email' AND gender = 'MALE' AND id = 1");
 	assertEquals(1, actual);
     }
 

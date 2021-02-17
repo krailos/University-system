@@ -23,7 +23,8 @@ class DepartmentDaoTest {
 
     @Test
     void givenNewDepartment_whenCreate_thenCreated() {
-	Department department = new Department("new");
+	Department department = new Department.DepartmentBuilder().
+		withName("new department").built();
 
 	departmentDao.create(department);
 
@@ -33,11 +34,13 @@ class DepartmentDaoTest {
 
     @Test
     void givenNewFieldsOfDepartment_whenUpdate_tnenUpdated() {
-	Department department = new Department(1, "new");
+	Department department = new Department.DepartmentBuilder().
+		withId(1).
+		withName("new department").built();
 
 	departmentDao.update(department);
 
-	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "departments", "name = 'new'");
+	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "departments", "name = 'new department'");
 	assertEquals(1, actual);
     }
 
