@@ -23,7 +23,7 @@ class BuildingDaoTest {
 
     @Test
     void givenNewBuilding_whenCreate_thenCreated() {
-	Building building = new Building("Building 3", "Address 3");
+	Building building = new Building.BuildingBuilder().withName("Building 3").withAddress("Address 3").built();
 
 	buildingDao.create(building);
 
@@ -33,12 +33,12 @@ class BuildingDaoTest {
 
     @Test
     void givenNewFieldsOfBuilding_whenUpdate_thenUpdated() {
-	Building building = new Building(1, "new", "new");
+	Building building = new Building.BuildingBuilder().withId(1).withName("new name").withAddress("new address").built();
 
 	buildingDao.update(building);
 
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "buildings",
-		" name = 'new' and address = 'new'");
+		" name = 'new name' and address = 'new address'");
 	assertEquals(1, actual);
     }
 

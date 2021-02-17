@@ -9,21 +9,6 @@ public class Faculty {
     private String name;
     private DeansOffice deansOffice;
     private List<Speciality> specialities = new ArrayList<>();
- 
-
-    public Faculty() {
-    }
-
-    public Faculty(String name, DeansOffice deansOffice) {
-	this.name = name;
-	this.deansOffice = deansOffice;
-    }
-
-    public Faculty(int id, String name, DeansOffice deansOffice) {
-	this.id = id;
-	this.name = name;
-	this.deansOffice = deansOffice;
-    }
 
     public int getId() {
 	return id;
@@ -56,7 +41,35 @@ public class Faculty {
     public void setDeansOffice(DeansOffice deansOffice) {
 	this.deansOffice = deansOffice;
     }
-    
+
+    public static class FacultyBuilder {
+	private Faculty faculty;
+
+	public FacultyBuilder() {
+	    faculty = new Faculty();
+	}
+
+	public FacultyBuilder withId(int id) {
+	    faculty.id = id;
+	    return this;
+	}
+
+	public FacultyBuilder withName(String name) {
+	    faculty.name = name;
+	    return this;
+	}
+
+	public FacultyBuilder withDeansOffice(DeansOffice deansOffice) {
+	    faculty.deansOffice = deansOffice;
+	    return this;
+	}
+
+	public Faculty built() {
+	    return faculty;
+	}
+
+    }
+
     @Override
     public int hashCode() {
 	final int prime = 31;

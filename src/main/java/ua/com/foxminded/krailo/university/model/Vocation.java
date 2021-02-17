@@ -11,28 +11,6 @@ public class Vocation {
     private LocalDate end;
     private Teacher teacher;
 
-    public Vocation() {
-    }
-
-    public Vocation(int id, String kind, LocalDate applyingDate, LocalDate start, LocalDate end, Teacher teacher) {
-	super();
-	this.id = id;
-	this.kind = kind;
-	this.applyingDate = applyingDate;
-	this.start = start;
-	this.end = end;
-	this.teacher = teacher;
-    }
-
-    public Vocation(String kind, LocalDate applyingDate, LocalDate start, LocalDate end, Teacher teacher) {
-	super();
-	this.kind = kind;
-	this.applyingDate = applyingDate;
-	this.start = start;
-	this.end = end;
-	this.teacher = teacher;
-    }
-
     public int getId() {
 	return id;
     }
@@ -79,6 +57,50 @@ public class Vocation {
 
     public void setTeacher(Teacher teacher) {
 	this.teacher = teacher;
+    }
+
+    public static class VocationBuilder {
+
+	private Vocation vocation;
+
+	public VocationBuilder() {
+	    vocation = new Vocation();
+	}
+
+	public VocationBuilder withId(int id) {
+	    vocation.id = id;
+	    return this;
+	}
+
+	public VocationBuilder withKind(String kind) {
+	    vocation.kind = kind;
+	    return this;
+	}
+
+	public VocationBuilder withApplyingDate(LocalDate applyingDate) {
+	    vocation.applyingDate = applyingDate;
+	    return this;
+	}
+
+	public VocationBuilder withStartDate(LocalDate startDate) {
+	    vocation.start = startDate;
+	    return this;
+	}
+
+	public VocationBuilder withEndDate(LocalDate andDate) {
+	    vocation.end = andDate;
+	    return this;
+	}
+
+	public VocationBuilder withTeacher(Teacher teacher) {
+	    vocation.teacher = teacher;
+	    return this;
+	}
+
+	public Vocation built() {
+	    return vocation;
+	}
+
     }
 
     @Override

@@ -19,42 +19,6 @@ public class Teacher {
     private Gender gender;
     private String degree;
 
-    public Teacher() {
-    }
-
-    public Teacher(int id) {
-	this.id = id;
-    }
-
-    public Teacher(String teacherId, String firstName, String lastName, LocalDate birthDate, String phone,
-	    String address, String email, String degree, Gender gender, Department department) {
-	this.teacherId = teacherId;
-	this.firstName = firstName;
-	this.lastName = lastName;
-	this.birthDate = birthDate;
-	this.phone = phone;
-	this.address = address;
-	this.email = email;
-	this.degree = degree;
-	this.gender = gender;
-	this.department = department;
-    }
-
-    public Teacher(int id, String teacherId, String firstName, String lastName, LocalDate birthDate, String phone,
-	    String address, String email, String degree, Gender gender, Department department) {
-	this.id = id;
-	this.teacherId = teacherId;
-	this.firstName = firstName;
-	this.lastName = lastName;
-	this.birthDate = birthDate;
-	this.phone = phone;
-	this.address = address;
-	this.email = email;
-	this.degree = degree;
-	this.gender = gender;
-	this.department = department;
-    }
-
     public int getId() {
 	return id;
     }
@@ -149,6 +113,75 @@ public class Teacher {
 
     public void setDegree(String degree) {
 	this.degree = degree;
+    }
+
+    public static class TeacherBuilder {
+
+	private Teacher teacher;
+
+	public TeacherBuilder() {
+	    teacher = new Teacher();
+	}
+
+	public TeacherBuilder withId(int id) {
+	    teacher.id = id;
+	    return this;
+	}
+
+	public TeacherBuilder withTeacherId(String teacherId) {
+	    teacher.teacherId = teacherId;
+	    return this;
+	}
+
+	public TeacherBuilder withFirstName(String firstName) {
+	    teacher.firstName = firstName;
+	    return this;
+	}
+
+	public TeacherBuilder withlastName(String lastName) {
+	    teacher.lastName = lastName;
+	    return this;
+	}
+
+	public TeacherBuilder withBirthDate(LocalDate birthDate) {
+	    teacher.birthDate = birthDate;
+	    return this;
+	}
+
+	public TeacherBuilder withPhone(String phone) {
+	    teacher.phone = phone;
+	    return this;
+	}
+
+	public TeacherBuilder withAddress(String address) {
+	    teacher.address = address;
+	    return this;
+	}
+
+	public TeacherBuilder withEmail(String email) {
+	    teacher.email = email;
+	    return this;
+	}
+
+	public TeacherBuilder withDegree(String degree) {
+	    teacher.degree = degree;
+	    return this;
+	}
+
+	public TeacherBuilder withGender(Gender gender) {
+	    teacher.gender = gender;
+	    return this;
+	}
+
+	public TeacherBuilder withDepartment(Department department) {
+	    teacher.department = department;
+	    return this;
+	}
+
+	public Teacher built() {
+	    return teacher;
+	}
+
     }
 
     @Override

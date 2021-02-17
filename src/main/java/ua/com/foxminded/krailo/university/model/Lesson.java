@@ -15,34 +15,6 @@ public class Lesson {
     private Timetable timetable;
     private List<Group> groups = new ArrayList<>();
 
-    public Lesson() {
-    }
-
-    public Lesson(int id) {
-	this.id = id;
-    }
-
-    public Lesson(LocalDate date, LessonTime lessonTime, Subject subject, Audience audience, Teacher teacher,
-	    Timetable timetable) {
-	this.date = date;
-	this.lessonTime = lessonTime;
-	this.subject = subject;
-	this.audience = audience;
-	this.teacher = teacher;
-	this.timetable = timetable;
-    }
-
-    public Lesson(int id, LocalDate date, LessonTime lessonTime, Subject subject, Audience audience, Teacher teacher,
-	    Timetable timetable) {
-	this.id = id;
-	this.date = date;
-	this.lessonTime = lessonTime;
-	this.subject = subject;
-	this.audience = audience;
-	this.teacher = teacher;
-	this.timetable = timetable;
-    }
-
     public int getId() {
 	return id;
     }
@@ -105,6 +77,60 @@ public class Lesson {
 
     public void setGroups(List<Group> groups) {
 	this.groups = groups;
+    }
+
+    public static class LessonBuilder {
+
+	private Lesson lesson;
+
+	public LessonBuilder() {
+	    lesson = new Lesson();
+	}
+
+	public LessonBuilder withId(int id) {
+	    lesson.id = id;
+	    return this;
+	}
+
+	public LessonBuilder withDate(LocalDate date) {
+	    lesson.date = date;
+	    return this;
+	}
+
+	public LessonBuilder withLessonTime(LessonTime lessonTime) {
+	    lesson.lessonTime = lessonTime;
+	    return this;
+	}
+
+	public LessonBuilder withSubject(Subject subject) {
+	    lesson.subject = subject;
+	    return this;
+	}
+
+	public LessonBuilder withAudience(Audience audience) {
+	    lesson.audience = audience;
+	    return this;
+	}
+
+	public LessonBuilder withTeacher(Teacher teacher) {
+	    lesson.teacher = teacher;
+	    return this;
+	}
+
+	public LessonBuilder withTimetable(Timetable timetable) {
+	    lesson.timetable = timetable;
+	    return this;
+	}
+
+	public LessonBuilder withGroups(List<Group> groups) {
+	    lesson.groups = groups;
+	    return this;
+	}
+
+	public Lesson built() {
+	    return lesson;
+	}
+
     }
 
     @Override

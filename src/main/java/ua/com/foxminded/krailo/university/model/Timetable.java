@@ -10,31 +10,6 @@ public class Timetable {
     private Year year;
     private List<Lesson> lessons = new ArrayList<>();
 
-    public Timetable() {
-    }
-
-    public Timetable(int id) {
-	this.id = id;
-    }
-
-    public Timetable(String name, Year year) {
-	this.name = name;
-	this.year = year;
-    }
-
-    public Timetable(int id, String name, Year year) {
-	this.id = id;
-	this.name = name;
-	this.year = year;
-    }
-
-    public Timetable(int id, String name, Year year, List<Lesson> lessons) {
-	this.id = id;
-	this.name = name;
-	this.year = year;
-	this.lessons = lessons;
-    }
-
     public int getId() {
 	return id;
     }
@@ -65,6 +40,40 @@ public class Timetable {
 
     public void setLessons(List<Lesson> lessons) {
 	this.lessons = lessons;
+    }
+
+    public static class TimetableBuilder {
+
+	private Timetable timetable;
+
+	public TimetableBuilder() {
+	    timetable = new Timetable();
+	}
+
+	public TimetableBuilder withId(int id) {
+	    timetable.id = id;
+	    return this;
+	}
+
+	public TimetableBuilder withName(String name) {
+	    timetable.name = name;
+	    return this;
+	}
+
+	public TimetableBuilder withYear(Year year) {
+	    timetable.year = year;
+	    return this;
+	}
+
+	public TimetableBuilder withLessons(List<Lesson> lessons) {
+	    timetable.lessons = lessons;
+	    return this;
+	}
+
+	public Timetable built() {
+	    return timetable;
+	}
+
     }
 
     @Override

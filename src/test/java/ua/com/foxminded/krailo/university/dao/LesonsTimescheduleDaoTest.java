@@ -23,7 +23,8 @@ class LesonsTimescheduleDaoTest {
 
     @Test
     void givenNewLessonsTimeSchedule_whenCreate_thenCreated() {
-	LessonsTimeSchedule lessonsTimeSchedule = new LessonsTimeSchedule("new");
+	LessonsTimeSchedule lessonsTimeSchedule = new LessonsTimeSchedule.LessonsTimescheduleBuilder()
+		.withName("new lesson time schedule").built();
 
 	lessonsTimesceduleDao.create(lessonsTimeSchedule);
 
@@ -33,11 +34,12 @@ class LesonsTimescheduleDaoTest {
 
     @Test
     void givenNewFieldsOfLessonsTimeSchedule_whenUpdate_tnenUpdated() {
-	LessonsTimeSchedule lessonsTimeSchedule = new LessonsTimeSchedule(1, "new");
+	LessonsTimeSchedule lessonsTimeSchedule = new LessonsTimeSchedule.LessonsTimescheduleBuilder().withId(1)
+		.withName("new lesson time schedule").built();
 
 	lessonsTimesceduleDao.update(lessonsTimeSchedule);
 
-	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons_timeschedule", "name = 'new'");
+	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons_timeschedule", "name = 'new lesson time schedule'");
 	assertEquals(1, actual);
     }
 

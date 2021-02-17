@@ -24,7 +24,9 @@ class FacultyDaoTest {
 
     @Test
     void givenNewFaculty_whenCreate_thenCreated() {
-	Faculty faculty = new Faculty("new", new DeansOffice(1, "new", null));
+	Faculty faculty = new Faculty.FacultyBuilder().withName("new name").withDeansOffice(
+		new DeansOffice.DeansOfficeBuilder().withId(1).withName("new name").withUniversityOffice(null).built())
+		.built();
 
 	facultyDao.create(faculty);
 
@@ -34,12 +36,14 @@ class FacultyDaoTest {
 
     @Test
     void givenNewFieldsOfFaculty_whenUpdate_tnenUpdated() {
-	Faculty faculty = new Faculty(1, "new", new DeansOffice(1, "new", null));
+	Faculty faculty = new Faculty.FacultyBuilder().withId(1).withName("new name").withDeansOffice(
+		new DeansOffice.DeansOfficeBuilder().withId(1).withName("new name").withUniversityOffice(null).built())
+		.built();
 
 	facultyDao.update(faculty);
 
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "faculties",
-		"name = 'new' AND deans_office_id = 1");
+		"name = 'new name' AND deans_office_id = 1");
 	assertEquals(1, actual);
     }
 

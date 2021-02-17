@@ -10,28 +10,12 @@ public class Speciality {
     private Faculty faculty;
     private List<Year> years = new ArrayList<>();
 
-    public Speciality() {
-    }
-
-    public Speciality(int id, String name, Faculty faculty) {
-	super();
-	this.id = id;
-	this.name = name;
-	this.faculty = faculty;
-    }
-
     public int getId() {
 	return id;
     }
 
     public void setId(int id) {
 	this.id = id;
-    }
-
-    public Speciality(String name, Faculty faculty) {
-	super();
-	this.name = name;
-	this.faculty = faculty;
     }
 
     public String getName() {
@@ -56,6 +40,40 @@ public class Speciality {
 
     public void setYears(List<Year> years) {
 	this.years = years;
+    }
+
+    public static class SpecialityBuilder {
+
+	private Speciality speciality;
+
+	public SpecialityBuilder() {
+	    speciality = new Speciality();
+	}
+
+	public SpecialityBuilder withId(int id) {
+	    speciality.id = id;
+	    return this;
+	}
+
+	public SpecialityBuilder withName(String name) {
+	    speciality.name = name;
+	    return this;
+	}
+
+	public SpecialityBuilder withFaculty(Faculty faculty) {
+	    speciality.faculty = faculty;
+	    return this;
+	}
+
+	public SpecialityBuilder withYears(List<Year> years) {
+	    speciality.years = years;
+	    return this;
+	}
+
+	public Speciality built() {
+	    return speciality;
+	}
+
     }
 
     @Override

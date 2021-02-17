@@ -32,7 +32,8 @@ class GroupDaoTest {
 
     @Test
     void givenNewGroup_whenCreate_thenCreated() {
-	Group group = new Group("new", new Year(1, "new", null));
+	Group group = new Group.GroupBuilder().withName("new name")
+		.withYear(new Year.YearBuilder().withId(1).withName("new name").withSpeciality(null).built()).built();
 
 	groupDao.create(group);
 
@@ -42,11 +43,12 @@ class GroupDaoTest {
 
     @Test
     void givenNewFieldsOfGroup_whenUpdate_tnenUpdated() {
-	Group group = new Group(1, "new", new Year(1, "new", null));
+	Group group = new Group.GroupBuilder().withId(1).withName("new name")
+		.withYear(new Year.YearBuilder().withId(1).withName("new name").withSpeciality(null).built()).built();
 
 	groupDao.update(group);
 
-	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "groups", "name = 'new' AND id = 1");
+	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "groups", "name = 'new name' AND id = 1");
 	assertEquals(1, actual);
     }
 
@@ -79,8 +81,12 @@ class GroupDaoTest {
 
     @Test
     void givenLessonId_whenFindGroupsByLessonId_thenFound() {
-	Lesson lesson = new Lesson(1, LocalDate.of(2000, 01, 01), new LessonTime(1), new Subject(1, null),
-		new Audience(1), new Teacher(1), new Timetable(1));
+	Lesson lesson = new Lesson.LessonBuilder().withId(1).withDate(LocalDate.of(2000, 01, 01))
+		.withLessonTime(new LessonTime.LessonTimeBuilder().withId(1).built())
+		.withSubject(new Subject.SubjectBuilder().withId(1).withName("new name").built())
+		.withAudience(new Audience.AudienceBuilder().withId(1).built())
+		.withTeacher(new Teacher.TeacherBuilder().withId(1).built())
+		.withTimetable(new Timetable.TimetableBuilder().withId(1).built()).built();
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons_groups", "lesson_id = 1");
 
 	int actual = groupDao.findByLessonId(lesson.getId()).size();
@@ -90,7 +96,7 @@ class GroupDaoTest {
 
     @Test
     void givenYearId_whenFindByYearId_thenFound() {
-	Year year = new Year(1, "", null);
+	Year year = new Year.YearBuilder().withId(1).withName("new name").withSpeciality(null).built();
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "groups", "year_id = 1");
 
 	int actual = groupDao.findByYearId(year.getId()).size();

@@ -13,21 +13,6 @@ public class DeansOffice {
     private List<LessonsTimeSchedule> lessonsTimeSchedules;
     private List<Vocation> vocations = new ArrayList<>();
 
-    public DeansOffice() {
-    }
-
-    public DeansOffice(String name, UniversityOffice universityOffice) {
-	this.name = name;
-	this.universityOffice = universityOffice;
-    }
-    
-    public DeansOffice(int id, String name, UniversityOffice universityOffice) {
-	this.id = id;
-	this.name = name;
-	this.universityOffice = universityOffice;
-    }
-
-
     public int getId() {
 	return id;
     }
@@ -82,6 +67,34 @@ public class DeansOffice {
 
     public void setLessonsTimeSchedules(List<LessonsTimeSchedule> lessonsTimeSchedules) {
 	this.lessonsTimeSchedules = lessonsTimeSchedules;
+    }
+
+    public static class DeansOfficeBuilder {
+	private DeansOffice deansOffice;
+
+	public DeansOfficeBuilder() {
+	    deansOffice = new DeansOffice();
+	}
+
+	public DeansOfficeBuilder withId(int id) {
+	    deansOffice.id = id;
+	    return this;
+	}
+
+	public DeansOfficeBuilder withName(String name) {
+	    deansOffice.name = name;
+	    return this;
+	}
+
+	public DeansOfficeBuilder withUniversityOffice(UniversityOffice universityOffice) {
+	    deansOffice.universityOffice = universityOffice;
+	    return this;
+	}
+
+	public DeansOffice built() {
+	    return deansOffice;
+	}
+
     }
 
     @Override

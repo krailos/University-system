@@ -24,48 +24,54 @@ class DeansOfficeDaoTest {
 
     @Test
     void givenNewDeansOffice_whenCreate_thenCreated() {
-	DeansOffice deansOffice = new DeansOffice("new", new UniversityOffice(1, "new", "new"));
-	
+	DeansOffice deansOffice = new DeansOffice.DeansOfficeBuilder().withName("new name")
+		.withUniversityOffice(new UniversityOffice.UniversityOfficeBuilder().withId(1).withName("new name")
+			.withAddress("new address").built())
+		.built();
+
 	deansOfficeDao.create(deansOffice);
-	
+
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "deans_office");
 	assertEquals(3, actual);
     }
 
     @Test
     void givenNewFieldsOfDeansOffice_whenUpdate_tnenUpdated() {
-	DeansOffice deansOffice = new DeansOffice(1, "new", new UniversityOffice(1, "new", "new"));
-	
+	DeansOffice deansOffice =  new DeansOffice.DeansOfficeBuilder().withId(1).withName("new name")
+		.withUniversityOffice(new UniversityOffice.UniversityOfficeBuilder().withId(1).withName("new name")
+			.withAddress("new address").built())
+		.built();
+
 	deansOfficeDao.update(deansOffice);
-	
+
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "deans_office",
-		"name = 'new' AND university_office_id = 1");
+		"name = 'new name' AND university_office_id = 1");
 	assertEquals(1, actual);
     }
 
     @Test
     void givenId_whenFindById_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "deans_office", "id =1");
-	
+
 	int actual = deansOfficeDao.findById(1).getId();
-	
+
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenDeansOffices_whenFindAll_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTable(jdbcTemplate, "deans_office");
-	
+
 	int actual = deansOfficeDao.findAll().size();
-	
+
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenId_whenDeleteById_thenDeleted() {
-	
+
 	deansOfficeDao.deleteById(1);
-	
+
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "deans_office");
 	assertEquals(1, actual);
     }

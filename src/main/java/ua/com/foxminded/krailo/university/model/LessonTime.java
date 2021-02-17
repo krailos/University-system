@@ -10,30 +10,6 @@ public class LessonTime {
     private LocalTime endTime;
     private LessonsTimeSchedule lessonsTimeSchedule;
 
-    public LessonTime() {
-    }
-
-    public LessonTime(int id) {
-	this.id = id;
-    }
-
-    public LessonTime(String orderNumber, LocalTime startTime, LocalTime endTime,
-	    LessonsTimeSchedule lessonsTimeSchedule) {
-	this.orderNumber = orderNumber;
-	this.startTime = startTime;
-	this.endTime = endTime;
-	this.lessonsTimeSchedule = lessonsTimeSchedule;
-    }
-
-    public LessonTime(int id, String orderNumber, LocalTime startTime, LocalTime endTime,
-	    LessonsTimeSchedule lessonsTimeSchedule) {
-	this.id = id;
-	this.orderNumber = orderNumber;
-	this.startTime = startTime;
-	this.endTime = endTime;
-	this.lessonsTimeSchedule = lessonsTimeSchedule;
-    }
-
     public int getId() {
 	return id;
     }
@@ -72,6 +48,44 @@ public class LessonTime {
 
     public void setLessonsTimeSchedule(LessonsTimeSchedule lessonsTimeSchedule) {
 	this.lessonsTimeSchedule = lessonsTimeSchedule;
+    }
+
+    public static class LessonTimeBuilder {
+	private LessonTime lessonTime;
+
+	public LessonTimeBuilder() {
+	    lessonTime = new LessonTime();
+	}
+
+	public LessonTimeBuilder withId(int id) {
+	    lessonTime.id = id;
+	    return this;
+	}
+
+	public LessonTimeBuilder withOrderNumber(String orderNumber) {
+	    lessonTime.orderNumber = orderNumber;
+	    return this;
+	}
+
+	public LessonTimeBuilder withStartTime(LocalTime startTime) {
+	    lessonTime.startTime = startTime;
+	    return this;
+	}
+
+	public LessonTimeBuilder withEndTime(LocalTime endTime) {
+	    lessonTime.endTime = endTime;
+	    return this;
+	}
+
+	public LessonTimeBuilder withLessonsTimeSchedule(LessonsTimeSchedule lessonsTimeSchedule) {
+	    lessonTime.lessonsTimeSchedule = lessonsTimeSchedule;
+	    return this;
+	}
+
+	public LessonTime built() {
+	    return lessonTime;
+	}
+
     }
 
     @Override

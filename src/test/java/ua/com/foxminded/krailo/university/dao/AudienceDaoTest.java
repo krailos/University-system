@@ -24,7 +24,9 @@ class AudienceDaoTest {
 
     @Test
     void givenNewAudience_whenCreate_thenCreated() throws Exception {
-	Audience audience = new Audience("3", new Building(2, "name", "address"), 120, "description3");
+	Audience audience = new Audience.AudienceBuilder().withNumber("3")
+		.withBuilding(new Building.BuildingBuilder().withId(2).withName("name").withAddress("address").built())
+		.withCapacity(120).withDescription("description3").built();
 
 	audienceDao.create(audience);
 
@@ -61,7 +63,9 @@ class AudienceDaoTest {
 
     @Test
     void givenNewFieldsOfAudience_whenUpdate_thenUpdated() {
-	Audience audience = new Audience(1, "new", new Building(1, "", ""), 1, "new");
+	Audience audience = new Audience.AudienceBuilder().withId(1).withNumber("new").withBuilding(
+		new Building.BuildingBuilder().withId(1).withName("new name").withAddress("new address").built())
+		.withCapacity(1).withDescription("new").built();
 
 	audienceDao.update(audience);
 

@@ -16,42 +16,6 @@ public class Student {
     private Gender gender;
     private Group group;
 
-    public Student() {
-    }
-
-    public Student(int id) {
-	this.id = id;
-    }
-
-    public Student(String studentId, String firstName, String lastName, LocalDate birthDate, String phone,
-	    String address, String email, String rank, Gender gender, Group group) {
-	this.studentId = studentId;
-	this.firstName = firstName;
-	this.lastName = lastName;
-	this.birthDate = birthDate;
-	this.phone = phone;
-	this.address = address;
-	this.email = email;
-	this.rank = rank;
-	this.gender = gender;
-	this.group = group;
-    }
-
-    public Student(int id, String studentId, String firstName, String lastName, LocalDate birthDate, String phone,
-	    String address, String email, String rank, Gender gender, Group group) {
-	this.id = id;
-	this.studentId = studentId;
-	this.firstName = firstName;
-	this.lastName = lastName;
-	this.birthDate = birthDate;
-	this.phone = phone;
-	this.address = address;
-	this.email = email;
-	this.rank = rank;
-	this.gender = gender;
-	this.group = group;
-    }
-
     public int getId() {
 	return id;
     }
@@ -138,6 +102,75 @@ public class Student {
 
     public void setRank(String rank) {
 	this.rank = rank;
+    }
+
+    public static class StudentBuilder {
+
+	private Student student;
+
+	public StudentBuilder() {
+	    student = new Student();
+	}
+
+	public StudentBuilder withId(int id) {
+	    student.id = id;
+	    return this;
+	}
+
+	public StudentBuilder withStudentId(String studentId) {
+	    student.studentId = studentId;
+	    return this;
+	}
+
+	public StudentBuilder withFirstName(String firstName) {
+	    student.firstName = firstName;
+	    return this;
+	}
+
+	public StudentBuilder withlastName(String lastName) {
+	    student.lastName = lastName;
+	    return this;
+	}
+
+	public StudentBuilder withBirthDate(LocalDate birthDate) {
+	    student.birthDate = birthDate;
+	    return this;
+	}
+
+	public StudentBuilder withPhone(String phone) {
+	    student.phone = phone;
+	    return this;
+	}
+
+	public StudentBuilder withAddress(String address) {
+	    student.address = address;
+	    return this;
+	}
+
+	public StudentBuilder withEmail(String email) {
+	    student.email = email;
+	    return this;
+	}
+
+	public StudentBuilder withRank(String rank) {
+	    student.rank = rank;
+	    return this;
+	}
+
+	public StudentBuilder withGender(Gender gender) {
+	    student.gender = gender;
+	    return this;
+	}
+
+	public StudentBuilder withGroup(Group group) {
+	    student.group = group;
+	    return this;
+	}
+
+	public Student built() {
+	    return student;
+	}
+
     }
 
     @Override

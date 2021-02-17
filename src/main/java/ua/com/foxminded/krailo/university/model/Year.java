@@ -11,20 +11,6 @@ public class Year {
     private List<Subject> subjects = new ArrayList<>();
     private List<Group> groups = new ArrayList<>();
 
-    public Year() {
-    }
-
-    public Year(int id, String name, Speciality speciality) {
-	this.id = id;
-	this.name = name;
-	this.speciality = speciality;
-    }
-
-    public Year(String name, Speciality speciality) {
-	this.name = name;
-	this.speciality = speciality;
-    }
-
     public int getId() {
 	return id;
     }
@@ -63,6 +49,40 @@ public class Year {
 
     public void setGroups(List<Group> groups) {
 	this.groups = groups;
+    }
+
+    public static class YearBuilder {
+
+	private Year year;
+
+	public YearBuilder() {
+	    year = new Year();
+	}
+
+	public YearBuilder withId(int id) {
+	    year.id = id;
+	    return this;
+	}
+
+	public YearBuilder withName(String name) {
+	    year.name = name;
+	    return this;
+	}
+
+	public YearBuilder withSpeciality(Speciality speciality) {
+	    year.speciality = speciality;
+	    return this;
+	}
+
+	public YearBuilder withGroups(List<Group> groups) {
+	    year.groups = groups;
+	    return this;
+	}
+
+	public Year built() {
+	    return year;
+	}
+
     }
 
     @Override
