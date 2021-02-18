@@ -16,6 +16,7 @@ import ua.com.foxminded.krailo.university.model.Vocation;
 public class VocationDao {
 
     private static final String SQL_SELECT_ALL = "SELECT * FROM vocations ORDER BY id";
+    private static final String SQL_SELECT_BY_TEACHER_ID = "SELECT * FROM vocations where teacher_id = ?";
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM vocations WHERE id = ?";
     private static final String SQL_UPDATE_BY_ID = "UPDATE vocations SET kind = ?, applying_date = ?, start_date = ?, end_date = ?, teacher_id = ? WHERE id = ?";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM vocations WHERE id = ?";
@@ -35,6 +36,10 @@ public class VocationDao {
 
     public List<Vocation> findAll() {
 	return jdbcTemplate.query(SQL_SELECT_ALL, vocationRowMapper);
+    }
+    
+    public List<Vocation> findByTeacherId(int teacherId) {
+	return jdbcTemplate.query(SQL_SELECT_BY_TEACHER_ID, vocationRowMapper, teacherId);
     }
 
     public void create(Vocation vocation) {

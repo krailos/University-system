@@ -64,6 +64,11 @@ public class Group {
 	    group.year = year;
 	    return this;
 	}
+	
+	public GroupBuilder withStudents(List<Student> students) {
+	    group.students = students;
+	    return this;
+	}
 
 	public Group built() {
 	    return group;

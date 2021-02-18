@@ -85,7 +85,8 @@ CREATE TABLE specialities (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
 	faculty_id int REFERENCES faculties (id) ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT specialities__pkey PRIMARY KEY (id)
+	CONSTRAINT specialities__pkey PRIMARY KEY (id),
+	UNIQUE(name, faculty_id)
 );
 
 CREATE TABLE years (
@@ -100,13 +101,15 @@ CREATE TABLE groups (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
 	year_id int REFERENCES years (id) ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT groups__pkey PRIMARY KEY (id)
+	CONSTRAINT groups__pkey PRIMARY KEY (id),
+	UNIQUE(name, year_id)
 );
 
 CREATE TABLE lessons_timeschedule (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
-	CONSTRAINT lessons_timeschedule__pkey PRIMARY KEY (id)
+	CONSTRAINT lessons_timeschedule__pkey PRIMARY KEY (id),
+	UNIQUE(name)
 );
 
 CREATE TABLE lesson_times (
@@ -115,7 +118,8 @@ CREATE TABLE lesson_times (
 	start_time time NOT NULL,
 	end_time time NOT NULL,
 	lessons_timeschedule_id int REFERENCES lessons_timeschedule (id) ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT lesson_times__pkey PRIMARY KEY (id)
+	CONSTRAINT lesson_times__pkey PRIMARY KEY (id),
+	UNIQUE(order_number)
 );
 
 CREATE TABLE students (
@@ -130,13 +134,15 @@ CREATE TABLE students (
 	rank character varying (50) NOT NULL,	
 	gender gender,
 	group_id int REFERENCES groups (id) ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT students__pkey PRIMARY KEY (id)
+	CONSTRAINT students__pkey PRIMARY KEY (id),
+	UNIQUE(student_id)
 );
 
 CREATE TABLE subjects (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
-	CONSTRAINT subjects__pkey PRIMARY KEY (id)
+	CONSTRAINT subjects__pkey PRIMARY KEY (id),
+	UNIQUE(name)
 );
 
 CREATE TABLE teachers (

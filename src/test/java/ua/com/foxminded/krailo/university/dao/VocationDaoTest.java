@@ -73,6 +73,15 @@ class VocationDaoTest {
 	
 	assertEquals(expected, actual);
     }
+    
+    @Test
+    void givenTeacherId_whenFindByTeacherId_thenFound() {
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "vocations", "teacher_id = 1");
+	
+	int actual = vocationDao.findByTeacherId(1).size();
+	
+	assertEquals(expected, actual);
+    }
 
     @Test
     void givenId_whenDeleteById_thenDeleted() throws Exception {

@@ -78,6 +78,11 @@ public class Year {
 	    year.groups = groups;
 	    return this;
 	}
+	
+	public YearBuilder withSubjects(List<Subject> subjects) {
+	    year.subjects = subjects;
+	    return this;
+	}
 
 	public Year built() {
 	    return year;

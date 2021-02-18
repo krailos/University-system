@@ -32,7 +32,7 @@ class HolidayServiceTest {
 
     @Test
     void givenHoliday_whenCereate_thanCreated() {
-	Holiday holiday = new Holiday("name", LocalDate.of(2021, 01, 01));
+	Holiday holiday = createHoliday();
 	doNothing().when(holidayDao).create(holiday);
 
 	holidayService.create(holiday);
@@ -42,7 +42,7 @@ class HolidayServiceTest {
 
     @Test
     void givenHoliday_whenUpdate_thanUpdeted() {
-	Holiday holiday = new Holiday("name", LocalDate.of(2021, 01, 01));
+	Holiday holiday = createHoliday();
 	doNothing().when(holidayDao).update(holiday);
 
 	holidayService.update(holiday);
@@ -52,9 +52,9 @@ class HolidayServiceTest {
 
     @Test
     void givenHolidayId_whenGetById_thenGot() {
-	Holiday holiday = new Holiday(1, "name", LocalDate.of(2021, 01, 01));
+	Holiday holiday = createHoliday();
 	when(holidayDao.findById(1)).thenReturn(holiday);
-	Holiday expected = new Holiday(1, "name", LocalDate.of(2021, 01, 01));
+	Holiday expected = createHoliday();
 
 	Holiday actual = holidayService.getById(1);
 
@@ -63,20 +63,18 @@ class HolidayServiceTest {
 
     @Test
     void givenHolidays_whenGetAll_thenGot() {
-	List<Holiday> holidays = new ArrayList<>(Arrays.asList(new Holiday(1, "name", LocalDate.of(2021, 01, 01)),
-		new Holiday(1, "name", LocalDate.of(2021, 01, 01))));
+	List<Holiday> holidays = createHolidays();
 	when(holidayDao.findAll()).thenReturn(holidays);
 
 	List<Holiday> actual = holidayService.getAll();
 
-	List<Holiday> expected = new ArrayList<>(Arrays.asList(new Holiday(1, "name", LocalDate.of(2021, 01, 01)),
-		new Holiday(1, "name", LocalDate.of(2021, 01, 01))));
+	List<Holiday> expected = createHolidays();
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenHoliday_whenDelete_thenDeleted() {
-	Holiday holiday = new Holiday(1, "name", LocalDate.of(2021, 01, 01));
+	Holiday holiday = createHoliday();
 	doNothing().when(holidayDao).deleteById(1);
 
 	holidayService.delete(holiday);
@@ -84,4 +82,13 @@ class HolidayServiceTest {
 	verify(holidayDao).deleteById(1);
     }
 
+    private Holiday createHoliday() {
+	return new Holiday.HolidayBuilder().withId(1).withName("name").withDate(LocalDate.of(2021, 01, 01)).built();
+    }
+
+    private List<Holiday> createHolidays() {
+	return new ArrayList<Holiday>(Arrays.asList(
+		new Holiday.HolidayBuilder().withId(1).withName("name2").withDate(LocalDate.of(2021, 01, 01)).built(),
+		new Holiday.HolidayBuilder().withId(2).withName("name2").withDate(LocalDate.of(2021, 02, 02)).built()));
+    }
 }
