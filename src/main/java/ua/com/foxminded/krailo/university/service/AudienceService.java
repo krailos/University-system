@@ -17,11 +17,17 @@ public class AudienceService {
     }
 
     public void create(Audience audience) {
-	audienceDao.create(audience);
+	List<Audience> audiences = audienceDao.findByBuildingId(audience.getBuilding().getId());
+	if (isAudienceNumberExist(audiences, audience)) {
+	    audienceDao.create(audience);
+	}
     }
 
     public void update(Audience audience) {
-	audienceDao.update(audience);
+	List<Audience> audiences = audienceDao.findByBuildingId(audience.getBuilding().getId());
+	if (!isAudienceNumberExist(audiences, audience)) {
+	    audienceDao.update(audience);
+	}
     }
 
     public Audience getById(int id) {
@@ -38,5 +44,9 @@ public class AudienceService {
 
     public void delete(Audience audience) {
 	audienceDao.deleteById(audience.getId());
+    }
+
+    private boolean isAudienceNumberExist(List<Audience> audiences, Audience audience) {
+	return audiences.stream().map(Audience::getNumber).noneMatch(n -> n.equals(audience.getNumber()));
     }
 }

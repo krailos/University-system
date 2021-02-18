@@ -176,7 +176,7 @@ class LessonServiceTest {
 
 	lessonService.update(lesson);
 
-	verify(lessonDao, never()).create(lesson);
+	verify(lessonDao, never()).update(lesson);
     }
 
     @Test
@@ -188,7 +188,7 @@ class LessonServiceTest {
 
 	lessonService.update(lesson);
 
-	verify(lessonDao, never()).create(lesson);
+	verify(lessonDao, never()).update(lesson);
     }
 
     @Test
@@ -201,7 +201,7 @@ class LessonServiceTest {
 
 	lessonService.update(lesson);
 
-	verify(lessonDao, never()).create(lesson);
+	verify(lessonDao, never()).update(lesson);
     }
 
     @Test
@@ -214,7 +214,7 @@ class LessonServiceTest {
 
 	lessonService.update(lesson);
 
-	verify(lessonDao, never()).create(lesson);
+	verify(lessonDao, never()).update(lesson);
     }
 
     @Test
@@ -227,7 +227,7 @@ class LessonServiceTest {
 
 	lessonService.update(lesson);
 
-	verify(lessonDao, never()).create(lesson);
+	verify(lessonDao, never()).update(lesson);
     }
 
     private List<Lesson> createLessons() {
