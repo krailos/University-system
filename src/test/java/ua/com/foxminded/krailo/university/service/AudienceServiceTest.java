@@ -32,9 +32,7 @@ class AudienceServiceTest {
 
     @Test
     void givenAudienceWithNewNumber_whenCreate_thenCreated() {
-	Audience audience = new Audience.AudienceBuilder().withId(1).withNumber("number newNumber")
-		.withBuilding(new Building.BuildingBuilder().withId(1).built()).withCapacity(100)
-		.withDescription("description").built();
+	Audience audience = createAudience();
 	doNothing().when(audienceDao).create(audience);
 	List<Audience> audiences = createAudiences();
 	when(audienceDao.findByBuildingId(1)).thenReturn(audiences);
@@ -58,10 +56,8 @@ class AudienceServiceTest {
     }
 
     @Test
-    void givenAudienceWithExistingNumber_whenUpdate_thenUpdated() {
-	Audience audience = new Audience.AudienceBuilder().withId(1).withNumber("number 1")
-		.withBuilding(new Building.BuildingBuilder().withId(1).built()).withCapacity(100)
-		.withDescription("description").built();
+    void givenAudienceWithNewNumber_whenUpdate_thenUpdated() {
+	Audience audience = createAudience();
 	doNothing().when(audienceDao).update(audience);
 	List<Audience> audiences = createAudiences();
 	when(audienceDao.findByBuildingId(1)).thenReturn(audiences);
@@ -72,8 +68,8 @@ class AudienceServiceTest {
     }
 
     @Test
-    void givenAudienceWithNotExistingNumber_whenUpdate_thenNotUpdated() {
-	Audience audience = new Audience.AudienceBuilder().withId(1).withNumber("number newNumber")
+    void givenAudienceWithExistingNumber_whenUpdate_thenNotUpdated() {
+	Audience audience = new Audience.AudienceBuilder().withId(1).withNumber("number 1")
 		.withBuilding(new Building.BuildingBuilder().withId(1).built()).withCapacity(100)
 		.withDescription("description").built();
 	List<Audience> audiences = createAudiences();
@@ -86,16 +82,12 @@ class AudienceServiceTest {
 
     @Test
     void givenAudienceId_whenGetById_thenGot() {
-	Audience audience = new Audience.AudienceBuilder().withId(1).withNumber("number 1")
-		.withBuilding(new Building.BuildingBuilder().withId(1).built()).withCapacity(100)
-		.withDescription("description").built();
+	Audience audience = createAudience();
 	when(audienceDao.findById(1)).thenReturn(audience);
 
 	Audience actual = audienceService.getById(1);
 
-	Audience expected = new Audience.AudienceBuilder().withId(1).withNumber("number 1")
-		.withBuilding(new Building.BuildingBuilder().withId(1).built()).withCapacity(100)
-		.withDescription("description").built();
+	Audience expected = createAudience();
 	assertEquals(expected, actual);
     }
 
@@ -123,14 +115,18 @@ class AudienceServiceTest {
 
     @Test
     void givenAudience_whenDelete_thenDeleted() {
-	Audience audience = new Audience.AudienceBuilder().withId(1).withNumber("number 1")
-		.withBuilding(new Building.BuildingBuilder().withId(1).built()).withCapacity(100)
-		.withDescription("description").built();
+	Audience audience = createAudience();
 	doNothing().when(audienceDao).deleteById(1);
 
 	audienceService.delete(audience);
 
 	verify(audienceDao).deleteById(1);
+    }
+
+    private Audience createAudience() {
+	return new Audience.AudienceBuilder().withId(1).withNumber("number")
+		.withBuilding(new Building.BuildingBuilder().withId(1).built()).withCapacity(100)
+		.withDescription("description").built();
     }
 
     private List<Audience> createAudiences() {

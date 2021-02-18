@@ -28,7 +28,8 @@ CREATE TABLE holidays (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
 	date date NOT NULL,
-	CONSTRAINT holidays__pkey PRIMARY KEY (id)
+	CONSTRAINT holidays__pkey PRIMARY KEY (id),
+	UNIQUE(name)
 );
 
 CREATE TABLE buildings (
@@ -53,20 +54,23 @@ CREATE TABLE university_office (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
 	address character varying (100) NOT NULL,
-	CONSTRAINT university_office__pkey PRIMARY KEY (id)
+	CONSTRAINT university_office__pkey PRIMARY KEY (id),
+	UNIQUE(name)
 );
 
 CREATE TABLE deans_office (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
 	university_office_id int REFERENCES university_office (id) ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT deans_office__pkey PRIMARY KEY (id)
+	CONSTRAINT deans_office__pkey PRIMARY KEY (id),
+	UNIQUE(name)
 );
 
 CREATE TABLE departments (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
-	CONSTRAINT departments__pkey PRIMARY KEY (id)
+	CONSTRAINT departments__pkey PRIMARY KEY (id),
+	UNIQUE(name)
 );
 
 CREATE TABLE faculties (

@@ -1,15 +1,12 @@
 package ua.com.foxminded.krailo.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +18,6 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.AudienceDao;
 import ua.com.foxminded.krailo.university.dao.BuildingDao;
-import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Building;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,7 +33,7 @@ class BuildingServiceTest {
 
     @Test
     void givenBuilding_whenCereate_thanCreated() {
-	Building building = new Building(1, "name", "address");
+	Building building = createBuilding();
 	doNothing().when(buildingDao).create(building);
 
 	buildingService.create(building);
@@ -47,7 +43,7 @@ class BuildingServiceTest {
 
     @Test
     void givenBuilding_whenUpdate_thanUpdeted() {
-	Building building = new Building(1, "name", "address");
+	Building building = createBuilding();
 	doNothing().when(buildingDao).update(building);
 
 	buildingService.update(building);
@@ -57,54 +53,47 @@ class BuildingServiceTest {
 
     @Test
     void givenBuildingId_whenGetById_thenGot() {
-	Building building = new Building(1, "name", "address");
-	List<Audience> audiences = new ArrayList<>(
-		Arrays.asList(new Audience(1, "new", null, 100, ""), new Audience(1, "new", null, 100, "")));
+	Building building = createBuilding();
 	when(buildingDao.findById(1)).thenReturn(building);
-	when(audienceDao.findByBuildingId(1)).thenReturn(audiences);
-	Building expected = new Building(1, "name", "address");
-	expected.setAudiences(new ArrayList<>(
-		Arrays.asList(new Audience(1, "new", null, 100, ""), new Audience(1, "new", null, 100, ""))));
 
 	Building actual = buildingService.getById(1);
 
+	Building expected = createBuilding();
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenBuildings_whenGetAll_thenGot() {
-	List<Building> buildings = new ArrayList<>(
-		Arrays.asList(new Building(1, "name", "address"), new Building(2, "name2", "address2")));
+	List<Building> buildings = createBuildings();
 	when(buildingDao.findAll()).thenReturn(buildings);
-	when(audienceDao.findByBuildingId(any(Integer.class)))
-		.thenAnswer(inv -> Arrays.stream(inv.getArguments()).map(o -> (int) o).map(i -> {
-		    switch (i) {
-		    case 1:
-			return new Audience(1, "new", null, 100, "");
-		    case 2:
-			return new Audience(2, "new2", null, 100, "");
-		    default:
-			return null;
-		    }
-		}).collect(Collectors.toList()));
 
 	List<Building> actual = buildingService.getAll();
 
-	List<Building> expected = new ArrayList<>(
-		Arrays.asList(new Building(1, "name", "address"), new Building(2, "name2", "address2")));
-	expected.get(0).setAudiences(new ArrayList<Audience>(Arrays.asList(new Audience(1, "new", null, 100, ""))));
-	expected.get(1).setAudiences(new ArrayList<Audience>(Arrays.asList(new Audience(2, "new2", null, 100, ""))));
+	List<Building> expected = createBuildings();
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenBuilding_whenDelete_thenDeleted() {
-	Building building = new Building(1, "name", "address");
+	Building building = createBuilding();
 	doNothing().when(buildingDao).deleteById(1);
 
 	buildingService.delete(building);
 
 	verify(buildingDao).deleteById(1);
+    }
+
+    private Building createBuilding() {
+	return new Building.BuildingBuilder().withId(1).withName("name").withAddress("address").built();
+    }
+
+    private List<Building> createBuildings() {
+	List<Building> buildings = new ArrayList<>();
+	Building building1 = new Building.BuildingBuilder().withId(1).withName("name1").withAddress("address1").built();
+	Building building2 = new Building.BuildingBuilder().withId(2).withName("name2").withAddress("address2").built();
+	buildings.add(building1);
+	buildings.add(building2);
+	return buildings;
     }
 
 }

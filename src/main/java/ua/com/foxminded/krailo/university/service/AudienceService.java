@@ -25,7 +25,7 @@ public class AudienceService {
 
     public void update(Audience audience) {
 	List<Audience> audiences = audienceDao.findByBuildingId(audience.getBuilding().getId());
-	if (!isAudienceNumberExist(audiences, audience)) {
+	if (isAudienceNumberExist(audiences, audience)) {
 	    audienceDao.update(audience);
 	}
     }

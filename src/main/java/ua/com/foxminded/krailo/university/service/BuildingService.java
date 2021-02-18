@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import ua.com.foxminded.krailo.university.dao.AudienceDao;
 import ua.com.foxminded.krailo.university.dao.BuildingDao;
 import ua.com.foxminded.krailo.university.model.Building;
 
@@ -12,11 +11,9 @@ import ua.com.foxminded.krailo.university.model.Building;
 public class BuildingService {
 
     private BuildingDao buildingDao;
-    private AudienceDao audienceDao;
 
-    public BuildingService(BuildingDao buildingDao, AudienceDao audienceDao) {
+    public BuildingService(BuildingDao buildingDao) {
 	this.buildingDao = buildingDao;
-	this.audienceDao = audienceDao;
     }
 
     public void create(Building building) {
@@ -28,25 +25,18 @@ public class BuildingService {
     }
 
     public Building getById(int id) {
-	Building building = buildingDao.findById(id);
-	addAudiencesToBuilding(building);
-	return building;
+	return buildingDao.findById(id);
+	
     }
 
     public List<Building> getAll() {
-	List<Building> buildings = buildingDao.findAll();
-	for (Building building : buildings) {
-	    addAudiencesToBuilding(building);
-	}
-	return buildings;
+	return buildingDao.findAll();
+
     }
 
     public void delete(Building building) {
 	buildingDao.deleteById(building.getId());
     }
 
-    private void addAudiencesToBuilding(Building building) {
-	building.setAudiences(audienceDao.findByBuildingId(building.getId()));
-    }
 
 }
