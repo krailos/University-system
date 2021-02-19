@@ -20,7 +20,6 @@ public class LessonService {
     private VocationDao vocationDao;
     private HolidayDao holidayDao;
 
-    
     public LessonService(LessonDao lessonDao, VocationDao vocationDao, HolidayDao holidayDao) {
 	this.lessonDao = lessonDao;
 	this.vocationDao = vocationDao;
@@ -31,10 +30,10 @@ public class LessonService {
 	List<Lesson> lessons = lessonDao.findByDate(lesson);
 	List<Vocation> vocations = vocationDao.findByTeacherId(lesson.getTeacher().getId());
 	List<Holiday> holidays = holidayDao.findAll();
-	if (isSubjectExistIntoYear(lesson) && isLessonTimeFree(lessons, lesson) && isTeacherFree(lessons, lesson)
-		&& isGroupExistIntoYear(lesson) && isCapacityBigEnough(lesson) && isTeacherAtWork(vocations, lesson)
+	if (isSubjectAddedToYear(lesson) && isTeacherFree(lessons, lesson) && isGroupAddedToYear(lesson)
+		&& isCapacityBigEnough(lesson) && isTeacherOutoffVocation(vocations, lesson)
 		&& isAudienceFree(lessons, lesson) && isLessonDateOutoffHoliday(holidays, lesson)
-		&& isLessonDateOutoffWeekend(lesson)) {
+		&& isLessonDateWeekday(lesson)) {
 	    lessonDao.create(lesson);
 	}
     }
@@ -43,10 +42,10 @@ public class LessonService {
 	List<Lesson> lessons = lessonDao.findByDate(lesson);
 	List<Vocation> vocations = vocationDao.findByTeacherId(lesson.getTeacher().getId());
 	List<Holiday> holidays = holidayDao.findAll();
-	if (isSubjectExistIntoYear(lesson) && isLessonTimeFree(lessons, lesson) && isTeacherFree(lessons, lesson)
-		&& isGroupExistIntoYear(lesson) && isCapacityBigEnough(lesson) && isTeacherAtWork(vocations, lesson)
+	if (isSubjectAddedToYear(lesson) && isTeacherFree(lessons, lesson) && isGroupAddedToYear(lesson)
+		&& isCapacityBigEnough(lesson) && isTeacherOutoffVocation(vocations, lesson)
 		&& isAudienceFree(lessons, lesson) && isLessonDateOutoffHoliday(holidays, lesson)
-		&& isLessonDateOutoffWeekend(lesson)) {
+		&& isLessonDateWeekday(lesson)) {
 	    lessonDao.update(lesson);
 	}
     }
@@ -63,13 +62,8 @@ public class LessonService {
 	lessonDao.deleteById(lesson.getId());
     }
 
-    private boolean isSubjectExistIntoYear(Lesson lesson) {
+    private boolean isSubjectAddedToYear(Lesson lesson) {
 	return lesson.getTimetable().getYear().getSubjects().contains(lesson.getSubject());
-    }
-
-    private boolean isLessonTimeFree(List<Lesson> lessons, Lesson lesson) {
-	return lessons.stream().filter(l -> lesson.getAudience().equals(l.getAudience())).map(Lesson::getLessonTime)
-		.noneMatch(t -> t.equals(lesson.getLessonTime()));
     }
 
     private boolean isTeacherFree(List<Lesson> lessons, Lesson lesson) {
@@ -77,32 +71,32 @@ public class LessonService {
 		.noneMatch(t -> t.equals(lesson.getTeacher()));
     }
 
-    private boolean isTeacherAtWork(List<Vocation> vocations, Lesson lesson) {
-	return vocations.stream().noneMatch(v -> (v.getStart().isAfter(lesson.getDate().minusDays(1))
-		&& v.getEnd().isBefore(lesson.getDate().plusDays(1))));
-    }
-
     private boolean isAudienceFree(List<Lesson> lessons, Lesson lesson) {
 	return lessons.stream().filter(l -> l.getLessonTime().equals(lesson.getLessonTime())).map(Lesson::getAudience)
 		.noneMatch(a -> a.equals(lesson.getAudience()));
     }
 
-    private boolean isLessonDateOutoffHoliday(List<Holiday> holidays, Lesson lesson) {
-	return holidays.stream().noneMatch(h -> h.getDate().equals(lesson.getDate()));
-    }
-
-    private boolean isLessonDateOutoffWeekend(Lesson lesson) {
-	return (lesson.getDate().getDayOfWeek().equals(DayOfWeek.SATURDAY)
-		&& lesson.getDate().getDayOfWeek().equals(DayOfWeek.SUNDAY));
-    }
-
-    private boolean isGroupExistIntoYear(Lesson lesson) {
+    private boolean isGroupAddedToYear(Lesson lesson) {
 	return lesson.getGroups().stream().allMatch(g -> lesson.getTimetable().getYear().getGroups().contains(g));
     }
 
     private boolean isCapacityBigEnough(Lesson lesson) {
 	return (lesson.getAudience().getCapacity() >= lesson.getGroups().stream().map(Group::getStudents)
 		.mapToInt(List::size).sum());
+    }
+
+    private boolean isTeacherOutoffVocation(List<Vocation> vocations, Lesson lesson) {
+	return vocations.stream().noneMatch(v -> (lesson.getDate().isAfter(v.getStart().minusDays(1))
+		&& lesson.getDate().isBefore(v.getEnd().plusDays(1))));
+    }
+
+    private boolean isLessonDateOutoffHoliday(List<Holiday> holidays, Lesson lesson) {
+	return holidays.stream().noneMatch(h -> h.getDate().equals(lesson.getDate()));
+    }
+
+    private boolean isLessonDateWeekday(Lesson lesson) {
+	return !(lesson.getDate().getDayOfWeek().equals(DayOfWeek.SATURDAY)
+		|| lesson.getDate().getDayOfWeek().equals(DayOfWeek.SUNDAY));
     }
 
 }

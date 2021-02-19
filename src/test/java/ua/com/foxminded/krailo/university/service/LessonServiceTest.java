@@ -85,7 +85,14 @@ class LessonServiceTest {
 
     @Test
     void givenLessonWhithAllCorrectFields_whenCreate_thenCreated() {
-	List<Lesson> lessons = createLessons();	
+	List<Lesson> lessons = createLessons();
+	List<Vocation> vocations = new ArrayList<>();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(1)).
+		withEndDate(lessons.get(0).getDate().plusDays(7)).withTeacher(lessons.get(0).getTeacher()).built();
+	vocations.add(vocation);
+	List<Holiday> holidays = new ArrayList<>(); 
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate().plusDays(1)).built();
+	holidays.add(holiday);
 	Lesson lesson = new Lesson.LessonBuilder().
 		withId(1).
 		withDate(LocalDate.of(2021, 01, 01)).
@@ -93,21 +100,41 @@ class LessonServiceTest {
 		withSubject(lessons.get(0).getSubject()).
 		withAudience(lessons.get(0).getAudience()).
 		withTeacher(lessons.get(0).getTeacher()).
-		withTimetable(lessons.get(0).getTimetable()).built();
+		withGroups(lessons.get(0).getTimetable().getYear().getGroups()).
+		withTimetable(lessons.get(0).getTimetable()).
+		built();
 	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
-
+	when(vocationDao.findByTeacherId(lesson.getTeacher().getId())).thenReturn(vocations);
+	when(holidayDao.findAll()).thenReturn(holidays);
+	
 	lessonService.create(lesson);
 
 	verify(lessonDao).create(lesson);
     }
 
     @Test
-    void givenLessonWithRepeatedLessonTime_whenCreate_thenNotCreated() {
+    void givenLessonWithBookedAudience_whenCreate_thenNotCreated() {
 	List<Lesson> lessons = createLessons();
-	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), lessons.get(1).getLessonTime(),
-		lessons.get(1).getSubject(), lessons.get(1).getAudience(), new Teacher(),
-		lessons.get(1).getTimetable());
+	List<Vocation> vocations = new ArrayList<>();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(1)).
+		withEndDate(lessons.get(0).getDate().plusDays(7)).withTeacher(lessons.get(0).getTeacher()).built();
+	vocations.add(vocation);
+	List<Holiday> holidays = new ArrayList<>(); 
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate().plusDays(1)).built();
+	holidays.add(holiday);
+	Lesson lesson = new Lesson.LessonBuilder().
+		withId(1).
+		withDate(LocalDate.of(2021, 01, 01)).
+		withLessonTime(lessons.get(0).getLessonTime()).
+		withSubject(lessons.get(0).getTimetable().getYear().getSubjects().get(0)).
+		withAudience(lessons.get(0).getAudience()).
+		withGroups(lessons.get(0).getTimetable().getYear().getGroups()).
+		withTeacher(new Teacher.TeacherBuilder().withId(10).built()).
+		withTimetable(lessons.get(0).getTimetable()).
+		built();
 	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
+	when(vocationDao.findByTeacherId(lesson.getTeacher().getId())).thenReturn(vocations);
+	when(holidayDao.findAll()).thenReturn(holidays);
 
 	lessonService.create(lesson);
 
@@ -115,11 +142,28 @@ class LessonServiceTest {
     }
 
     @Test
-    void givenLessonWithWrongSubject_whenCreate_thenNotCreated() {
+    void givenLessonWithSubjectNotAddedToYear_whenCreate_thenNotCreated() {
 	List<Lesson> lessons = createLessons();
-	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), new LessonTime(), new Subject(), new Audience(),
-		new Teacher(), lessons.get(1).getTimetable());
+	List<Vocation> vocations = new ArrayList<>();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(1)).
+		withEndDate(lessons.get(0).getDate().plusDays(7)).withTeacher(lessons.get(0).getTeacher()).built();
+	vocations.add(vocation);
+	List<Holiday> holidays = new ArrayList<>(); 
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate().plusDays(1)).built();
+	holidays.add(holiday);
+	Lesson lesson = new Lesson.LessonBuilder().
+		withId(1).
+		withDate(LocalDate.of(2021, 01, 01)).
+		withLessonTime(new LessonTime.LessonTimeBuilder().withId(3).built()).
+		withSubject(new Subject.SubjectBuilder().withId(10).built()).
+		withAudience(lessons.get(0).getAudience()).
+		withTeacher(lessons.get(0).getTeacher()).
+		withGroups(lessons.get(0).getTimetable().getYear().getGroups()).
+		withTimetable(lessons.get(0).getTimetable()).
+		built();
 	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
+	when(vocationDao.findByTeacherId(lesson.getTeacher().getId())).thenReturn(vocations);
+	when(holidayDao.findAll()).thenReturn(holidays);
 
 	lessonService.create(lesson);
 
@@ -127,63 +171,231 @@ class LessonServiceTest {
     }
 
     @Test
-    void givenLessonWithWrongTeacher_whenCreate_thenNotCreated() {
+    void givenLessonWithBookedTeacher_whenCreate_thenNotCreated() {
 	List<Lesson> lessons = createLessons();
-	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), lessons.get(1).getLessonTime(),
-		lessons.get(1).getSubject(), new Audience(), lessons.get(1).getTeacher(),
-		lessons.get(1).getTimetable());
+	List<Vocation> vocations = new ArrayList<>();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(1)).
+		withEndDate(lessons.get(0).getDate().plusDays(7)).withTeacher(lessons.get(0).getTeacher()).built();
+	vocations.add(vocation);
+	List<Holiday> holidays = new ArrayList<>(); 
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate().plusDays(1)).built();
+	holidays.add(holiday);
+	Lesson lesson = new Lesson.LessonBuilder().
+		withId(1).
+		withDate(LocalDate.of(2021, 01, 01)).
+		withLessonTime(lessons.get(0).getLessonTime()).
+		withSubject(lessons.get(0).getSubject()).
+		withAudience(new Audience.AudienceBuilder().withId(10).built()).
+		withTeacher(lessons.get(0).getTeacher()).
+		withGroups(lessons.get(0).getTimetable().getYear().getGroups()).
+		withTimetable(lessons.get(0).getTimetable()).
+		built();
 	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
-
+	when(vocationDao.findByTeacherId(lesson.getTeacher().getId())).thenReturn(vocations);
+	when(holidayDao.findAll()).thenReturn(holidays);
+	
 	lessonService.create(lesson);
 
 	verify(lessonDao, never()).create(lesson);
     }
 
     @Test
-    void givenLessonWithWrongGroup_whenCreate_thenNotCreated() {
+    void givenLessonWithGroupNotAddedToYear_whenCreate_thenNotCreated() {
 	List<Lesson> lessons = createLessons();
-	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), new LessonTime(), lessons.get(1).getSubject(),
-		lessons.get(1).getAudience(), new Teacher(), lessons.get(1).getTimetable());
-	lesson.getGroups().add(new Group());
+	List<Vocation> vocations = new ArrayList<>();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(1)).
+		withEndDate(lessons.get(0).getDate().plusDays(7)).withTeacher(lessons.get(0).getTeacher()).built();
+	vocations.add(vocation);
+	List<Holiday> holidays = new ArrayList<>(); 
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate().plusDays(1)).built();
+	holidays.add(holiday);
+	Lesson lesson = new Lesson.LessonBuilder().
+		withId(1).
+		withDate(LocalDate.of(2021, 01, 01)).
+		withLessonTime(new LessonTime.LessonTimeBuilder().withId(3).built()).
+		withSubject(new Subject.SubjectBuilder().withId(10).built()).
+		withAudience(lessons.get(0).getAudience()).
+		withTeacher(lessons.get(0).getTeacher()).
+		withGroups( Arrays.asList(new Group.GroupBuilder().withId(10).built())).
+		withTimetable(lessons.get(0).getTimetable()).
+		built();
 	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
-
+	when(vocationDao.findByTeacherId(lesson.getTeacher().getId())).thenReturn(vocations);
+	when(holidayDao.findAll()).thenReturn(holidays);
+	
 	lessonService.create(lesson);
 
 	verify(lessonDao, never()).create(lesson);
     }
 
     @Test
-    void givenLessonWithWrongAudienceCapacity_whenCreate_thenNotCreated() {
+    void givenLessonWithAudienceCapacityLessThenStuentsAmount_whenCreate_thenNotCreated() {
 	List<Lesson> lessons = createLessons();
-	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), new LessonTime(), lessons.get(1).getSubject(),
-		new Audience("new", null, 1, ""), new Teacher(), lessons.get(1).getTimetable());
-	lesson.getGroups().add(lessons.get(0).getGroups().get(0));
+	List<Vocation> vocations = new ArrayList<>();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(1)).
+		withEndDate(lessons.get(0).getDate().plusDays(7)).withTeacher(lessons.get(0).getTeacher()).built();
+	vocations.add(vocation);
+	List<Holiday> holidays = new ArrayList<>(); 
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate().plusDays(1)).built();
+	holidays.add(holiday);
+	Lesson lesson = new Lesson.LessonBuilder().
+		withId(1).
+		withDate(LocalDate.of(2021, 01, 01)).
+		withLessonTime(new LessonTime.LessonTimeBuilder().withId(3).built()).
+		withSubject(lessons.get(0).getSubject()).
+		withAudience(new Audience.AudienceBuilder().withId(10).withCapacity(1).built()).
+		withTeacher(lessons.get(0).getTeacher()).
+		withGroups(lessons.get(0).getTimetable().getYear().getGroups()).
+		withTimetable(lessons.get(0).getTimetable()).
+		built();
 	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
-
+	when(vocationDao.findByTeacherId(lesson.getTeacher().getId())).thenReturn(vocations);
+	when(holidayDao.findAll()).thenReturn(holidays);
+	
 	lessonService.create(lesson);
 
 	verify(lessonDao, never()).create(lesson);
     }
+    
+    @Test
+    void givenLessonWhithTeacherOnVocation_whenCreate_thenNotCreated() {
+	List<Lesson> lessons = createLessons();
+	List<Vocation> vocations = new ArrayList<>();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate()).
+		withEndDate(lessons.get(0).getDate()).withTeacher(lessons.get(0).getTeacher()).built();
+	vocations.add(vocation);
+	List<Holiday> holidays = new ArrayList<>(); 
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate().plusDays(1)).built();
+	holidays.add(holiday);
+	Lesson lesson = new Lesson.LessonBuilder().
+		withId(1).
+		withDate(LocalDate.of(2021, 01, 01)).
+		withLessonTime(new LessonTime.LessonTimeBuilder().withId(3).built()).
+		withSubject(lessons.get(0).getSubject()).
+		withAudience(lessons.get(0).getAudience()).
+		withTeacher(lessons.get(0).getTeacher()).
+		withGroups(lessons.get(0).getTimetable().getYear().getGroups()).
+		withTimetable(lessons.get(0).getTimetable()).
+		built();
+	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
+	when(vocationDao.findByTeacherId(lesson.getTeacher().getId())).thenReturn(vocations);
+	when(holidayDao.findAll()).thenReturn(holidays);
+	
+	lessonService.create(lesson);
 
+	verify(lessonDao, never()).create(lesson);
+    }
+    
+    @Test
+    void givenLessonWhithDateThatMatchToHoliday_whenCreate_thenNotCreated() {
+	List<Lesson> lessons = createLessons();
+	List<Vocation> vocations = new ArrayList<>();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(1)).
+		withEndDate(lessons.get(0).getDate().plusDays(7)).withTeacher(lessons.get(0).getTeacher()).built();
+	vocations.add(vocation);
+	List<Holiday> holidays = new ArrayList<>(); 
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate()).built();
+	holidays.add(holiday);
+	Lesson lesson = new Lesson.LessonBuilder().
+		withId(1).
+		withDate(LocalDate.of(2021, 01, 01)).
+		withLessonTime(new LessonTime.LessonTimeBuilder().withId(3).built()).
+		withSubject(lessons.get(0).getSubject()).
+		withAudience(lessons.get(0).getAudience()).
+		withTeacher(lessons.get(0).getTeacher()).
+		withGroups(lessons.get(0).getTimetable().getYear().getGroups()).
+		withTimetable(lessons.get(0).getTimetable()).
+		built();
+	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
+	when(vocationDao.findByTeacherId(lesson.getTeacher().getId())).thenReturn(vocations);
+	when(holidayDao.findAll()).thenReturn(holidays);
+	
+	lessonService.create(lesson);
+
+	verify(lessonDao, never()).create(lesson);
+    }
+    
+    @Test
+    void givenLessonWhithDateThatMatchToWeekend_whenCreate_thenNotCreated() {
+	List<Lesson> lessons = createLessons();
+	List<Vocation> vocations = new ArrayList<>();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(1)).
+		withEndDate(lessons.get(0).getDate().plusDays(7)).withTeacher(lessons.get(0).getTeacher()).built();
+	vocations.add(vocation);
+	List<Holiday> holidays = new ArrayList<>(); 
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate()).built();
+	holidays.add(holiday);
+	Lesson lesson = new Lesson.LessonBuilder().
+		withId(1).
+		withDate(LocalDate.of(2021, 01, 01)).
+		withLessonTime(new LessonTime.LessonTimeBuilder().withId(3).built()).
+		withSubject(lessons.get(0).getSubject()).
+		withAudience(lessons.get(0).getAudience()).
+		withTeacher(lessons.get(0).getTeacher()).
+		withGroups(lessons.get(0).getTimetable().getYear().getGroups()).
+		withTimetable(lessons.get(0).getTimetable()).
+		built();
+	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
+	when(vocationDao.findByTeacherId(lesson.getTeacher().getId())).thenReturn(vocations);
+	when(holidayDao.findAll()).thenReturn(holidays);
+	
+	lessonService.create(lesson);
+
+	verify(lessonDao, never()).create(lesson);
+    }
+    
     @Test
     void givenLessonWhithAllCorrectFields_whenUpdate_thenUpdated() {
 	List<Lesson> lessons = createLessons();
-	Lesson lesson = new Lesson(1, LocalDate.of(2021, 01, 01), new LessonTime(), lessons.get(1).getSubject(),
-		new Audience(), new Teacher(), lessons.get(1).getTimetable());
+	List<Vocation> vocations = new ArrayList<>();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(1)).
+		withEndDate(lessons.get(0).getDate().plusDays(7)).withTeacher(lessons.get(0).getTeacher()).built();
+	vocations.add(vocation);
+	List<Holiday> holidays = new ArrayList<>(); 
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate().plusDays(1)).built();
+	holidays.add(holiday);
+	Lesson lesson = new Lesson.LessonBuilder().
+		withId(1).
+		withDate(LocalDate.of(2021, 01, 01)).
+		withLessonTime(new LessonTime.LessonTimeBuilder().withId(3).built()).
+		withSubject(lessons.get(0).getSubject()).
+		withAudience(lessons.get(0).getAudience()).
+		withTeacher(lessons.get(0).getTeacher()).
+		withGroups(lessons.get(0).getTimetable().getYear().getGroups()).
+		withTimetable(lessons.get(0).getTimetable()).
+		built();
 	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
-
+	when(vocationDao.findByTeacherId(lesson.getTeacher().getId())).thenReturn(vocations);
+	when(holidayDao.findAll()).thenReturn(holidays);
+	
 	lessonService.update(lesson);
 
 	verify(lessonDao).update(lesson);
     }
 
     @Test
-    void givenLessonWithRepeatedLessonTime_whenUpdate_thenUpdated() {
+    void givenLessonWithBookedAudience_whenUpdate_thenNotUpdated() {
 	List<Lesson> lessons = createLessons();
-	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), lessons.get(1).getLessonTime(),
-		lessons.get(1).getSubject(), lessons.get(1).getAudience(), new Teacher(),
-		lessons.get(1).getTimetable());
+	List<Vocation> vocations = new ArrayList<>();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(1)).
+		withEndDate(lessons.get(0).getDate().plusDays(7)).withTeacher(lessons.get(0).getTeacher()).built();
+	vocations.add(vocation);
+	List<Holiday> holidays = new ArrayList<>(); 
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate().plusDays(1)).built();
+	holidays.add(holiday);
+	Lesson lesson = new Lesson.LessonBuilder().
+		withId(1).
+		withDate(LocalDate.of(2021, 01, 01)).
+		withLessonTime(lessons.get(0).getLessonTime()).
+		withSubject(lessons.get(0).getTimetable().getYear().getSubjects().get(0)).
+		withAudience(lessons.get(0).getAudience()).
+		withGroups(lessons.get(0).getTimetable().getYear().getGroups()).
+		withTeacher(new Teacher.TeacherBuilder().withId(10).built()).
+		withTimetable(lessons.get(0).getTimetable()).
+		built();
 	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
+	when(vocationDao.findByTeacherId(lesson.getTeacher().getId())).thenReturn(vocations);
+	when(holidayDao.findAll()).thenReturn(holidays);
 
 	lessonService.update(lesson);
 
@@ -191,11 +403,28 @@ class LessonServiceTest {
     }
 
     @Test
-    void givenLessonWithWrongSubject_whenUpdate_thenUpdated() {
+    void givenLessonWithSubjectNotAddedToYear_whenUpdate_thenNotUpdated() {
 	List<Lesson> lessons = createLessons();
-	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), new LessonTime(), new Subject(), new Audience(),
-		new Teacher(), lessons.get(1).getTimetable());
+	List<Vocation> vocations = new ArrayList<>();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(1)).
+		withEndDate(lessons.get(0).getDate().plusDays(7)).withTeacher(lessons.get(0).getTeacher()).built();
+	vocations.add(vocation);
+	List<Holiday> holidays = new ArrayList<>(); 
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate().plusDays(1)).built();
+	holidays.add(holiday);
+	Lesson lesson = new Lesson.LessonBuilder().
+		withId(1).
+		withDate(LocalDate.of(2021, 01, 01)).
+		withLessonTime(new LessonTime.LessonTimeBuilder().withId(3).built()).
+		withSubject(new Subject.SubjectBuilder().withId(10).built()).
+		withAudience(lessons.get(0).getAudience()).
+		withTeacher(lessons.get(0).getTeacher()).
+		withGroups(lessons.get(0).getTimetable().getYear().getGroups()).
+		withTimetable(lessons.get(0).getTimetable()).
+		built();
 	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
+	when(vocationDao.findByTeacherId(lesson.getTeacher().getId())).thenReturn(vocations);
+	when(holidayDao.findAll()).thenReturn(holidays);
 
 	lessonService.update(lesson);
 
@@ -203,44 +432,179 @@ class LessonServiceTest {
     }
 
     @Test
-    void givenLessonWithWrongTeacher_whenUpdate_thenUpdated() {
+    void givenLessonWithBookedTeacher_whenUpdate_thenNotUpdated() {
 	List<Lesson> lessons = createLessons();
-	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), lessons.get(1).getLessonTime(),
-		lessons.get(1).getSubject(), new Audience(), lessons.get(1).getTeacher(),
-		lessons.get(1).getTimetable());
+	List<Vocation> vocations = new ArrayList<>();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(1)).
+		withEndDate(lessons.get(0).getDate().plusDays(7)).withTeacher(lessons.get(0).getTeacher()).built();
+	vocations.add(vocation);
+	List<Holiday> holidays = new ArrayList<>(); 
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate().plusDays(1)).built();
+	holidays.add(holiday);
+	Lesson lesson = new Lesson.LessonBuilder().
+		withId(1).
+		withDate(LocalDate.of(2021, 01, 01)).
+		withLessonTime(lessons.get(0).getLessonTime()).
+		withSubject(lessons.get(0).getSubject()).
+		withAudience(new Audience.AudienceBuilder().withId(10).built()).
+		withTeacher(lessons.get(0).getTeacher()).
+		withGroups(lessons.get(0).getTimetable().getYear().getGroups()).
+		withTimetable(lessons.get(0).getTimetable()).
+		built();
 	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
-
+	when(vocationDao.findByTeacherId(lesson.getTeacher().getId())).thenReturn(vocations);
+	when(holidayDao.findAll()).thenReturn(holidays);
+	
 	lessonService.update(lesson);
 
 	verify(lessonDao, never()).update(lesson);
     }
 
     @Test
-    void givenLessonWithWrongGroup_whenUpdate_thenUpdated() {
+    void givenLessonWithGroupNotAddedToYear_whenUpdate_thenNotUpdated() {
 	List<Lesson> lessons = createLessons();
-	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), new LessonTime(), lessons.get(1).getSubject(),
-		lessons.get(1).getAudience(), new Teacher(), lessons.get(1).getTimetable());
-	lesson.getGroups().add(new Group());
+	List<Vocation> vocations = new ArrayList<>();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(1)).
+		withEndDate(lessons.get(0).getDate().plusDays(7)).withTeacher(lessons.get(0).getTeacher()).built();
+	vocations.add(vocation);
+	List<Holiday> holidays = new ArrayList<>(); 
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate().plusDays(1)).built();
+	holidays.add(holiday);
+	Lesson lesson = new Lesson.LessonBuilder().
+		withId(1).
+		withDate(LocalDate.of(2021, 01, 01)).
+		withLessonTime(new LessonTime.LessonTimeBuilder().withId(3).built()).
+		withSubject(new Subject.SubjectBuilder().withId(10).built()).
+		withAudience(lessons.get(0).getAudience()).
+		withTeacher(lessons.get(0).getTeacher()).
+		withGroups( Arrays.asList(new Group.GroupBuilder().withId(10).built())).
+		withTimetable(lessons.get(0).getTimetable()).
+		built();
 	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
-
+	when(vocationDao.findByTeacherId(lesson.getTeacher().getId())).thenReturn(vocations);
+	when(holidayDao.findAll()).thenReturn(holidays);
+	
 	lessonService.update(lesson);
 
 	verify(lessonDao, never()).update(lesson);
     }
 
     @Test
-    void givenLessonWithWrongAudienceCapacity_whenUpdate_thenUpdated() {
+    void givenLessonWithAudienceCapacityLessThenStuentsAmount_whenUpdate_thenNotUpdated() {
 	List<Lesson> lessons = createLessons();
-	Lesson lesson = new Lesson(3, LocalDate.of(2021, 01, 01), new LessonTime(), lessons.get(1).getSubject(),
-		new Audience("new", null, 1, ""), new Teacher(), lessons.get(1).getTimetable());
-	lesson.getGroups().add(lessons.get(0).getGroups().get(0));
+	List<Vocation> vocations = new ArrayList<>();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(1)).
+		withEndDate(lessons.get(0).getDate().plusDays(7)).withTeacher(lessons.get(0).getTeacher()).built();
+	vocations.add(vocation);
+	List<Holiday> holidays = new ArrayList<>(); 
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate().plusDays(1)).built();
+	holidays.add(holiday);
+	Lesson lesson = new Lesson.LessonBuilder().
+		withId(1).
+		withDate(LocalDate.of(2021, 01, 01)).
+		withLessonTime(new LessonTime.LessonTimeBuilder().withId(3).built()).
+		withSubject(lessons.get(0).getSubject()).
+		withAudience(new Audience.AudienceBuilder().withId(10).withCapacity(1).built()).
+		withTeacher(lessons.get(0).getTeacher()).
+		withGroups(lessons.get(0).getTimetable().getYear().getGroups()).
+		withTimetable(lessons.get(0).getTimetable()).
+		built();
 	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
+	when(vocationDao.findByTeacherId(lesson.getTeacher().getId())).thenReturn(vocations);
+	when(holidayDao.findAll()).thenReturn(holidays);
 
 	lessonService.update(lesson);
 
 	verify(lessonDao, never()).update(lesson);
     }
+    
+    @Test
+    void givenLessonWhithTeacherOnVocation_whenUpdate_thenNotUpdated() {
+	List<Lesson> lessons = createLessons();
+	List<Vocation> vocations = new ArrayList<>();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate()).
+		withEndDate(lessons.get(0).getDate()).withTeacher(lessons.get(0).getTeacher()).built();
+	vocations.add(vocation);
+	List<Holiday> holidays = new ArrayList<>(); 
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate().plusDays(1)).built();
+	holidays.add(holiday);
+	Lesson lesson = new Lesson.LessonBuilder().
+		withId(1).
+		withDate(LocalDate.of(2021, 01, 01)).
+		withLessonTime(new LessonTime.LessonTimeBuilder().withId(3).built()).
+		withSubject(lessons.get(0).getSubject()).
+		withAudience(lessons.get(0).getAudience()).
+		withTeacher(lessons.get(0).getTeacher()).
+		withGroups(lessons.get(0).getTimetable().getYear().getGroups()).
+		withTimetable(lessons.get(0).getTimetable()).
+		built();
+	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
+	when(vocationDao.findByTeacherId(lesson.getTeacher().getId())).thenReturn(vocations);
+	when(holidayDao.findAll()).thenReturn(holidays);
+	
+	lessonService.update(lesson);
 
+	verify(lessonDao, never()).update(lesson);
+    }
+    
+    @Test
+    void givenLessonWhithDateThatMatchToHoliday_whenUpdate_thenNotUpdated() {
+	List<Lesson> lessons = createLessons();
+	List<Vocation> vocations = new ArrayList<>();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(1)).
+		withEndDate(lessons.get(0).getDate().plusDays(7)).withTeacher(lessons.get(0).getTeacher()).built();
+	vocations.add(vocation);
+	List<Holiday> holidays = new ArrayList<>(); 
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate()).built();
+	holidays.add(holiday);
+	Lesson lesson = new Lesson.LessonBuilder().
+		withId(1).
+		withDate(LocalDate.of(2021, 01, 01)).
+		withLessonTime(new LessonTime.LessonTimeBuilder().withId(3).built()).
+		withSubject(lessons.get(0).getSubject()).
+		withAudience(lessons.get(0).getAudience()).
+		withTeacher(lessons.get(0).getTeacher()).
+		withGroups(lessons.get(0).getTimetable().getYear().getGroups()).
+		withTimetable(lessons.get(0).getTimetable()).
+		built();
+	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
+	when(vocationDao.findByTeacherId(lesson.getTeacher().getId())).thenReturn(vocations);
+	when(holidayDao.findAll()).thenReturn(holidays);
+	
+	lessonService.update(lesson);
+
+	verify(lessonDao, never()).update(lesson);
+    }
+    
+    @Test
+    void givenLessonWhithDateThatMatchToWeekend_whenUpdate_thenNotUpdated() {
+	List<Lesson> lessons = createLessons();
+	List<Vocation> vocations = new ArrayList<>();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(1)).
+		withEndDate(lessons.get(0).getDate().plusDays(7)).withTeacher(lessons.get(0).getTeacher()).built();
+	vocations.add(vocation);
+	List<Holiday> holidays = new ArrayList<>(); 
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate()).built();
+	holidays.add(holiday);
+	Lesson lesson = new Lesson.LessonBuilder().
+		withId(1).
+		withDate(LocalDate.of(2021, 01, 01)).
+		withLessonTime(new LessonTime.LessonTimeBuilder().withId(3).built()).
+		withSubject(lessons.get(0).getSubject()).
+		withAudience(lessons.get(0).getAudience()).
+		withTeacher(lessons.get(0).getTeacher()).
+		withGroups(lessons.get(0).getTimetable().getYear().getGroups()).
+		withTimetable(lessons.get(0).getTimetable()).
+		built();
+	when(lessonDao.findByDate(lesson)).thenReturn(lessons);
+	when(vocationDao.findByTeacherId(lesson.getTeacher().getId())).thenReturn(vocations);
+	when(holidayDao.findAll()).thenReturn(holidays);
+	
+	lessonService.update(lesson);
+
+	verify(lessonDao, never()).update(lesson);
+    }
+    
     private List<Lesson> createLessons() {
 	Student student1 = new Student.StudentBuilder().withId(1).built();
 	Student student2 = new Student.StudentBuilder().withId(2).built();
@@ -305,7 +669,6 @@ class LessonServiceTest {
 		withDate(LocalDate.of(2021, 01, 01)).
 		withLessonTime(lessonTime2).
 		withSubject(subject2).
-		withAudience(audience).
 		withTeacher(teacher2).
 		withGroups(Arrays.asList(group1, group2)).
 		withTimetable(timetable).
@@ -313,12 +676,4 @@ class LessonServiceTest {
 	return new ArrayList<Lesson>(Arrays.asList(lesson1, lesson2));
     }
 
-    private List<Vocation> createVocations(){
-	
-    }
-    
-    private List<Holiday> createHolidays(){
-	
-    }
-    
 }
