@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +32,7 @@ class LessonTimeServiceTest {
 
     @Test
     void givenLessonTime_whenCereate_thanCreated() {
-	LessonTime lessonTime = new LessonTime(1);
+	LessonTime lessonTime = createLessonTime();
 	doNothing().when(lessonTimeDao).create(lessonTime);
 
 	lessonTimeService.create(lessonTime);
@@ -41,7 +42,7 @@ class LessonTimeServiceTest {
 
     @Test
     void givenGLessonTime_whenUpdate_thanUpdeted() {
-	LessonTime lessonTime = new LessonTime(1);
+	LessonTime lessonTime = createLessonTime();
 	doNothing().when(lessonTimeDao).update(lessonTime);
 
 	lessonTimeService.update(lessonTime);
@@ -51,9 +52,9 @@ class LessonTimeServiceTest {
 
     @Test
     void givenLessonTimeId_whenGetById_thenGot() {
-	LessonTime lessonTime = new LessonTime(1);
+	LessonTime lessonTime = createLessonTime();
 	when(lessonTimeDao.findById(1)).thenReturn(lessonTime);
-	LessonTime expected = new LessonTime(1);
+	LessonTime expected = createLessonTime();
 
 	LessonTime actual = lessonTimeService.getById(1);
 
@@ -62,23 +63,34 @@ class LessonTimeServiceTest {
 
     @Test
     void givenLessonTimes_whenGetAll_thenGot() {
-	List<LessonTime> lessonTimes = new ArrayList<>(Arrays.asList(new LessonTime(1), new LessonTime(2)));
+	List<LessonTime> lessonTimes = createLessonTimes();
 	when(lessonTimeDao.findAll()).thenReturn(lessonTimes);
 
 	List<LessonTime> actual = lessonTimeService.getAll();
 
-	List<LessonTime> expected = new ArrayList<>(Arrays.asList(new LessonTime(1), new LessonTime(2)));
+	List<LessonTime> expected = createLessonTimes();
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenLessonTime_whenDelete_thenDeleted() {
-	LessonTime lessonTime = new LessonTime(1);
+	LessonTime lessonTime = createLessonTime();
 	doNothing().when(lessonTimeDao).deleteById(1);
 
 	lessonTimeService.delete(lessonTime);
 
 	verify(lessonTimeDao).deleteById(1);
+    }
+
+    private LessonTime createLessonTime() {
+	return new LessonTime.LessonTimeBuilder().withId(1).withOrderNumber("order numver")
+		.withStartTime(LocalTime.of(8, 30)).withEndTime(LocalTime.of(9, 15)).built();
+    }
+
+    private List<LessonTime> createLessonTimes() {
+	return new ArrayList<>(
+		Arrays.asList(new LessonTime.LessonTimeBuilder().withId(1).withOrderNumber("order numver")
+			.withStartTime(LocalTime.of(8, 30)).withEndTime(LocalTime.of(9, 15)).built()));
     }
 
 }

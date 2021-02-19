@@ -18,6 +18,8 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
+import ua.com.foxminded.krailo.university.model.Department;
+import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Teacher;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +33,7 @@ class TeacherServiceTest {
 
     @Test
     void givenTeacher_whenCereate_thanCreated() {
-	Teacher teacher = new Teacher(1);
+	Teacher teacher = createTeacher();
 	doNothing().when(teacherDao).create(teacher);
 
 	teacherService.create(teacher);
@@ -41,7 +43,7 @@ class TeacherServiceTest {
 
     @Test
     void givenTeacher_whenUpdate_thanUpdeted() {
-	Teacher teacher = new Teacher(1);
+	Teacher teacher = createTeacher();
 	doNothing().when(teacherDao).update(teacher);
 
 	teacherService.update(teacher);
@@ -51,9 +53,9 @@ class TeacherServiceTest {
 
     @Test
     void givenTeacherId_whenGetById_thenGot() {
-	Teacher teacher = new Teacher(1);
+	Teacher teacher = createTeacher();
 	when(teacherDao.findById(1)).thenReturn(teacher);
-	Teacher expected = new Teacher(1);
+	Teacher expected = createTeacher();
 
 	Teacher actual = teacherService.getById(1);
 
@@ -62,23 +64,38 @@ class TeacherServiceTest {
 
     @Test
     void givenTeachers_whenGetAll_thenGot() {
-	List<Teacher> teachers = new ArrayList<>(Arrays.asList(new Teacher(1), new Teacher(1)));
+	List<Teacher> teachers = createTeachers();
 	when(teacherDao.findAll()).thenReturn(teachers);
 
 	List<Teacher> actual = teacherService.getAll();
 
-	List<Teacher> expected = new ArrayList<>(Arrays.asList(new Teacher(1), new Teacher(1)));
+	List<Teacher> expected = createTeachers();
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenTeacher_whenDelete_thenDeleted() {
-	Teacher teacher = new Teacher(1);
+	Teacher teacher = createTeacher();
 	doNothing().when(teacherDao).deleteById(1);
 
 	teacherService.delete(teacher);
 
 	verify(teacherDao).deleteById(1);
+    }
+
+    private Teacher createTeacher() {
+	return new Teacher.TeacherBuilder().withId(1).withFirstName("first name").withlastName("last name")
+		.withGender(Gender.MALE).withDepartment(new Department.DepartmentBuilder().withId(1).built()).built();
+    }
+
+    private List<Teacher> createTeachers() {
+	return new ArrayList<>(Arrays.asList(
+		new Teacher.TeacherBuilder().withId(1).withFirstName("first name").withlastName("last name")
+			.withGender(Gender.MALE).withDepartment(new Department.DepartmentBuilder().withId(1).built())
+			.built(),
+		new Teacher.TeacherBuilder().withId(2).withFirstName("first name 2").withlastName("last name 2")
+			.withGender(Gender.MALE).withDepartment(new Department.DepartmentBuilder().withId(1).built())
+			.built()));
     }
 
 }

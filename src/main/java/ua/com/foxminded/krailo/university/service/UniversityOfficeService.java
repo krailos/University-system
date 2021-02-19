@@ -4,9 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import ua.com.foxminded.krailo.university.dao.BuildingDao;
-import ua.com.foxminded.krailo.university.dao.DeansOfficeDao;
-import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.UniversityOfficeDao;
 import ua.com.foxminded.krailo.university.model.UniversityOffice;
 
@@ -14,16 +11,9 @@ import ua.com.foxminded.krailo.university.model.UniversityOffice;
 public class UniversityOfficeService {
 
     private UniversityOfficeDao universityOfficeDao;
-    private DeansOfficeDao deansOfficeDao;
-    private HolidayDao holidayDao;
-    private BuildingDao buildingDao;
 
-    public UniversityOfficeService(UniversityOfficeDao universityOfficeDao, DeansOfficeDao deansOfficeDao,
-	    HolidayDao holidayDao, BuildingDao buildingDao) {
+    public UniversityOfficeService(UniversityOfficeDao universityOfficeDao) {
 	this.universityOfficeDao = universityOfficeDao;
-	this.deansOfficeDao = deansOfficeDao;
-	this.holidayDao = holidayDao;
-	this.buildingDao = buildingDao;
     }
 
     public void create(UniversityOffice universityOffice) {
@@ -35,27 +25,16 @@ public class UniversityOfficeService {
     }
 
     public UniversityOffice getById(int id) {
-	UniversityOffice universityOffice = universityOfficeDao.findById(id);
-	addDeansFacultyHolidaysBuildingsToUniversityOffice(universityOffice);
-	return universityOffice;
+	return universityOfficeDao.findById(id);
+
     }
 
     public List<UniversityOffice> getAll() {
-	List<UniversityOffice> universityOffices = universityOfficeDao.findAll();
-	for (UniversityOffice universityOffice : universityOffices) {
-	    addDeansFacultyHolidaysBuildingsToUniversityOffice(universityOffice);
-	}
-	return universityOffices;
+	return universityOfficeDao.findAll();
     }
 
     public void delete(UniversityOffice universityOffice) {
 	universityOfficeDao.deleteById(universityOffice.getId());
-    }
-
-    private void addDeansFacultyHolidaysBuildingsToUniversityOffice(UniversityOffice universityOffice) {
-	universityOffice.setDeansOffices(deansOfficeDao.findAll());
-	universityOffice.setHolidays(holidayDao.findAll());
-	universityOffice.setBuildings(buildingDao.findAll());
     }
 
 }

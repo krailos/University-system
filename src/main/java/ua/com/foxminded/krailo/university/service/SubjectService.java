@@ -5,18 +5,15 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.SubjectDao;
-import ua.com.foxminded.krailo.university.dao.TeacherDao;
 import ua.com.foxminded.krailo.university.model.Subject;
 
 @Service
 public class SubjectService {
 
     private SubjectDao subjectDao;
-    private TeacherDao teacherDao;
 
-    public SubjectService(SubjectDao subjectDao, TeacherDao teacherDao) {
+    public SubjectService(SubjectDao subjectDao) {
 	this.subjectDao = subjectDao;
-	this.teacherDao = teacherDao;
     }
 
     public void create(Subject subject) {
@@ -28,25 +25,16 @@ public class SubjectService {
     }
 
     public Subject getById(int id) {
-	Subject subject = subjectDao.findById(id);
-	addTeachersToSubject(subject);
-	return subject;
+	return subjectDao.findById(id);
     }
 
     public List<Subject> getAll() {
-	List<Subject> subjects = subjectDao.findAll();
-	for (Subject subject : subjects) {
-	    addTeachersToSubject(subject);
-	}
-	return subjects;
+	return subjectDao.findAll();
+
     }
 
     public void delete(Subject subject) {
 	subjectDao.deleteById(subject.getId());
-    }
-
-    private void addTeachersToSubject(Subject subject) {
-	subject.setTeachers(teacherDao.findBySubjectId(subject.getId()));
     }
 
 }

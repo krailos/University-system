@@ -18,6 +18,8 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.StudentDao;
+import ua.com.foxminded.krailo.university.model.Gender;
+import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Student;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +33,7 @@ class StudentServiceTest {
 
     @Test
     void givenStudent_whenCreate_thenCreated() {
-	Student student = new Student(1);
+	Student student = createStudent();
 	doNothing().when(studentDao).create(student);
 
 	studentService.create(student);
@@ -41,7 +43,7 @@ class StudentServiceTest {
 
     @Test
     void givenStudent_whenUpdate_thenUpdated() {
-	Student student = new Student(1);
+	Student student = createStudent();
 	doNothing().when(studentDao).update(student);
 
 	studentService.update(student);
@@ -51,45 +53,58 @@ class StudentServiceTest {
 
     @Test
     void givenStudentId_whenGetById_thenGot() {
-	Student student = new Student(1);
+	Student student = createStudent();
 	when(studentDao.findById(1)).thenReturn(student);
 
 	Student actual = studentService.getById(1);
 
-	Student expected = new Student(1);
+	Student expected = createStudent();
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenStudents_whenGetAll_thenGot() {
-	List<Student> students = new ArrayList<>(Arrays.asList(new Student(1), new Student(2)));
+	List<Student> students = createStudents();
 	when(studentDao.findAll()).thenReturn(students);
 
 	List<Student> actual = studentService.getAll();
 
-	List<Student> expected = new ArrayList<>(Arrays.asList(new Student(1), new Student(2)));
+	List<Student> expected = createStudents();
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenStudentId_whenGetByGroupId_thenGot() {
-	List<Student> students = new ArrayList<>(Arrays.asList(new Student(1), new Student(2)));
+	List<Student> students = createStudents();
 	when(studentDao.findByGroupId(1)).thenReturn(students);
 
 	List<Student> actual = studentService.getByGroupId(1);
 
-	List<Student> expected = new ArrayList<>(Arrays.asList(new Student(1), new Student(2)));
+	List<Student> expected = createStudents();
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenStudent_whenDelete_thenDeleted() {
-	Student student = new Student(1);
+	Student student = createStudent();
 	doNothing().when(studentDao).deleteById(1);
 
 	studentService.delete(student);
 
 	verify(studentDao).deleteById(1);
+    }
+
+    private Student createStudent() {
+	return new Student.StudentBuilder().withId(1).withFirstName("first name").withlastName("last name")
+		.withGender(Gender.MALE).withGroup(new Group.GroupBuilder().withId(1).built()).built();
+    }
+
+    private List<Student> createStudents() {
+	return new ArrayList<>(Arrays.asList(
+		new Student.StudentBuilder().withId(1).withFirstName("first name").withlastName("last name")
+			.withGender(Gender.MALE).withGroup(new Group.GroupBuilder().withId(1).built()).built(),
+		new Student.StudentBuilder().withId(2).withFirstName("first name2").withlastName("last name2")
+			.withGender(Gender.MALE).withGroup(new Group.GroupBuilder().withId(1).built()).built()));
     }
 
 }

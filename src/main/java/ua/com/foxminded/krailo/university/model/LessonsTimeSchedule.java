@@ -51,7 +51,7 @@ public class LessonsTimeSchedule {
 	    return this;
 	}
 
-	public LessonsTimescheduleBuilder withTeachers(List<LessonTime> lessonTimes) {
+	public LessonsTimescheduleBuilder withLessonTimes(List<LessonTime> lessonTimes) {
 	    lessonsTimeSchedule.lessonTimes = lessonTimes;
 	    return this;
 	}

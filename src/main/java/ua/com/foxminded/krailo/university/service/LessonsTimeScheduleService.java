@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import ua.com.foxminded.krailo.university.dao.LessonTimeDao;
 import ua.com.foxminded.krailo.university.dao.LessonTimeScheduleDao;
 import ua.com.foxminded.krailo.university.model.LessonsTimeSchedule;
 
@@ -12,11 +11,9 @@ import ua.com.foxminded.krailo.university.model.LessonsTimeSchedule;
 public class LessonsTimeScheduleService {
 
     private LessonTimeScheduleDao lessonTimeScheduleDao;
-    private LessonTimeDao lessonTimeDao;
 
-    public LessonsTimeScheduleService(LessonTimeScheduleDao lessonTimeScheduleDao, LessonTimeDao lessonTimeDao) {
+    public LessonsTimeScheduleService(LessonTimeScheduleDao lessonTimeScheduleDao) {
 	this.lessonTimeScheduleDao = lessonTimeScheduleDao;
-	this.lessonTimeDao = lessonTimeDao;
     }
 
     public void create(LessonsTimeSchedule lessonsTimeSchedule) {
@@ -28,25 +25,15 @@ public class LessonsTimeScheduleService {
     }
 
     public LessonsTimeSchedule getById(int id) {
-	LessonsTimeSchedule lessonsTimeSchedule = lessonTimeScheduleDao.findById(id);
-	addLessonTimeToLessonsTimeSchedule(lessonsTimeSchedule);
-	return lessonsTimeSchedule;
+	return lessonTimeScheduleDao.findById(id);
     }
 
     public List<LessonsTimeSchedule> getAll() {
-	List<LessonsTimeSchedule> lessonsTimeSchedules = lessonTimeScheduleDao.findAll();
-	for (LessonsTimeSchedule lessonsTimeSchedule : lessonsTimeSchedules) {
-	    addLessonTimeToLessonsTimeSchedule(lessonsTimeSchedule);
-	}
-	return lessonsTimeSchedules;
+	return lessonTimeScheduleDao.findAll();
     }
 
     public void delete(LessonsTimeSchedule lessonsTimeSchedule) {
 	lessonTimeScheduleDao.deleteById(lessonsTimeSchedule.getId());
-    }
-
-    private void addLessonTimeToLessonsTimeSchedule(LessonsTimeSchedule lessonsTimeSchedule) {
-	lessonsTimeSchedule.setLessonTimes(lessonTimeDao.findBylessonTimeScheduleId(lessonsTimeSchedule.getId()));
     }
 
 }
