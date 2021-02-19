@@ -298,7 +298,7 @@ class LessonServiceTest {
 	holidays.add(holiday);
 	Lesson lesson = new Lesson.LessonBuilder().
 		withId(1).
-		withDate(LocalDate.of(2021, 01, 01)).
+		withDate(lessons.get(0).getDate()).
 		withLessonTime(new LessonTime.LessonTimeBuilder().withId(3).built()).
 		withSubject(lessons.get(0).getSubject()).
 		withAudience(lessons.get(0).getAudience()).
@@ -319,15 +319,15 @@ class LessonServiceTest {
     void givenLessonWhithDateThatMatchToWeekend_whenCreate_thenNotCreated() {
 	List<Lesson> lessons = createLessons();
 	List<Vocation> vocations = new ArrayList<>();
-	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(1)).
-		withEndDate(lessons.get(0).getDate().plusDays(7)).withTeacher(lessons.get(0).getTeacher()).built();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(5)).
+		withEndDate(lessons.get(0).getDate().plusDays(10)).withTeacher(lessons.get(0).getTeacher()).built();
 	vocations.add(vocation);
 	List<Holiday> holidays = new ArrayList<>(); 
-	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate()).built();
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate().plusDays(4)).built();
 	holidays.add(holiday);
 	Lesson lesson = new Lesson.LessonBuilder().
 		withId(1).
-		withDate(LocalDate.of(2021, 01, 01)).
+		withDate(lessons.get(0).getDate().plusDays(1)).
 		withLessonTime(new LessonTime.LessonTimeBuilder().withId(3).built()).
 		withSubject(lessons.get(0).getSubject()).
 		withAudience(lessons.get(0).getAudience()).
@@ -580,15 +580,15 @@ class LessonServiceTest {
     void givenLessonWhithDateThatMatchToWeekend_whenUpdate_thenNotUpdated() {
 	List<Lesson> lessons = createLessons();
 	List<Vocation> vocations = new ArrayList<>();
-	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(1)).
-		withEndDate(lessons.get(0).getDate().plusDays(7)).withTeacher(lessons.get(0).getTeacher()).built();
+	Vocation vocation = new Vocation.VocationBuilder().withStartDate(lessons.get(0).getDate().plusDays(5)).
+		withEndDate(lessons.get(0).getDate().plusDays(10)).withTeacher(lessons.get(0).getTeacher()).built();
 	vocations.add(vocation);
 	List<Holiday> holidays = new ArrayList<>(); 
-	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate()).built();
+	Holiday holiday =  new Holiday.HolidayBuilder().withDate(lessons.get(0).getDate().plusDays(4)).built();
 	holidays.add(holiday);
 	Lesson lesson = new Lesson.LessonBuilder().
 		withId(1).
-		withDate(LocalDate.of(2021, 01, 01)).
+		withDate(lessons.get(0).getDate().plusDays(1)).
 		withLessonTime(new LessonTime.LessonTimeBuilder().withId(3).built()).
 		withSubject(lessons.get(0).getSubject()).
 		withAudience(lessons.get(0).getAudience()).
