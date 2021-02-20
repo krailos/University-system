@@ -21,12 +21,8 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
-import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Lesson;
-import ua.com.foxminded.krailo.university.model.LessonTime;
-import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
-import ua.com.foxminded.krailo.university.model.Timetable;
 import ua.com.foxminded.krailo.university.model.Vocation;
 
 @ExtendWith(MockitoExtension.class)
