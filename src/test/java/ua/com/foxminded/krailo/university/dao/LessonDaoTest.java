@@ -172,7 +172,7 @@ class LessonDaoTest {
 		built();
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons", "date BETWEEN '2021-01-01' AND '2021-01-04'");
 
-	int actual = lessonDao.findByVocationDate(vocation).size();
+	int actual = lessonDao.findBetweenVocationStartEndAndTeacherId(vocation).size();
 
 	assertEquals(expected, actual);
     }

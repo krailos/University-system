@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
-import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.Vocation;
 
 @Service
@@ -21,15 +20,13 @@ public class VocationService {
     }
 
     public void create(Vocation vocation) {
-	List<Lesson> lessons = lessonDao.findByVocationDate(vocation);
-	if (checkByHavingLessons(lessons, vocation)) {
+	if (isVocationPeriodFreeOfLessons(vocation) && isVocationsEndDateMoreThenStart(vocation)) {
 	    vocationDao.create(vocation);
 	}
     }
 
     public void update(Vocation vocation) {
-	List<Lesson> lessons = lessonDao.findByVocationDate(vocation);
-	if (checkByHavingLessons(lessons, vocation)) {
+	if (isVocationPeriodFreeOfLessons(vocation) && isVocationsEndDateMoreThenStart(vocation)) {
 	    vocationDao.update(vocation);
 	}
     }
@@ -46,8 +43,12 @@ public class VocationService {
 	vocationDao.deleteById(vocation.getId());
     }
 
-    private boolean checkByHavingLessons(List<Lesson> lessons, Vocation vocation) {
-	return lessons.stream().map(Lesson::getTeacher).noneMatch(t -> t.equals(vocation.getTeacher()));
+    private boolean isVocationPeriodFreeOfLessons(Vocation vocation) {
+	return lessonDao.findBetweenVocationStartEndAndTeacherId(vocation).size() == 0;
+    }
+
+    private boolean isVocationsEndDateMoreThenStart(Vocation vocation) {
+	return vocation.getStart().isBefore(vocation.getEnd());
     }
 
 }

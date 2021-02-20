@@ -41,11 +41,10 @@ class VocationServiceTest {
     private VocationService vocationService;
 
     @Test
-    void givenVocationWithDurationFreeOfLessons_whenCereate_thenCreated() {
-	Vocation vocation = new Vocation(1, "kind", LocalDate.of(2020, 12, 31), LocalDate.of(2021, 01, 01),
-		LocalDate.of(2021, 01, 04), new Teacher(2));
-	List<Lesson> lessons = createLessons();
-	when(lessonDao.findByVocationDate(vocation)).thenReturn(lessons);
+    void givenVocationPeriodWhichNotMatchWithLessons_whenCereate_thenCreated() {
+	Vocation vocation = createVocation();
+	List<Lesson> lessons =  new ArrayList<>();;
+	when(lessonDao.findBetweenVocationStartEndAndTeacherId(vocation)).thenReturn(lessons);
 
 	vocationService.create(vocation);
 
@@ -53,11 +52,10 @@ class VocationServiceTest {
     }
 
     @Test
-    void givenVocationWithDurationWichHasLessons_whenCereate_thenNotCreated() {
-	Vocation vocation = new Vocation(1, "kind", LocalDate.of(2020, 12, 31), LocalDate.of(2021, 01, 01),
-		LocalDate.of(2021, 01, 04), new Teacher(1));
+    void givenVocationPeriodWhichMatchWithLessons_whenCereate_thenNotCreated() {
+	Vocation vocation = createVocation();
 	List<Lesson> lessons = createLessons();
-	when(lessonDao.findByVocationDate(vocation)).thenReturn(lessons);
+	when(lessonDao.findBetweenVocationStartEndAndTeacherId(vocation)).thenReturn(lessons);
 
 	vocationService.create(vocation);
 
@@ -65,11 +63,23 @@ class VocationServiceTest {
     }
 
     @Test
-    void givenVocationWithDurationFreeOfLessons_whenUpdete__thenUpdeted() {
-	Vocation vocation = new Vocation(1, "kind", LocalDate.of(2020, 12, 31), LocalDate.of(2021, 01, 01),
-		LocalDate.of(2021, 01, 04), new Teacher(2));
-	List<Lesson> lessons = createLessons();
-	when(lessonDao.findByVocationDate(vocation)).thenReturn(lessons);
+    void givenVocationWithEndLessThenStart_whenCereate_thenNotCreated() {
+	Vocation vocation = createVocation();
+	vocation.setStart(LocalDate.of(2021, 01, 02));
+	vocation.setEnd(LocalDate.of(2021, 01, 01));
+	List<Lesson> lessons = new ArrayList<>();
+	when(lessonDao.findBetweenVocationStartEndAndTeacherId(vocation)).thenReturn(lessons);
+
+	vocationService.create(vocation);
+
+	verify(vocationDao, never()).create(vocation);
+    }
+
+    @Test
+    void givenVocationPeriodWhichNotMatchWithLessons_whenUpdate_thenUpdated() {
+	Vocation vocation = createVocation();
+	List<Lesson> lessons = new ArrayList<>();
+	when(lessonDao.findBetweenVocationStartEndAndTeacherId(vocation)).thenReturn(lessons);
 
 	vocationService.update(vocation);
 
@@ -77,11 +87,23 @@ class VocationServiceTest {
     }
 
     @Test
-    void givenVocationWithDurationWichHasLessons_whenUpdete__thenNotUpdeted() {
-	Vocation vocation = new Vocation(1, "kind", LocalDate.of(2020, 12, 31), LocalDate.of(2021, 01, 01),
-		LocalDate.of(2021, 01, 04), new Teacher(1));
+    void givenVocationPeriodWhichMatchWithLessons_whenUpdate_thenNotUpdated() {
+	Vocation vocation = createVocation();
 	List<Lesson> lessons = createLessons();
-	when(lessonDao.findByVocationDate(vocation)).thenReturn(lessons);
+	when(lessonDao.findBetweenVocationStartEndAndTeacherId(vocation)).thenReturn(lessons);
+
+	vocationService.update(vocation);
+
+	verify(vocationDao, never()).update(vocation);
+    }
+
+    @Test
+    void givenVocationWithEndLessThenStart_whenUpdate_thenNotUpdated() {
+	Vocation vocation = createVocation();
+	vocation.setStart(LocalDate.of(2021, 01, 02));
+	vocation.setEnd(LocalDate.of(2021, 01, 01));
+	List<Lesson> lessons = new ArrayList<>();
+	when(lessonDao.findBetweenVocationStartEndAndTeacherId(vocation)).thenReturn(lessons);
 
 	vocationService.update(vocation);
 
@@ -90,11 +112,9 @@ class VocationServiceTest {
 
     @Test
     void givenVocationId_whenGetById_thenGot() {
-	Vocation vocation = new Vocation(1, "kind", LocalDate.of(2020, 12, 31), LocalDate.of(2021, 01, 01),
-		LocalDate.of(2021, 01, 04), new Teacher(1));
+	Vocation vocation = createVocation();
 	when(vocationDao.findById(1)).thenReturn(vocation);
-	Vocation expected = new Vocation(1, "kind", LocalDate.of(2020, 12, 31), LocalDate.of(2021, 01, 01),
-		LocalDate.of(2021, 01, 04), new Teacher(1));
+	Vocation expected = createVocation();
 
 	Vocation actual = vocationService.getById(1);
 
@@ -103,27 +123,18 @@ class VocationServiceTest {
 
     @Test
     void givenVocations_whenGetAll_thenGot() {
-	List<Vocation> vocations = new ArrayList<>(Arrays.asList(
-		new Vocation(1, "kind", LocalDate.of(2020, 12, 31), LocalDate.of(2021, 01, 01),
-			LocalDate.of(2021, 01, 04), new Teacher(1)),
-		new Vocation(1, "kind", LocalDate.of(2020, 12, 31), LocalDate.of(2021, 01, 01),
-			LocalDate.of(2021, 01, 04), new Teacher(1))));
+	List<Vocation> vocations = createVocations();
 	when(vocationDao.findAll()).thenReturn(vocations);
 
 	List<Vocation> actual = vocationService.getAll();
 
-	List<Vocation> expected = new ArrayList<>(Arrays.asList(
-		new Vocation(1, "kind", LocalDate.of(2020, 12, 31), LocalDate.of(2021, 01, 01),
-			LocalDate.of(2021, 01, 04), new Teacher(1)),
-		new Vocation(1, "kind", LocalDate.of(2020, 12, 31), LocalDate.of(2021, 01, 01),
-			LocalDate.of(2021, 01, 04), new Teacher(1))));
+	List<Vocation> expected = createVocations();
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenVocation_whenDelete_thenDeleted() {
-	Vocation vocation = new Vocation(1, "kind", LocalDate.of(2020, 12, 31), LocalDate.of(2021, 01, 01),
-		LocalDate.of(2021, 01, 04), new Teacher(1));
+	Vocation vocation = createVocation();
 	doNothing().when(vocationDao).deleteById(1);
 
 	vocationService.delete(vocation);
@@ -133,10 +144,31 @@ class VocationServiceTest {
 
     private List<Lesson> createLessons() {
 	List<Lesson> lessons = new ArrayList<>();
-	lessons.add(new Lesson(LocalDate.of(2021, 01, 01), new LessonTime(1), new Subject(1, null), new Audience(1),
-		new Teacher(1), new Timetable(1)));
-	lessons.add(new Lesson(LocalDate.of(2021, 01, 01), new LessonTime(1), new Subject(1, null), new Audience(1),
-		new Teacher(1), new Timetable(1)));
+	lessons.add(new Lesson.LessonBuilder().withId(1).withDate(LocalDate.of(2021, 01, 01))
+		.withTeacher(new Teacher.TeacherBuilder().withId(1).withFirstName("teacher").built()).built());
+	lessons.add(new Lesson.LessonBuilder().withId(1).withDate(LocalDate.of(2021, 01, 02))
+		.withTeacher(new Teacher.TeacherBuilder().withId(1).withFirstName("teacher").built()).built());
+	lessons.add(new Lesson.LessonBuilder().withId(1).withDate(LocalDate.of(2021, 01, 03))
+		.withTeacher(new Teacher.TeacherBuilder().withId(1).withFirstName("teacher").built()).built());
+
 	return lessons;
+    }
+
+    private Vocation createVocation() {
+	return new Vocation.VocationBuilder().withId(1).withKind("kind").withApplyingDate(LocalDate.of(2020, 12, 31))
+		.withStartDate(LocalDate.of(2021, 01, 01)).withEndDate(LocalDate.of(2021, 01, 07))
+		.withTeacher(new Teacher.TeacherBuilder().withId(1).withFirstName("teacher").built()).built();
+    }
+
+    private List<Vocation> createVocations() {
+	return new ArrayList<>(Arrays.asList(
+		new Vocation.VocationBuilder().withId(1).withKind("kind").withApplyingDate(LocalDate.of(2020, 12, 31))
+			.withStartDate(LocalDate.of(2021, 01, 01)).withEndDate(LocalDate.of(2021, 01, 07))
+			.withTeacher(new Teacher.TeacherBuilder().withId(1).withFirstName("teacher").built()).built(),
+		new Vocation.VocationBuilder().withId(2).withKind("kind").withApplyingDate(LocalDate.of(2020, 12, 31))
+			.withStartDate(LocalDate.of(2021, 01, 01)).withEndDate(LocalDate.of(2021, 01, 07))
+			.withTeacher(new Teacher.TeacherBuilder().withId(2).withFirstName("teacher2").built())
+			.built()));
+
     }
 }
