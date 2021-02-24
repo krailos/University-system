@@ -29,8 +29,8 @@ class YearDaoTest {
 
     @Test
     void givenNewYear_whenCreate_thenCreated() {
-	Year year = new Year.YearBuilder().withName("new name")
-		.withSpeciality(new Speciality.SpecialityBuilder().withId(1).withName("new name").built()).built();
+	Year year = Year.builder().name("new name").speciality(Speciality.builder().id(1).name("new name").build())
+		.build();
 
 	yearDao.create(year);
 
@@ -40,11 +40,10 @@ class YearDaoTest {
 
     @Test
     void givenNewYearWithSubjects_whenCreate_thenNewRowsInYearsSubjectsCreated() {
-	Year year = new Year.YearBuilder().withName("new name")
-		.withSpeciality(new Speciality.SpecialityBuilder().withId(1).withName("new name").built()).built();
-	List<Subject> subjects = new ArrayList<>(
-		Arrays.asList(new Subject.SubjectBuilder().withId(3).withName("new subject").built(),
-			new Subject.SubjectBuilder().withId(4).withName("new subject").built()));
+	Year year = Year.builder().name("new name").speciality(Speciality.builder().id(1).name("new name").build())
+		.build();
+	List<Subject> subjects = new ArrayList<>(Arrays.asList(Subject.builder().id(3).name("new subject").build(),
+		Subject.builder().id(4).name("new subject").build()));
 	year.setSubjects(subjects);
 
 	yearDao.create(year);
@@ -56,8 +55,8 @@ class YearDaoTest {
 
     @Test
     void givenNewFieldsOfYear_whenUpdate_tnenUpdated() {
-	Year year = new Year.YearBuilder().withId(1).withName("new name")
-		.withSpeciality(new Speciality.SpecialityBuilder().withId(1).withName("new name").built()).built();
+	Year year = Year.builder().id(1).name("new name")
+		.speciality(Speciality.builder().id(1).name("new name").build()).build();
 
 	yearDao.update(year);
 
@@ -67,11 +66,10 @@ class YearDaoTest {
 
     @Test
     void givenNewSubjectsOfYear_whenUpdate_thenNewRowsInYearsSubjectsUpdated() {
-	Year year = new Year.YearBuilder().withId(1).withName("new name")
-		.withSpeciality(new Speciality.SpecialityBuilder().withId(1).withName("new name").built()).built();
-	List<Subject> subjects = new ArrayList<>(
-		Arrays.asList(new Subject.SubjectBuilder().withId(1).withName("new subject").built(),
-			new Subject.SubjectBuilder().withId(2).withName("new subject").built()));
+	Year year = Year.builder().id(1).name("new name")
+		.speciality(Speciality.builder().id(1).name("new name").build()).build();
+	List<Subject> subjects = new ArrayList<>(Arrays.asList(Subject.builder().id(1).name("new subject").build(),
+		Subject.builder().id(2).name("new subject").build()));
 	year.setSubjects(subjects);
 
 	yearDao.update(year);

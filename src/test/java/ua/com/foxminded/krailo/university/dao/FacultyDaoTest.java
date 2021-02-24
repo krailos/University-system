@@ -24,9 +24,9 @@ class FacultyDaoTest {
 
     @Test
     void givenNewFaculty_whenCreate_thenCreated() {
-	Faculty faculty = new Faculty.FacultyBuilder().withName("new name").withDeansOffice(
-		new DeansOffice.DeansOfficeBuilder().withId(1).withName("new name").withUniversityOffice(null).built())
-		.built();
+	Faculty faculty = Faculty.builder().name("new name").deansOffice(
+		DeansOffice.builder().id(1).name("new name").universityOffice(null).build())
+		.build();
 
 	facultyDao.create(faculty);
 
@@ -36,9 +36,9 @@ class FacultyDaoTest {
 
     @Test
     void givenNewFieldsOfFaculty_whenUpdate_tnenUpdated() {
-	Faculty faculty = new Faculty.FacultyBuilder().withId(1).withName("new name").withDeansOffice(
-		new DeansOffice.DeansOfficeBuilder().withId(1).withName("new name").withUniversityOffice(null).built())
-		.built();
+	Faculty faculty = Faculty.builder().id(1).name("new name").deansOffice(
+		DeansOffice.builder().id(1).name("new name").universityOffice(null).build())
+		.build();
 
 	facultyDao.update(faculty);
 

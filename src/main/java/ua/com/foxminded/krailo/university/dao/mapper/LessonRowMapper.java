@@ -12,7 +12,6 @@ import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.LessonTimeDao;
 import ua.com.foxminded.krailo.university.dao.SubjectDao;
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
-import ua.com.foxminded.krailo.university.dao.TimetableDao;
 import ua.com.foxminded.krailo.university.model.Lesson;
 
 @Component
@@ -22,16 +21,14 @@ public class LessonRowMapper implements RowMapper<Lesson> {
     private SubjectDao subjectDao;
     private TeacherDao teacherDao;
     private AudienceDao audienceDao;
-    private TimetableDao timetableDao;
     private GroupDao groupDao;
 
     public LessonRowMapper(LessonTimeDao lessonTimeDao, SubjectDao subjectDao, TeacherDao teacherDao,
-	    AudienceDao audienceDao, TimetableDao timetableDao, GroupDao groupDao) {
+	    AudienceDao audienceDao, GroupDao groupDao) {
 	this.lessonTimeDao = lessonTimeDao;
 	this.subjectDao = subjectDao;
 	this.teacherDao = teacherDao;
 	this.audienceDao = audienceDao;
-	this.timetableDao = timetableDao;
 	this.groupDao = groupDao;
     }
 
@@ -44,7 +41,6 @@ public class LessonRowMapper implements RowMapper<Lesson> {
 	lesson.setSubject(subjectDao.findById(rs.getInt("subject_id")));
 	lesson.setTeacher(teacherDao.findById(rs.getInt("teacher_id")));
 	lesson.setAudience(audienceDao.findById(rs.getInt("audience_id")));
-	lesson.setTimetable(timetableDao.findById(rs.getInt("timetable_id")));
 	lesson.setGroups(groupDao.findByLessonId(lesson.getId()));
 	return lesson;
     }

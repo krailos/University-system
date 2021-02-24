@@ -19,6 +19,30 @@ public class Teacher {
     private Gender gender;
     private String degree;
 
+    public Teacher() {
+    }
+
+    public Teacher(int id, String teacherId, String firstName, String lastName, LocalDate birthDate,
+	    Department department, List<Subject> subjects, String phone, String address, String email, Gender gender,
+	    String degree) {
+	this.id = id;
+	this.teacherId = teacherId;
+	this.firstName = firstName;
+	this.lastName = lastName;
+	this.birthDate = birthDate;
+	this.department = department;
+	this.subjects = subjects;
+	this.phone = phone;
+	this.address = address;
+	this.email = email;
+	this.gender = gender;
+	this.degree = degree;
+    }
+
+    public static TeacherBuilder builder() {
+	return new TeacherBuilder();
+    }
+
     public int getId() {
 	return id;
     }
@@ -117,69 +141,77 @@ public class Teacher {
 
     public static class TeacherBuilder {
 
-	private Teacher teacher;
+	private int id;
+	private String teacherId;
+	private String firstName;
+	private String lastName;
+	private LocalDate birthDate;
+	private Department department;
+	private List<Subject> subjects = new ArrayList<>();
+	private String phone;
+	private String address;
+	private String email;
+	private Gender gender;
+	private String degree;
 
-	public TeacherBuilder() {
-	    teacher = new Teacher();
-	}
-
-	public TeacherBuilder withId(int id) {
-	    teacher.id = id;
+	public TeacherBuilder id(int id) {
+	    this.id = id;
 	    return this;
 	}
 
-	public TeacherBuilder withTeacherId(String teacherId) {
-	    teacher.teacherId = teacherId;
+	public TeacherBuilder teacherId(String teacherId) {
+	    this.teacherId = teacherId;
 	    return this;
 	}
 
-	public TeacherBuilder withFirstName(String firstName) {
-	    teacher.firstName = firstName;
+	public TeacherBuilder firstName(String firstName) {
+	    this.firstName = firstName;
 	    return this;
 	}
 
-	public TeacherBuilder withlastName(String lastName) {
-	    teacher.lastName = lastName;
+	public TeacherBuilder lastName(String lastName) {
+	    this.lastName = lastName;
 	    return this;
 	}
 
-	public TeacherBuilder withBirthDate(LocalDate birthDate) {
-	    teacher.birthDate = birthDate;
+	public TeacherBuilder birthDate(LocalDate birthDate) {
+	    this.birthDate = birthDate;
 	    return this;
 	}
 
-	public TeacherBuilder withPhone(String phone) {
-	    teacher.phone = phone;
+	public TeacherBuilder phone(String phone) {
+	    this.phone = phone;
 	    return this;
 	}
 
-	public TeacherBuilder withAddress(String address) {
-	    teacher.address = address;
+	public TeacherBuilder address(String address) {
+	    this.address = address;
 	    return this;
 	}
 
-	public TeacherBuilder withEmail(String email) {
-	    teacher.email = email;
+	public TeacherBuilder email(String email) {
+	    this.email = email;
 	    return this;
 	}
 
-	public TeacherBuilder withDegree(String degree) {
-	    teacher.degree = degree;
+	public TeacherBuilder degree(String degree) {
+	    this.degree = degree;
 	    return this;
 	}
 
-	public TeacherBuilder withGender(Gender gender) {
-	    teacher.gender = gender;
+	public TeacherBuilder gender(Gender gender) {
+	    this.gender = gender;
 	    return this;
 	}
 
-	public TeacherBuilder withDepartment(Department department) {
-	    teacher.department = department;
+	public TeacherBuilder department(Department department) {
+	    this.department = department;
 	    return this;
 	}
 
-	public Teacher built() {
-	    return teacher;
+	public Teacher build() {
+	    return new Teacher(id, teacherId, firstName, lastName, birthDate, department, subjects, phone, address,
+		    email, gender, degree);
 	}
 
     }

@@ -10,6 +10,20 @@ public class Building {
     private String address;
     private List<Audience> audiences = new ArrayList<>();
 
+    public Building() {
+    }
+
+    public Building(int id, String name, String address, List<Audience> audiences) {
+	this.id = id;
+	this.name = name;
+	this.address = address;
+	this.audiences = audiences;
+    }
+
+    public static BuildingBuilder builder() {
+	return new BuildingBuilder();
+    }
+
     public String getName() {
 	return name;
     }
@@ -43,34 +57,34 @@ public class Building {
     }
 
     public static class BuildingBuilder {
-	private Building building;
 
-	public BuildingBuilder() {
-	    building = new Building();
-	}
+	private int id;
+	private String name;
+	private String address;
+	private List<Audience> audiences = new ArrayList<>();
 
-	public BuildingBuilder withId(int id) {
-	    building.id = id;
+	public BuildingBuilder id(int id) {
+	    this.id = id;
 	    return this;
 	}
 
-	public BuildingBuilder withName(String name) {
-	    building.name = name;
+	public BuildingBuilder name(String name) {
+	    this.name = name;
 	    return this;
 	}
 
-	public BuildingBuilder withAddress(String address) {
-	    building.address = address;
+	public BuildingBuilder address(String address) {
+	    this.address = address;
 	    return this;
 	}
 
-	public BuildingBuilder withAudiences(List<Audience> audiences) {
-	    building.audiences = audiences;
+	public BuildingBuilder audiences(List<Audience> audiences) {
+	    this.audiences = audiences;
 	    return this;
 	}
 
-	public Building built() {
-	    return building;
+	public Building build() {
+	    return new Building(id, name, address, audiences);
 	}
     }
 

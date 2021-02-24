@@ -13,6 +13,20 @@ public class DeansOffice {
     private List<LessonsTimeSchedule> lessonsTimeSchedules;
     private List<Vocation> vocations = new ArrayList<>();
 
+    public DeansOffice() {
+
+    }
+
+    public DeansOffice(int id, String name, UniversityOffice universityOffice) {
+	this.id = id;
+	this.name = name;
+	this.universityOffice = universityOffice;
+    }
+
+    public static DeansOfficeBuilder builder() {
+	return new DeansOfficeBuilder();
+    }
+
     public int getId() {
 	return id;
     }
@@ -70,29 +84,28 @@ public class DeansOffice {
     }
 
     public static class DeansOfficeBuilder {
-	private DeansOffice deansOffice;
 
-	public DeansOfficeBuilder() {
-	    deansOffice = new DeansOffice();
-	}
+	private int id;
+	private String name;
+	private UniversityOffice universityOffice;
 
-	public DeansOfficeBuilder withId(int id) {
-	    deansOffice.id = id;
+	public DeansOfficeBuilder id(int id) {
+	    this.id = id;
 	    return this;
 	}
 
-	public DeansOfficeBuilder withName(String name) {
-	    deansOffice.name = name;
+	public DeansOfficeBuilder name(String name) {
+	    this.name = name;
 	    return this;
 	}
 
-	public DeansOfficeBuilder withUniversityOffice(UniversityOffice universityOffice) {
-	    deansOffice.universityOffice = universityOffice;
+	public DeansOfficeBuilder universityOffice(UniversityOffice universityOffice) {
+	    this.universityOffice = universityOffice;
 	    return this;
 	}
 
-	public DeansOffice built() {
-	    return deansOffice;
+	public DeansOffice build() {
+	    return new DeansOffice(id, name, universityOffice);
 	}
 
     }

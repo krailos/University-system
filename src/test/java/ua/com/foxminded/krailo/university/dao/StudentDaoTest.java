@@ -27,18 +27,18 @@ class StudentDaoTest {
 
     @Test
     void givenNewStudent_whenCreate_thenCreated() {
-	Student student = new Student.StudentBuilder().
-		withStudentId("student id").
-		withFirstName("first name").
-		withlastName("last name").
-		withBirthDate(LocalDate.of(2000, 01, 01)).
-		withAddress("address").
-		withPhone("phone").
-		withEmail("email").
-		withRank("rank").
-		withGender(Gender.MALE).
-		withGroup(new Group.GroupBuilder().withId(1).withName("group name").built()).
-		built();
+	Student student = Student.builder().
+		studentId("student id").
+		firstName("first name").
+		lastName("last name").
+		birthDate(LocalDate.of(2000, 01, 01)).
+		address("address").
+		phone("phone").
+		email("email").
+		rank("rank").
+		gender(Gender.MALE).
+		group(Group.builder().id(1).name("group name").build()).
+		build();
 
 	studentDao.create(student);
 
@@ -48,19 +48,19 @@ class StudentDaoTest {
 
     @Test
     void givenNewFieldsOfStudents_whenUpdate_tnenUpdated() {
-	Student student = new Student.StudentBuilder().
-		withId(1).
-		withStudentId("student id").
-		withFirstName("first name").
-		withlastName("last name").
-		withBirthDate(LocalDate.of(2000, 01, 01)).
-		withAddress("address").
-		withPhone("phone").
-		withEmail("email").
-		withRank("rank").
-		withGender(Gender.MALE).
-		withGroup(new Group.GroupBuilder().withId(1).withName("group name").built()).
-		built();
+	Student student = Student.builder().
+		id(1).
+		studentId("student id").
+		firstName("first name").
+		lastName("last name").
+		birthDate(LocalDate.of(2000, 01, 01)).
+		address("address").
+		phone("phone").
+		email("email").
+		rank("rank").
+		gender(Gender.MALE).
+		group(Group.builder().id(1).name("group name").build()).
+		build();
 
 	studentDao.update(student);
 

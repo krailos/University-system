@@ -7,8 +7,24 @@ public class Timetable {
 
     private int id;
     private String name;
-    private Year year;
+    private Student student;
+    private Teacher teacher;
     private List<Lesson> lessons = new ArrayList<>();
+
+    public Timetable() {
+    }
+
+    public Timetable(int id, String name, Student student, Teacher teacher, List<Lesson> lessons) {
+	this.id = id;
+	this.name = name;
+	this.student = student;
+	this.teacher = teacher;
+	this.lessons = lessons;
+    }
+    
+    public static TimetableBuilder builder () {
+	return new TimetableBuilder();
+    }
 
     public int getId() {
 	return id;
@@ -26,14 +42,6 @@ public class Timetable {
 	this.name = name;
     }
 
-    public Year getYear() {
-	return year;
-    }
-
-    public void setYear(Year year) {
-	this.year = year;
-    }
-
     public List<Lesson> getLessons() {
 	return lessons;
     }
@@ -42,36 +50,57 @@ public class Timetable {
 	this.lessons = lessons;
     }
 
+    public Student getStudent() {
+	return student;
+    }
+
+    public void setStudent(Student student) {
+	this.student = student;
+    }
+
+    public Teacher getTeacher() {
+	return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+	this.teacher = teacher;
+    }
+
     public static class TimetableBuilder {
 
-	private Timetable timetable;
+	private int id;
+	private String name;
+	private Student student;
+	private Teacher teacher;
+	private List<Lesson> lessons = new ArrayList<>();
 
-	public TimetableBuilder() {
-	    timetable = new Timetable();
-	}
-
-	public TimetableBuilder withId(int id) {
-	    timetable.id = id;
+	public TimetableBuilder id(int id) {
+	    this.id = id;
 	    return this;
 	}
 
-	public TimetableBuilder withName(String name) {
-	    timetable.name = name;
+	public TimetableBuilder name(String name) {
+	    this.name = name;
 	    return this;
 	}
 
-	public TimetableBuilder withYear(Year year) {
-	    timetable.year = year;
+	public TimetableBuilder student(Student student) {
+	    this.student = student;
+	    return this;
+	}
+
+	public TimetableBuilder teacher(Teacher teacher) {
+	    this.teacher = teacher;
 	    return this;
 	}
 
 	public TimetableBuilder withLessons(List<Lesson> lessons) {
-	    timetable.lessons = lessons;
+	    this.lessons = lessons;
 	    return this;
 	}
 
-	public Timetable built() {
-	    return timetable;
+	public Timetable build() {
+	    return new Timetable(id, name, student, teacher, lessons);
 	}
 
     }
@@ -83,7 +112,8 @@ public class Timetable {
 	result = prime * result + id;
 	result = prime * result + ((lessons == null) ? 0 : lessons.hashCode());
 	result = prime * result + ((name == null) ? 0 : name.hashCode());
-	result = prime * result + ((year == null) ? 0 : year.hashCode());
+	result = prime * result + ((student == null) ? 0 : student.hashCode());
+	result = prime * result + ((teacher == null) ? 0 : teacher.hashCode());
 	return result;
     }
 
@@ -108,17 +138,23 @@ public class Timetable {
 		return false;
 	} else if (!name.equals(other.name))
 	    return false;
-	if (year == null) {
-	    if (other.year != null)
+	if (student == null) {
+	    if (other.student != null)
 		return false;
-	} else if (!year.equals(other.year))
+	} else if (!student.equals(other.student))
+	    return false;
+	if (teacher == null) {
+	    if (other.teacher != null)
+		return false;
+	} else if (!teacher.equals(other.teacher))
 	    return false;
 	return true;
     }
 
     @Override
     public String toString() {
-	return "Timetable [id=" + id + ", name=" + name + ", year=" + year + ", lessons=" + lessons + "]";
+	return "Timetable [id=" + id + ", name=" + name + ", student=" + student + ", teacher=" + teacher + ", lessons="
+		+ lessons + "]";
     }
 
 }

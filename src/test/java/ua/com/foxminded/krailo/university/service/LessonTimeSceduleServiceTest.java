@@ -14,15 +14,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.LessonTimeDao;
 import ua.com.foxminded.krailo.university.dao.LessonTimeScheduleDao;
 import ua.com.foxminded.krailo.university.model.LessonsTimeSchedule;
 
 @ExtendWith(MockitoExtension.class)
-@SpringJUnitConfig(ConfigTest.class)
 class LessonTimeSceduleServiceTest {
 
     @Mock
@@ -67,7 +64,7 @@ class LessonTimeSceduleServiceTest {
     void givenLessonsTimeSchedules_whenGetAll_thenGot() {
 	List<LessonsTimeSchedule> lessonsTimeSchedules = createLessonsTimeSchedules();
 	when(lessonTimeScheduleDao.findAll()).thenReturn(lessonsTimeSchedules);
-	
+
 	List<LessonsTimeSchedule> actual = lessonsTimeScheduleService.getAll();
 
 	List<LessonsTimeSchedule> expected = createLessonsTimeSchedules();
@@ -83,12 +80,12 @@ class LessonTimeSceduleServiceTest {
 
 	verify(lessonTimeScheduleDao).deleteById(1);
     }
-    
+
     private LessonsTimeSchedule createLessonsTimeSchedule() {
-	return new LessonsTimeSchedule.LessonsTimescheduleBuilder().withId(1).withName("name").built();
+	return LessonsTimeSchedule.builder().id(1).name("name").build();
     }
 
     private List<LessonsTimeSchedule> createLessonsTimeSchedules() {
-  	return new ArrayList<>(Arrays.asList(new LessonsTimeSchedule.LessonsTimescheduleBuilder().withId(1).withName("name").built()));
-      }
+	return new ArrayList<>(Arrays.asList(LessonsTimeSchedule.builder().id(1).name("name").build()));
+    }
 }

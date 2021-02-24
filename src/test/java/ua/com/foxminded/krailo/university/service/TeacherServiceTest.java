@@ -14,16 +14,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
 import ua.com.foxminded.krailo.university.model.Department;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Teacher;
 
 @ExtendWith(MockitoExtension.class)
-@SpringJUnitConfig(ConfigTest.class)
 class TeacherServiceTest {
 
     @Mock
@@ -84,18 +81,18 @@ class TeacherServiceTest {
     }
 
     private Teacher createTeacher() {
-	return new Teacher.TeacherBuilder().withId(1).withFirstName("first name").withlastName("last name")
-		.withGender(Gender.MALE).withDepartment(new Department.DepartmentBuilder().withId(1).built()).built();
+	return  Teacher.builder().id(1).firstName("first name").lastName("last name")
+		.gender(Gender.MALE).department(new Department.DepartmentBuilder().id(1).build()).build();
     }
 
     private List<Teacher> createTeachers() {
 	return new ArrayList<>(Arrays.asList(
-		new Teacher.TeacherBuilder().withId(1).withFirstName("first name").withlastName("last name")
-			.withGender(Gender.MALE).withDepartment(new Department.DepartmentBuilder().withId(1).built())
-			.built(),
-		new Teacher.TeacherBuilder().withId(2).withFirstName("first name 2").withlastName("last name 2")
-			.withGender(Gender.MALE).withDepartment(new Department.DepartmentBuilder().withId(1).built())
-			.built()));
+		 Teacher.builder().id(1).firstName("first name").lastName("last name")
+			.gender(Gender.MALE).department(new Department.DepartmentBuilder().id(1).build())
+			.build(),
+		 Teacher.builder().id(2).firstName("first name 2").lastName("last name 2")
+			.gender(Gender.MALE).department(new Department.DepartmentBuilder().id(1).build())
+			.build()));
     }
 
 }

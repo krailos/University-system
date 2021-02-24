@@ -10,6 +10,20 @@ public class Faculty {
     private DeansOffice deansOffice;
     private List<Speciality> specialities = new ArrayList<>();
 
+    public Faculty() {
+    }
+
+    public Faculty(int id, String name, DeansOffice deansOffice, List<Speciality> specialities) {
+	this.id = id;
+	this.name = name;
+	this.deansOffice = deansOffice;
+	this.specialities = specialities;
+    }
+
+    public static FacultyBuilder builder() {
+	return new FacultyBuilder();
+    }
+
     public int getId() {
 	return id;
     }
@@ -43,29 +57,33 @@ public class Faculty {
     }
 
     public static class FacultyBuilder {
-	private Faculty faculty;
+	private int id;
+	private String name;
+	private DeansOffice deansOffice;
+	private List<Speciality> specialities = new ArrayList<>();
 
-	public FacultyBuilder() {
-	    faculty = new Faculty();
-	}
-
-	public FacultyBuilder withId(int id) {
-	    faculty.id = id;
+	public FacultyBuilder id(int id) {
+	    this.id = id;
 	    return this;
 	}
 
-	public FacultyBuilder withName(String name) {
-	    faculty.name = name;
+	public FacultyBuilder name(String name) {
+	    this.name = name;
 	    return this;
 	}
 
-	public FacultyBuilder withDeansOffice(DeansOffice deansOffice) {
-	    faculty.deansOffice = deansOffice;
+	public FacultyBuilder deansOffice(DeansOffice deansOffice) {
+	    this.deansOffice = deansOffice;
+	    return this;
+	}
+	
+	public FacultyBuilder specialities(List<Speciality> specialities) {
+	    this.specialities = specialities;
 	    return this;
 	}
 
-	public Faculty built() {
-	    return faculty;
+	public Faculty build() {
+	    return new Faculty(id, name, deansOffice, specialities);
 	}
 
     }

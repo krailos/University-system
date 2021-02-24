@@ -25,7 +25,7 @@ class SubjectDaoTest {
 
     @Test
     void givenNewSubject_whenCreate_thenCreated() {
-	Subject subject = new Subject.SubjectBuilder().withName("new subject").built();
+	Subject subject = Subject.builder().name("new subject").build();
 
 	subjectDao.create(subject);
 
@@ -35,7 +35,7 @@ class SubjectDaoTest {
 
     @Test
     void givenNewFieldsOfSubject_whenUpdate_tnenUpdated() {
-	Subject subject = new Subject.SubjectBuilder().withId(1).withName("new subject").built();
+	Subject subject = Subject.builder().id(1).name("new subject").build();
 
 
 	subjectDao.update(subject);
@@ -73,7 +73,7 @@ class SubjectDaoTest {
     
     @Test
     void givenTeacherId_whenFindSubjectsByTeacherId_thenFound() {
-	Teacher teacher = new Teacher.TeacherBuilder().withId(1).built();
+	Teacher teacher = Teacher.builder().id(1).build();
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "subjects", "id = 1 OR id = 2" );
 
 	int actual = subjectDao.findByTeacherId(teacher.getId()).size();
@@ -83,7 +83,7 @@ class SubjectDaoTest {
     
     @Test
     void givenYearId_whenFindSubjectsByYearId_thenFound() {
-	Year year = new Year.YearBuilder().withId(1).withName("new year").built();
+	Year year = Year.builder().id(1).name("new year").build();
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "subjects", "id = 1 OR id = 2" );
 
 	int actual = subjectDao.findByYearId(year.getId()).size();

@@ -1,8 +1,10 @@
 package ua.com.foxminded.krailo.university.dao;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -16,6 +18,7 @@ public class HolidayDao {
 
     private static final String SQL_SELECT_HOLIDAYS = "SELECT * FROM holidays ORDER BY id";
     private static final String SQL_SELECT_HOLIDAY_BY_ID = "SELECT * FROM holidays WHERE id = ?";
+    private static final String SQL_SELECT_HOLIDAY_BY_DATE = "SELECT * FROM holidays WHERE date = ?";
     private static final String SQL_UPDATE_HOLIDAY_BY_ID = "UPDATE holidays SET name = ?, date = ? WHERE id = ?";
     private static final String SQL_DELETE_HOLIDAY_BY_ID = "DELETE FROM holidays WHERE id = ?";
     private static final String SQL_INSERT_HOLIDAY = "INSERT INTO holidays (name, date) VALUES (?, ?)";
@@ -48,12 +51,19 @@ public class HolidayDao {
     }
 
     public void update(Holiday holiday) {
-	jdbcTemplate.update(SQL_UPDATE_HOLIDAY_BY_ID, holiday.getName(), holiday.getDate(),
-		holiday.getId());
+	jdbcTemplate.update(SQL_UPDATE_HOLIDAY_BY_ID, holiday.getName(), holiday.getDate(), holiday.getId());
     }
 
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_HOLIDAY_BY_ID, id);
+    }
+
+    public Holiday findByDate(LocalDate date) {
+	try {
+	    return jdbcTemplate.queryForObject(SQL_SELECT_HOLIDAY_BY_DATE, holidayRowMapper, date);
+	} catch (EmptyResultDataAccessException e) {
+	    return null;
+	}
     }
 
 }

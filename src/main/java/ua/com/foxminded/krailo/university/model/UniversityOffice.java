@@ -12,6 +12,19 @@ public class UniversityOffice {
     private List<Building> buildings = new ArrayList<>();
     private List<Holiday> holidays = new ArrayList<>();
 
+    public UniversityOffice() {
+    }
+
+    public UniversityOffice(int id, String name, String address) {
+	this.id = id;
+	this.name = name;
+	this.address = address;
+    }
+
+    public static UniversityOfficeBuilder builder() {
+	return new UniversityOfficeBuilder();
+    }
+
     public int getId() {
 	return id;
     }
@@ -62,29 +75,27 @@ public class UniversityOffice {
 
     public static class UniversityOfficeBuilder {
 
-	private UniversityOffice universityOffice;
+	private int id;
+	private String name;
+	private String address;
 
-	public UniversityOfficeBuilder() {
-	    universityOffice = new UniversityOffice();
-	}
-
-	public UniversityOfficeBuilder withId(int id) {
-	    universityOffice.id = id;
+	public UniversityOfficeBuilder id(int id) {
+	    this.id = id;
 	    return this;
 	}
 
-	public UniversityOfficeBuilder withName(String name) {
-	    universityOffice.name = name;
+	public UniversityOfficeBuilder name(String name) {
+	    this.name = name;
 	    return this;
 	}
 
-	public UniversityOfficeBuilder withAddress(String address) {
-	    universityOffice.address = address;
+	public UniversityOfficeBuilder address(String address) {
+	    this.address = address;
 	    return this;
 	}
 
-	public UniversityOffice built() {
-	    return universityOffice;
+	public UniversityOffice build() {
+	    return new UniversityOffice(id, name, address);
 	}
 
     }

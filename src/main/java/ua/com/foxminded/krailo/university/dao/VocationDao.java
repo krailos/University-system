@@ -2,8 +2,10 @@ package ua.com.foxminded.krailo.university.dao;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,6 +19,7 @@ public class VocationDao {
 
     private static final String SQL_SELECT_ALL = "SELECT * FROM vocations ORDER BY id";
     private static final String SQL_SELECT_BY_TEACHER_ID = "SELECT * FROM vocations where teacher_id = ?";
+    private static final String SQL_SELECT_BY_TEACHER_ID_AND_DATE = "SELECT * FROM vocations where teacher_id = ? AND ? between start_date AND end_date ";
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM vocations WHERE id = ?";
     private static final String SQL_UPDATE_BY_ID = "UPDATE vocations SET kind = ?, applying_date = ?, start_date = ?, end_date = ?, teacher_id = ? WHERE id = ?";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM vocations WHERE id = ?";
@@ -37,7 +40,7 @@ public class VocationDao {
     public List<Vocation> findAll() {
 	return jdbcTemplate.query(SQL_SELECT_ALL, vocationRowMapper);
     }
-    
+
     public List<Vocation> findByTeacherId(int teacherId) {
 	return jdbcTemplate.query(SQL_SELECT_BY_TEACHER_ID, vocationRowMapper, teacherId);
     }
@@ -64,6 +67,14 @@ public class VocationDao {
 
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
+    }
+
+    public Vocation findByTeacherIdAndDate(int teacherId, LocalDate date) {
+	try {
+	    return jdbcTemplate.queryForObject(SQL_SELECT_BY_TEACHER_ID_AND_DATE, vocationRowMapper, teacherId, date);
+	} catch (EmptyResultDataAccessException e) {
+	    return null;
+	}
     }
 
 }

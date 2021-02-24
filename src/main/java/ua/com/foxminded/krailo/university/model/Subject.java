@@ -9,6 +9,19 @@ public class Subject {
     private String name;
     private List<Teacher> teachers = new ArrayList<>();
 
+    public Subject() {
+    }
+
+    public Subject(int id, String name, List<Teacher> teachers) {
+	this.id = id;
+	this.name = name;
+	this.teachers = teachers;
+    }
+
+    public static SubjectBuilder builder() {
+	return new SubjectBuilder();
+    }
+
     public int getId() {
 	return id;
     }
@@ -35,29 +48,27 @@ public class Subject {
 
     public static class SubjectBuilder {
 
-	private Subject subject;
+	private int id;
+	private String name;
+	private List<Teacher> teachers = new ArrayList<>();
 
-	public SubjectBuilder() {
-	    subject = new Subject();
-	}
-
-	public SubjectBuilder withId(int id) {
-	    subject.id = id;
+	public SubjectBuilder id(int id) {
+	    this.id = id;
 	    return this;
 	}
 
-	public SubjectBuilder withName(String name) {
-	    subject.name = name;
+	public SubjectBuilder name(String name) {
+	    this.name = name;
 	    return this;
 	}
 
-	public SubjectBuilder withTeachers(List<Teacher> teachers) {
-	    subject.teachers = teachers;
+	public SubjectBuilder teachers(List<Teacher> teachers) {
+	    this.teachers = teachers;
 	    return this;
 	}
 
-	public Subject built() {
-	    return subject;
+	public Subject build() {
+	    return new Subject(id, name, teachers);
 	}
 
     }

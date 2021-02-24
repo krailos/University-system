@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,16 +15,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.TimetableDao;
+import ua.com.foxminded.krailo.university.model.Lesson;
+import ua.com.foxminded.krailo.university.model.Student;
+import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Timetable;
-import ua.com.foxminded.krailo.university.model.Year;
 
 @ExtendWith(MockitoExtension.class)
-@SpringJUnitConfig(ConfigTest.class)
 class TimetableServiceTest {
 
     @Mock
@@ -84,17 +84,81 @@ class TimetableServiceTest {
 	verify(timetableDao).deleteById(1);
     }
 
+    @Test
+    void givenTimetableIdAndTeacherAndDate_whenGetTimetableForTeacherByDate_thenGot() {
+	Teacher teacher = Teacher.builder().id(1).build();
+	Timetable timetable = Timetable.builder().name("for teacher by date").build();
+	List<Lesson> lessons = new ArrayList<>(
+		Arrays.asList(Lesson.builder().id(1).build(), Lesson.builder().id(2).build()));
+	when(timetableDao.findById(1)).thenReturn(timetable);
+	when(lessonDao.findByTeacherByDate(teacher, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
+
+	Timetable actual = timetableService.getTimetableForTeacherByDate(1, teacher, LocalDate.of(2021, 01, 02));
+
+	Timetable expected = Timetable.builder().name("for teacher by date").build();
+	expected.setTeacher(teacher);
+	expected.setLessons(lessons);
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenTimetableIdAndTeacherAndDate_whenGetTimetableForTeacherByMonth_thenGot() {
+	Teacher teacher = Teacher.builder().id(1).build();
+	Timetable timetable = Timetable.builder().name("for teacher by date").build();
+	List<Lesson> lessons = new ArrayList<>(
+		Arrays.asList(Lesson.builder().id(1).build(), Lesson.builder().id(2).build()));
+	when(timetableDao.findById(1)).thenReturn(timetable);
+	when(lessonDao.findByTeacherByMonth(teacher, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
+
+	Timetable actual = timetableService.getTimetableForTeacherByMonth(1, teacher, LocalDate.of(2021, 01, 02));
+
+	Timetable expected = Timetable.builder().name("for teacher by date").build();
+	expected.setTeacher(teacher);
+	expected.setLessons(lessons);
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenTimetableIdAndStudentAndDate_whenGetTimetableForStudentByDate_thenGot() {
+	Student student = Student.builder().id(1).build();
+	Timetable timetable = Timetable.builder().name("for teacher by date").build();
+	List<Lesson> lessons = new ArrayList<>(
+		Arrays.asList(Lesson.builder().id(1).build(), Lesson.builder().id(2).build()));
+	when(timetableDao.findById(1)).thenReturn(timetable);
+	when(lessonDao.findByStudentByDate(student, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
+
+	Timetable actual = timetableService.getTimetableForStudentByDate(1, student, LocalDate.of(2021, 01, 02));
+
+	Timetable expected = Timetable.builder().name("for teacher by date").build();
+	expected.setStudent(student);
+	expected.setLessons(lessons);
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenTimetableIdAndStudentAndDate_whenGetTimetableForStudentByMonth_thenGot() {
+	Student student = Student.builder().id(1).build();
+	Timetable timetable = Timetable.builder().name("for teacher by date").build();
+	List<Lesson> lessons = new ArrayList<>(
+		Arrays.asList(Lesson.builder().id(1).build(), Lesson.builder().id(2).build()));
+	when(timetableDao.findById(1)).thenReturn(timetable);
+	when(lessonDao.findByStudentByMonth(student, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
+
+	Timetable actual = timetableService.getTimetableForStudentByMonth(1, student, LocalDate.of(2021, 01, 02));
+
+	Timetable expected = Timetable.builder().name("for teacher by date").build();
+	expected.setStudent(student);
+	expected.setLessons(lessons);
+	assertEquals(expected, actual);
+    }
+
     private Timetable createTimetable() {
-	return new Timetable.TimetableBuilder().withId(1).withName("name")
-		.withYear(new Year.YearBuilder().withId(1).built()).built();
+	return Timetable.builder().id(1).name("name").build();
     }
 
     private List<Timetable> createTimetables() {
-	return new ArrayList<>(Arrays.asList(
-		new Timetable.TimetableBuilder().withId(1).withName("name")
-			.withYear(new Year.YearBuilder().withId(1).built()).built(),
-		new Timetable.TimetableBuilder().withId(1).withName("name")
-			.withYear(new Year.YearBuilder().withId(1).built()).built()));
+	return new ArrayList<>(Arrays.asList(Timetable.builder().id(1).name("name").build(),
+		Timetable.builder().id(1).name("name").build()));
     }
 
 }

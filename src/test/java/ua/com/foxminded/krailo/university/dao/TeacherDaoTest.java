@@ -31,17 +31,9 @@ class TeacherDaoTest {
 
     @Test
     void givenNewTeacher_whenCreate_thenCreated() {
-	Teacher teacher = new Teacher.TeacherBuilder().withTeacherId("teacher id").
-		withFirstName("first name").
-		withlastName("last name").
-		withBirthDate(LocalDate.of(2000, 01, 01)).
-		withAddress("address").
-		withPhone("phone").
-		withEmail("email").
-		withDegree("degree").
-		withDepartment(new Department.DepartmentBuilder().withId(1).withName("new pepartment").built()).
-		withGender(Gender.MALE).
-		built();
+	Teacher teacher = Teacher.builder().teacherId("teacher id").firstName("first name").lastName("last name")
+		.birthDate(LocalDate.of(2000, 01, 01)).address("address").phone("phone").email("email").degree("degree")
+		.department(Department.builder().id(1).name("new pepartment").build()).gender(Gender.MALE).build();
 
 	teacherDao.create(teacher);
 
@@ -51,21 +43,11 @@ class TeacherDaoTest {
 
     @Test
     void givenNewTeacherWithSubjects_whenCreate_thenNewRowsInTableTeachersSubjectsCreated() {
-	Teacher teacher = new Teacher.TeacherBuilder().
-		withId(3).
-		withTeacherId("teacher id").
-		withFirstName("first name").
-		withlastName("last name").
-		withBirthDate(LocalDate.of(2000, 01, 01)).
-		withAddress("address").
-		withPhone("phone").
-		withEmail("email").
-		withDegree("degree").
-		withDepartment(new Department.DepartmentBuilder().withId(1).withName("new pepartment").built()).
-		withGender(Gender.MALE).
-		built();
-	List<Subject> subjects = new ArrayList<>(Arrays.asList(new Subject.SubjectBuilder().withId(1).withName("subject1").built(),
-		new Subject.SubjectBuilder().withId(2).withName("subject2").built()));
+	Teacher teacher = Teacher.builder().id(3).teacherId("teacher id").firstName("first name").lastName("last name")
+		.birthDate(LocalDate.of(2000, 01, 01)).address("address").phone("phone").email("email").degree("degree")
+		.department(Department.builder().id(1).name("new pepartment").build()).gender(Gender.MALE).build();
+	List<Subject> subjects = new ArrayList<>(Arrays.asList(Subject.builder().id(1).name("subject1").build(),
+		Subject.builder().id(2).name("subject2").build()));
 	teacher.setSubjects(subjects);
 
 	teacherDao.create(teacher);
@@ -77,45 +59,25 @@ class TeacherDaoTest {
 
     @Test
     void givenNewFieldsOfTeacher_whenUpdate_tnenUpdated() {
-	Teacher teacher = new Teacher.TeacherBuilder().
-		withId(1).
-		withTeacherId("teacher id").
-		withFirstName("first name").
-		withlastName("last name").
-		withBirthDate(LocalDate.of(2000, 01, 01)).
-		withAddress("address").
-		withPhone("phone").
-		withEmail("email").
-		withDegree("degree").
-		withDepartment(new Department.DepartmentBuilder().withId(1).withName("new pepartment").built()).
-		withGender(Gender.MALE).
-		built();
+	Teacher teacher = Teacher.builder().id(1).teacherId("teacher id").firstName("first name").lastName("last name")
+		.birthDate(LocalDate.of(2000, 01, 01)).address("address").phone("phone").email("email").degree("degree")
+		.department(Department.builder().id(1).name("new pepartment").build()).gender(Gender.MALE).build();
 
 	teacherDao.update(teacher);
 
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers",
 		"teacher_id = 'teacher id' AND first_name  = 'first name' AND last_name = 'last name' AND birth_date = '2000-01-01'"
-		+ " AND phone = 'phone' AND address = 'address' AND email = 'email'AND degree = 'degree'  AND gender = 'MALE' AND id = 1");
+			+ " AND phone = 'phone' AND address = 'address' AND email = 'email'AND degree = 'degree'  AND gender = 'MALE' AND id = 1");
 	assertEquals(1, actual);
     }
 
     @Test
     void givenNewSubjectsOfTeacher_whenUpdate_thenUpdated() {
-	Teacher teacher = new Teacher.TeacherBuilder().
-		withId(1).
-		withTeacherId("teacher id").
-		withFirstName("first name").
-		withlastName("last name").
-		withBirthDate(LocalDate.of(2000, 01, 01)).
-		withAddress("address").
-		withPhone("phone").
-		withEmail("email").
-		withDegree("degree").
-		withDepartment(new Department.DepartmentBuilder().withId(1).withName("new pepartment").built()).
-		withGender(Gender.MALE).
-		built();
-	List<Subject> subjects = new ArrayList<>(Arrays.asList(new Subject.SubjectBuilder().withId(1).withName("subject1").built(),
-		new Subject.SubjectBuilder().withId(2).withName("subject2").built()));
+	Teacher teacher = Teacher.builder().id(1).teacherId("teacher id").firstName("first name").lastName("last name")
+		.birthDate(LocalDate.of(2000, 01, 01)).address("address").phone("phone").email("email").degree("degree")
+		.department(Department.builder().id(1).name("new pepartment").build()).gender(Gender.MALE).build();
+	List<Subject> subjects = new ArrayList<>(Arrays.asList(Subject.builder().id(1).name("subject1").build(),
+		Subject.builder().id(2).name("subject2").build()));
 	teacher.setSubjects(subjects);
 
 	teacherDao.update(teacher);
@@ -154,17 +116,17 @@ class TeacherDaoTest {
 
     @Test
     void givenSubjectId_whenFindBySubjectId_thenFound() {
-	Subject subject = new Subject.SubjectBuilder().withId(1).withName("subject1").built();
+	Subject subject = Subject.builder().id(1).name("subject1").build();
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers", "id = 1 OR id = 2");
 
 	int actual = teacherDao.findBySubjectId(subject.getId()).size();
 
 	assertEquals(expected, actual);
     }
-    
+
     @Test
     void givenDepertmentId_whenFindByDepartmentId_thenFound() {
-	Department department = new Department.DepartmentBuilder().withId(1).withName("name department").built();
+	Department department = Department.builder().id(1).name("name department").build();
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers", "department_id = 1");
 
 	int actual = teacherDao.findByDepartmentId(department.getId()).size();

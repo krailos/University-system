@@ -26,11 +26,11 @@ class LessonTimeDaoTest {
 
     @Test
     void givenNewLessonTime_whenCreate_thenCreated() {
-	LessonTime lessonTime = new LessonTime.LessonTimeBuilder().withOrderNumber("new order number").
-		withStartTime(LocalTime.of(12, 00)).
-		withEndTime(LocalTime.of(12, 45)).
-		withLessonsTimeSchedule(new LessonsTimeSchedule.LessonsTimescheduleBuilder().withId(1).withName("new name").built()).
-		built();
+	LessonTime lessonTime = LessonTime.builder().orderNumber("new order number").
+		startTime(LocalTime.of(12, 00)).
+		endTime(LocalTime.of(12, 45)).
+		lessonsTimeSchedule(LessonsTimeSchedule.builder().id(1).name("new name").build()).
+		build();
 
 	lessonTimeDao.create(lessonTime);
 
@@ -40,12 +40,12 @@ class LessonTimeDaoTest {
 
     @Test
     void givenNewFieldsOfLossonTime_whenUpdate_tnenUpdated() {
-	LessonTime lessonTime = new LessonTime.LessonTimeBuilder().withOrderNumber("new order number").
-		withId(1).
-		withStartTime(LocalTime.of(12, 00)).
-		withEndTime(LocalTime.of(12, 45)).
-		withLessonsTimeSchedule(new LessonsTimeSchedule.LessonsTimescheduleBuilder().withId(1).withName("new name").built()).
-		built();
+	LessonTime lessonTime = LessonTime.builder().orderNumber("new order number").
+		id(1).
+		startTime(LocalTime.of(12, 00)).
+		endTime(LocalTime.of(12, 45)).
+		lessonsTimeSchedule(LessonsTimeSchedule.builder().id(1).name("new name").build()).
+		build();
 	lessonTimeDao.update(lessonTime);
 
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lesson_times",

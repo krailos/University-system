@@ -11,6 +11,22 @@ public class Vocation {
     private LocalDate end;
     private Teacher teacher;
 
+    public Vocation() {
+    }
+
+    public Vocation(int id, String kind, LocalDate applyingDate, LocalDate start, LocalDate end, Teacher teacher) {
+	this.id = id;
+	this.kind = kind;
+	this.applyingDate = applyingDate;
+	this.start = start;
+	this.end = end;
+	this.teacher = teacher;
+    }
+
+    public static VocationBuilder builder() {
+	return new VocationBuilder();
+    }
+
     public int getId() {
 	return id;
     }
@@ -61,44 +77,45 @@ public class Vocation {
 
     public static class VocationBuilder {
 
-	private Vocation vocation;
+	private int id;
+	private String kind;
+	private LocalDate applyingDate;
+	private LocalDate start;
+	private LocalDate end;
+	private Teacher teacher;
 
-	public VocationBuilder() {
-	    vocation = new Vocation();
-	}
-
-	public VocationBuilder withId(int id) {
-	    vocation.id = id;
+	public VocationBuilder id(int id) {
+	    this.id = id;
 	    return this;
 	}
 
-	public VocationBuilder withKind(String kind) {
-	    vocation.kind = kind;
+	public VocationBuilder kind(String kind) {
+	    this.kind = kind;
 	    return this;
 	}
 
-	public VocationBuilder withApplyingDate(LocalDate applyingDate) {
-	    vocation.applyingDate = applyingDate;
+	public VocationBuilder applyingDate(LocalDate applyingDate) {
+	    this.applyingDate = applyingDate;
 	    return this;
 	}
 
-	public VocationBuilder withStartDate(LocalDate startDate) {
-	    vocation.start = startDate;
+	public VocationBuilder startDate(LocalDate startDate) {
+	    this.start = startDate;
 	    return this;
 	}
 
-	public VocationBuilder withEndDate(LocalDate andDate) {
-	    vocation.end = andDate;
+	public VocationBuilder endDate(LocalDate andDate) {
+	    this.end = andDate;
 	    return this;
 	}
 
-	public VocationBuilder withTeacher(Teacher teacher) {
-	    vocation.teacher = teacher;
+	public VocationBuilder teacher(Teacher teacher) {
+	    this.teacher = teacher;
 	    return this;
 	}
 
-	public Vocation built() {
-	    return vocation;
+	public Vocation build() {
+	    return new Vocation(id, kind, applyingDate, start, end, teacher);
 	}
 
     }

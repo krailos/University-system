@@ -25,7 +25,7 @@ class HolidayDaoTest {
 
     @Test
     void givenNewHoliday_whenCreate_thenCreated() {
-	Holiday holiday = new Holiday.HolidayBuilder().withName("Holiday 3").withDate(LocalDate.of(2021, 01, 03)).built();
+	Holiday holiday = Holiday.builder().name("Holiday 3").date(LocalDate.of(2021, 01, 03)).build();
 
 	holidayDao.create(holiday);
 
@@ -35,7 +35,7 @@ class HolidayDaoTest {
 
     @Test
     void givenNewFieldsOfHoliday_whenUpdate_thenUpdated() {
-	Holiday holiday = new Holiday.HolidayBuilder().withId(1).withName("new Holiday").withDate(LocalDate.of(2021, 01, 03)).built();
+	Holiday holiday = Holiday.builder().id(1).name("new Holiday").date(LocalDate.of(2021, 01, 03)).build();
 
 	holidayDao.update(holiday);
 
@@ -69,6 +69,15 @@ class HolidayDaoTest {
 
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "holidays");
 	assertEquals(1, actual);
+    }
+    
+    @Test
+    void givenId_whenFindByDate_thenFound() {
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "holidays", "date = '2021-01-01'");
+
+	int actual = holidayDao.findById(1).getId();
+
+	assertEquals(expected, actual);
     }
 
 }

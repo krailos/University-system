@@ -18,10 +18,9 @@ import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.LessonTime;
+import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
-import ua.com.foxminded.krailo.university.model.Timetable;
-import ua.com.foxminded.krailo.university.model.Vocation;
 
 @SpringJUnitConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
@@ -34,13 +33,9 @@ class LessonDaoTest {
 
     @Test
     void givenNewLesson_whenCreate_thenCreated() {
-	Lesson lesson = new Lesson.LessonBuilder().
-		withDate(LocalDate.of(2000, 01, 01)).
-		withLessonTime(new LessonTime.LessonTimeBuilder().withId(1).built()).
-		withSubject(new Subject.SubjectBuilder().withId(1).withName("new subject").built()).
-		withAudience(new Audience.AudienceBuilder().withId(1).built()).
-		withTeacher(new Teacher.TeacherBuilder().withId(1).built()).
-		withTimetable(new Timetable.TimetableBuilder().withId(1).built()).built();
+	Lesson lesson = Lesson.builder().date(LocalDate.of(2000, 01, 01)).lessonTime(LessonTime.builder().id(1).build())
+		.subject(Subject.builder().id(1).name("new subject").build()).audience(Audience.builder().id(1).build())
+		.teacher(Teacher.builder().id(1).build()).build();
 
 	lessonDao.create(lesson);
 
@@ -50,16 +45,12 @@ class LessonDaoTest {
 
     @Test
     void givenNewLessonWithGroups_whenCreate_thenNewRowsInTableLessonsGroupsCreated() {
-	Lesson lesson = new Lesson.LessonBuilder().
-		withId(1).
-		withDate(LocalDate.of(2000, 01, 01)).
-		withLessonTime(new LessonTime.LessonTimeBuilder().withId(1).built()).
-		withSubject(new Subject.SubjectBuilder().withId(1).withName("new subject").built()).
-		withAudience(new Audience.AudienceBuilder().withId(1).built()).
-		withTeacher(new Teacher.TeacherBuilder().withId(1).built()).
-		withTimetable(new Timetable.TimetableBuilder().withId(1).built()).
-		withGroups(new ArrayList<>(Arrays.asList(new Group.GroupBuilder().withId(1).built(),new Group.GroupBuilder().withId(2).built()))).
-		built();
+	Lesson lesson = Lesson.builder().id(1).date(LocalDate.of(2000, 01, 01))
+		.lessonTime(LessonTime.builder().id(1).build())
+		.subject(Subject.builder().id(1).name("new subject").build()).audience(Audience.builder().id(1).build())
+		.teacher(Teacher.builder().id(1).build())
+		.groups(new ArrayList<>(Arrays.asList(Group.builder().id(1).build(), Group.builder().id(2).build())))
+		.build();
 
 	lessonDao.create(lesson);
 
@@ -69,36 +60,27 @@ class LessonDaoTest {
 
     @Test
     void givenNewFieldsOfLesson_whenUpdate_thenUpdated() {
-	Lesson lesson = new Lesson.LessonBuilder().
-		withId(1).
-		withDate(LocalDate.of(2000, 01, 01)).
-		withLessonTime(new LessonTime.LessonTimeBuilder().withId(1).built()).
-		withSubject(new Subject.SubjectBuilder().withId(1).withName("new subject").built()).
-		withAudience(new Audience.AudienceBuilder().withId(1).built()).
-		withTeacher(new Teacher.TeacherBuilder().withId(1).built()).
-		withTimetable(new Timetable.TimetableBuilder().withId(1).built()).
-		built();
+	Lesson lesson = Lesson.builder().id(1).date(LocalDate.of(2000, 01, 01))
+		.lessonTime(LessonTime.builder().id(1).build())
+		.subject(Subject.builder().id(1).name("new subject").build()).audience(Audience.builder().id(1).build())
+		.teacher(Teacher.builder().id(1).build()).build();
 
 	lessonDao.update(lesson);
 
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons",
-		"date = '2000-01-01' AND lesson_time_id = 1 AND subject_id = 1 AND teacher_id = 1 AND audience_id = 1 AND timetable_id = 1");
+		"date = '2000-01-01' AND lesson_time_id = 1 AND subject_id = 1 AND teacher_id = 1 AND audience_id = 1");
 	assertEquals(1, actual);
     }
 
     @Test
     void givenNewGroupsOfLesson_whenUpdate_thenUpdated() {
-	Lesson lesson = new Lesson.LessonBuilder().
-		withId(1).
-		withDate(LocalDate.of(2000, 01, 01)).
-		withLessonTime(new LessonTime.LessonTimeBuilder().withId(1).built()).
-		withSubject(new Subject.SubjectBuilder().withId(1).withName("new subject").built()).
-		withAudience(new Audience.AudienceBuilder().withId(1).built()).
-		withTeacher(new Teacher.TeacherBuilder().withId(1).built()).
-		withTimetable(new Timetable.TimetableBuilder().withId(1).built()).
-		withGroups(new ArrayList<>(Arrays.asList(new Group.GroupBuilder().withId(1).built(),new Group.GroupBuilder().withId(2).built()))).
-		built();
-	
+	Lesson lesson = Lesson.builder().id(1).date(LocalDate.of(2000, 01, 01))
+		.lessonTime(LessonTime.builder().id(1).build())
+		.subject(Subject.builder().id(1).name("new subject").build()).audience(Audience.builder().id(1).build())
+		.teacher(Teacher.builder().id(1).build())
+		.groups(new ArrayList<>(Arrays.asList(Group.builder().id(1).build(), Group.builder().id(2).build())))
+		.build();
+
 	lessonDao.update(lesson);
 
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons_groups", "lesson_id = 1");
@@ -142,14 +124,6 @@ class LessonDaoTest {
     }
 
     @Test
-    void givenTimetableId_whenFindByTimetableId_thenFound() {
-
-	int actual = lessonDao.findByTimetableId(1).size();
-
-	assertEquals(5, actual);
-    }
-
-    @Test
     void givenLesson_whenFindByDate_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons", "date = '2021-01-01'");
 	Lesson lesson = new Lesson();
@@ -161,19 +135,89 @@ class LessonDaoTest {
     }
 
     @Test
-    void givenVocation_whenFindByVocationDate_thenFound() {
-	Vocation vocation = new Vocation.VocationBuilder().
-		withId(1).
-		withKind("kind").
-		withApplyingDate(LocalDate.of(2020, 12, 31)).
-		withStartDate(LocalDate.of(2021, 01, 01)).
-		withEndDate(LocalDate.of(2021, 01, 04)).
-		withTeacher(new Teacher.TeacherBuilder().withId(1).built()).
-		built();
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons", "date BETWEEN '2021-01-01' AND '2021-01-04'");
+    void givenTeacherAndDate_whenFindByTeacherByMonth_thenFound() {
+	Teacher teacher = Teacher.builder().id(1).build();
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons",
+		" teacher_id = 1 and date BETWEEN '2021-01-01' AND '2021-02-01'");
 
-	int actual = lessonDao.findBetweenVocationStartEndAndTeacherId(vocation).size();
+	int actual = lessonDao.findByTeacherByMonth(teacher, LocalDate.of(2021, 01, 01)).size();
 
 	assertEquals(expected, actual);
     }
+
+    @Test
+    void givenTeacherAndDate_whenFindByTeacherBetweenDates_thenFound() {
+	Teacher teacher = Teacher.builder().id(1).build();
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons",
+		" teacher_id = 1 and date BETWEEN '2021-01-01' AND '2021-01-05'");
+
+	int actual = lessonDao
+		.findByTeacherBetweenDates(teacher, LocalDate.of(2021, 01, 01), LocalDate.of(2021, 01, 05)).size();
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenTeacherAndDate_whenFindByTeacherByDate_thenFound() {
+	Teacher teacher = Teacher.builder().id(1).build();
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons",
+		"teacher_id = 1 AND date = '2021-01-01'");
+
+	int actual = lessonDao.findByTeacherByDate(teacher, LocalDate.of(2021, 01, 01)).size();
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenStudentAndDate_whenFindByStudentByMonth_thenFound() {
+	Student student = Student.builder().id(1).build();
+
+	int actual = lessonDao.findByStudentByMonth(student, LocalDate.of(2021, 01, 01)).size();
+
+	assertEquals(2, actual);
+    }
+
+    @Test
+    void givenStudentAndDate_whenFindByStudentBetweenDates_thenFound() {
+	Student student = Student.builder().id(1).build();
+
+	int actual = lessonDao
+		.findByStudentBetweenDates(student, LocalDate.of(2021, 01, 01), LocalDate.of(2021, 01, 05)).size();
+
+	assertEquals(2, actual);
+    }
+
+    @Test
+    void givenStudentAndDate_whenFindByStudentByDate_thenFound() {
+	Student student = Student.builder().id(1).build();
+
+	int actual = lessonDao.findByStudentByDate(student, LocalDate.of(2021, 01, 01)).size();
+
+	assertEquals(2, actual);
+    }
+
+    @Test
+    void givenId_whenFindByDateByTeacherByLessonTime_thenFound() {
+	Lesson lesson = Lesson.builder().date(LocalDate.of(2021, 01, 01)).teacher(Teacher.builder().id(1).build())
+		.lessonTime(LessonTime.builder().id(1).build()).build();
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons",
+		" date = '2021-001-01' AND  teacher_id = 1 AND lesson_time_id = 1");
+
+	int actual = lessonDao.findByDateByTeacherByLessonTime(lesson).getId();
+
+	assertEquals(expected, actual);
+    }
+    
+    @Test
+    void givenId_whenFindByDateByAudienceByLessonTime_thenFound() {
+	Lesson lesson = Lesson.builder().date(LocalDate.of(2021, 01, 01)).audience(Audience.builder().id(1).build())
+		.lessonTime(LessonTime.builder().id(1).build()).build();
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons",
+		" date = '2021-001-01' AND  audience_id = 1 AND lesson_time_id = 1");
+
+	int actual = lessonDao.findByDateByAudienceByLessonTime(lesson).getId();
+
+	assertEquals(expected, actual);
+    }
+
 }

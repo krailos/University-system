@@ -14,15 +14,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.SubjectDao;
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
 import ua.com.foxminded.krailo.university.model.Subject;
 
 @ExtendWith(MockitoExtension.class)
-@SpringJUnitConfig(ConfigTest.class)
 class SubjectServiceTest {
 
     @Mock
@@ -85,12 +82,12 @@ class SubjectServiceTest {
     }
 
     private Subject createSubject() {
-	return new Subject.SubjectBuilder().withId(1).withName("name").built();
+	return Subject.builder().id(1).name("name").build();
     }
 
     private List<Subject> createSubjects() {
-	return new ArrayList<>(Arrays.asList(new Subject.SubjectBuilder().withId(1).withName("name").built(),
-		new Subject.SubjectBuilder().withId(2).withName("name2").built()));
+	return new ArrayList<>(Arrays.asList(Subject.builder().id(1).name("name").build(),
+		Subject.builder().id(2).name("name2").build()));
     }
 
 }

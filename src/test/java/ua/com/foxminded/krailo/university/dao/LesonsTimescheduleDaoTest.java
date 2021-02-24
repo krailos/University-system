@@ -23,8 +23,8 @@ class LesonsTimescheduleDaoTest {
 
     @Test
     void givenNewLessonsTimeSchedule_whenCreate_thenCreated() {
-	LessonsTimeSchedule lessonsTimeSchedule = new LessonsTimeSchedule.LessonsTimescheduleBuilder()
-		.withName("new lesson time schedule").built();
+	LessonsTimeSchedule lessonsTimeSchedule = LessonsTimeSchedule.builder()
+		.name("new lesson time schedule").build();
 
 	lessonsTimesceduleDao.create(lessonsTimeSchedule);
 
@@ -34,8 +34,8 @@ class LesonsTimescheduleDaoTest {
 
     @Test
     void givenNewFieldsOfLessonsTimeSchedule_whenUpdate_tnenUpdated() {
-	LessonsTimeSchedule lessonsTimeSchedule = new LessonsTimeSchedule.LessonsTimescheduleBuilder().withId(1)
-		.withName("new lesson time schedule").built();
+	LessonsTimeSchedule lessonsTimeSchedule = LessonsTimeSchedule.builder().id(1)
+		.name("new lesson time schedule").build();
 
 	lessonsTimesceduleDao.update(lessonsTimeSchedule);
 

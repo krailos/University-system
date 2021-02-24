@@ -15,14 +15,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.LessonTimeDao;
 import ua.com.foxminded.krailo.university.model.LessonTime;
 
 @ExtendWith(MockitoExtension.class)
-@SpringJUnitConfig(ConfigTest.class)
 class LessonTimeServiceTest {
 
     @Mock
@@ -83,14 +80,13 @@ class LessonTimeServiceTest {
     }
 
     private LessonTime createLessonTime() {
-	return new LessonTime.LessonTimeBuilder().withId(1).withOrderNumber("order numver")
-		.withStartTime(LocalTime.of(8, 30)).withEndTime(LocalTime.of(9, 15)).built();
+	return LessonTime.builder().id(1).orderNumber("order numver").startTime(LocalTime.of(8, 30))
+		.endTime(LocalTime.of(9, 15)).build();
     }
 
     private List<LessonTime> createLessonTimes() {
-	return new ArrayList<>(
-		Arrays.asList(new LessonTime.LessonTimeBuilder().withId(1).withOrderNumber("order numver")
-			.withStartTime(LocalTime.of(8, 30)).withEndTime(LocalTime.of(9, 15)).built()));
+	return new ArrayList<>(Arrays.asList(LessonTime.builder().id(1).orderNumber("order numver")
+		.startTime(LocalTime.of(8, 30)).endTime(LocalTime.of(9, 15)).build()));
     }
 
 }

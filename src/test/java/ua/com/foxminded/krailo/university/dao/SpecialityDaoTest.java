@@ -24,9 +24,9 @@ class SpecialityDaoTest {
 
     @Test
     void givenNewSpeciality_whenCreate_thenCreated() {
-	Speciality speciality = new Speciality.SpecialityBuilder().withName("new name").
-		withFaculty(new Faculty.FacultyBuilder().withId(1).withName("new").withDeansOffice(null).built()).
-		built();
+	Speciality speciality = Speciality.builder().name("new name").
+		faculty(Faculty.builder().id(1).name("new").build()).
+		build();
 
 	specialityDao.create(speciality);
 
@@ -36,9 +36,9 @@ class SpecialityDaoTest {
 
     @Test
     void givenNewFieldsOfFaculty_whenUpdate_tnenUpdated() {
-	Speciality speciality = new Speciality.SpecialityBuilder().withId(1).withName("new name").
-		withFaculty(new Faculty.FacultyBuilder().withId(1).withName("new").withDeansOffice(null).built()).
-		built();
+	Speciality speciality = Speciality.builder().id(1).name("new name").
+		faculty(Faculty.builder().id(1).name("new").build()).
+		build();
 
 	specialityDao.update(speciality);
 

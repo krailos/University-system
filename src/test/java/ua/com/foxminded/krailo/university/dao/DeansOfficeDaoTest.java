@@ -24,10 +24,10 @@ class DeansOfficeDaoTest {
 
     @Test
     void givenNewDeansOffice_whenCreate_thenCreated() {
-	DeansOffice deansOffice = new DeansOffice.DeansOfficeBuilder().withName("new name")
-		.withUniversityOffice(new UniversityOffice.UniversityOfficeBuilder().withId(1).withName("new name")
-			.withAddress("new address").built())
-		.built();
+	DeansOffice deansOffice = DeansOffice.builder().name("new name")
+		.universityOffice(UniversityOffice.builder().id(1).name("new name")
+			.address("new address").build())
+		.build();
 
 	deansOfficeDao.create(deansOffice);
 
@@ -37,10 +37,10 @@ class DeansOfficeDaoTest {
 
     @Test
     void givenNewFieldsOfDeansOffice_whenUpdate_tnenUpdated() {
-	DeansOffice deansOffice =  new DeansOffice.DeansOfficeBuilder().withId(1).withName("new name")
-		.withUniversityOffice(new UniversityOffice.UniversityOfficeBuilder().withId(1).withName("new name")
-			.withAddress("new address").built())
-		.built();
+	DeansOffice deansOffice =  DeansOffice.builder().id(1).name("new name")
+		.universityOffice(UniversityOffice.builder().id(1).name("new name")
+			.address("new address").build())
+		.build();
 
 	deansOfficeDao.update(deansOffice);
 

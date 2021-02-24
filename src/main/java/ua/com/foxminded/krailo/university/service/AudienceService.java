@@ -17,15 +17,13 @@ public class AudienceService {
     }
 
     public void create(Audience audience) {
-	List<Audience> audiences = audienceDao.findByBuildingId(audience.getBuilding().getId());
-	if (isAudienceNumberExist(audiences, audience)) {
+	if (isUniqueNumber(audience)) {
 	    audienceDao.create(audience);
 	}
     }
 
     public void update(Audience audience) {
-	List<Audience> audiences = audienceDao.findByBuildingId(audience.getBuilding().getId());
-	if (isAudienceNumberExist(audiences, audience)) {
+	if (isUniqueNumberForUpdate(audience)) {
 	    audienceDao.update(audience);
 	}
     }
@@ -46,7 +44,14 @@ public class AudienceService {
 	audienceDao.deleteById(audience.getId());
     }
 
-    private boolean isAudienceNumberExist(List<Audience> audiences, Audience audience) {
-	return audiences.stream().map(Audience::getNumber).noneMatch(n -> n.equals(audience.getNumber()));
+    private boolean isUniqueNumber(Audience audience) {
+	return audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()) == null;
+    }
+
+    private boolean isUniqueNumberForUpdate(Audience audience) {
+	Audience audienceFromDB = audienceDao.findByNumberAndBuildingId(audience.getNumber(),
+		audience.getBuilding().getId());
+	return (audienceFromDB == null || audienceFromDB.getId() == audience.getId());
+
     }
 }

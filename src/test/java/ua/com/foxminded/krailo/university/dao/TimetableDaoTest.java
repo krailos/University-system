@@ -11,7 +11,6 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.model.Timetable;
-import ua.com.foxminded.krailo.university.model.Year;
 
 @SpringJUnitConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
@@ -24,25 +23,20 @@ class TimetableDaoTest {
 
     @Test
     void givenNewTimetable_whenCreate_thenCreated() {
-	Timetable timetable = new Timetable.TimetableBuilder().withName("new name").
-		withYear(new Year.YearBuilder().withId(3).withName("new").built()).
-		built();
-
+	Timetable timetable = Timetable.builder().name("new timetable for student for date").build();
 	timetableDao.create(timetable);
 
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "timetables");
-	assertEquals(3, actual);
+	assertEquals(5, actual);
     }
 
     @Test
     void givenNewFieldsOfTimetable_whenUpdate_tnenUpdated() {
-	Timetable timetable = new Timetable.TimetableBuilder().withId(1).withName("new name").
-		withYear(new Year.YearBuilder().withId(1).withName("new").built()).
-		built();
+	Timetable timetable = Timetable.builder().id(1).name("new timetable for student for date").build();
 	timetableDao.update(timetable);
 
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "timetables",
-		"name = 'new name' AND year_id = 1");
+		"name = 'new timetable for student for date'");
 	assertEquals(1, actual);
     }
 
@@ -70,17 +64,7 @@ class TimetableDaoTest {
 	timetableDao.deleteById(1);
 
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "timetables");
-	assertEquals(1, actual);
-    }
-    
-    @Test void givenTimemtable_whenGetByYear_thanGot(){
-	Timetable timetable = new Timetable.TimetableBuilder().withId(1).withName("new name").
-		withYear(new Year.YearBuilder().withId(1).withName("new").built()).
-		built();
-	
-	int actual = timetableDao.findByYear(timetable).size();
-	
-	assertEquals(1, actual);
+	assertEquals(3, actual);
     }
 
 }

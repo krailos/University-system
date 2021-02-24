@@ -23,7 +23,7 @@ class BuildingDaoTest {
 
     @Test
     void givenNewBuilding_whenCreate_thenCreated() {
-	Building building = new Building.BuildingBuilder().withName("Building 3").withAddress("Address 3").built();
+	Building building = Building.builder().name("Building 3").address("Address 3").build();
 
 	buildingDao.create(building);
 
@@ -33,7 +33,7 @@ class BuildingDaoTest {
 
     @Test
     void givenNewFieldsOfBuilding_whenUpdate_thenUpdated() {
-	Building building = new Building.BuildingBuilder().withId(1).withName("new name").withAddress("new address").built();
+	Building building = new Building.BuildingBuilder().id(1).name("new name").address("new address").build();
 
 	buildingDao.update(building);
 

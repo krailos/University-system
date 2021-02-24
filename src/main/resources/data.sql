@@ -64,15 +64,17 @@ address, email, degree, gender, department_id ) VALUES
 ('3t', 'teacher first name 3', 'teacher last name 3', '03.01.1970', '0680000003', 'address 3', 'email 3', 'professor', 'MALE', '1'),
 ('4t', 'teacher first name 4', 'teacher last name 4', '04.01.1970', '0680000004', 'address 4', 'email 4', 'professor', 'MALE', '1');
 
-INSERT INTO timetables (name, year_id) VALUES 
-('timetable for first year finance', '1'),
-('timetable for first year banking', '2');
+INSERT INTO timetables (name) VALUES 
+('timetable for student by date date'),
+('timetable for student by month'),
+('timetable for teacher by date'),
+('timetable for teacher by month');
 
-INSERT INTO lessons (date, lesson_time_id, subject_id, teacher_id, audience_id, timetable_id) VALUES 
-('01.02.2021', '1', '1', '1', '1', '1'),
-('01.02.2021', '2', '2', '2', '2', '1'),
-('01.02.2021', '1', '3', '3', '3', '2'),
-('01.02.2021', '2', '4', '4', '4', '2');
+INSERT INTO lessons (date, lesson_time_id, subject_id, teacher_id, audience_id) VALUES 
+('01.02.2021', '1', '1', '1', '1'),
+('01.02.2021', '2', '2', '2', '2'),
+('01.02.2021', '1', '3', '3', '3'),
+('01.02.2021', '2', '4', '4', '4');
 
 INSERT INTO vocations (kind, applying_date, start_date, end_date, teacher_id) VALUES 
 ('annual', '01.10.2020', '01.08.2021', '14.08.2021', '1');

@@ -14,15 +14,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.SpecialityDao;
 import ua.com.foxminded.krailo.university.dao.YearDao;
 import ua.com.foxminded.krailo.university.model.Speciality;
 
 @ExtendWith(MockitoExtension.class)
-@SpringJUnitConfig(ConfigTest.class)
 class SpecialityServiceTest {
 
     @Mock
@@ -86,12 +83,12 @@ class SpecialityServiceTest {
     }
 
     private Speciality createSpeciality() {
-	return new Speciality.SpecialityBuilder().withId(1).withName("name").built();
+	return Speciality.builder().id(1).name("name").build();
     }
 
     private List<Speciality> createSpecialities() {
-	return new ArrayList<>(Arrays.asList(new Speciality.SpecialityBuilder().withId(1).withName("name").built(),
-		new Speciality.SpecialityBuilder().withId(2).withName("name2").built()));
+	return new ArrayList<>(Arrays.asList(Speciality.builder().id(1).name("name").build(),
+		Speciality.builder().id(2).name("name2").build()));
     }
 
 }

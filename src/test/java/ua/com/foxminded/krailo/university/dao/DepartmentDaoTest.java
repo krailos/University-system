@@ -23,8 +23,8 @@ class DepartmentDaoTest {
 
     @Test
     void givenNewDepartment_whenCreate_thenCreated() {
-	Department department = new Department.DepartmentBuilder().
-		withName("new department").built();
+	Department department = Department.builder().
+		name("new department").build();
 
 	departmentDao.create(department);
 
@@ -35,8 +35,8 @@ class DepartmentDaoTest {
     @Test
     void givenNewFieldsOfDepartment_whenUpdate_tnenUpdated() {
 	Department department = new Department.DepartmentBuilder().
-		withId(1).
-		withName("new department").built();
+		id(1).
+		name("new department").build();
 
 	departmentDao.update(department);
 

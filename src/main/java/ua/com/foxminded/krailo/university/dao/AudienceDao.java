@@ -3,6 +3,7 @@ package ua.com.foxminded.krailo.university.dao;
 import java.sql.PreparedStatement;
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -15,6 +16,8 @@ import ua.com.foxminded.krailo.university.model.Audience;
 public class AudienceDao {
 
     private static final String SQL_SELECT_AUDIENCE_BY_ID = "SELECT * FROM audiences  WHERE id = ?";
+    private static final String SQL_SELECT_AUDIENCE_BY_NUMBER = "SELECT * FROM audiences  WHERE number = ?";
+    private static final String SQL_SELECT_AUDIENCE_BY_NUMBER_AND_BUILDING_ID = "SELECT * FROM audiences  WHERE number = ? AND building_id = ?";
     private static final String SQL_SELECT_AUDIENCES_BY_BUILDING = "SELECT * FROM audiences WHERE building_id = ?";
     private static final String SQL_SELECT_ALL_AUDIENCES = "SELECT * FROM audiences";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM audiences WHERE id = ?";
@@ -31,6 +34,10 @@ public class AudienceDao {
 
     public Audience findById(int id) {
 	return jdbcTemplate.queryForObject(SQL_SELECT_AUDIENCE_BY_ID, new Object[] { id }, audienceRowMapper);
+    }
+
+    public List<Audience> findByNumber(String name) {
+	return jdbcTemplate.query(SQL_SELECT_AUDIENCE_BY_NUMBER, new Object[] { name }, audienceRowMapper);
     }
 
     public List<Audience> findByBuildingId(int buildingId) {
@@ -61,6 +68,16 @@ public class AudienceDao {
 
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
+    }
+
+    public Audience findByNumberAndBuildingId(String number, int buildingId) {
+	try {
+	    return jdbcTemplate.queryForObject(SQL_SELECT_AUDIENCE_BY_NUMBER_AND_BUILDING_ID,
+		    new Object[] { number, buildingId }, audienceRowMapper);
+	} catch (EmptyResultDataAccessException e) {
+	    return null;
+	    // TODO: handle exception
+	}
     }
 
 }

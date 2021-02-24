@@ -50,8 +50,8 @@ class UniversityOfficeDaoTest {
 
     @Test
     void givenNewFieldsOfUniversity_office_whenUpdate_thenUpdated() {
-	UniversityOffice universityOffice = new UniversityOffice.UniversityOfficeBuilder().
-		withId(1).withName("new name").withAddress("new address").built();
+	UniversityOffice universityOffice = UniversityOffice.builder().
+		id(1).name("new name").address("new address").build();
 
 	universityOfficeDao.update(universityOffice);
 
@@ -62,8 +62,8 @@ class UniversityOfficeDaoTest {
 
     @Test
     void givenNewUniversity_office_whenCreate_thenCreated() {
-	UniversityOffice universityOffice = new UniversityOffice.UniversityOfficeBuilder().
-		withName("new name").withAddress("new address").built();
+	UniversityOffice universityOffice = UniversityOffice.builder().
+		name("new name").address("new address").build();
 
 	universityOfficeDao.create(universityOffice);
 

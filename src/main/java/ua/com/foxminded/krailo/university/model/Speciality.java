@@ -10,6 +10,20 @@ public class Speciality {
     private Faculty faculty;
     private List<Year> years = new ArrayList<>();
 
+    public Speciality() {
+    }
+
+    public Speciality(int id, String name, Faculty faculty, List<Year> years) {
+	this.id = id;
+	this.name = name;
+	this.faculty = faculty;
+	this.years = years;
+    }
+
+    public static SpecialityBuilder builder() {
+	return new SpecialityBuilder();
+    }
+
     public int getId() {
 	return id;
     }
@@ -44,34 +58,33 @@ public class Speciality {
 
     public static class SpecialityBuilder {
 
-	private Speciality speciality;
+	private int id;
+	private String name;
+	private Faculty faculty;
+	private List<Year> years = new ArrayList<>();
 
-	public SpecialityBuilder() {
-	    speciality = new Speciality();
-	}
-
-	public SpecialityBuilder withId(int id) {
-	    speciality.id = id;
+	public SpecialityBuilder id(int id) {
+	    this.id = id;
 	    return this;
 	}
 
-	public SpecialityBuilder withName(String name) {
-	    speciality.name = name;
+	public SpecialityBuilder name(String name) {
+	    this.name = name;
 	    return this;
 	}
 
-	public SpecialityBuilder withFaculty(Faculty faculty) {
-	    speciality.faculty = faculty;
+	public SpecialityBuilder faculty(Faculty faculty) {
+	    this.faculty = faculty;
 	    return this;
 	}
 
-	public SpecialityBuilder withYears(List<Year> years) {
-	    speciality.years = years;
+	public SpecialityBuilder years(List<Year> years) {
+	    this.years = years;
 	    return this;
 	}
 
-	public Speciality built() {
-	    return speciality;
+	public Speciality build() {
+	    return new Speciality(id, name, faculty, years);
 	}
 
     }

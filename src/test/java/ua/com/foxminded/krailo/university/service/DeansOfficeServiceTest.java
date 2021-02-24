@@ -13,15 +13,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.DeansOfficeDao;
 import ua.com.foxminded.krailo.university.model.DeansOffice;
 import ua.com.foxminded.krailo.university.model.UniversityOffice;
 
 @ExtendWith(MockitoExtension.class)
-@SpringJUnitConfig(ConfigTest.class)
 class DeansOfficeServiceTest {
 
     @InjectMocks
@@ -82,22 +79,22 @@ class DeansOfficeServiceTest {
     }
 
     private DeansOffice createDeanceOffice() {
-	return new DeansOffice.DeansOfficeBuilder().withId(1).withName("name")
-		.withUniversityOffice(new UniversityOffice.UniversityOfficeBuilder().withId(1).withName("name")
-			.withAddress("address").built())
-		.built();
+	return DeansOffice.builder().id(1).name("name")
+		.universityOffice(UniversityOffice.builder().id(1).name("name")
+			.address("address").build())
+		.build();
     }
 
     private List<DeansOffice> createDeansOffices() {
 	List<DeansOffice> deansOffices = new ArrayList<>();
-	DeansOffice deansOffice1 = new DeansOffice.DeansOfficeBuilder().withId(1).withName("name")
-		.withUniversityOffice(new UniversityOffice.UniversityOfficeBuilder().withId(1).withName("name")
-			.withAddress("address").built())
-		.built();
-	DeansOffice deansOffice2 = new DeansOffice.DeansOfficeBuilder().withId(2).withName("name2")
-		.withUniversityOffice(new UniversityOffice.UniversityOfficeBuilder().withId(1).withName("name")
-			.withAddress("address").built())
-		.built();
+	DeansOffice deansOffice1 = DeansOffice.builder().id(1).name("name")
+		.universityOffice(UniversityOffice.builder().id(1).name("name")
+			.address("address").build())
+		.build();
+	DeansOffice deansOffice2 = DeansOffice.builder().id(2).name("name2")
+		.universityOffice(UniversityOffice.builder().id(1).name("name")
+			.address("address").build())
+		.build();
 	deansOffices.add(deansOffice1);
 	deansOffices.add(deansOffice2);
 	return deansOffices;

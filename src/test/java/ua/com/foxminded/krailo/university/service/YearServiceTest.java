@@ -14,15 +14,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.YearDao;
 import ua.com.foxminded.krailo.university.model.Speciality;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @ExtendWith(MockitoExtension.class)
-@SpringJUnitConfig(ConfigTest.class)
 class YearServiceTest {
 
     @Mock
@@ -84,16 +81,13 @@ class YearServiceTest {
     }
 
     private Year createYear() {
-	return new Year.YearBuilder().withId(1).withName("year")
-		.withSpeciality(new Speciality.SpecialityBuilder().withId(1).built()).built();
+	return Year.builder().id(1).name("year").speciality(Speciality.builder().id(1).build()).build();
     }
 
     private List<Year> createYears() {
-	return new ArrayList<>(Arrays.asList(
-		new Year.YearBuilder().withId(1).withName("year")
-			.withSpeciality(new Speciality.SpecialityBuilder().withId(1).built()).built(),
-		new Year.YearBuilder().withId(2).withName("year2")
-			.withSpeciality(new Speciality.SpecialityBuilder().withId(1).built()).built()));
+	return new ArrayList<>(
+		Arrays.asList(Year.builder().id(1).name("year").speciality(Speciality.builder().id(1).build()).build(),
+			Year.builder().id(2).name("year2").speciality(Speciality.builder().id(1).build()).build()));
     }
 
 }

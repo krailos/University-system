@@ -14,16 +14,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.FacultyDao;
 import ua.com.foxminded.krailo.university.dao.SpecialityDao;
 import ua.com.foxminded.krailo.university.model.DeansOffice;
 import ua.com.foxminded.krailo.university.model.Faculty;
 
 @ExtendWith(MockitoExtension.class)
-@SpringJUnitConfig(ConfigTest.class)
 class FacultyServiceTest {
 
     @Mock
@@ -86,16 +83,16 @@ class FacultyServiceTest {
     }
 
     private Faculty createFaculty() {
-	return new Faculty.FacultyBuilder().withId(1).withName("name")
-		.withDeansOffice(new DeansOffice.DeansOfficeBuilder().withId(1).built()).built();
+	return Faculty.builder().id(1).name("name")
+		.deansOffice(DeansOffice.builder().id(1).build()).build();
     }
 
     private List<Faculty> createFaculties() {
 	return new ArrayList<Faculty>(Arrays.asList(
-		new Faculty.FacultyBuilder().withId(1).withName("name1")
-			.withDeansOffice(new DeansOffice.DeansOfficeBuilder().withId(1).built()).built(),
-		new Faculty.FacultyBuilder().withId(2).withName("name2")
-			.withDeansOffice(new DeansOffice.DeansOfficeBuilder().withId(1).built()).built()));
+		Faculty.builder().id(1).name("name1")
+			.deansOffice(DeansOffice.builder().id(1).build()).build(),
+		Faculty.builder().id(2).name("name2")
+			.deansOffice(DeansOffice.builder().id(1).build()).build()));
     }
 
 }

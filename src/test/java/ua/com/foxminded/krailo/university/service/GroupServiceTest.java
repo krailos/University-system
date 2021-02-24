@@ -2,9 +2,9 @@ package ua.com.foxminded.krailo.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.never;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,16 +15,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.StudentDao;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @ExtendWith(MockitoExtension.class)
-@SpringJUnitConfig(ConfigTest.class)
 class GroupServiceTest {
 
     @Mock
@@ -43,11 +40,10 @@ class GroupServiceTest {
 
 	verify(groupDao).create(group);
     }
-    
+
     @Test
     void givenGroupWithExistingName_whenCereate_thanNotCreated() {
-	Group group = new Group.GroupBuilder().withId(1).withName("name1").withYear(new Year.YearBuilder().withId(1).built())
-		.built();
+	Group group = Group.builder().id(1).name("name1").year(Year.builder().id(1).build()).build();
 	List<Group> groups = createGroups();
 	when(groupDao.findByYearId(1)).thenReturn(groups);
 
@@ -65,11 +61,10 @@ class GroupServiceTest {
 
 	verify(groupDao).update(group);
     }
-    
+
     @Test
     void givenGroupWithExistingName_whenUpdate_thanNotUpdated() {
-	Group group = new Group.GroupBuilder().withId(1).withName("name1").withYear(new Year.YearBuilder().withId(1).built())
-		.built();
+	Group group = Group.builder().id(1).name("name1").year(Year.builder().id(1).build()).build();
 	List<Group> groups = createGroups();
 	when(groupDao.findByYearId(1)).thenReturn(groups);
 
@@ -111,16 +106,13 @@ class GroupServiceTest {
     }
 
     private Group createGroup() {
-	return new Group.GroupBuilder().withId(1).withName("name").withYear(new Year.YearBuilder().withId(1).built())
-		.built();
+	return Group.builder().id(1).name("name").year(Year.builder().id(1).build()).build();
     }
 
     private List<Group> createGroups() {
-	return new ArrayList<Group>(Arrays.asList(
-		new Group.GroupBuilder().withId(1).withName("name1").withYear(new Year.YearBuilder().withId(1).built())
-			.built(),
-		new Group.GroupBuilder().withId(2).withName("name2").withYear(new Year.YearBuilder().withId(1).built())
-			.built()));
+	return new ArrayList<Group>(
+		Arrays.asList(Group.builder().id(1).name("name1").year(Year.builder().id(1).build()).build(),
+			Group.builder().id(2).name("name2").year(Year.builder().id(1).build()).build()));
     }
 
 }

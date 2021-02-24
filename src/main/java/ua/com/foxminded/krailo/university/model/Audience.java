@@ -8,6 +8,21 @@ public class Audience {
     private int capacity;
     private String description;
 
+    public Audience() {
+    }
+
+    public Audience(int id, String number, Building building, int capacity, String description) {
+	this.id = id;
+	this.number = number;
+	this.building = building;
+	this.capacity = capacity;
+	this.description = description;
+    }
+
+    public static AudienceBuilder builder() {
+	return new AudienceBuilder();
+    }
+
     public int getId() {
 	return id;
     }
@@ -49,40 +64,39 @@ public class Audience {
     }
 
     public static class AudienceBuilder {
-	
-	private Audience audience;
+	private int id;
+	private String number;
+	private Building building;
+	private int capacity;
+	private String description;
 
-	public AudienceBuilder() {
-	    audience = new Audience();
-	}
-
-	public AudienceBuilder withId(int id) {
-	    audience.id = id;
+	public AudienceBuilder id(int id) {
+	    this.id = id;
 	    return this;
 	}
 
-	public AudienceBuilder withNumber(String number) {
-	    audience.number = number;
+	public AudienceBuilder number(String number) {
+	    this.number = number;
 	    return this;
 	}
 
-	public AudienceBuilder withBuilding(Building building) {
-	    audience.building = building;
+	public AudienceBuilder building(Building building) {
+	    this.building = building;
 	    return this;
 	}
 
-	public AudienceBuilder withCapacity(int capacity) {
-	    audience.capacity = capacity;
+	public AudienceBuilder capacity(int capacity) {
+	    this.capacity = capacity;
 	    return this;
 	}
 
-	public AudienceBuilder withDescription(String description) {
-	    audience.description = description;
+	public AudienceBuilder description(String description) {
+	    this.description = description;
 	    return this;
 	}
 
-	public Audience built() {
-	    return audience;
+	public Audience build() {
+	    return new Audience(id, number, building, capacity, description);
 	}
 
     }

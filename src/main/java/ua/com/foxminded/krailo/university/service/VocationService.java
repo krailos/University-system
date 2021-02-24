@@ -44,7 +44,8 @@ public class VocationService {
     }
 
     private boolean isVocationPeriodFreeOfLessons(Vocation vocation) {
-	return lessonDao.findBetweenVocationStartEndAndTeacherId(vocation).size() == 0;
+	return lessonDao.findByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd())
+		.isEmpty();
     }
 
     private boolean isVocationsEndDateMoreThenStart(Vocation vocation) {

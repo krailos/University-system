@@ -13,15 +13,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.AudienceDao;
 import ua.com.foxminded.krailo.university.dao.BuildingDao;
 import ua.com.foxminded.krailo.university.model.Building;
 
 @ExtendWith(MockitoExtension.class)
-@SpringJUnitConfig(ConfigTest.class)
 class BuildingServiceTest {
 
     @Mock
@@ -84,13 +81,13 @@ class BuildingServiceTest {
     }
 
     private Building createBuilding() {
-	return new Building.BuildingBuilder().withId(1).withName("name").withAddress("address").built();
+	return Building.builder().id(1).name("name").address("address").build();
     }
 
     private List<Building> createBuildings() {
 	List<Building> buildings = new ArrayList<>();
-	Building building1 = new Building.BuildingBuilder().withId(1).withName("name1").withAddress("address1").built();
-	Building building2 = new Building.BuildingBuilder().withId(2).withName("name2").withAddress("address2").built();
+	Building building1 = Building.builder().id(1).name("name1").address("address1").build();
+	Building building2 = Building.builder().id(2).name("name2").address("address2").build();
 	buildings.add(building1);
 	buildings.add(building2);
 	return buildings;

@@ -14,16 +14,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.StudentDao;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Student;
 
 @ExtendWith(MockitoExtension.class)
-@SpringJUnitConfig(ConfigTest.class)
 class StudentServiceTest {
 
     @InjectMocks
@@ -95,16 +92,16 @@ class StudentServiceTest {
     }
 
     private Student createStudent() {
-	return new Student.StudentBuilder().withId(1).withFirstName("first name").withlastName("last name")
-		.withGender(Gender.MALE).withGroup(new Group.GroupBuilder().withId(1).built()).built();
+	return Student.builder().id(1).firstName("first name").lastName("last name").gender(Gender.MALE)
+		.group(new Group.GroupBuilder().id(1).build()).build();
     }
 
     private List<Student> createStudents() {
 	return new ArrayList<>(Arrays.asList(
-		new Student.StudentBuilder().withId(1).withFirstName("first name").withlastName("last name")
-			.withGender(Gender.MALE).withGroup(new Group.GroupBuilder().withId(1).built()).built(),
-		new Student.StudentBuilder().withId(2).withFirstName("first name2").withlastName("last name2")
-			.withGender(Gender.MALE).withGroup(new Group.GroupBuilder().withId(1).built()).built()));
+		Student.builder().id(1).firstName("first name").lastName("last name").gender(Gender.MALE)
+			.group(new Group.GroupBuilder().id(1).build()).build(),
+		Student.builder().id(2).firstName("first name2").lastName("last name2").gender(Gender.MALE)
+			.group(new Group.GroupBuilder().id(1).build()).build()));
     }
 
 }

@@ -15,14 +15,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.model.Holiday;
 
 @ExtendWith(MockitoExtension.class)
-@SpringJUnitConfig(ConfigTest.class)
 class HolidayServiceTest {
 
     @Mock
@@ -83,12 +80,12 @@ class HolidayServiceTest {
     }
 
     private Holiday createHoliday() {
-	return new Holiday.HolidayBuilder().withId(1).withName("name").withDate(LocalDate.of(2021, 01, 01)).built();
+	return Holiday.builder().id(1).name("name").date(LocalDate.of(2021, 01, 01)).build();
     }
 
     private List<Holiday> createHolidays() {
 	return new ArrayList<Holiday>(Arrays.asList(
-		new Holiday.HolidayBuilder().withId(1).withName("name2").withDate(LocalDate.of(2021, 01, 01)).built(),
-		new Holiday.HolidayBuilder().withId(2).withName("name2").withDate(LocalDate.of(2021, 02, 02)).built()));
+		Holiday.builder().id(1).name("name2").date(LocalDate.of(2021, 01, 01)).build(),
+		Holiday.builder().id(2).name("name2").date(LocalDate.of(2021, 02, 02)).build()));
     }
 }

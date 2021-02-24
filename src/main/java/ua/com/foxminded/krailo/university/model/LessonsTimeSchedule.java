@@ -9,6 +9,19 @@ public class LessonsTimeSchedule {
     private String name;
     private List<LessonTime> lessonTimes = new ArrayList<>();
 
+    public LessonsTimeSchedule() {
+    }
+
+    public LessonsTimeSchedule(int id, String name, List<LessonTime> lessonTimes) {
+	this.id = id;
+	this.name = name;
+	this.lessonTimes = lessonTimes;
+    }
+
+    public static LessonsTimescheduleBuilder builder() {
+	return new LessonsTimescheduleBuilder();
+    }
+
     public int getId() {
 	return id;
     }
@@ -35,29 +48,27 @@ public class LessonsTimeSchedule {
 
     public static class LessonsTimescheduleBuilder {
 
-	private LessonsTimeSchedule lessonsTimeSchedule;
+	private int id;
+	private String name;
+	private List<LessonTime> lessonTimes = new ArrayList<>();
 
-	public LessonsTimescheduleBuilder() {
-	    lessonsTimeSchedule = new LessonsTimeSchedule();
-	}
-
-	public LessonsTimescheduleBuilder withId(int id) {
-	    lessonsTimeSchedule.id = id;
+	public LessonsTimescheduleBuilder id(int id) {
+	    this.id = id;
 	    return this;
 	}
 
-	public LessonsTimescheduleBuilder withName(String name) {
-	    lessonsTimeSchedule.name = name;
+	public LessonsTimescheduleBuilder name(String name) {
+	    this.name = name;
 	    return this;
 	}
 
-	public LessonsTimescheduleBuilder withLessonTimes(List<LessonTime> lessonTimes) {
-	    lessonsTimeSchedule.lessonTimes = lessonTimes;
+	public LessonsTimescheduleBuilder lessonTimes(List<LessonTime> lessonTimes) {
+	    this.lessonTimes = lessonTimes;
 	    return this;
 	}
 
-	public LessonsTimeSchedule built() {
-	    return lessonsTimeSchedule;
+	public LessonsTimeSchedule build() {
+	    return new LessonsTimeSchedule(id, name, lessonTimes);
 	}
 
     }

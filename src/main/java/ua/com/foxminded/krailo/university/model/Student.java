@@ -16,6 +16,28 @@ public class Student {
     private Gender gender;
     private Group group;
 
+    public Student() {
+    }
+
+    public Student(int id, String studentId, String firstName, String lastName, LocalDate birthDate, String phone,
+	    String address, String email, String rank, Gender gender, Group group) {
+	this.id = id;
+	this.studentId = studentId;
+	this.firstName = firstName;
+	this.lastName = lastName;
+	this.birthDate = birthDate;
+	this.phone = phone;
+	this.address = address;
+	this.email = email;
+	this.rank = rank;
+	this.gender = gender;
+	this.group = group;
+    }
+
+    public static StudentBuilder builder() {
+	return new StudentBuilder();
+    }
+
     public int getId() {
 	return id;
     }
@@ -106,69 +128,76 @@ public class Student {
 
     public static class StudentBuilder {
 
-	private Student student;
+	private int id;
+	private String studentId;
+	private String firstName;
+	private String lastName;
+	private LocalDate birthDate;
+	private String phone;
+	private String address;
+	private String email;
+	private String rank;
+	private Gender gender;
+	private Group group;
 
-	public StudentBuilder() {
-	    student = new Student();
-	}
-
-	public StudentBuilder withId(int id) {
-	    student.id = id;
+	public StudentBuilder id(int id) {
+	    this.id = id;
 	    return this;
 	}
 
-	public StudentBuilder withStudentId(String studentId) {
-	    student.studentId = studentId;
+	public StudentBuilder studentId(String studentId) {
+	    this.studentId = studentId;
 	    return this;
 	}
 
-	public StudentBuilder withFirstName(String firstName) {
-	    student.firstName = firstName;
+	public StudentBuilder firstName(String firstName) {
+	    this.firstName = firstName;
 	    return this;
 	}
 
-	public StudentBuilder withlastName(String lastName) {
-	    student.lastName = lastName;
+	public StudentBuilder lastName(String lastName) {
+	    this.lastName = lastName;
 	    return this;
 	}
 
-	public StudentBuilder withBirthDate(LocalDate birthDate) {
-	    student.birthDate = birthDate;
+	public StudentBuilder birthDate(LocalDate birthDate) {
+	    this.birthDate = birthDate;
 	    return this;
 	}
 
-	public StudentBuilder withPhone(String phone) {
-	    student.phone = phone;
+	public StudentBuilder phone(String phone) {
+	    this.phone = phone;
 	    return this;
 	}
 
-	public StudentBuilder withAddress(String address) {
-	    student.address = address;
+	public StudentBuilder address(String address) {
+	    this.address = address;
 	    return this;
 	}
 
-	public StudentBuilder withEmail(String email) {
-	    student.email = email;
+	public StudentBuilder email(String email) {
+	    this.email = email;
 	    return this;
 	}
 
-	public StudentBuilder withRank(String rank) {
-	    student.rank = rank;
+	public StudentBuilder rank(String rank) {
+	    this.rank = rank;
 	    return this;
 	}
 
-	public StudentBuilder withGender(Gender gender) {
-	    student.gender = gender;
+	public StudentBuilder gender(Gender gender) {
+	    this.gender = gender;
 	    return this;
 	}
 
-	public StudentBuilder withGroup(Group group) {
-	    student.group = group;
+	public StudentBuilder group(Group group) {
+	    this.group = group;
 	    return this;
 	}
 
-	public Student built() {
-	    return student;
+	public Student build() {
+	    return new Student(id, studentId, firstName, lastName, birthDate, phone, address, email, rank, gender,
+		    group);
 	}
 
     }

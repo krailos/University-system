@@ -14,14 +14,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.UniversityOfficeDao;
 import ua.com.foxminded.krailo.university.model.UniversityOffice;
 
 @ExtendWith(MockitoExtension.class)
-@SpringJUnitConfig(ConfigTest.class)
 class UniversityOfficeServiceTest {
 
     @Mock
@@ -83,15 +80,12 @@ class UniversityOfficeServiceTest {
     }
 
     private UniversityOffice createUniversityOffice() {
-	return new UniversityOffice.UniversityOfficeBuilder().withId(1).withName("name").withAddress("address").built();
+	return UniversityOffice.builder().id(1).name("name").address("address").build();
     }
 
     private List<UniversityOffice> createUniversityOffices() {
-	return new ArrayList<>(Arrays.asList(
-		new UniversityOffice.UniversityOfficeBuilder().withId(1).withName("name").withAddress("address")
-			.built(),
-		new UniversityOffice.UniversityOfficeBuilder().withId(1).withName("name").withAddress("address")
-			.built()));
+	return new ArrayList<>(Arrays.asList(UniversityOffice.builder().id(1).name("name").address("address").build(),
+		UniversityOffice.builder().id(1).name("name").address("address").build()));
     }
 
 }

@@ -164,9 +164,8 @@ CREATE TABLE teachers (
 CREATE TABLE timetables (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
-	year_id int REFERENCES years (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT timetables__pkey PRIMARY KEY (id),
-	UNIQUE (name, year_id)
+	UNIQUE (name)
 );
 
 CREATE TABLE lessons (
@@ -176,7 +175,6 @@ CREATE TABLE lessons (
 	subject_id int REFERENCES subjects (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	teacher_id int REFERENCES teachers (id) ON UPDATE CASCADE ON DELETE CASCADE,
 	audience_id int REFERENCES audiences (id) ON UPDATE CASCADE ON DELETE CASCADE,	
-	timetable_id int REFERENCES timetables (id) ON UPDATE CASCADE ON DELETE CASCADE,	
 	CONSTRAINT lessons__pkey PRIMARY KEY (id)
 );
 

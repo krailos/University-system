@@ -10,6 +10,20 @@ public class Group {
     private Year year;
     private List<Student> students = new ArrayList<>();
 
+    public Group() {
+    }
+
+    public Group(int id, String name, Year year, List<Student> students) {
+	this.id = id;
+	this.name = name;
+	this.year = year;
+	this.students = students;
+    }
+
+    public static GroupBuilder builder() {
+	return new GroupBuilder();
+    }
+
     public int getId() {
 	return id;
     }
@@ -44,34 +58,33 @@ public class Group {
 
     public static class GroupBuilder {
 
-	private Group group;
+	private int id;
+	private String name;
+	private Year year;
+	private List<Student> students = new ArrayList<>();
 
-	public GroupBuilder() {
-	    group = new Group();
-	}
-
-	public GroupBuilder withId(int id) {
-	    group.id = id;
+	public GroupBuilder id(int id) {
+	    this.id = id;
 	    return this;
 	}
 
-	public GroupBuilder withName(String name) {
-	    group.name = name;
+	public GroupBuilder name(String name) {
+	    this.name = name;
 	    return this;
 	}
 
-	public GroupBuilder withYear(Year year) {
-	    group.year = year;
-	    return this;
-	}
-	
-	public GroupBuilder withStudents(List<Student> students) {
-	    group.students = students;
+	public GroupBuilder year(Year year) {
+	    this.year = year;
 	    return this;
 	}
 
-	public Group built() {
-	    return group;
+	public GroupBuilder students(List<Student> students) {
+	    this.students = students;
+	    return this;
+	}
+
+	public Group build() {
+	    return new Group(id, name, year, students);
 	}
 
     }

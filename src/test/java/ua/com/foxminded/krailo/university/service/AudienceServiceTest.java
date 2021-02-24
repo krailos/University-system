@@ -14,15 +14,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.AudienceDao;
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Building;
 
 @ExtendWith(MockitoExtension.class)
-@SpringJUnitConfig(ConfigTest.class)
 class AudienceServiceTest {
 
     @InjectMocks
@@ -33,9 +30,8 @@ class AudienceServiceTest {
     @Test
     void givenAudienceWithNewNumber_whenCreate_thenCreated() {
 	Audience audience = createAudience();
-	doNothing().when(audienceDao).create(audience);
-	List<Audience> audiences = createAudiences();
-	when(audienceDao.findByBuildingId(1)).thenReturn(audiences);
+	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
+		.thenReturn(null);
 
 	audienceService.create(audience);
 
@@ -44,11 +40,9 @@ class AudienceServiceTest {
 
     @Test
     void givenAudienceWithExistingNumber_whenCreate_thenNotCreated() {
-	Audience audience = new Audience.AudienceBuilder().withId(1).withNumber("number 1")
-		.withBuilding(new Building.BuildingBuilder().withId(1).built()).withCapacity(100)
-		.withDescription("description").built();
-	List<Audience> audiences = createAudiences();
-	when(audienceDao.findByBuildingId(1)).thenReturn(audiences);
+	Audience audience = createAudience();
+	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
+		.thenReturn(Audience.builder().id(1).build());
 
 	audienceService.create(audience);
 
@@ -58,9 +52,18 @@ class AudienceServiceTest {
     @Test
     void givenAudienceWithNewNumber_whenUpdate_thenUpdated() {
 	Audience audience = createAudience();
-	doNothing().when(audienceDao).update(audience);
-	List<Audience> audiences = createAudiences();
-	when(audienceDao.findByBuildingId(1)).thenReturn(audiences);
+	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId())).thenReturn(null);
+
+	audienceService.update(audience);
+
+	verify(audienceDao).update(audience);
+    }
+    
+    @Test
+    void givenAudienceWithNotChangedNumber_whenUpdate_thenUpdated() {
+	Audience audience = createAudience();
+	Audience audience2 = createAudience();
+	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId())).thenReturn(audience2);
 
 	audienceService.update(audience);
 
@@ -69,11 +72,10 @@ class AudienceServiceTest {
 
     @Test
     void givenAudienceWithExistingNumber_whenUpdate_thenNotUpdated() {
-	Audience audience = new Audience.AudienceBuilder().withId(1).withNumber("number 1")
-		.withBuilding(new Building.BuildingBuilder().withId(1).built()).withCapacity(100)
-		.withDescription("description").built();
-	List<Audience> audiences = createAudiences();
-	when(audienceDao.findByBuildingId(1)).thenReturn(audiences);
+	Audience audience = createAudience();
+	Audience audience2 = createAudience();
+	audience2.setId(2);
+	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId())).thenReturn(audience2);
 
 	audienceService.update(audience);
 
@@ -124,19 +126,16 @@ class AudienceServiceTest {
     }
 
     private Audience createAudience() {
-	return new Audience.AudienceBuilder().withId(1).withNumber("number")
-		.withBuilding(new Building.BuildingBuilder().withId(1).built()).withCapacity(100)
-		.withDescription("description").built();
+	return Audience.builder().id(1).number("number 1").building(Building.builder().id(1).build()).capacity(100)
+		.description("description").build();
     }
 
     private List<Audience> createAudiences() {
 	List<Audience> audiences = new ArrayList<>();
-	Audience audience1 = new Audience.AudienceBuilder().withId(1).withNumber("number 1")
-		.withBuilding(new Building.BuildingBuilder().withId(1).built()).withCapacity(100)
-		.withDescription("description").built();
-	Audience audience2 = new Audience.AudienceBuilder().withId(2).withNumber("number 2")
-		.withBuilding(new Building.BuildingBuilder().withId(1).built()).withCapacity(100)
-		.withDescription("description").built();
+	Audience audience1 = Audience.builder().id(1).number("number 1").building(Building.builder().id(1).build())
+		.capacity(100).description("description").build();
+	Audience audience2 = Audience.builder().id(1).number("number 1").building(Building.builder().id(2).build())
+		.capacity(100).description("description").build();
 	audiences.add(audience1);
 	audiences.add(audience2);
 	return audiences;

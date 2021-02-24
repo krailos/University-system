@@ -14,15 +14,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.DepartmentDao;
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
 import ua.com.foxminded.krailo.university.model.Department;
 
 @ExtendWith(MockitoExtension.class)
-@SpringJUnitConfig(ConfigTest.class)
 class DepartmentServiceTest {
 
     @Mock
@@ -34,7 +31,7 @@ class DepartmentServiceTest {
 
     @Test
     void givenDepartment_whenCereate_thanCreated() {
-	Department department = new Department.DepartmentBuilder().withId(1).withName("name").built();
+	Department department = Department.builder().id(1).name("name").build();
 	doNothing().when(departmentDao).create(department);
 
 	departmentService.create(department);
@@ -44,7 +41,7 @@ class DepartmentServiceTest {
 
     @Test
     void givenDepartment_whenUpdate_thanUpdeted() {
-	Department department = new Department.DepartmentBuilder().withId(1).withName("name").built();
+	Department department =Department.builder().id(1).name("name").build();
 	doNothing().when(departmentDao).update(department);
 
 	departmentService.update(department);
@@ -54,33 +51,33 @@ class DepartmentServiceTest {
 
     @Test
     void givenDepartmentId_whenGetById_thenGot() {
-	Department department = new Department.DepartmentBuilder().withId(1).withName("name").built();
+	Department department =  Department.builder().id(1).name("name").build();
 	when(departmentDao.findById(1)).thenReturn(department);
 
 	Department actual = departmentService.getById(1);
 
-	Department expected = new Department.DepartmentBuilder().withId(1).withName("name").built();
+	Department expected = Department.builder().id(1).name("name").build();
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenDepartments_whenGetAll_thenGot() {
 	List<Department> departments = new ArrayList<>(
-		Arrays.asList(new Department.DepartmentBuilder().withId(1).withName("name").built(),
-			new Department.DepartmentBuilder().withId(2).withName("name2").built()));
+		Arrays.asList(Department.builder().id(1).name("name").build(),
+			 Department.builder().id(2).name("name2").build()));
 	when(departmentDao.findAll()).thenReturn(departments);
 
 	List<Department> actual = departmentService.getAll();
 
 	List<Department> expected = new ArrayList<>(
-		Arrays.asList(new Department.DepartmentBuilder().withId(1).withName("name").built(),
-			new Department.DepartmentBuilder().withId(2).withName("name2").built()));
+		Arrays.asList(Department.builder().id(1).name("name").build(),
+			Department.builder().id(2).name("name2").build()));
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenDepartment_whenDelete_thenDeleted() {
-	Department department = new Department.DepartmentBuilder().withId(1).withName("name").built();
+	Department department = new Department.DepartmentBuilder().id(1).name("name").build();
 	doNothing().when(departmentDao).deleteById(1);
 
 	departmentService.delete(department);

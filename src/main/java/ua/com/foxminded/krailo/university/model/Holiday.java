@@ -8,6 +8,19 @@ public class Holiday {
     private String name;
     private LocalDate date;
 
+    public Holiday() {
+    }
+
+    public Holiday(int id, String name, LocalDate date) {
+	this.id = id;
+	this.name = name;
+	this.date = date;
+    }
+
+    public static HolidayBuilder builder() {
+	return new HolidayBuilder();
+    }
+
     public int getId() {
 	return id;
     }
@@ -33,30 +46,28 @@ public class Holiday {
     }
 
     public static class HolidayBuilder {
-	
-	private Holiday holiday;
 
-	public HolidayBuilder() {
-	    holiday = new Holiday();
-	}
+	private int id;
+	private String name;
+	private LocalDate date;
 
-	public HolidayBuilder withId(int id) {
-	    holiday.id = id;
+	public HolidayBuilder id(int id) {
+	    this.id = id;
 	    return this;
 	}
 
-	public HolidayBuilder withName(String name) {
-	    holiday.name = name;
+	public HolidayBuilder name(String name) {
+	    this.name = name;
 	    return this;
 	}
 
-	public HolidayBuilder withDate(LocalDate date) {
-	    holiday.date = date;
+	public HolidayBuilder date(LocalDate date) {
+	    this.date = date;
 	    return this;
 	}
 
-	public Holiday built() {
-	    return holiday;
+	public Holiday build() {
+	    return new Holiday(id, name, date);
 	}
 
     }

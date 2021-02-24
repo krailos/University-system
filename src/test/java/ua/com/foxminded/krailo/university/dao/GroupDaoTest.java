@@ -18,7 +18,6 @@ import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.LessonTime;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
-import ua.com.foxminded.krailo.university.model.Timetable;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @SpringJUnitConfig(ConfigTest.class)
@@ -32,8 +31,8 @@ class GroupDaoTest {
 
     @Test
     void givenNewGroup_whenCreate_thenCreated() {
-	Group group = new Group.GroupBuilder().withName("new name")
-		.withYear(new Year.YearBuilder().withId(1).withName("new name").withSpeciality(null).built()).built();
+	Group group = Group.builder().name("new name")
+		.year(Year.builder().id(1).name("new name").build()).build();
 
 	groupDao.create(group);
 
@@ -43,8 +42,9 @@ class GroupDaoTest {
 
     @Test
     void givenNewFieldsOfGroup_whenUpdate_tnenUpdated() {
-	Group group = new Group.GroupBuilder().withId(1).withName("new name")
-		.withYear(new Year.YearBuilder().withId(1).withName("new name").withSpeciality(null).built()).built();
+	Group group = Group.builder().id(1).name("new name")
+		.year(Year.builder().id(1).name("new name").build()).build();
+
 
 	groupDao.update(group);
 
@@ -81,12 +81,11 @@ class GroupDaoTest {
 
     @Test
     void givenLessonId_whenFindGroupsByLessonId_thenFound() {
-	Lesson lesson = new Lesson.LessonBuilder().withId(1).withDate(LocalDate.of(2000, 01, 01))
-		.withLessonTime(new LessonTime.LessonTimeBuilder().withId(1).built())
-		.withSubject(new Subject.SubjectBuilder().withId(1).withName("new name").built())
-		.withAudience(new Audience.AudienceBuilder().withId(1).built())
-		.withTeacher(new Teacher.TeacherBuilder().withId(1).built())
-		.withTimetable(new Timetable.TimetableBuilder().withId(1).built()).built();
+	Lesson lesson = Lesson.builder().id(1).date(LocalDate.of(2000, 01, 01))
+		.lessonTime(LessonTime.builder().id(1).build())
+		.subject(Subject.builder().id(1).name("new name").build())
+		.audience(Audience.builder().id(1).build())
+		.teacher(Teacher.builder().id(1).build()).build();
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons_groups", "lesson_id = 1");
 
 	int actual = groupDao.findByLessonId(lesson.getId()).size();
@@ -96,7 +95,7 @@ class GroupDaoTest {
 
     @Test
     void givenYearId_whenFindByYearId_thenFound() {
-	Year year = new Year.YearBuilder().withId(1).withName("new name").withSpeciality(null).built();
+	Year year = Year.builder().id(1).name("new name").build();
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "groups", "year_id = 1");
 
 	int actual = groupDao.findByYearId(year.getId()).size();

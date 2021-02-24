@@ -26,12 +26,12 @@ class VocationDaoTest {
 
     @Test
     void givenNewVocation_whenCreate_thenCreated() {
-	Vocation vocation = new Vocation.VocationBuilder().withKind("kind").
-		withApplyingDate(LocalDate.of(2000, 01, 01)).
-		withStartDate(LocalDate.of(2000, 02, 02)).
-		withEndDate(LocalDate.of(2000, 03, 03)).
-		withTeacher(new Teacher.TeacherBuilder().withId(1).built()).
-		built();
+	Vocation vocation = Vocation.builder().kind("kind").
+		applyingDate(LocalDate.of(2000, 01, 01)).
+		startDate(LocalDate.of(2000, 02, 02)).
+		endDate(LocalDate.of(2000, 03, 03)).
+		teacher(Teacher.builder().id(1).build()).
+		build();
 	
 	vocationDao.create(vocation);
 	
@@ -41,13 +41,13 @@ class VocationDaoTest {
 
     @Test
     void givenNewFieldsOfVocation_whenUpdate_thenUpdated() {
-	Vocation vocation = new Vocation.VocationBuilder().withId(1).
-		withKind("kind").
-		withApplyingDate(LocalDate.of(2000, 01, 01)).
-		withStartDate(LocalDate.of(2000, 02, 02)).
-		withEndDate(LocalDate.of(2000, 03, 03)).
-		withTeacher(new Teacher.TeacherBuilder().withId(1).built()).
-		built();
+	Vocation vocation = Vocation.builder().id(1).
+		kind("kind").
+		applyingDate(LocalDate.of(2000, 01, 01)).
+		startDate(LocalDate.of(2000, 02, 02)).
+		endDate(LocalDate.of(2000, 03, 03)).
+		teacher(Teacher.builder().id(1).build()).
+		build();
 	
 	vocationDao.update(vocation);
 	
@@ -90,6 +90,15 @@ class VocationDaoTest {
 	
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "vocations");
 	assertEquals(1, actual);
+    }
+    
+    @Test
+    void givenId_whenFindByTeacherIdAndDate_thenFound() {
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "vocations", "id = 1 AND '2021-02-15' BETWEEN start_date AND end_date");
+	
+	int actual = vocationDao.findByTeacherIdAndDate(1, LocalDate.of(2021, 02, 15)).getId();
+	
+	assertEquals(expected, actual);
     }
 
 }

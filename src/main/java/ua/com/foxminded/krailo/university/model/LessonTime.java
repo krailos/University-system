@@ -10,6 +10,22 @@ public class LessonTime {
     private LocalTime endTime;
     private LessonsTimeSchedule lessonsTimeSchedule;
 
+    public LessonTime() {
+    }
+
+    public LessonTime(int id, String orderNumber, LocalTime startTime, LocalTime endTime,
+	    LessonsTimeSchedule lessonsTimeSchedule) {
+	this.id = id;
+	this.orderNumber = orderNumber;
+	this.startTime = startTime;
+	this.endTime = endTime;
+	this.lessonsTimeSchedule = lessonsTimeSchedule;
+    }
+
+    public static LessonTimeBuilder builder() {
+	return new LessonTimeBuilder();
+    }
+
     public int getId() {
 	return id;
     }
@@ -51,39 +67,40 @@ public class LessonTime {
     }
 
     public static class LessonTimeBuilder {
-	private LessonTime lessonTime;
 
-	public LessonTimeBuilder() {
-	    lessonTime = new LessonTime();
-	}
+	private int id;
+	private String orderNumber;
+	private LocalTime startTime;
+	private LocalTime endTime;
+	private LessonsTimeSchedule lessonsTimeSchedule;
 
-	public LessonTimeBuilder withId(int id) {
-	    lessonTime.id = id;
+	public LessonTimeBuilder id(int id) {
+	    this.id = id;
 	    return this;
 	}
 
-	public LessonTimeBuilder withOrderNumber(String orderNumber) {
-	    lessonTime.orderNumber = orderNumber;
+	public LessonTimeBuilder orderNumber(String orderNumber) {
+	    this.orderNumber = orderNumber;
 	    return this;
 	}
 
-	public LessonTimeBuilder withStartTime(LocalTime startTime) {
-	    lessonTime.startTime = startTime;
+	public LessonTimeBuilder startTime(LocalTime startTime) {
+	    this.startTime = startTime;
 	    return this;
 	}
 
-	public LessonTimeBuilder withEndTime(LocalTime endTime) {
-	    lessonTime.endTime = endTime;
+	public LessonTimeBuilder endTime(LocalTime endTime) {
+	    this.endTime = endTime;
 	    return this;
 	}
 
-	public LessonTimeBuilder withLessonsTimeSchedule(LessonsTimeSchedule lessonsTimeSchedule) {
-	    lessonTime.lessonsTimeSchedule = lessonsTimeSchedule;
+	public LessonTimeBuilder lessonsTimeSchedule(LessonsTimeSchedule lessonsTimeSchedule) {
+	    this.lessonsTimeSchedule = lessonsTimeSchedule;
 	    return this;
 	}
 
-	public LessonTime built() {
-	    return lessonTime;
+	public LessonTime build() {
+	    return new LessonTime(id, orderNumber, startTime, endTime, lessonsTimeSchedule);
 	}
 
     }
