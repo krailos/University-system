@@ -3,6 +3,7 @@ package ua.com.foxminded.krailo.university.dao;
 import java.sql.PreparedStatement;
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -15,6 +16,7 @@ import ua.com.foxminded.krailo.university.model.Speciality;
 public class SpecialityDao {
 
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM specialities WHERE id = ?";
+    private static final String SQL_SELECT_BY_NAME_AND_FACULTY_ID = "SELECT * FROM specialities WHERE name = ? AND id = ?";
     private static final String SQL_SELECT_BY_FACULTY_ID = "SELECT * FROM specialities WHERE faculty_id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM specialities ";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM specialities WHERE id = ?";
@@ -53,11 +55,20 @@ public class SpecialityDao {
 	return jdbcTemplate.query(SQL_SELECT_ALL, specialityRowMapper);
     }
 
-    public List<Speciality> findByFacultyId(int id) {
- 	return jdbcTemplate.query(SQL_SELECT_BY_FACULTY_ID, specialityRowMapper, id);
-     }
+    public List<Speciality> findByFacultyId(int facultyId) {
+	return jdbcTemplate.query(SQL_SELECT_BY_FACULTY_ID, specialityRowMapper, facultyId);
+    }
+
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
+    }
+
+    public Speciality findByNameAndFacultyId(String name, int facultyId) {
+	try {
+	    return jdbcTemplate.queryForObject(SQL_SELECT_BY_NAME_AND_FACULTY_ID, specialityRowMapper, name, facultyId);
+	} catch (EmptyResultDataAccessException e) {
+	    return null;
+	}
     }
 
 }

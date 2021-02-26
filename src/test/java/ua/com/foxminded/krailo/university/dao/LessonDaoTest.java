@@ -129,18 +129,7 @@ class LessonDaoTest {
 	Lesson lesson = new Lesson();
 	lesson.setDate(LocalDate.of(2021, 01, 01));
 
-	int actual = lessonDao.findByDate(lesson).size();
-
-	assertEquals(expected, actual);
-    }
-
-    @Test
-    void givenTeacherAndDate_whenFindByTeacherByMonth_thenFound() {
-	Teacher teacher = Teacher.builder().id(1).build();
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons",
-		" teacher_id = 1 and date BETWEEN '2021-01-01' AND '2021-02-01'");
-
-	int actual = lessonDao.findByTeacherByMonth(teacher, LocalDate.of(2021, 01, 01)).size();
+	int actual = lessonDao.findByDate(lesson.getDate()).size();
 
 	assertEquals(expected, actual);
     }
@@ -163,18 +152,9 @@ class LessonDaoTest {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons",
 		"teacher_id = 1 AND date = '2021-01-01'");
 
-	int actual = lessonDao.findByTeacherByDate(teacher, LocalDate.of(2021, 01, 01)).size();
+	int actual = lessonDao.findByTeacherAndDate(teacher, LocalDate.of(2021, 01, 01)).size();
 
 	assertEquals(expected, actual);
-    }
-
-    @Test
-    void givenStudentAndDate_whenFindByStudentByMonth_thenFound() {
-	Student student = Student.builder().id(1).build();
-
-	int actual = lessonDao.findByStudentByMonth(student, LocalDate.of(2021, 01, 01)).size();
-
-	assertEquals(2, actual);
     }
 
     @Test
@@ -191,7 +171,7 @@ class LessonDaoTest {
     void givenStudentAndDate_whenFindByStudentByDate_thenFound() {
 	Student student = Student.builder().id(1).build();
 
-	int actual = lessonDao.findByStudentByDate(student, LocalDate.of(2021, 01, 01)).size();
+	int actual = lessonDao.findByStudentAndDate(student, LocalDate.of(2021, 01, 01)).size();
 
 	assertEquals(2, actual);
     }
@@ -203,21 +183,33 @@ class LessonDaoTest {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons",
 		" date = '2021-001-01' AND  teacher_id = 1 AND lesson_time_id = 1");
 
-	int actual = lessonDao.findByDateByTeacherByLessonTime(lesson).getId();
+	int actual = lessonDao.findByDateAndTeacherAndLessonTime(lesson).getId();
 
 	assertEquals(expected, actual);
     }
-    
+
     @Test
-    void givenId_whenFindByDateByAudienceByLessonTime_thenFound() {
+    void givenLesson_whenFindByDateAndAudienceAndLessonTime_thenFound() {
 	Lesson lesson = Lesson.builder().date(LocalDate.of(2021, 01, 01)).audience(Audience.builder().id(1).build())
 		.lessonTime(LessonTime.builder().id(1).build()).build();
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons",
 		" date = '2021-001-01' AND  audience_id = 1 AND lesson_time_id = 1");
 
-	int actual = lessonDao.findByDateByAudienceByLessonTime(lesson).getId();
+	int actual = lessonDao.findByDateAndAudienceAndLessonTime(lesson).getId();
 
 	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenDateLessonTimeIdGroupId_whenFindByDateAndLessonTimeAndGroup_thenFound() {
+	Lesson lesson = Lesson.builder().date(LocalDate.of(2021, 01, 01)).audience(Audience.builder().id(1).build())
+		.lessonTime(LessonTime.builder().id(1).build()).build();
+	lesson.getGroups().add(Group.builder().id(1).build());
+
+	int actual = lessonDao.findByDateAndLessonTimeIdAndGroupId(lesson.getDate(), lesson.getLessonTime().getId(),
+		lesson.getGroups().get(0).getId()).getId();
+
+	assertEquals(1, actual);
     }
 
 }

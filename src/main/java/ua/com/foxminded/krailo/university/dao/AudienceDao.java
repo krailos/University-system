@@ -76,7 +76,6 @@ public class AudienceDao {
 		    new Object[] { number, buildingId }, audienceRowMapper);
 	} catch (EmptyResultDataAccessException e) {
 	    return null;
-	    // TODO: handle exception
 	}
     }
 

@@ -1,6 +1,7 @@
 package ua.com.foxminded.krailo.university.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -17,25 +18,34 @@ public class SpecialityService {
     }
 
     public void create(Speciality speciality) {
-	specialityDao.create(speciality);
+	if (isUniqueSpecialityName(speciality)) {
+	    specialityDao.create(speciality);
+	}
     }
 
     public void update(Speciality speciality) {
-	specialityDao.update(speciality);
+	if (isUniqueSpecialityName(speciality)) {
+	    specialityDao.update(speciality);
+	}
     }
 
     public Speciality getById(int id) {
-	Speciality speciality = specialityDao.findById(id);
-	return speciality;
+	return specialityDao.findById(id);
     }
 
     public List<Speciality> getAll() {
-	List<Speciality> specialities = specialityDao.findAll();
-	return specialities;
+	return specialityDao.findAll();
     }
 
     public void delete(Speciality speciality) {
 	specialityDao.deleteById(speciality.getId());
+    }
+
+    private boolean isUniqueSpecialityName(Speciality speciality) {
+	Optional<Speciality> existingSpeciality = Optional.ofNullable(
+		specialityDao.findByNameAndFacultyId(speciality.getName(), speciality.getFaculty().getId()));
+	return (existingSpeciality.isEmpty()
+		|| existingSpeciality.filter(s -> s.getId() == speciality.getId()).isPresent());
     }
 
 }

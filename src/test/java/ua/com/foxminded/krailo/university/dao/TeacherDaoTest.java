@@ -134,4 +134,14 @@ class TeacherDaoTest {
 	assertEquals(expected, actual);
     }
 
+    @Test
+    void givenTeacherIdAndSubjectId_whenFindByTeacherIdAndSubjectId_thenFound() {
+	Teacher teacher = Teacher.builder().id(1).build();
+	Subject subject = Subject.builder().id(1).build();
+
+	int actual = teacherDao.findByTeacherIdAndSubjectId(teacher.getId(), subject.getId()).getId();
+
+	assertEquals(1, actual);
+    }
+
 }

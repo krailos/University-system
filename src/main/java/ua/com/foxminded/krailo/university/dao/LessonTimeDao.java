@@ -57,8 +57,8 @@ public class LessonTimeDao {
 	return jdbcTemplate.query(SQL_SELECT_ALL, lessonTimeRowMapper);
     }
     
-    public List<LessonTime> findBylessonTimeScheduleId(int id) {
-	return jdbcTemplate.query(SQL_SELECT_BY_LESSON_TIME_SCHEDULE_ID, lessonTimeRowMapper, id);
+    public List<LessonTime> findBylessonTimeScheduleId(int scheduleId) {
+	return jdbcTemplate.query(SQL_SELECT_BY_LESSON_TIME_SCHEDULE_ID, lessonTimeRowMapper, scheduleId);
     }
 
     public void deleteById(int id) {

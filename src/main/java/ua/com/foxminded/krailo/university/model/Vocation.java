@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public class Vocation {
 
     private int id;
-    private String kind;
+    private VocationKind kind;
     private LocalDate applyingDate;
     private LocalDate start;
     private LocalDate end;
@@ -14,7 +14,8 @@ public class Vocation {
     public Vocation() {
     }
 
-    public Vocation(int id, String kind, LocalDate applyingDate, LocalDate start, LocalDate end, Teacher teacher) {
+    public Vocation(int id, VocationKind kind, LocalDate applyingDate, LocalDate start, LocalDate end,
+	    Teacher teacher) {
 	this.id = id;
 	this.kind = kind;
 	this.applyingDate = applyingDate;
@@ -35,6 +36,22 @@ public class Vocation {
 	this.id = id;
     }
 
+    public VocationKind getKind() {
+	return kind;
+    }
+
+    public void setKind(VocationKind kind) {
+	this.kind = kind;
+    }
+
+    public LocalDate getApplyingDate() {
+	return applyingDate;
+    }
+
+    public void setApplyingDate(LocalDate applyingDate) {
+	this.applyingDate = applyingDate;
+    }
+
     public LocalDate getStart() {
 	return start;
     }
@@ -51,22 +68,6 @@ public class Vocation {
 	this.end = end;
     }
 
-    public String getKind() {
-	return kind;
-    }
-
-    public void setKind(String kind) {
-	this.kind = kind;
-    }
-
-    public LocalDate getApplyingDate() {
-	return applyingDate;
-    }
-
-    public void setApplyingDate(LocalDate applyingDate) {
-	this.applyingDate = applyingDate;
-    }
-
     public Teacher getTeacher() {
 	return teacher;
     }
@@ -78,7 +79,7 @@ public class Vocation {
     public static class VocationBuilder {
 
 	private int id;
-	private String kind;
+	private VocationKind kind;
 	private LocalDate applyingDate;
 	private LocalDate start;
 	private LocalDate end;
@@ -89,7 +90,7 @@ public class Vocation {
 	    return this;
 	}
 
-	public VocationBuilder kind(String kind) {
+	public VocationBuilder kind(VocationKind kind) {
 	    this.kind = kind;
 	    return this;
 	}

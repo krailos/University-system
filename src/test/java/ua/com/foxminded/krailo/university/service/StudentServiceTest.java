@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.never;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.StudentDao;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Group;
@@ -27,11 +29,15 @@ class StudentServiceTest {
     private StudentService studentService;
     @Mock
     private StudentDao studentDao;
+    @Mock
+    private GroupDao groupDao;
 
     @Test
     void givenStudent_whenCreate_thenCreated() {
 	Student student = createStudent();
-	doNothing().when(studentDao).create(student);
+	Group group = Group.builder().id(1).capacity(3).build();
+	group.setStudents(new ArrayList<>(createStudents()));
+	when(groupDao.findById(student.getGroup().getId())).thenReturn(group);
 
 	studentService.create(student);
 
@@ -39,13 +45,39 @@ class StudentServiceTest {
     }
 
     @Test
+    void givenStudentWithNotEnoughtGroupCapacity_whenCreate_thenNotCreated() {
+	Student student = createStudent();
+	Group group = Group.builder().id(1).capacity(2).build();
+	group.setStudents(new ArrayList<>(createStudents()));
+	when(groupDao.findById(student.getGroup().getId())).thenReturn(group);
+
+	studentService.create(student);
+
+	verify(studentDao, never()).create(student);
+    }
+
+    @Test
     void givenStudent_whenUpdate_thenUpdated() {
 	Student student = createStudent();
-	doNothing().when(studentDao).update(student);
+	Group group = Group.builder().id(1).capacity(3).build();
+	group.setStudents(new ArrayList<>(createStudents()));
+	when(groupDao.findById(student.getGroup().getId())).thenReturn(group);
 
 	studentService.update(student);
 
 	verify(studentDao).update(student);
+    }
+
+    @Test
+    void givenStudentWithNotEnoughtGroupCapacity_whenUpdate_thenNotUpdated() {
+	Student student = createStudent();
+	Group group = Group.builder().id(1).capacity(2).build();
+	group.setStudents(new ArrayList<>(createStudents()));
+	when(groupDao.findById(student.getGroup().getId())).thenReturn(group);
+
+	studentService.update(student);
+
+	verify(studentDao, never()).update(student);
     }
 
     @Test

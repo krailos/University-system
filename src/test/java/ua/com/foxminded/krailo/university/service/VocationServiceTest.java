@@ -17,11 +17,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
+import ua.com.foxminded.krailo.university.model.Holiday;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Vocation;
+import ua.com.foxminded.krailo.university.model.VocationKind;
 
 @ExtendWith(MockitoExtension.class)
 class VocationServiceTest {
@@ -30,18 +33,45 @@ class VocationServiceTest {
     private VocationDao vocationDao;
     @Mock
     private LessonDao lessonDao;
+    @Mock
+    private HolidayDao holidayDao;
     @InjectMocks
     private VocationService vocationService;
 
     @Test
     void givenVocationPeriodWhitoutLessons_whenCereate_thenCreated() {
 	Vocation vocation = createVocation();
+	List<Vocation> vocations = createVocations();
+	List<Holiday> holidays = new ArrayList<>(
+		Arrays.asList(Holiday.builder().name("name 1").date(LocalDate.of(2021, 01, 01)).build(),
+			Holiday.builder().name("name 2").date(LocalDate.of(2021, 01, 01)).build()));
 	when(lessonDao.findByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
 		.thenReturn(new ArrayList<>());
+	when(holidayDao.findAll()).thenReturn(holidays);
+	when(vocationDao.findByTeacherIdAndYear(vocation.getTeacher().getId(), vocation.getStart()))
+		.thenReturn(vocations);
 
 	vocationService.create(vocation);
 
 	verify(vocationDao).create(vocation);
+    }
+
+    @Test
+    void givenVocationPeriodWhitoutDurationMoreThenMaxDuration_whenCereate_thenCreated() {
+	Vocation vocation = createVocation();
+	vocation.setEnd(LocalDate.of(2021, 01, 12));
+	List<Vocation> vocations = createVocations();
+	List<Holiday> holidays = new ArrayList<>(
+		Arrays.asList(Holiday.builder().name("name 1").date(LocalDate.of(2021, 01, 01)).build(),
+			Holiday.builder().name("name 2").date(LocalDate.of(2021, 01, 01)).build()));
+	when(lessonDao.findByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
+		.thenReturn(new ArrayList<>());
+	when(holidayDao.findAll()).thenReturn(holidays);
+	when(vocationDao.findByTeacherId(vocation.getTeacher().getId())).thenReturn(vocations);
+
+	vocationService.create(vocation);
+
+	verify(vocationDao, never()).create(vocation);
     }
 
     @Test
@@ -61,6 +91,17 @@ class VocationServiceTest {
 	Vocation vocation = createVocation();
 	vocation.setStart(LocalDate.of(2021, 01, 02));
 	vocation.setEnd(LocalDate.of(2021, 01, 01));
+
+	vocationService.create(vocation);
+
+	verify(vocationDao, never()).create(vocation);
+    }
+    
+    @Test
+    void givenVocationWithStartAndEndDateWIthDifrentYear_whenCreate_thenNotCreated() {
+	Vocation vocation = createVocation();
+	vocation.setStart(LocalDate.of(2021, 12, 31));
+	vocation.setEnd(LocalDate.of(2022, 01, 10));
 
 	vocationService.create(vocation);
 
@@ -91,10 +132,21 @@ class VocationServiceTest {
     }
 
     @Test
-    void givenVocationWithEndLessThenStart_whenUpdate_thenNotUpdated() {
+    void givenVocationWithEndDateLessThenStart_whenUpdate_thenNotUpdated() {
 	Vocation vocation = createVocation();
 	vocation.setStart(LocalDate.of(2021, 01, 02));
 	vocation.setEnd(LocalDate.of(2021, 01, 01));
+
+	vocationService.update(vocation);
+
+	verify(vocationDao, never()).update(vocation);
+    }
+    
+    @Test
+    void givenVocationWithStartAndEndDateWIthDifrentYear_whenUpdate_thenNotUpdated() {
+	Vocation vocation = createVocation();
+	vocation.setStart(LocalDate.of(2021, 12, 31));
+	vocation.setEnd(LocalDate.of(2022, 01, 10));
 
 	vocationService.update(vocation);
 
@@ -146,17 +198,17 @@ class VocationServiceTest {
     }
 
     private Vocation createVocation() {
-	return Vocation.builder().id(1).kind("kind").applyingDate(LocalDate.of(2020, 12, 31))
+	return Vocation.builder().id(1).kind(VocationKind.GENERAL).applyingDate(LocalDate.of(2020, 12, 31))
 		.startDate(LocalDate.of(2021, 01, 01)).endDate(LocalDate.of(2021, 01, 07))
 		.teacher(Teacher.builder().id(1).firstName("teacher").build()).build();
     }
 
     private List<Vocation> createVocations() {
 	return new ArrayList<>(Arrays.asList(
-		Vocation.builder().id(1).kind("kind").applyingDate(LocalDate.of(2020, 12, 31))
+		Vocation.builder().id(1).kind(VocationKind.GENERAL).applyingDate(LocalDate.of(2020, 12, 31))
 			.startDate(LocalDate.of(2021, 01, 01)).endDate(LocalDate.of(2021, 01, 07))
 			.teacher(Teacher.builder().id(1).firstName("teacher").build()).build(),
-		Vocation.builder().id(2).kind("kind").applyingDate(LocalDate.of(2020, 12, 31))
+		Vocation.builder().id(2).kind(VocationKind.GENERAL).applyingDate(LocalDate.of(2020, 12, 31))
 			.startDate(LocalDate.of(2021, 01, 01)).endDate(LocalDate.of(2021, 01, 07))
 			.teacher(Teacher.builder().id(2).firstName("teacher2").build()).build()));
 

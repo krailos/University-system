@@ -1,6 +1,7 @@
 package ua.com.foxminded.krailo.university.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ public class AudienceService {
     }
 
     public void update(Audience audience) {
-	if (isUniqueNumberForUpdate(audience)) {
+	if (isUniqueNumber(audience)) {
 	    audienceDao.update(audience);
 	}
     }
@@ -45,13 +46,9 @@ public class AudienceService {
     }
 
     private boolean isUniqueNumber(Audience audience) {
-	return audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()) == null;
+	Optional<Audience> existingAudience = Optional.ofNullable(audienceDao.findByNumberAndBuildingId(audience.getNumber(),
+		audience.getBuilding().getId()));
+	return (existingAudience.isEmpty() || existingAudience.filter(a -> a.getId() == audience.getId()).isPresent());
     }
 
-    private boolean isUniqueNumberForUpdate(Audience audience) {
-	Audience audienceFromDB = audienceDao.findByNumberAndBuildingId(audience.getNumber(),
-		audience.getBuilding().getId());
-	return (audienceFromDB == null || audienceFromDB.getId() == audience.getId());
-
-    }
 }

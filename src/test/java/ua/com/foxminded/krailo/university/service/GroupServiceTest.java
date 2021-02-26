@@ -34,7 +34,7 @@ class GroupServiceTest {
     @Test
     void givenGroup_whenCereate_thanCreated() {
 	Group group = createGroup();
-	doNothing().when(groupDao).create(group);
+	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId())).thenReturn(null);
 
 	groupService.create(group);
 
@@ -44,8 +44,7 @@ class GroupServiceTest {
     @Test
     void givenGroupWithExistingName_whenCereate_thanNotCreated() {
 	Group group = Group.builder().id(1).name("name1").year(Year.builder().id(1).build()).build();
-	List<Group> groups = createGroups();
-	when(groupDao.findByYearId(1)).thenReturn(groups);
+	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId())).thenReturn(Group.builder().name("name").build());
 
 	groupService.create(group);
 
@@ -55,7 +54,7 @@ class GroupServiceTest {
     @Test
     void givenGroup_whenUpdate_thanUpdeted() {
 	Group group = createGroup();
-	doNothing().when(groupDao).update(group);
+	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId())).thenReturn(null);
 
 	groupService.update(group);
 
@@ -65,8 +64,8 @@ class GroupServiceTest {
     @Test
     void givenGroupWithExistingName_whenUpdate_thanNotUpdated() {
 	Group group = Group.builder().id(1).name("name1").year(Year.builder().id(1).build()).build();
-	List<Group> groups = createGroups();
-	when(groupDao.findByYearId(1)).thenReturn(groups);
+	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId()))
+		.thenReturn(Group.builder().id(2).name("name1").year(Year.builder().id(1).build()).build());
 
 	groupService.update(group);
 

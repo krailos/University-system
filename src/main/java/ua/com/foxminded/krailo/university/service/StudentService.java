@@ -4,24 +4,32 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.StudentDao;
+import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Student;
 
 @Service
 public class StudentService {
 
     private StudentDao studentDao;
+    private GroupDao groupDao;
 
-    public StudentService(StudentDao studentDao) {
+    public StudentService(StudentDao studentDao, GroupDao groupDao) {
 	this.studentDao = studentDao;
+	this.groupDao = groupDao;
     }
 
     public void create(Student student) {
-	studentDao.create(student);
+	if (isEnoughtGroupCapacity(student)) {
+	    studentDao.create(student);
+	}
     }
 
     public void update(Student student) {
-	studentDao.update(student);
+	if (isEnoughtGroupCapacity(student)) {
+	    studentDao.update(student);
+	}
     }
 
     public Student getById(int id) {
@@ -38,5 +46,10 @@ public class StudentService {
 
     public void delete(Student student) {
 	studentDao.deleteById(student.getId());
+    }
+
+    private boolean isEnoughtGroupCapacity(Student student) {
+	Group group = groupDao.findById(student.getId());
+	return (groupDao.findById(student.getId()).getStudents().size() + 1) <= group.getCapacity();
     }
 }

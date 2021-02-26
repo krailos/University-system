@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.never;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.krailo.university.dao.SpecialityDao;
 import ua.com.foxminded.krailo.university.dao.YearDao;
+import ua.com.foxminded.krailo.university.model.Faculty;
 import ua.com.foxminded.krailo.university.model.Speciality;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,21 +34,46 @@ class SpecialityServiceTest {
     @Test
     void givenSpeciality_whenCereate_thanCreated() {
 	Speciality speciality = createSpeciality();
-	doNothing().when(specialityDao).create(speciality);
+	when(specialityDao.findByNameAndFacultyId(speciality.getName(), speciality.getFaculty().getId()))
+		.thenReturn(null);
 
 	specialityService.create(speciality);
 
 	verify(specialityDao).create(speciality);
     }
+    
+    @Test
+    void givenSpecialityWithNotUniqueName_whenCereate_thanNotCreated() {
+	Speciality speciality = createSpeciality();
+	when(specialityDao.findByNameAndFacultyId(speciality.getName(), speciality.getFaculty().getId()))
+		.thenReturn(Speciality.builder().id(2).name("name").build());
+
+	specialityService.create(speciality);
+
+	verify(specialityDao, never()).create(speciality);
+    }
 
     @Test
     void givenSpeciality_whenUpdate_thanUpdeted() {
 	Speciality speciality = createSpeciality();
-	doNothing().when(specialityDao).update(speciality);
-
+	when(specialityDao.findByNameAndFacultyId(speciality.getName(), speciality.getFaculty().getId()))
+		.thenReturn(Speciality.builder().id(1).name("name").build());
+	
 	specialityService.update(speciality);
 
 	verify(specialityDao).update(speciality);
+    }
+    
+    @Test
+    void givenSpecialityWithNotUniqueNam_whenUpdate_thanNotUpdeted() {
+	Speciality speciality = createSpeciality();
+	when(specialityDao.findByNameAndFacultyId(speciality.getName(), speciality.getFaculty().getId()))
+	.thenReturn(Speciality.builder().id(2).name("name").build());
+
+	
+	specialityService.update(speciality);
+
+	verify(specialityDao, never()).update(speciality);
     }
 
     @Test
@@ -83,7 +110,7 @@ class SpecialityServiceTest {
     }
 
     private Speciality createSpeciality() {
-	return Speciality.builder().id(1).name("name").build();
+	return Speciality.builder().id(1).name("name").faculty(Faculty.builder().id(1).build()).build();
     }
 
     private List<Speciality> createSpecialities() {

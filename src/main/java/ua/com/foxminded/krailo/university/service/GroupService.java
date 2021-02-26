@@ -1,6 +1,7 @@
 package ua.com.foxminded.krailo.university.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -17,15 +18,13 @@ public class GroupService {
     }
 
     public void create(Group group) {
-	List<Group> groups = groupDao.findByYearId(group.getId());
-	if (isGroupNameExist(groups, group)) {
+	if (isUniqueGroupName(group)) {
 	    groupDao.create(group);
 	}
     }
 
     public void update(Group group) {
-	List<Group> groups = groupDao.findByYearId(group.getId());
-	if (isGroupNameExist(groups, group)) {
+	if (isUniqueGroupName(group)) {
 	    groupDao.update(group);
 	}
     }
@@ -43,8 +42,10 @@ public class GroupService {
 	groupDao.deleteById(group.getId());
     }
 
-    private boolean isGroupNameExist(List<Group> groups, Group group) {
-	return groups.stream().map(Group::getName).noneMatch(n -> n.equals(group.getName()));
+    private boolean isUniqueGroupName(Group group) {
+	Optional<Group> existingGroup = Optional
+		.ofNullable(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId()));
+	return (existingGroup.isEmpty() || existingGroup.filter(g -> g.getId() == group.getId()).isPresent());
     }
 
 }

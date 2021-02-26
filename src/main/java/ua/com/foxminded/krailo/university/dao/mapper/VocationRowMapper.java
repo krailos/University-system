@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
 import ua.com.foxminded.krailo.university.model.Vocation;
+import ua.com.foxminded.krailo.university.model.VocationKind;
 
 @Component
 public class VocationRowMapper implements RowMapper<Vocation> {
@@ -23,7 +24,7 @@ public class VocationRowMapper implements RowMapper<Vocation> {
     public Vocation mapRow(ResultSet rs, int rowNum) throws SQLException {
 	Vocation vocation = new Vocation();
 	vocation.setId(rs.getInt("id"));
-	vocation.setKind(rs.getString("kind"));
+	vocation.setKind(VocationKind.valueOf(rs.getString("kind")));
 	vocation.setApplyingDate(rs.getObject("applying_date", LocalDate.class));
 	vocation.setStart(rs.getObject("start_date", LocalDate.class));
 	vocation.setEnd(rs.getObject("end_date", LocalDate.class));

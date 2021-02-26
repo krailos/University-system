@@ -77,7 +77,7 @@ INSERT INTO lessons (date, lesson_time_id, subject_id, teacher_id, audience_id) 
 ('01.02.2021', '2', '4', '4', '4');
 
 INSERT INTO vocations (kind, applying_date, start_date, end_date, teacher_id) VALUES 
-('annual', '01.10.2020', '01.08.2021', '14.08.2021', '1');
+('GENERAL', '01.10.2020', '01.08.2021', '14.08.2021', '1');
 
 INSERT INTO lessons_groups (lesson_id, group_id) VALUES 
 ('1', '1'),

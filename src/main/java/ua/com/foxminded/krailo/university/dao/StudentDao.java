@@ -55,8 +55,8 @@ public class StudentDao {
 		student.getRank(), student.getGender().toString(), student.getGroup().getId(), student.getId());
     }
 
-    public Student findById(int studentId) {
-	return jdbcTemplate.queryForObject(SQL_SELECT_BY_ID, studentRowMapper, studentId);
+    public Student findById(int id) {
+	return jdbcTemplate.queryForObject(SQL_SELECT_BY_ID, studentRowMapper, id);
     }
 
     public List<Student> findAll() {

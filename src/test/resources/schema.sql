@@ -22,7 +22,9 @@ DROP TABLE IF EXISTS teachers_subjects CASCADE;
 DROP TABLE IF EXISTS years_subjects CASCADE;
 
 DROP TYPE IF EXISTS gender CASCADE;
+DROP TYPE IF EXISTS kind CASCADE;
 CREATE TYPE gender AS enum ('MALE', 'FEMALE');
+CREATE TYPE kind AS enum ('GENERAL', 'PREFERENTIAL');
 
 CREATE TABLE holidays (
 	id serial NOT NULL,
@@ -170,7 +172,7 @@ CREATE TABLE lessons (
 
 CREATE TABLE vocations (
 	id serial NOT NULL,
-	kind character varying (50) NOT NULL,
+	kind kind,
 	applying_date date NOT NULL,
 	start_date date NOT NULL,
 	end_date date NOT NULL,

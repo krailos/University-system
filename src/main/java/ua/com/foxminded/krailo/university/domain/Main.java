@@ -20,6 +20,7 @@ public class Main {
 	populator.addScript(new ClassPathResource("data.sql"));
 	DatabasePopulatorUtils.execute(populator, (DataSource) context.getBean("dataSource"));
 	System.out.println("data populated");
+	
 	context.close();
     }
 }

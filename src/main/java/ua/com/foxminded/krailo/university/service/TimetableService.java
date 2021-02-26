@@ -45,7 +45,7 @@ public class TimetableService {
 
     public Timetable getTimetableForTeacherByDate(int timetableId, Teacher teacher, LocalDate date) {
 	Timetable timetable = timetableDao.findById(timetableId);
-	List<Lesson> lessons = lessonDao.findByTeacherByDate(teacher, date);
+	List<Lesson> lessons = lessonDao.findByTeacherAndDate(teacher, date);
 	timetable.setLessons(lessons);
 	timetable.setTeacher(teacher);
 	return timetable;
@@ -53,7 +53,7 @@ public class TimetableService {
 
     public Timetable getTimetableForTeacherByMonth(int timetableId, Teacher teacher, LocalDate date) {
 	Timetable timetable = timetableDao.findById(timetableId);
-	List<Lesson> lessons = lessonDao.findByTeacherByMonth(teacher, date);
+	List<Lesson> lessons = lessonDao.findByTeacherBetweenDates(teacher, date, date.plusMonths(1));
 	timetable.setLessons(lessons);
 	timetable.setTeacher(teacher);
 	return timetable;
@@ -61,7 +61,7 @@ public class TimetableService {
 
     public Timetable getTimetableForStudentByDate(int timetableId, Student student, LocalDate date) {
 	Timetable timetable = timetableDao.findById(timetableId);
-	List<Lesson> lessons = lessonDao.findByStudentByDate(student, date);
+	List<Lesson> lessons = lessonDao.findByStudentAndDate(student, date);
 	timetable.setLessons(lessons);
 	timetable.setStudent(student);
 	return timetable;
@@ -69,7 +69,7 @@ public class TimetableService {
 
     public Timetable getTimetableForStudentByMonth(int timetableId, Student student, LocalDate date) {
 	Timetable timetable = timetableDao.findById(timetableId);
-	List<Lesson> lessons = lessonDao.findByStudentByMonth(student, date);
+	List<Lesson> lessons = lessonDao.findByStudentBetweenDates(student, date, date.plusMonths(1));
 	timetable.setLessons(lessons);
 	timetable.setStudent(student);
 	return timetable;

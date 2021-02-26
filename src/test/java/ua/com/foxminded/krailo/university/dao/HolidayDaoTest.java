@@ -70,7 +70,7 @@ class HolidayDaoTest {
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "holidays");
 	assertEquals(1, actual);
     }
-    
+
     @Test
     void givenId_whenFindByDate_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "holidays", "date = '2021-01-01'");

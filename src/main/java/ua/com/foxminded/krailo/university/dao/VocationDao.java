@@ -19,6 +19,7 @@ public class VocationDao {
 
     private static final String SQL_SELECT_ALL = "SELECT * FROM vocations ORDER BY id";
     private static final String SQL_SELECT_BY_TEACHER_ID = "SELECT * FROM vocations where teacher_id = ?";
+    private static final String SQL_SELECT_BY_TEACHER_ID_AND_YEAR = "SELECT * FROM vocations where teacher_id = ? AND EXTRACT(YEAR FROM start_date) = ?";
     private static final String SQL_SELECT_BY_TEACHER_ID_AND_DATE = "SELECT * FROM vocations where teacher_id = ? AND ? between start_date AND end_date ";
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM vocations WHERE id = ?";
     private static final String SQL_UPDATE_BY_ID = "UPDATE vocations SET kind = ?, applying_date = ?, start_date = ?, end_date = ?, teacher_id = ? WHERE id = ?";
@@ -49,7 +50,7 @@ public class VocationDao {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_VOCATION, new String[] { "id" });
-	    ps.setString(1, vocation.getKind());
+	    ps.setString(1, vocation.getKind().getName());
 	    ps.setDate(2, Date.valueOf(vocation.getApplyingDate()));
 	    ps.setDate(3, Date.valueOf(vocation.getStart()));
 	    ps.setDate(4, Date.valueOf(vocation.getEnd()));
@@ -67,6 +68,10 @@ public class VocationDao {
 
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
+    }
+
+    public List<Vocation> findByTeacherIdAndYear(int teacherId, LocalDate date) {
+	return jdbcTemplate.query(SQL_SELECT_BY_TEACHER_ID_AND_YEAR, vocationRowMapper, teacherId, date.getYear());
     }
 
     public Vocation findByTeacherIdAndDate(int teacherId, LocalDate date) {

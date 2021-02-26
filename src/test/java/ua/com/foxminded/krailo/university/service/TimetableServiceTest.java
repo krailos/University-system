@@ -91,7 +91,7 @@ class TimetableServiceTest {
 	List<Lesson> lessons = new ArrayList<>(
 		Arrays.asList(Lesson.builder().id(1).build(), Lesson.builder().id(2).build()));
 	when(timetableDao.findById(1)).thenReturn(timetable);
-	when(lessonDao.findByTeacherByDate(teacher, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
+	when(lessonDao.findByTeacherAndDate(teacher, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
 
 	Timetable actual = timetableService.getTimetableForTeacherByDate(1, teacher, LocalDate.of(2021, 01, 02));
 
@@ -108,7 +108,8 @@ class TimetableServiceTest {
 	List<Lesson> lessons = new ArrayList<>(
 		Arrays.asList(Lesson.builder().id(1).build(), Lesson.builder().id(2).build()));
 	when(timetableDao.findById(1)).thenReturn(timetable);
-	when(lessonDao.findByTeacherByMonth(teacher, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
+	when(lessonDao.findByTeacherBetweenDates(teacher, LocalDate.of(2021, 01, 02),
+		LocalDate.of(2021, 01, 02).plusMonths(1))).thenReturn(lessons);
 
 	Timetable actual = timetableService.getTimetableForTeacherByMonth(1, teacher, LocalDate.of(2021, 01, 02));
 
@@ -125,7 +126,7 @@ class TimetableServiceTest {
 	List<Lesson> lessons = new ArrayList<>(
 		Arrays.asList(Lesson.builder().id(1).build(), Lesson.builder().id(2).build()));
 	when(timetableDao.findById(1)).thenReturn(timetable);
-	when(lessonDao.findByStudentByDate(student, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
+	when(lessonDao.findByStudentAndDate(student, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
 
 	Timetable actual = timetableService.getTimetableForStudentByDate(1, student, LocalDate.of(2021, 01, 02));
 
@@ -142,7 +143,8 @@ class TimetableServiceTest {
 	List<Lesson> lessons = new ArrayList<>(
 		Arrays.asList(Lesson.builder().id(1).build(), Lesson.builder().id(2).build()));
 	when(timetableDao.findById(1)).thenReturn(timetable);
-	when(lessonDao.findByStudentByMonth(student, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
+	when(lessonDao.findByStudentBetweenDates(student, LocalDate.of(2021, 01, 02),
+		LocalDate.of(2021, 01, 02).plusMonths(1))).thenReturn(lessons);
 
 	Timetable actual = timetableService.getTimetableForStudentByMonth(1, student, LocalDate.of(2021, 01, 02));
 

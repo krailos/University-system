@@ -14,6 +14,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Vocation;
+import ua.com.foxminded.krailo.university.model.VocationKind;
 
 @SpringJUnitConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
@@ -26,7 +27,7 @@ class VocationDaoTest {
 
     @Test
     void givenNewVocation_whenCreate_thenCreated() {
-	Vocation vocation = Vocation.builder().kind("kind").
+	Vocation vocation = Vocation.builder().kind(VocationKind.GENERAL).
 		applyingDate(LocalDate.of(2000, 01, 01)).
 		startDate(LocalDate.of(2000, 02, 02)).
 		endDate(LocalDate.of(2000, 03, 03)).
@@ -42,7 +43,7 @@ class VocationDaoTest {
     @Test
     void givenNewFieldsOfVocation_whenUpdate_thenUpdated() {
 	Vocation vocation = Vocation.builder().id(1).
-		kind("kind").
+		kind(VocationKind.GENERAL).
 		applyingDate(LocalDate.of(2000, 01, 01)).
 		startDate(LocalDate.of(2000, 02, 02)).
 		endDate(LocalDate.of(2000, 03, 03)).
@@ -99,6 +100,21 @@ class VocationDaoTest {
 	int actual = vocationDao.findByTeacherIdAndDate(1, LocalDate.of(2021, 02, 15)).getId();
 	
 	assertEquals(expected, actual);
+    }
+    
+    @Test
+    void givenId_whenFindByYear_thenFound() {
+	Vocation vocation = Vocation.builder().id(1).
+		kind(VocationKind.GENERAL).
+		applyingDate(LocalDate.of(2000, 01, 01)).
+		startDate(LocalDate.of(2021, 02, 02)).
+		endDate(LocalDate.of(2021, 03, 03)).
+		teacher(Teacher.builder().id(1).build()).
+		build();
+	
+	int actual = vocationDao.findByTeacherIdAndYear(vocation.getId(), vocation.getStart()).size();
+	
+	assertEquals(1, actual);
     }
 
 }

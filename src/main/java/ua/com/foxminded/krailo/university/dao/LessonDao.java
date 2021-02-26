@@ -1,6 +1,5 @@
 package ua.com.foxminded.krailo.university.dao;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.List;
@@ -29,15 +28,16 @@ public class LessonDao {
     private static final String SQL_DELETE_LESSONS_GROUPS_BY_LESSON_ID_GROUP_ID = "DELETE FROM lessons_groups WHERE lesson_id = ? AND group_id = ?";
     private static final String SQL_SELECT_BY_DATE = "SELECT * FROM lessons WHERE date = ?";
     private static final String SQL_SELECT_BY_TEACHER_BETWEEN_DATES = "SELECT * FROM lessons WHERE teacher_id = ? AND date BETWEEN ? AND ?";
-    private static final String SQL_SELECT_BY_TEACHER_BY_DATE = "SELECT * FROM lessons WHERE teacher_id = ? AND date = ?";
+    private static final String SQL_SELECT_BY_TEACHER_AND_DATE = "SELECT * FROM lessons WHERE teacher_id = ? AND date = ?";
     private static final String SQL_SELECT_BY_STUDENT_BETWEEN_DATES = "SELECT lessons.id, date, lesson_time_id, subject_id, teacher_id, audience_id, lesson_id, lessons_groups.group_id,"
 	    + "students.id  FROM lessons JOIN lessons_groups ON (lessons.id = lessons_groups.lesson_id) JOIN students ON (lessons_groups.group_id = students.group_id)"
 	    + " WHERE students.id = ? AND date BETWEEN ? AND ?";
-    private static final String SQL_SELECT_BY_STUDENT_BY_DATE = "SELECT lessons.id, date, lesson_time_id, subject_id, teacher_id, audience_id, lesson_id, lessons_groups.group_id,"
+    private static final String SQL_SELECT_BY_STUDENT_AND_DATE = "SELECT lessons.id, date, lesson_time_id, subject_id, teacher_id, audience_id, lesson_id, lessons_groups.group_id,"
 	    + "students.id  FROM lessons JOIN lessons_groups ON (lessons.id = lessons_groups.lesson_id) JOIN students ON (lessons_groups.group_id = students.group_id)"
 	    + " WHERE students.id = ? AND date = ?";
-    private static final String SQL_SELECT_BY_DATE_BY_TEACHER_BY_LESSON_TIME = "SELECT * FROM lessons WHERE date = ? AND teacher_id = ? AND lesson_time_id = ?";
-    private static final String SQL_SELECT_BY_DATE_BY_AUDIENCE_BY_LESSON_TIME = "SELECT * FROM lessons WHERE date = ? AND audience_id = ? AND lesson_time_id = ?";
+    private static final String SQL_SELECT_BY_DATE_AND_TEACHER_AND_LESSON_TIME = "SELECT * FROM lessons WHERE date = ? AND teacher_id = ? AND lesson_time_id = ?";
+    private static final String SQL_SELECT_BY_DATE_AND_AUDIENCE_AND_LESSON_TIME = "SELECT * FROM lessons WHERE date = ? AND audience_id = ? AND lesson_time_id = ?";
+    private static final String SQL_SELECT_BY_DATE_AND_LESSON_TIME_ID_AND_GROUP_ID = "SELECT * FROM lessons JOIN lessons_groups ON (lessons.id = lessons_groups.lesson_id) WHERE date = ? AND lesson_time_id = ? AND group_id = ?";
 
     private JdbcTemplate jdbcTemplate;
     private LessonRowMapper lessonRowMapper;
@@ -86,49 +86,48 @@ public class LessonDao {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
     }
 
-    public List<Lesson> findByDate(Lesson lesson) {
-	return jdbcTemplate.query(SQL_SELECT_BY_DATE, lessonRowMapper, Date.valueOf(lesson.getDate()));
-    }
-
-    public List<Lesson> findByTeacherByMonth(Teacher teacher, LocalDate date) {
-	return jdbcTemplate.query(SQL_SELECT_BY_TEACHER_BETWEEN_DATES, lessonRowMapper, teacher.getId(), date,
-		date.plusMonths(1));
+    public List<Lesson> findByDate(LocalDate date) {
+	return jdbcTemplate.query(SQL_SELECT_BY_DATE, lessonRowMapper, date);
     }
 
     public List<Lesson> findByTeacherBetweenDates(Teacher teacher, LocalDate start, LocalDate end) {
 	return jdbcTemplate.query(SQL_SELECT_BY_TEACHER_BETWEEN_DATES, lessonRowMapper, teacher.getId(), start, end);
     }
 
-    public List<Lesson> findByTeacherByDate(Teacher teacher, LocalDate date) {
-	return jdbcTemplate.query(SQL_SELECT_BY_TEACHER_BY_DATE, lessonRowMapper, teacher.getId(), date);
-    }
-
-    public List<Lesson> findByStudentByMonth(Student student, LocalDate date) {
-	return jdbcTemplate.query(SQL_SELECT_BY_STUDENT_BETWEEN_DATES, lessonRowMapper, student.getId(), date,
-		date.plusMonths(1));
+    public List<Lesson> findByTeacherAndDate(Teacher teacher, LocalDate date) {
+	return jdbcTemplate.query(SQL_SELECT_BY_TEACHER_AND_DATE, lessonRowMapper, teacher.getId(), date);
     }
 
     public List<Lesson> findByStudentBetweenDates(Student student, LocalDate start, LocalDate end) {
 	return jdbcTemplate.query(SQL_SELECT_BY_STUDENT_BETWEEN_DATES, lessonRowMapper, student.getId(), start, end);
     }
 
-    public List<Lesson> findByStudentByDate(Student student, LocalDate date) {
-	return jdbcTemplate.query(SQL_SELECT_BY_STUDENT_BY_DATE, lessonRowMapper, student.getId(), date);
+    public List<Lesson> findByStudentAndDate(Student student, LocalDate date) {
+	return jdbcTemplate.query(SQL_SELECT_BY_STUDENT_AND_DATE, lessonRowMapper, student.getId(), date);
     }
 
-    public Lesson findByDateByTeacherByLessonTime(Lesson lesson) {
+    public Lesson findByDateAndTeacherAndLessonTime(Lesson lesson) {
 	try {
-	    return jdbcTemplate.queryForObject(SQL_SELECT_BY_DATE_BY_TEACHER_BY_LESSON_TIME, lessonRowMapper,
+	    return jdbcTemplate.queryForObject(SQL_SELECT_BY_DATE_AND_TEACHER_AND_LESSON_TIME, lessonRowMapper,
 		    lesson.getDate(), lesson.getTeacher().getId(), lesson.getLessonTime().getId());
 	} catch (EmptyResultDataAccessException e) {
 	    return null;
 	}
     }
 
-    public Lesson findByDateByAudienceByLessonTime(Lesson lesson) {
+    public Lesson findByDateAndAudienceAndLessonTime(Lesson lesson) {
 	try {
-	    return jdbcTemplate.queryForObject(SQL_SELECT_BY_DATE_BY_AUDIENCE_BY_LESSON_TIME, lessonRowMapper,
+	    return jdbcTemplate.queryForObject(SQL_SELECT_BY_DATE_AND_AUDIENCE_AND_LESSON_TIME, lessonRowMapper,
 		    lesson.getDate(), lesson.getAudience().getId(), lesson.getLessonTime().getId());
+	} catch (EmptyResultDataAccessException e) {
+	    return null;
+	}
+    }
+
+    public Lesson findByDateAndLessonTimeIdAndGroupId(LocalDate date, int lessonTimeId, int groupId) {
+	try {
+	    return jdbcTemplate.queryForObject(SQL_SELECT_BY_DATE_AND_LESSON_TIME_ID_AND_GROUP_ID, lessonRowMapper,
+		    date, lessonTimeId, groupId);
 	} catch (EmptyResultDataAccessException e) {
 	    return null;
 	}

@@ -16,10 +16,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
+import ua.com.foxminded.krailo.university.dao.TeacherDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Building;
@@ -44,6 +48,8 @@ class LessonServiceTest {
     private VocationDao vocationDao;
     @Mock
     private HolidayDao holidayDao;
+    @Mock
+    private TeacherDao teacherDao;
 
     @Test
     void givenLessonId_whenGetById_thenGot() {
@@ -80,10 +86,14 @@ class LessonServiceTest {
     @Test
     void givenLessonWhithAllCorrectFields_whenCreate_thenCreated() {
 	Lesson lesson = createLesson();
-	when(lessonDao.findByDateByTeacherByLessonTime(lesson)).thenReturn(null);
-	when(lessonDao.findByDateByAudienceByLessonTime(lesson)).thenReturn(null);
+	when(lessonDao.findByDateAndTeacherAndLessonTime(lesson)).thenReturn(null);
+	when(lessonDao.findByDateAndAudienceAndLessonTime(lesson)).thenReturn(null);
 	when(vocationDao.findByTeacherIdAndDate(lesson.getTeacher().getId(), lesson.getDate())).thenReturn(null);
 	when(holidayDao.findByDate(lesson.getDate())).thenReturn(null);
+	when(teacherDao.findByTeacherIdAndSubjectId(lesson.getTeacher().getId(), lesson.getSubject().getId()))
+		.thenReturn(Teacher.builder().id(1).build());
+	when(lessonDao.findByDateAndLessonTimeIdAndGroupId(lesson.getDate(), lesson.getLessonTime().getId(),
+		lesson.getGroups().get(0).getId())).thenReturn(null);
 
 	lessonService.create(lesson);
 
@@ -93,7 +103,7 @@ class LessonServiceTest {
     @Test
     void givenLessonWithBookedAudience_whenCreate_thenNotCreated() {
 	Lesson lesson = createLesson();
-	when(lessonDao.findByDateByAudienceByLessonTime(lesson)).thenReturn(Lesson.builder().id(1).build());
+	when(lessonDao.findByDateAndAudienceAndLessonTime(lesson)).thenReturn(Lesson.builder().id(1).build());
 
 	lessonService.create(lesson);
 
@@ -103,7 +113,7 @@ class LessonServiceTest {
     @Test
     void givenLessonWithBookedTeacher_whenCreate_thenNotCreated() {
 	Lesson lesson = createLesson();
-	when(lessonDao.findByDateByTeacherByLessonTime(lesson)).thenReturn(Lesson.builder().id(1).build());
+	when(lessonDao.findByDateAndTeacherAndLessonTime(lesson)).thenReturn(Lesson.builder().id(1).build());
 
 	lessonService.create(lesson);
 
@@ -152,12 +162,55 @@ class LessonServiceTest {
     }
 
     @Test
+    void givenLessonWhithTeacherThatNotTeachesLessonSubject_whenCreate_thenNotCreated() {
+	Lesson lesson = createLesson();
+	when(teacherDao.findByTeacherIdAndSubjectId(lesson.getTeacher().getId(), lesson.getSubject().getId()))
+		.thenReturn(null);
+
+	lessonService.create(lesson);
+
+	verify(lessonDao, never()).create(lesson);
+    }
+
+    @Test
+    void givenLessonWhithGroupThatNotFree_whenCreate_thenNotCreated() {
+	Lesson lesson = createLesson();
+	when(teacherDao.findByTeacherIdAndSubjectId(lesson.getTeacher().getId(), lesson.getSubject().getId()))
+		.thenReturn(Teacher.builder().id(1).build());
+	when(lessonDao.findByDateAndLessonTimeIdAndGroupId(Mockito.any(LocalDate.class), Mockito.anyInt(),
+		Mockito.anyInt())).thenAnswer(new Answer<Lesson>() {
+		    @Override
+		    public Lesson answer(InvocationOnMock invocation) throws Throwable {
+			LocalDate date = invocation.getArgument(0);
+			System.out.println(date);
+			int lessonTimeId = invocation.getArgument(1);
+			System.out.println(lessonTimeId);
+			int groupId = invocation.getArgument(2);
+			System.out.println(groupId);
+			if (groupId == 1) {
+			    return Lesson.builder().id(1).build();
+			} else {
+			    return null;
+			}
+		    }
+		});
+
+	lessonService.create(lesson);
+
+	verify(lessonDao, never()).create(lesson);
+    }
+
+    @Test
     void givenLessonWhithAllCorrectFields_whenUpdate_thenUpdated() {
 	Lesson lesson = createLesson();
-	when(lessonDao.findByDateByTeacherByLessonTime(lesson)).thenReturn(null);
-	when(lessonDao.findByDateByAudienceByLessonTime(lesson)).thenReturn(null);
+	when(lessonDao.findByDateAndTeacherAndLessonTime(lesson)).thenReturn(null);
+	when(lessonDao.findByDateAndAudienceAndLessonTime(lesson)).thenReturn(null);
 	when(vocationDao.findByTeacherIdAndDate(lesson.getTeacher().getId(), lesson.getDate())).thenReturn(null);
 	when(holidayDao.findByDate(lesson.getDate())).thenReturn(null);
+	when(teacherDao.findByTeacherIdAndSubjectId(lesson.getTeacher().getId(), lesson.getSubject().getId()))
+		.thenReturn(Teacher.builder().id(1).build());
+	when(lessonDao.findByDateAndLessonTimeIdAndGroupId(lesson.getDate(), lesson.getLessonTime().getId(),
+		lesson.getGroups().get(0).getId())).thenReturn(null);
 
 	lessonService.update(lesson);
 
@@ -167,7 +220,7 @@ class LessonServiceTest {
     @Test
     void givenLessonWithBookedAudience_whenUpdate_thenNotUpdated() {
 	Lesson lesson = createLesson();
-	when(lessonDao.findByDateByAudienceByLessonTime(lesson)).thenReturn(Lesson.builder().id(1).build());
+	when(lessonDao.findByDateAndAudienceAndLessonTime(lesson)).thenReturn(Lesson.builder().id(1).build());
 
 	lessonService.update(lesson);
 
@@ -177,7 +230,7 @@ class LessonServiceTest {
     @Test
     void givenLessonWithBookedTeacher_whenUpdate_thenNotUpdated() {
 	Lesson lesson = createLesson();
-	when(lessonDao.findByDateByTeacherByLessonTime(lesson)).thenReturn(Lesson.builder().id(1).build());
+	when(lessonDao.findByDateAndTeacherAndLessonTime(lesson)).thenReturn(Lesson.builder().id(1).build());
 
 	lessonService.update(lesson);
 
@@ -219,6 +272,45 @@ class LessonServiceTest {
     void givenLessonWhithDateThatMatchToWeekend_whenUpdate_thenNotUpdated() {
 	Lesson lesson = createLesson();
 	lesson.setDate(LocalDate.of(2021, 01, 02));
+
+	lessonService.update(lesson);
+
+	verify(lessonDao, never()).update(lesson);
+    }
+
+    @Test
+    void givenLessonWhithTeacherThatNotTeachesLessonSubject_whenUpdate_thenNotUpdated() {
+	Lesson lesson = createLesson();
+	when(teacherDao.findByTeacherIdAndSubjectId(lesson.getTeacher().getId(), lesson.getSubject().getId()))
+		.thenReturn(null);
+
+	lessonService.update(lesson);
+
+	verify(lessonDao, never()).update(lesson);
+    }
+
+    @Test
+    void givenLessonWhithGroupThatNotFree_whenUpdate_thenNotUpdated() {
+	Lesson lesson = createLesson();
+	when(teacherDao.findByTeacherIdAndSubjectId(lesson.getTeacher().getId(), lesson.getSubject().getId()))
+		.thenReturn(Teacher.builder().id(1).build());
+	when(lessonDao.findByDateAndLessonTimeIdAndGroupId(Mockito.any(LocalDate.class), Mockito.anyInt(),
+		Mockito.anyInt())).thenAnswer(new Answer<Lesson>() {
+		    @Override
+		    public Lesson answer(InvocationOnMock invocation) throws Throwable {
+			LocalDate date = invocation.getArgument(0);
+			System.out.println(date);
+			int lessonTimeId = invocation.getArgument(1);
+			System.out.println(lessonTimeId);
+			int groupId = invocation.getArgument(2);
+			System.out.println(groupId);
+			if (groupId == 1) {
+			    return Lesson.builder().id(1).build();
+			} else {
+			    return null;
+			}
+		    }
+		});
 
 	lessonService.update(lesson);
 

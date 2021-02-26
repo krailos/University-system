@@ -1,7 +1,6 @@
 package ua.com.foxminded.krailo.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,6 +40,7 @@ class AudienceServiceTest {
     @Test
     void givenAudienceWithExistingNumber_whenCreate_thenNotCreated() {
 	Audience audience = createAudience();
+	audience.setId(0);
 	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
 		.thenReturn(Audience.builder().id(1).build());
 
@@ -52,18 +52,18 @@ class AudienceServiceTest {
     @Test
     void givenAudienceWithNewNumber_whenUpdate_thenUpdated() {
 	Audience audience = createAudience();
-	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId())).thenReturn(null);
-
+	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
+		.thenReturn(null);
 	audienceService.update(audience);
 
 	verify(audienceDao).update(audience);
     }
-    
+
     @Test
     void givenAudienceWithNotChangedNumber_whenUpdate_thenUpdated() {
 	Audience audience = createAudience();
-	Audience audience2 = createAudience();
-	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId())).thenReturn(audience2);
+	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
+		.thenReturn(Audience.builder().id(1).build());
 
 	audienceService.update(audience);
 
@@ -73,9 +73,8 @@ class AudienceServiceTest {
     @Test
     void givenAudienceWithExistingNumber_whenUpdate_thenNotUpdated() {
 	Audience audience = createAudience();
-	Audience audience2 = createAudience();
-	audience2.setId(2);
-	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId())).thenReturn(audience2);
+	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
+		.thenReturn(Audience.builder().id(9).build());
 
 	audienceService.update(audience);
 
@@ -118,7 +117,6 @@ class AudienceServiceTest {
     @Test
     void givenAudience_whenDelete_thenDeleted() {
 	Audience audience = createAudience();
-	doNothing().when(audienceDao).deleteById(1);
 
 	audienceService.delete(audience);
 
