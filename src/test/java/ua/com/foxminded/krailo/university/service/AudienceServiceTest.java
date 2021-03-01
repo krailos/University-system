@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +31,7 @@ class AudienceServiceTest {
     void givenAudienceWithNewNumber_whenCreate_thenCreated() {
 	Audience audience = createAudience();
 	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
-		.thenReturn(null);
+		.thenReturn(Optional.empty());
 
 	audienceService.create(audience);
 
@@ -42,7 +43,7 @@ class AudienceServiceTest {
 	Audience audience = createAudience();
 	audience.setId(0);
 	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
-		.thenReturn(Audience.builder().id(1).build());
+		.thenReturn(Optional.of(Audience.builder().id(1).build()));
 
 	audienceService.create(audience);
 
@@ -53,7 +54,7 @@ class AudienceServiceTest {
     void givenAudienceWithNewNumber_whenUpdate_thenUpdated() {
 	Audience audience = createAudience();
 	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
-		.thenReturn(null);
+		.thenReturn(Optional.empty());
 	audienceService.update(audience);
 
 	verify(audienceDao).update(audience);
@@ -63,7 +64,7 @@ class AudienceServiceTest {
     void givenAudienceWithNotChangedNumber_whenUpdate_thenUpdated() {
 	Audience audience = createAudience();
 	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
-		.thenReturn(Audience.builder().id(1).build());
+		.thenReturn(Optional.of(Audience.builder().id(1).build()));
 
 	audienceService.update(audience);
 
@@ -74,7 +75,7 @@ class AudienceServiceTest {
     void givenAudienceWithExistingNumber_whenUpdate_thenNotUpdated() {
 	Audience audience = createAudience();
 	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
-		.thenReturn(Audience.builder().id(9).build());
+		.thenReturn(Optional.of(Audience.builder().id(9).build()));
 
 	audienceService.update(audience);
 

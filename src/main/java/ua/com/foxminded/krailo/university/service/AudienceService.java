@@ -46,8 +46,8 @@ public class AudienceService {
     }
 
     private boolean isUniqueNumber(Audience audience) {
-	Optional<Audience> existingAudience = Optional.ofNullable(audienceDao.findByNumberAndBuildingId(audience.getNumber(),
-		audience.getBuilding().getId()));
+	Optional<Audience> existingAudience = audienceDao.findByNumberAndBuildingId(audience.getNumber(),
+		audience.getBuilding().getId());
 	return (existingAudience.isEmpty() || existingAudience.filter(a -> a.getId() == audience.getId()).isPresent());
     }
 

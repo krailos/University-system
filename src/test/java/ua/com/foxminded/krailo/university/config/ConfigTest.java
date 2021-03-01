@@ -5,12 +5,14 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import ua.com.foxminded.krailo.university.configuration.UniversityConfig;
 
 @Configuration
 @Import(UniversityConfig.class)
+@PropertySource("classpath:config.properties")
 public class ConfigTest {
 
     @Bean
@@ -22,5 +24,5 @@ public class ConfigTest {
 	dataSource.setPassword("");
 	return dataSource;
     }
-
+    
 }

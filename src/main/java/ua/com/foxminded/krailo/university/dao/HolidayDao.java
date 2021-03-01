@@ -3,6 +3,7 @@ package ua.com.foxminded.krailo.university.dao;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -58,11 +59,11 @@ public class HolidayDao {
 	jdbcTemplate.update(SQL_DELETE_HOLIDAY_BY_ID, id);
     }
 
-    public Holiday findByDate(LocalDate date) {
+    public Optional<Holiday> findByDate(LocalDate date) {
 	try {
-	    return jdbcTemplate.queryForObject(SQL_SELECT_HOLIDAY_BY_DATE, holidayRowMapper, date);
+	    return Optional.of(jdbcTemplate.queryForObject(SQL_SELECT_HOLIDAY_BY_DATE, holidayRowMapper, date));
 	} catch (EmptyResultDataAccessException e) {
-	    return null;
+	    return Optional.empty();
 	}
     }
 

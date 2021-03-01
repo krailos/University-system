@@ -183,7 +183,7 @@ class LessonDaoTest {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons",
 		" date = '2021-001-01' AND  teacher_id = 1 AND lesson_time_id = 1");
 
-	int actual = lessonDao.findByDateAndTeacherAndLessonTime(lesson).getId();
+	int actual = lessonDao.findByDateAndTeacherAndLessonTime(lesson).get().getId();
 
 	assertEquals(expected, actual);
     }
@@ -195,7 +195,7 @@ class LessonDaoTest {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons",
 		" date = '2021-001-01' AND  audience_id = 1 AND lesson_time_id = 1");
 
-	int actual = lessonDao.findByDateAndAudienceAndLessonTime(lesson).getId();
+	int actual = lessonDao.findByDateAndAudienceAndLessonTime(lesson).get().getId();
 
 	assertEquals(expected, actual);
     }
@@ -207,7 +207,7 @@ class LessonDaoTest {
 	lesson.getGroups().add(Group.builder().id(1).build());
 
 	int actual = lessonDao.findByDateAndLessonTimeIdAndGroupId(lesson.getDate(), lesson.getLessonTime().getId(),
-		lesson.getGroups().get(0).getId()).getId();
+		lesson.getGroups().get(0).getId()).get().getId();
 
 	assertEquals(1, actual);
     }

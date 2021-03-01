@@ -9,17 +9,16 @@ public class Group {
     private String name;
     private Year year;
     private List<Student> students = new ArrayList<>();
-    private int capacity;
 
     public Group() {
     }
 
-    public Group(int id, String name, Year year, List<Student> students, int capacity) {
+    public Group(int id, String name, Year year, List<Student> students) {
 	this.id = id;
 	this.name = name;
 	this.year = year;
 	this.students = students;
-	this.capacity = capacity;
+
     }
 
     public static GroupBuilder builder() {
@@ -28,14 +27,6 @@ public class Group {
 
     public int getId() {
 	return id;
-    }
-
-    public int getCapacity() {
-	return capacity;
-    }
-
-    public void setCapacity(int capacity) {
-	this.capacity = capacity;
     }
 
     public void setId(int id) {
@@ -72,7 +63,6 @@ public class Group {
 	private String name;
 	private Year year;
 	private List<Student> students = new ArrayList<>();
-	private int capacity;
 
 	public GroupBuilder id(int id) {
 	    this.id = id;
@@ -94,13 +84,8 @@ public class Group {
 	    return this;
 	}
 
-	public GroupBuilder capacity(int capacity) {
-	    this.capacity = capacity;
-	    return this;
-	}
-
 	public Group build() {
-	    return new Group(id, name, year, students, capacity);
+	    return new Group(id, name, year, students);
 	}
 
     }

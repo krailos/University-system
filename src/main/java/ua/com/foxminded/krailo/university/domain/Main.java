@@ -9,6 +9,8 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.krailo.university.configuration.UniversityConfig;
+import ua.com.foxminded.krailo.university.model.Student;
+import ua.com.foxminded.krailo.university.service.StudentService;
 
 @Component
 public class Main {
@@ -20,6 +22,9 @@ public class Main {
 	populator.addScript(new ClassPathResource("data.sql"));
 	DatabasePopulatorUtils.execute(populator, (DataSource) context.getBean("dataSource"));
 	System.out.println("data populated");
+	
+	StudentService ss = context.getBean(StudentService.class);
+	ss.create(new Student());
 	
 	context.close();
     }

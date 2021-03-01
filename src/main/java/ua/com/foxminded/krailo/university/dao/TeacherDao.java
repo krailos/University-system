@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -26,7 +25,6 @@ public class TeacherDao {
     private static final String SQL_SELECT_BY_DEPARTMENT_ID = "SELECT * FROM teachers WHERE department_id = ?";
     private static final String SQL_INSERT_TEACHERS_SUBJECTS = "INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES (?, ?)";
     private static final String SQL_DELETE_TEACHERS_SUBJECTS_BY_TEACHER_ID_SUBJECT_ID = "DELETE FROM teachers_subjects WHERE teacher_id = ? AND subject_id = ?";
-    private static final String SQL_SELECT_BY_TEACHER_ID_AND_SUBJECT_ID = "SELECT * FROM teachers JOIN teachers_subjects ON (teachers_subjects.teacher_id = teachers.id) WHERE id = ? and subject_id = ?";
 
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Teacher> teacherRowMapper;
@@ -87,15 +85,6 @@ public class TeacherDao {
 
     public List<Teacher> findByDepartmentId(int id) {
 	return jdbcTemplate.query(SQL_SELECT_BY_DEPARTMENT_ID, new Object[] { id }, teacherRowMapper);
-    }
-
-    public Teacher findByTeacherIdAndSubjectId(int teacherId, int subjectId) {
-	try {
-	    return jdbcTemplate.queryForObject(SQL_SELECT_BY_TEACHER_ID_AND_SUBJECT_ID, teacherRowMapper, teacherId,
-		    subjectId);
-	} catch (EmptyResultDataAccessException e) {
-	    return null;
-	}
     }
 
 }

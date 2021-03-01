@@ -97,7 +97,7 @@ class AudienceDaoTest {
     void givenAudience_whenFindByNumberAndBuildingId_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "Audiences", "number = 1 AND building_id = 1");
 
-	int actual = audienceDao.findByNumberAndBuildingId("1", 1).getId();
+	int actual = audienceDao.findByNumberAndBuildingId("1", 1).get().getId();
 
 	assertEquals(expected, actual);
     }

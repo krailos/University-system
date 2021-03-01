@@ -2,6 +2,7 @@ package ua.com.foxminded.krailo.university.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -70,12 +71,12 @@ public class AudienceDao {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
     }
 
-    public Audience findByNumberAndBuildingId(String number, int buildingId) {
+    public Optional<Audience> findByNumberAndBuildingId(String number, int buildingId) {
 	try {
-	    return jdbcTemplate.queryForObject(SQL_SELECT_AUDIENCE_BY_NUMBER_AND_BUILDING_ID,
-		    new Object[] { number, buildingId }, audienceRowMapper);
+	    return Optional.of(jdbcTemplate.queryForObject(SQL_SELECT_AUDIENCE_BY_NUMBER_AND_BUILDING_ID,
+		    new Object[] { number, buildingId }, audienceRowMapper));
 	} catch (EmptyResultDataAccessException e) {
-	    return null;
+	    return Optional.empty();
 	}
     }
 

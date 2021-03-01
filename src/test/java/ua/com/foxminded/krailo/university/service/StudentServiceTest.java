@@ -2,9 +2,9 @@ package ua.com.foxminded.krailo.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.never;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.StudentDao;
@@ -32,10 +33,12 @@ class StudentServiceTest {
     @Mock
     private GroupDao groupDao;
 
+   
     @Test
     void givenStudent_whenCreate_thenCreated() {
+	ReflectionTestUtils.setField(studentService, "groupMaxCapacity", 30);
 	Student student = createStudent();
-	Group group = Group.builder().id(1).capacity(3).build();
+	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
 	when(groupDao.findById(student.getGroup().getId())).thenReturn(group);
 
@@ -46,8 +49,9 @@ class StudentServiceTest {
 
     @Test
     void givenStudentWithNotEnoughtGroupCapacity_whenCreate_thenNotCreated() {
+	ReflectionTestUtils.setField(studentService, "groupMaxCapacity", 1);
 	Student student = createStudent();
-	Group group = Group.builder().id(1).capacity(2).build();
+	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
 	when(groupDao.findById(student.getGroup().getId())).thenReturn(group);
 
@@ -58,8 +62,9 @@ class StudentServiceTest {
 
     @Test
     void givenStudent_whenUpdate_thenUpdated() {
+	ReflectionTestUtils.setField(studentService, "groupMaxCapacity", 30);
 	Student student = createStudent();
-	Group group = Group.builder().id(1).capacity(3).build();
+	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
 	when(groupDao.findById(student.getGroup().getId())).thenReturn(group);
 
@@ -70,8 +75,9 @@ class StudentServiceTest {
 
     @Test
     void givenStudentWithNotEnoughtGroupCapacity_whenUpdate_thenNotUpdated() {
+	ReflectionTestUtils.setField(studentService, "groupMaxCapacity", 1);
 	Student student = createStudent();
-	Group group = Group.builder().id(1).capacity(2).build();
+	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
 	when(groupDao.findById(student.getGroup().getId())).thenReturn(group);
 

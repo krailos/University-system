@@ -2,15 +2,18 @@ package ua.com.foxminded.krailo.university.service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
+import ua.com.foxminded.krailo.university.model.Holiday;
 import ua.com.foxminded.krailo.university.model.Vocation;
 
 @Service
@@ -19,6 +22,10 @@ public class VocationService {
     private VocationDao vocationDao;
     private LessonDao lessonDao;
     private HolidayDao holidayDao;
+    @Value("${model.vocationDurationGeneral}")
+    private int vocationDurationGeneral;
+    @Value("${model.vocationDurationPreferential}")
+    private int vocationDurationPreferential;
 
     public VocationService(VocationDao vocationDao, LessonDao lessonDao, HolidayDao holidayDao) {
 	this.vocationDao = vocationDao;
@@ -27,15 +34,14 @@ public class VocationService {
     }
 
     public void create(Vocation vocation) {
-	if (isVocationPeriodFreeOfLessons(vocation) && isVocationsEndDateMoreThenStart(vocation)
-		&& isVocationDuratioMoreThenMaxDuration(vocation)
-		&& isVocationsStartAndEndDateBelongsSameYear(vocation)) {
+	if (!isVocationDuratioMoreThenMaxDuration(vocation) && isVocationPeriodFreeFromLessons(vocation)
+		&& isVocationsEndDateMoreThenStart(vocation) && isVocationsStartAndEndDateBelongsSameYear(vocation)) {
 	    vocationDao.create(vocation);
 	}
     }
 
     public void update(Vocation vocation) {
-	if (isVocationPeriodFreeOfLessons(vocation) && isVocationsEndDateMoreThenStart(vocation)
+	if (isVocationPeriodFreeFromLessons(vocation) && isVocationsEndDateMoreThenStart(vocation)
 		&& isVocationDuratioMoreThenMaxDuration(vocation)
 		&& isVocationsStartAndEndDateBelongsSameYear(vocation)) {
 	    vocationDao.update(vocation);
@@ -54,7 +60,7 @@ public class VocationService {
 	vocationDao.deleteById(vocation.getId());
     }
 
-    private boolean isVocationPeriodFreeOfLessons(Vocation vocation) {
+    private boolean isVocationPeriodFreeFromLessons(Vocation vocation) {
 	return lessonDao.findByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd())
 		.isEmpty();
     }
@@ -69,21 +75,19 @@ public class VocationService {
 
     private boolean isVocationDuratioMoreThenMaxDuration(Vocation vocation) {
 	List<Vocation> vocations = vocationDao.findByTeacherIdAndYear(vocation.getTeacher().getId(),
-		vocation.getStart());
+		Year.from(vocation.getStart()));
 	vocations.add(vocation);
-	List<LocalDate> datesOfVocation = getListOfVocationDates(vocations);
-	List<LocalDate> datesOfHolidays = holidayDao.findAll().stream().map(h -> h.getDate())
-		.collect(Collectors.toList());
-	return (datesOfVocation.size() - datesOfVocation.stream()
-		.filter(d -> isDateWeekend(d) || datesOfHolidays.contains(d)).count()) <= vocation.getKind()
-			.getMaxDuration();
+	List<LocalDate> vocationDates = getVocationDates(vocations);
+	List<LocalDate> holidays = holidayDao.findAll().stream().map(Holiday::getDate).collect(Collectors.toList());
+	return vocationDates.stream().filter(d -> !isDateWeekend(d) || !holidays.contains(d))
+		.count() > getMaxVocationDuration(vocation);
     }
 
     private boolean isDateWeekend(LocalDate date) {
 	return date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY;
     }
 
-    private List<LocalDate> getListOfVocationDates(List<Vocation> vocations) {
+    private List<LocalDate> getVocationDates(List<Vocation> vocations) {
 	List<LocalDate> dates = new ArrayList<>();
 	for (Vocation tempVocation : vocations) {
 	    LocalDate tempDate = tempVocation.getStart();
@@ -93,6 +97,17 @@ public class VocationService {
 	    }
 	}
 	return dates;
+    }
+
+    private int getMaxVocationDuration(Vocation vocation) {
+	switch (vocation.getKind()) {
+	case GENERAL:
+	    return vocationDurationGeneral;
+	case PREFERENTIAL:
+	    return vocationDurationPreferential;
+	default:
+	    return 0;
+	}
     }
 
 }

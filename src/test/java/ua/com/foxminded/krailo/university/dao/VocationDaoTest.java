@@ -3,6 +3,7 @@ package ua.com.foxminded.krailo.university.dao;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
+import java.time.Year;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,16 +45,16 @@ class VocationDaoTest {
     void givenNewFieldsOfVocation_whenUpdate_thenUpdated() {
 	Vocation vocation = Vocation.builder().id(1).
 		kind(VocationKind.GENERAL).
-		applyingDate(LocalDate.of(2000, 01, 01)).
-		startDate(LocalDate.of(2000, 02, 02)).
-		endDate(LocalDate.of(2000, 03, 03)).
+		applyingDate(LocalDate.of(2021, 10, 01)).
+		startDate(LocalDate.of(2021, 10, 02)).
+		endDate(LocalDate.of(2021, 10, 10)).
 		teacher(Teacher.builder().id(1).build()).
 		build();
 	
 	vocationDao.update(vocation);
 	
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "vocations",
-		"kind = 'kind' AND applying_date = '2000-01-01' AND start_date = '2000-02-02' AND end_date = '2000-03-03'AND teacher_id = 1");
+		"kind = 'GENERAL' AND start_date = '2021-10-02' AND end_date = '2021-10-10'AND teacher_id = 1");
 	assertEquals(1, actual);
     }
 
@@ -95,15 +96,15 @@ class VocationDaoTest {
     
     @Test
     void givenId_whenFindByTeacherIdAndDate_thenFound() {
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "vocations", "id = 1 AND '2021-02-15' BETWEEN start_date AND end_date");
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "vocations", "id = 1 AND '2021-02-07' BETWEEN start_date AND end_date");
 	
-	int actual = vocationDao.findByTeacherIdAndDate(1, LocalDate.of(2021, 02, 15)).getId();
+	int actual = vocationDao.findByTeacherIdAndDate(1, LocalDate.of(2021, 02, 07)).get().getId();
 	
 	assertEquals(expected, actual);
     }
     
     @Test
-    void givenId_whenFindByYear_thenFound() {
+    void givenVocation_whenFindByTeacherIdAndYear_thenFound() {
 	Vocation vocation = Vocation.builder().id(1).
 		kind(VocationKind.GENERAL).
 		applyingDate(LocalDate.of(2000, 01, 01)).
@@ -112,7 +113,7 @@ class VocationDaoTest {
 		teacher(Teacher.builder().id(1).build()).
 		build();
 	
-	int actual = vocationDao.findByTeacherIdAndYear(vocation.getId(), vocation.getStart()).size();
+	int actual = vocationDao.findByTeacherIdAndYear(vocation.getTeacher().getId(), Year.from(vocation.getStart())).size();
 	
 	assertEquals(1, actual);
     }

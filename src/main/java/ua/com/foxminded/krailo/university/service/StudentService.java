@@ -2,18 +2,22 @@ package ua.com.foxminded.krailo.university.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.StudentDao;
-import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Student;
 
 @Service
+@PropertySource("classpath:config.properties")
 public class StudentService {
 
     private StudentDao studentDao;
     private GroupDao groupDao;
+    @Value("${model.groupMaxCapacity}")
+    private int groupMaxCapacity;
 
     public StudentService(StudentDao studentDao, GroupDao groupDao) {
 	this.studentDao = studentDao;
@@ -49,7 +53,7 @@ public class StudentService {
     }
 
     private boolean isEnoughtGroupCapacity(Student student) {
-	Group group = groupDao.findById(student.getId());
-	return (groupDao.findById(student.getId()).getStudents().size() + 1) <= group.getCapacity();
+	System.out.println(groupMaxCapacity);
+	return (groupDao.findById(student.getGroup().getId()).getStudents().size() + 1) <= groupMaxCapacity;
     }
 }

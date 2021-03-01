@@ -3,7 +3,9 @@ package ua.com.foxminded.krailo.university.dao;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -50,7 +52,7 @@ public class VocationDao {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_VOCATION, new String[] { "id" });
-	    ps.setString(1, vocation.getKind().getName());
+	    ps.setString(1, vocation.getKind().toString());
 	    ps.setDate(2, Date.valueOf(vocation.getApplyingDate()));
 	    ps.setDate(3, Date.valueOf(vocation.getStart()));
 	    ps.setDate(4, Date.valueOf(vocation.getEnd()));
@@ -61,7 +63,7 @@ public class VocationDao {
     }
 
     public void update(Vocation vocation) {
-	jdbcTemplate.update(SQL_UPDATE_BY_ID, vocation.getKind(), Date.valueOf(vocation.getApplyingDate()),
+	jdbcTemplate.update(SQL_UPDATE_BY_ID, vocation.getKind().toString(), Date.valueOf(vocation.getApplyingDate()),
 		Date.valueOf(vocation.getStart()), Date.valueOf(vocation.getEnd()), vocation.getTeacher().getId(),
 		vocation.getId());
     }
@@ -70,15 +72,15 @@ public class VocationDao {
 	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
     }
 
-    public List<Vocation> findByTeacherIdAndYear(int teacherId, LocalDate date) {
-	return jdbcTemplate.query(SQL_SELECT_BY_TEACHER_ID_AND_YEAR, vocationRowMapper, teacherId, date.getYear());
+    public List<Vocation> findByTeacherIdAndYear(int teacherId, Year year) {
+	return jdbcTemplate.query(SQL_SELECT_BY_TEACHER_ID_AND_YEAR, vocationRowMapper, teacherId, year.getValue());
     }
 
-    public Vocation findByTeacherIdAndDate(int teacherId, LocalDate date) {
+    public Optional<Vocation> findByTeacherIdAndDate(int teacherId, LocalDate date) {
 	try {
-	    return jdbcTemplate.queryForObject(SQL_SELECT_BY_TEACHER_ID_AND_DATE, vocationRowMapper, teacherId, date);
+	    return Optional.of(jdbcTemplate.queryForObject(SQL_SELECT_BY_TEACHER_ID_AND_DATE, vocationRowMapper, teacherId, date));
 	} catch (EmptyResultDataAccessException e) {
-	    return null;
+	    return Optional.empty();
 	}
     }
 

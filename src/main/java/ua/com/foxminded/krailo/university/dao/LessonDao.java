@@ -3,6 +3,7 @@ package ua.com.foxminded.krailo.university.dao;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -106,30 +107,30 @@ public class LessonDao {
 	return jdbcTemplate.query(SQL_SELECT_BY_STUDENT_AND_DATE, lessonRowMapper, student.getId(), date);
     }
 
-    public Lesson findByDateAndTeacherAndLessonTime(Lesson lesson) {
+    public Optional<Lesson> findByDateAndTeacherAndLessonTime(Lesson lesson) {
 	try {
-	    return jdbcTemplate.queryForObject(SQL_SELECT_BY_DATE_AND_TEACHER_AND_LESSON_TIME, lessonRowMapper,
-		    lesson.getDate(), lesson.getTeacher().getId(), lesson.getLessonTime().getId());
+	    return Optional.of(jdbcTemplate.queryForObject(SQL_SELECT_BY_DATE_AND_TEACHER_AND_LESSON_TIME,
+		    lessonRowMapper, lesson.getDate(), lesson.getTeacher().getId(), lesson.getLessonTime().getId()));
 	} catch (EmptyResultDataAccessException e) {
-	    return null;
+	    return Optional.empty();
 	}
     }
 
-    public Lesson findByDateAndAudienceAndLessonTime(Lesson lesson) {
+    public Optional<Lesson> findByDateAndAudienceAndLessonTime(Lesson lesson) {
 	try {
-	    return jdbcTemplate.queryForObject(SQL_SELECT_BY_DATE_AND_AUDIENCE_AND_LESSON_TIME, lessonRowMapper,
-		    lesson.getDate(), lesson.getAudience().getId(), lesson.getLessonTime().getId());
+	    return Optional.of(jdbcTemplate.queryForObject(SQL_SELECT_BY_DATE_AND_AUDIENCE_AND_LESSON_TIME,
+		    lessonRowMapper, lesson.getDate(), lesson.getAudience().getId(), lesson.getLessonTime().getId()));
 	} catch (EmptyResultDataAccessException e) {
-	    return null;
+	    return Optional.empty();
 	}
     }
 
-    public Lesson findByDateAndLessonTimeIdAndGroupId(LocalDate date, int lessonTimeId, int groupId) {
+    public Optional<Lesson> findByDateAndLessonTimeIdAndGroupId(LocalDate date, int lessonTimeId, int groupId) {
 	try {
-	    return jdbcTemplate.queryForObject(SQL_SELECT_BY_DATE_AND_LESSON_TIME_ID_AND_GROUP_ID, lessonRowMapper,
-		    date, lessonTimeId, groupId);
+	    return Optional.of(jdbcTemplate.queryForObject(SQL_SELECT_BY_DATE_AND_LESSON_TIME_ID_AND_GROUP_ID,
+		    lessonRowMapper, date, lessonTimeId, groupId));
 	} catch (EmptyResultDataAccessException e) {
-	    return null;
+	    return Optional.empty();
 	}
     }
 
