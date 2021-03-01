@@ -26,11 +26,9 @@ class LessonTimeDaoTest {
 
     @Test
     void givenNewLessonTime_whenCreate_thenCreated() {
-	LessonTime lessonTime = LessonTime.builder().orderNumber("new order number").
-		startTime(LocalTime.of(12, 00)).
-		endTime(LocalTime.of(12, 45)).
-		lessonsTimeSchedule(LessonsTimeSchedule.builder().id(1).name("new name").build()).
-		build();
+	LessonTime lessonTime = LessonTime.builder().orderNumber("new order number").startTime(LocalTime.of(12, 00))
+		.endTime(LocalTime.of(12, 45))
+		.lessonsTimeSchedule(LessonsTimeSchedule.builder().id(1).name("new name").build()).build();
 
 	lessonTimeDao.create(lessonTime);
 
@@ -40,12 +38,9 @@ class LessonTimeDaoTest {
 
     @Test
     void givenNewFieldsOfLossonTime_whenUpdate_tnenUpdated() {
-	LessonTime lessonTime = LessonTime.builder().orderNumber("new order number").
-		id(1).
-		startTime(LocalTime.of(12, 00)).
-		endTime(LocalTime.of(12, 45)).
-		lessonsTimeSchedule(LessonsTimeSchedule.builder().id(1).name("new name").build()).
-		build();
+	LessonTime lessonTime = LessonTime.builder().orderNumber("new order number").id(1)
+		.startTime(LocalTime.of(12, 00)).endTime(LocalTime.of(12, 45))
+		.lessonsTimeSchedule(LessonsTimeSchedule.builder().id(1).name("new name").build()).build();
 	lessonTimeDao.update(lessonTime);
 
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lesson_times",
@@ -70,7 +65,7 @@ class LessonTimeDaoTest {
 
 	assertEquals(expected, actual);
     }
-    
+
     @Test
     void givenLessonTimeScheduleId_whenFindByLessonsTimeScheduleId_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lesson_times", "lessons_timeschedule_id = 1");
@@ -87,6 +82,19 @@ class LessonTimeDaoTest {
 
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "lesson_times");
 	assertEquals(1, actual);
+    }
+
+    @Test
+    void givenLessonTime_whenFindByStartEndLessonTime_thenFound() {
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lesson_times",
+		"'08:46:00' BETWEEN start_time AND end_time " + " OR '09:25:00' BETWEEN start_time AND end_time");
+
+	LessonTime lessonTime = LessonTime.builder().startTime(LocalTime.of(8, 46)).endTime(LocalTime.of(9, 25))
+		.build();
+
+	int actual = lessonTimeDao.findByStartOrEndLessonTime(lessonTime).get().getId();
+
+	assertEquals(expected, actual);
     }
 
 }

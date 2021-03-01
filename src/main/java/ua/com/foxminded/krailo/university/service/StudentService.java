@@ -16,7 +16,7 @@ public class StudentService {
 
     private StudentDao studentDao;
     private GroupDao groupDao;
-    @Value("${model.groupMaxCapacity}")
+    @Value("${group.maxCapacity}")
     private int groupMaxCapacity;
 
     public StudentService(StudentDao studentDao, GroupDao groupDao) {

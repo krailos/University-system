@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,7 @@ import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
 import ua.com.foxminded.krailo.university.model.Holiday;
 import ua.com.foxminded.krailo.university.model.Vocation;
+import ua.com.foxminded.krailo.university.model.VocationKind;
 
 @Service
 public class VocationService {
@@ -22,10 +24,8 @@ public class VocationService {
     private VocationDao vocationDao;
     private LessonDao lessonDao;
     private HolidayDao holidayDao;
-    @Value("${model.vocationDurationGeneral}")
-    private int vocationDurationGeneral;
-    @Value("${model.vocationDurationPreferential}")
-    private int vocationDurationPreferential;
+    @Value("#{${vocation.durationBykind}}")
+    private Map<VocationKind, Integer> vocationDurationBykind;
 
     public VocationService(VocationDao vocationDao, LessonDao lessonDao, HolidayDao holidayDao) {
 	this.vocationDao = vocationDao;
@@ -41,9 +41,8 @@ public class VocationService {
     }
 
     public void update(Vocation vocation) {
-	if (isVocationPeriodFreeFromLessons(vocation) && isVocationsEndDateMoreThenStart(vocation)
-		&& isVocationDuratioMoreThenMaxDuration(vocation)
-		&& isVocationsStartAndEndDateBelongsSameYear(vocation)) {
+	if (!isVocationDuratioMoreThenMaxDuration(vocation) && isVocationPeriodFreeFromLessons(vocation)
+		&& isVocationsEndDateMoreThenStart(vocation) && isVocationsStartAndEndDateBelongsSameYear(vocation)) {
 	    vocationDao.update(vocation);
 	}
     }
@@ -79,8 +78,8 @@ public class VocationService {
 	vocations.add(vocation);
 	List<LocalDate> vocationDates = getVocationDates(vocations);
 	List<LocalDate> holidays = holidayDao.findAll().stream().map(Holiday::getDate).collect(Collectors.toList());
-	return vocationDates.stream().filter(d -> !isDateWeekend(d) || !holidays.contains(d))
-		.count() > getMaxVocationDuration(vocation);
+	return vocationDates.stream().filter(d -> !isDateWeekend(d)).filter(d -> !holidays.contains(d))
+		.count() > vocationDurationBykind.get(vocation.getKind());
     }
 
     private boolean isDateWeekend(LocalDate date) {
@@ -99,15 +98,6 @@ public class VocationService {
 	return dates;
     }
 
-    private int getMaxVocationDuration(Vocation vocation) {
-	switch (vocation.getKind()) {
-	case GENERAL:
-	    return vocationDurationGeneral;
-	case PREFERENTIAL:
-	    return vocationDurationPreferential;
-	default:
-	    return 0;
-	}
-    }
+   
 
 }

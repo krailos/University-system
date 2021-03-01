@@ -2,7 +2,9 @@ package ua.com.foxminded.krailo.university.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -20,6 +22,7 @@ public class LessonTimeDao {
     private static final String SQL_DELETE = "DELETE FROM lesson_times WHERE id = ?";
     private static final String SQL_INSERT = "INSERT INTO lesson_times (order_number, start_time, end_time, lessons_timeschedule_id) VALUES (?, ?, ?, ?)";
     private static final String SQL_UPDATE = "UPDATE lesson_times SET order_number = ?, start_time = ?, end_time = ?, lessons_timeschedule_id = ? where id = ?";
+    private static final String SQL_SELECT_BY_START_OR_END_TIME = "SELECT * FROM lesson_times where ? between start_time and end_time or ? between start_time and end_time";
 
     private JdbcTemplate jdbcTemplate;
     private RowMapper<LessonTime> lessonTimeRowMapper;
@@ -44,8 +47,8 @@ public class LessonTimeDao {
     }
 
     public void update(LessonTime lessonTime) {
-	jdbcTemplate.update(SQL_UPDATE, lessonTime.getOrderNumber(), lessonTime.getStartTime(),
-		lessonTime.getEndTime(), lessonTime.getLessonsTimeSchedule().getId(), lessonTime.getId());
+	jdbcTemplate.update(SQL_UPDATE, lessonTime.getOrderNumber(), lessonTime.getStartTime(), lessonTime.getEndTime(),
+		lessonTime.getLessonsTimeSchedule().getId(), lessonTime.getId());
 
     }
 
@@ -56,7 +59,7 @@ public class LessonTimeDao {
     public List<LessonTime> findAll() {
 	return jdbcTemplate.query(SQL_SELECT_ALL, lessonTimeRowMapper);
     }
-    
+
     public List<LessonTime> findBylessonTimeScheduleId(int scheduleId) {
 	return jdbcTemplate.query(SQL_SELECT_BY_LESSON_TIME_SCHEDULE_ID, lessonTimeRowMapper, scheduleId);
     }
@@ -64,6 +67,15 @@ public class LessonTimeDao {
     public void deleteById(int id) {
 	jdbcTemplate.update(SQL_DELETE, id);
 
+    }
+
+    public Optional<LessonTime> findByStartOrEndLessonTime(LessonTime lessonTime) {
+	try {
+	    return Optional.of(jdbcTemplate.queryForObject(SQL_SELECT_BY_START_OR_END_TIME, lessonTimeRowMapper,
+		    lessonTime.getStartTime(), lessonTime.getEndTime()));
+	} catch (EmptyResultDataAccessException e) {
+	    return Optional.empty();
+	}
     }
 
 }

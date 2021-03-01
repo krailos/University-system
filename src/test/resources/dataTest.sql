@@ -45,8 +45,8 @@ INSERT INTO lessons_timeschedule (name) VALUES
 ('lessons time schedule 2');
 
 INSERT INTO lesson_times (order_number, start_time, end_time, lessons_timeschedule_id) VALUES 
-('first lesson', '08:30:00', '09:45:00', '1'),
-('second lesson', '08:30:00', '09:45:00', '1');
+('first lesson', '08:30:00', '09:15:00', '1'),
+('second lesson', '09:30:00', '10:15:00', '1');
 
 INSERT INTO students (student_id, first_name, last_name, birth_date, phone,
 address, email, rank, gender, group_id) VALUES 

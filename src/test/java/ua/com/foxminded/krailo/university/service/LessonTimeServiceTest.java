@@ -4,11 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.never;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,11 +32,21 @@ class LessonTimeServiceTest {
     @Test
     void givenLessonTime_whenCereate_thanCreated() {
 	LessonTime lessonTime = createLessonTime();
-	doNothing().when(lessonTimeDao).create(lessonTime);
 
 	lessonTimeService.create(lessonTime);
 
 	verify(lessonTimeDao).create(lessonTime);
+    }
+
+    @Test
+    void givenExistingLessonTime_whenCereate_thanNotCreated() {
+	LessonTime lessonTime = createLessonTime();
+	when(lessonTimeDao.findByStartOrEndLessonTime(lessonTime))
+		.thenReturn(Optional.of(LessonTime.builder().id(1).build()));
+
+	lessonTimeService.create(lessonTime);
+
+	verify(lessonTimeDao, never()).create(lessonTime);
     }
 
     @Test
@@ -45,6 +57,17 @@ class LessonTimeServiceTest {
 	lessonTimeService.update(lessonTime);
 
 	verify(lessonTimeDao).update(lessonTime);
+    }
+
+    @Test
+    void givenExistingLessonTime_whenUpdate_thanNotUpdated() {
+	LessonTime lessonTime = createLessonTime();
+	when(lessonTimeDao.findByStartOrEndLessonTime(lessonTime))
+		.thenReturn(Optional.of(LessonTime.builder().id(1).build()));
+
+	lessonTimeService.update(lessonTime);
+
+	verify(lessonTimeDao, never()).update(lessonTime);
     }
 
     @Test

@@ -17,11 +17,15 @@ public class LessonTimeService {
     }
 
     public void create(LessonTime lessonTime) {
-	lessonTimeDao.create(lessonTime);
+	if (isLessonTimeFree(lessonTime)) {
+	    lessonTimeDao.create(lessonTime);
+	}
     }
 
     public void update(LessonTime lessonTime) {
-	lessonTimeDao.update(lessonTime);
+	if (isLessonTimeFree(lessonTime)) {
+	    lessonTimeDao.update(lessonTime);
+	}
     }
 
     public LessonTime getById(int id) {
@@ -34,6 +38,10 @@ public class LessonTimeService {
 
     public void delete(LessonTime lessonTime) {
 	lessonTimeDao.deleteById(lessonTime.getId());
+    }
+
+    private boolean isLessonTimeFree(LessonTime lessonTime) {
+	return lessonTimeDao.findByStartOrEndLessonTime(lessonTime).isEmpty();
     }
 
 }
