@@ -24,9 +24,9 @@ class AudienceDaoTest {
 
     @Test
     void givenNewAudience_whenCreate_thenCreated() throws Exception {
-	Audience audience = Audience.builder().number("3")
-		.building(Building.builder().id(2).name("name").address("address").build())
-		.capacity(120).description("description3").build();
+	Audience audience = Audience.builder().number("1")
+		.building(Building.builder().id(2).name("name").address("address").build()).capacity(120)
+		.description("description3").build();
 
 	audienceDao.create(audience);
 
@@ -42,7 +42,7 @@ class AudienceDaoTest {
 
 	assertEquals(expected, actual);
     }
-    
+
     @Test
     void givenAudience_whenFindByNumber_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "Audiences", "number = 1");
@@ -53,7 +53,7 @@ class AudienceDaoTest {
     }
 
     @Test
-    void givenBuldings_whenFindAll_thenFound() {
+    void givenAudiences_whenFindAll_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTable(jdbcTemplate, "Audiences");
 
 	int actual = audienceDao.findAll().size();
@@ -72,9 +72,9 @@ class AudienceDaoTest {
 
     @Test
     void givenNewFieldsOfAudience_whenUpdate_thenUpdated() {
-	Audience audience = Audience.builder().id(1).number("new").building(
-		Building.builder().id(1).name("new name").address("new address").build())
-		.capacity(1).description("new").build();
+	Audience audience = Audience.builder().id(1).number("new")
+		.building(Building.builder().id(1).name("new name").address("new address").build()).capacity(1)
+		.description("new").build();
 
 	audienceDao.update(audience);
 
@@ -91,8 +91,7 @@ class AudienceDaoTest {
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "Audiences");
 	assertEquals(2, actual);
     }
-    
-    
+
     @Test
     void givenAudience_whenFindByNumberAndBuildingId_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "Audiences", "number = 1 AND building_id = 1");
@@ -101,6 +100,5 @@ class AudienceDaoTest {
 
 	assertEquals(expected, actual);
     }
-   
 
 }
