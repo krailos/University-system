@@ -69,10 +69,6 @@ public class AudienceDao {
 	List<Audience> audiences = new ArrayList<>();
 	try {
 	    audiences = jdbcTemplate.query(SQL_SELECT_AUDIENCE_BY_NUMBER, new Object[] { number }, audienceRowMapper);
-	} catch (EmptyResultDataAccessException e) {
-	    String msg = format("Audiences with number %s not found", number);
-	    LOGGER.debug(msg);
-	    throw new EntityNotFoundException(msg);
 	} catch (DataAccessException e) {
 	    String msg = format("Unable to find audiences with number %s", number);
 	    LOGGER.error(msg, e);
@@ -87,10 +83,6 @@ public class AudienceDao {
 	List<Audience> audiences = new ArrayList<>();
 	try {
 	    audiences = jdbcTemplate.query(SQL_SELECT_AUDIENCES_BY_BUILDING, audienceRowMapper, buildingId);
-	} catch (EmptyResultDataAccessException e) {
-	    String msg = format("Audiences with building id %s not found", buildingId);
-	    LOGGER.debug(msg);
-	    throw new EntityNotFoundException(msg);
 	} catch (DataAccessException e) {
 	    String msg = format("Unable to find audiences with building id %s", buildingId);
 	    LOGGER.error(msg, e);
@@ -105,10 +97,6 @@ public class AudienceDao {
 	List<Audience> audiences = new ArrayList<>();
 	try {
 	    audiences = jdbcTemplate.query(SQL_SELECT_ALL_AUDIENCES, audienceRowMapper);
-	} catch (EmptyResultDataAccessException e) {
-	    String msg = "Audiences not found";
-	    LOGGER.debug(msg);
-	    throw new EntityNotFoundException(msg);
 	} catch (DataAccessException e) {
 	    String msg = "Unable to find all audiences";
 	    LOGGER.error(msg, e);
@@ -145,6 +133,7 @@ public class AudienceDao {
 
     public void update(Audience audience) {
 	LOGGER.debug("Updating audience '{}'", audience);
+	int rowsAffected = 0;
 	try {
 	    jdbcTemplate.update(SQL_UPDATE_BY_ID, audience.getNumber(), audience.getBuilding().getId(),
 		    audience.getCapacity(), audience.getDescription(), audience.getId());
@@ -157,19 +146,28 @@ public class AudienceDao {
 	    LOGGER.error(msg, e);
 	    throw new QueryNotExecuteException(msg, e);
 	}
-	LOGGER.info("audience updated '{}'", audience);
+	if (rowsAffected > 0) {
+	    LOGGER.info("audience updated '{}'", audience);
+	} else {
+	    LOGGER.debug("audience not updated '{}'", audience);
+	}
     }
 
     public void deleteById(int id) {
 	LOGGER.debug("Delete audience  by id'{}'", id);
+	int rowsAffected = 0;
 	try {
-	    jdbcTemplate.update(SQL_DELETE_BY_ID, id);
+	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BY_ID, id);
 	} catch (DataAccessException e) {
 	    String msg = format("Unable to delete audience with id %s", id);
 	    LOGGER.error(msg, e);
 	    throw new QueryNotExecuteException(msg, e);
 	}
-	LOGGER.info("audience deleted with id '{}'", id);
+	if (rowsAffected > 0) {
+	    LOGGER.info("audience deleted with id '{}'", id);
+	} else {
+	    LOGGER.debug("audience not deleted, audience id'{}' not exist", id);
+	}
     }
 
     public Optional<Audience> findByNumberAndBuildingId(String number, int buildingId) {

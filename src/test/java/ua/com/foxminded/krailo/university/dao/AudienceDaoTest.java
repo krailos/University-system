@@ -38,7 +38,7 @@ class AudienceDaoTest {
     void givenBuildingId_whenFindByBuildingId_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "Audiences", "building_id = 1");
 
-	int actual = audienceDao.findByBuildingId(1).size();
+	int actual = audienceDao.findByBuildingId(10).size();
 
 	assertEquals(expected, actual);
     }
@@ -72,7 +72,7 @@ class AudienceDaoTest {
 
     @Test
     void givenNewFieldsOfAudience_whenUpdate_thenUpdated() {
-	Audience audience = Audience.builder().id(1).number("new")
+	Audience audience = Audience.builder().id(27).number("new")
 		.building(Building.builder().id(1).name("new name").address("new address").build()).capacity(1)
 		.description("new").build();
 
@@ -86,7 +86,7 @@ class AudienceDaoTest {
     @Test
     void givenId_whenDelete_thenDeleted() throws Exception {
 
-	audienceDao.deleteById(3);
+	audienceDao.deleteById(1);
 
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "Audiences");
 	assertEquals(2, actual);
