@@ -69,6 +69,10 @@ public class AudienceDao {
 	List<Audience> audiences = new ArrayList<>();
 	try {
 	    audiences = jdbcTemplate.query(SQL_SELECT_AUDIENCE_BY_NUMBER, new Object[] { number }, audienceRowMapper);
+	} catch (EmptyResultDataAccessException e) {
+	    String msg = format("Audience with number %s not found", number);
+	    LOGGER.debug(msg);
+	    throw new EntityNotFoundException(msg);
 	} catch (DataAccessException e) {
 	    String msg = format("Unable to find audiences with number %s", number);
 	    LOGGER.error(msg, e);
@@ -135,7 +139,7 @@ public class AudienceDao {
 	LOGGER.debug("Updating audience '{}'", audience);
 	int rowsAffected = 0;
 	try {
-	    jdbcTemplate.update(SQL_UPDATE_BY_ID, audience.getNumber(), audience.getBuilding().getId(),
+	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, audience.getNumber(), audience.getBuilding().getId(),
 		    audience.getCapacity(), audience.getDescription(), audience.getId());
 	} catch (DataIntegrityViolationException e) {
 	    String msg = "Audiences not updated" + audience;

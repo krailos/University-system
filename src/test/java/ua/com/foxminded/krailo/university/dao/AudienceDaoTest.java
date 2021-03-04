@@ -72,7 +72,7 @@ class AudienceDaoTest {
 
     @Test
     void givenNewFieldsOfAudience_whenUpdate_thenUpdated() {
-	Audience audience = Audience.builder().id(27).number("new")
+	Audience audience = Audience.builder().id(1).number("new")
 		.building(Building.builder().id(1).name("new name").address("new address").build()).capacity(1)
 		.description("new").build();
 
