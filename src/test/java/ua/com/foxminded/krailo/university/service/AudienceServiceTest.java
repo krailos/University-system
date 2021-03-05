@@ -84,7 +84,7 @@ class AudienceServiceTest {
 
     @Test
     void givenAudienceId_whenGetById_thenGot() {
-	Audience audience = createAudience();
+	Optional<Audience> audience = Optional.of(createAudience());
 	when(audienceDao.findById(1)).thenReturn(audience);
 
 	Audience actual = audienceService.getById(1);

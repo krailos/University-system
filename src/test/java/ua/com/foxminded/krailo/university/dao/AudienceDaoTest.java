@@ -24,7 +24,7 @@ class AudienceDaoTest {
 
     @Test
     void givenNewAudience_whenCreate_thenCreated() throws Exception {
-	Audience audience = Audience.builder().number("1")
+	Audience audience = Audience.builder().number("3")
 		.building(Building.builder().id(2).name("name").address("address").build()).capacity(120)
 		.description("description3").build();
 
@@ -38,7 +38,7 @@ class AudienceDaoTest {
     void givenBuildingId_whenFindByBuildingId_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "Audiences", "building_id = 1");
 
-	int actual = audienceDao.findByBuildingId(10).size();
+	int actual = audienceDao.findByBuildingId(1).size();
 
 	assertEquals(expected, actual);
     }
@@ -65,7 +65,7 @@ class AudienceDaoTest {
     void givenId_whenFindById_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "Audiences", "id = 1");
 
-	int actual = audienceDao.findById(1).getId();
+	int actual = audienceDao.findById(1).get().getId();
 
 	assertEquals(expected, actual);
     }

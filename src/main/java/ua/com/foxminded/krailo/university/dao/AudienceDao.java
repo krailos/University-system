@@ -18,15 +18,14 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import ua.com.foxminded.krailo.university.domain.Main;
 import ua.com.foxminded.krailo.university.exception.ConstraintViolationException;
-import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
-import ua.com.foxminded.krailo.university.exception.QueryNotExecuteException;
+import ua.com.foxminded.krailo.university.exception.DaoException;
 import ua.com.foxminded.krailo.university.model.Audience;
 
 @Repository
 public class AudienceDao {
 
+    private static final Logger log = LoggerFactory.getLogger(AudienceDao.class);
     private static final String SQL_SELECT_AUDIENCE_BY_ID = "SELECT * FROM audiences  WHERE id = ?";
     private static final String SQL_SELECT_AUDIENCE_BY_NUMBER = "SELECT * FROM audiences  WHERE number = ?";
     private static final String SQL_SELECT_AUDIENCE_BY_NUMBER_AND_BUILDING_ID = "SELECT * FROM audiences  WHERE number = ? AND building_id = ?";
@@ -36,8 +35,6 @@ public class AudienceDao {
     private static final String SQL_INSERT_AUDIENCE = "INSERT INTO audiences (number, building_id, capacity, description) VALUES (?, ?, ?, ?)";
     private static final String SQL_UPDATE_BY_ID = "UPDATE audiences SET number = ?, building_id = ?, capacity = ?, description = ? where id = ?";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
-
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Audience> audienceRowMapper;
 
@@ -46,72 +43,65 @@ public class AudienceDao {
 	this.audienceRowMapper = audienceRowMapper;
     }
 
-    public Audience findById(int id) {
-	LOGGER.debug("find audience by id '{}'", id);
-	Audience audience = new Audience();
+    public Optional<Audience> findById(int id) throws DaoException {
+	log.debug("find audience by id='{}'", id);
 	try {
-	    audience = jdbcTemplate.queryForObject(SQL_SELECT_AUDIENCE_BY_ID, new Object[] { id }, audienceRowMapper);
+	    Optional<Audience> optional = Optional
+		    .of(jdbcTemplate.queryForObject(SQL_SELECT_AUDIENCE_BY_ID, new Object[] { id }, audienceRowMapper));
+	    log.debug("audience found='{}'", optional.get());
+	    return optional;
 	} catch (EmptyResultDataAccessException e) {
-	    String msg = format("Audience with id %s not found", id);
-	    LOGGER.debug(msg);
-	    throw new EntityNotFoundException(msg);
+	    String msg = format("Audience with id=%s not found", id);
+	    log.debug(msg, e);
+	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    String msg = format("Unable to get audience with id %s", id);
-	    LOGGER.error(msg, e);
-	    throw new QueryNotExecuteException(msg, e);
+	    String msg = format("Unable to get audience with id=%s", id);
+	    throw new DaoException(msg, e);
 	}
-	LOGGER.debug("audience found '{}'", audience);
-	return audience;
+
     }
 
     public List<Audience> findByNumber(String number) {
-	LOGGER.debug("find audiences by number '{}'", number);
-	List<Audience> audiences = new ArrayList<>();
+	log.debug("find audiences by number='{}'", number);
 	try {
-	    audiences = jdbcTemplate.query(SQL_SELECT_AUDIENCE_BY_NUMBER, new Object[] { number }, audienceRowMapper);
-	} catch (EmptyResultDataAccessException e) {
-	    String msg = format("Audience with number %s not found", number);
-	    LOGGER.debug(msg);
-	    throw new EntityNotFoundException(msg);
+	    List<Audience> audiences = jdbcTemplate.query(SQL_SELECT_AUDIENCE_BY_NUMBER, new Object[] { number },
+		    audienceRowMapper);
+	    log.debug("audiences found='{}'", audiences);
+	    return audiences;
 	} catch (DataAccessException e) {
-	    String msg = format("Unable to find audiences with number %s", number);
-	    LOGGER.error(msg, e);
-	    throw new QueryNotExecuteException(msg, e);
+	    String msg = format("Unable to find audiences with number=%s", number);
+	    throw new DaoException(msg, e);
 	}
-	LOGGER.debug("audiences found '{}'", audiences);
-	return audiences;
     }
 
     public List<Audience> findByBuildingId(int buildingId) {
-	LOGGER.debug("find audiences by building id '{}'", buildingId);
-	List<Audience> audiences = new ArrayList<>();
+	log.debug("find audiences by building id='{}'", buildingId);
 	try {
-	    audiences = jdbcTemplate.query(SQL_SELECT_AUDIENCES_BY_BUILDING, audienceRowMapper, buildingId);
+	    List<Audience> audiences = jdbcTemplate.query(SQL_SELECT_AUDIENCES_BY_BUILDING, audienceRowMapper,
+		    buildingId);
+	    log.debug("audiences found='{}'", audiences);
+	    return audiences;
 	} catch (DataAccessException e) {
-	    String msg = format("Unable to find audiences with building id %s", buildingId);
-	    LOGGER.error(msg, e);
-	    throw new QueryNotExecuteException(msg, e);
+	    String msg = format("Unable to find audiences with building id=%s", buildingId);
+	    throw new DaoException(msg, e);
 	}
-	LOGGER.debug("audiences found '{}'", audiences);
-	return audiences;
+
     }
 
     public List<Audience> findAll() {
-	LOGGER.debug("find all audiences ");
-	List<Audience> audiences = new ArrayList<>();
+	log.debug("find all audiences ");
 	try {
-	    audiences = jdbcTemplate.query(SQL_SELECT_ALL_AUDIENCES, audienceRowMapper);
+	    List<Audience> audiences = jdbcTemplate.query(SQL_SELECT_ALL_AUDIENCES, audienceRowMapper);
+	    log.debug("all audiences found = '{}'", audiences);
+	    return audiences;
 	} catch (DataAccessException e) {
 	    String msg = "Unable to find all audiences";
-	    LOGGER.error(msg, e);
-	    throw new QueryNotExecuteException(msg, e);
+	    throw new DaoException(msg, e);
 	}
-	LOGGER.debug("all audiences found '{}'", audiences);
-	return audiences;
     }
 
     public void create(Audience audience) {
-	LOGGER.debug("Creating audience '{}'", audience);
+	log.debug("Creating audience = '{}'", audience);
 	try {
 	    KeyHolder keyHolder = new GeneratedKeyHolder();
 	    jdbcTemplate.update(connection -> {
@@ -125,72 +115,66 @@ public class AudienceDao {
 	    audience.setId(keyHolder.getKey().intValue());
 	} catch (DataIntegrityViolationException e) {
 	    String msg = "Audiences not created" + audience;
-	    LOGGER.debug(msg);
 	    throw new ConstraintViolationException(msg);
 	} catch (DataAccessException e) {
 	    String msg = "Unable to create audience" + audience;
-	    LOGGER.error(msg, e);
-	    throw new QueryNotExecuteException(msg, e);
+	    throw new DaoException(msg, e);
 	}
-	LOGGER.info("audience created '{}'", audience);
+	log.info("audience created = '{}'", audience);
     }
 
     public void update(Audience audience) {
-	LOGGER.debug("Updating audience '{}'", audience);
+	log.debug("Updating audience = '{}'", audience);
 	int rowsAffected = 0;
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, audience.getNumber(), audience.getBuilding().getId(),
 		    audience.getCapacity(), audience.getDescription(), audience.getId());
 	} catch (DataIntegrityViolationException e) {
 	    String msg = "Audiences not updated" + audience;
-	    LOGGER.debug(msg);
 	    throw new ConstraintViolationException(msg);
 	} catch (DataAccessException e) {
 	    String msg = "Unable to update audience" + audience;
-	    LOGGER.error(msg, e);
-	    throw new QueryNotExecuteException(msg, e);
+	    throw new DaoException(msg, e);
 	}
 	if (rowsAffected > 0) {
-	    LOGGER.info("audience updated '{}'", audience);
+	    log.info("audience updated='{}'", audience);
 	} else {
-	    LOGGER.debug("audience not updated '{}'", audience);
+	    log.debug("audience not updated='{}'", audience);
 	}
     }
 
     public void deleteById(int id) {
-	LOGGER.debug("Delete audience  by id'{}'", id);
+	log.debug("Delete audience  by id = '{}'", id);
 	int rowsAffected = 0;
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BY_ID, id);
 	} catch (DataAccessException e) {
-	    String msg = format("Unable to delete audience with id %s", id);
-	    LOGGER.error(msg, e);
-	    throw new QueryNotExecuteException(msg, e);
+	    String msg = format("Unable to delete audience with id = %s", id);
+	    throw new DaoException(msg, e);
 	}
 	if (rowsAffected > 0) {
-	    LOGGER.info("audience deleted with id '{}'", id);
+	    log.info("audience deleted with id = '{}'", id);
 	} else {
-	    LOGGER.debug("audience not deleted, audience id'{}' not exist", id);
+	    log.debug("audience not deleted, audience id = '{}' not exist", id);
 	}
     }
 
-    public Optional<Audience> findByNumberAndBuildingId(String number, int buildingId) {
-	LOGGER.debug("find audience  by number '{}' and building id '{}'", number, buildingId);
+    public Optional<Audience> findByNumberAndBuildingId(String number, int buildingId) throws DaoException {
+	log.debug("find audience  by number '{}' and building id = '{}'", number, buildingId);
 	Optional<Audience> optional = Optional.empty();
 	try {
 	    optional = Optional.of(jdbcTemplate.queryForObject(SQL_SELECT_AUDIENCE_BY_NUMBER_AND_BUILDING_ID,
 		    new Object[] { number, buildingId }, audienceRowMapper));
+	    log.debug("audience found audience='{}'", optional.get());
+	    return optional;
 	} catch (EmptyResultDataAccessException e) {
-	    String msg = format("audiences not found by number %s and building id %s", number, buildingId);
-	    LOGGER.debug(msg);
+	    String msg = format("audiences not found by number %s and building id = %s", number, buildingId);
+	    log.debug(msg, e);
 	    return optional;
 	} catch (DataAccessException e) {
-	    String msg = format("Unable to find audience by number %s and building id %s", number, buildingId);
-	    LOGGER.error(msg, e);
-	    throw new QueryNotExecuteException(msg, e);
+	    String msg = format("Unable to find audience by number %s and building id = %s", number, buildingId);
+	    throw new DaoException(msg, e);
 	}
-	LOGGER.debug("audience found '{}'", optional.get());
-	return optional;
     }
 
 }
