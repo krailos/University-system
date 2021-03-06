@@ -40,7 +40,7 @@ public class LessonRowMapper implements RowMapper<Lesson> {
 	lesson.setLessonTime(lessonTimeDao.findById(rs.getInt("lesson_time_id")));
 	lesson.setSubject(subjectDao.findById(rs.getInt("subject_id")));
 	lesson.setTeacher(teacherDao.findById(rs.getInt("teacher_id")));
-	lesson.setAudience(audienceDao.findById(rs.getInt("audience_id")));
+	lesson.setAudience(audienceDao.findById(rs.getInt("audience_id")).get());
 	lesson.setGroups(groupDao.findByLessonId(lesson.getId()));
 	return lesson;
     }

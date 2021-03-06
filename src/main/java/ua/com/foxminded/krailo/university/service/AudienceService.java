@@ -26,57 +26,49 @@ public class AudienceService {
 	this.audienceDao = audienceDao;
     }
 
-    public Audience getById(int id) throws ServiceException {
-	log.debug("get audience by id='{}'", id);
-	try {
-	    return audienceDao.findById(id).get();
-	} catch (DaoException e) {
-	    throw new ServiceException(e.getMessage(), e);
+    public Audience getById(int id) {
+	log.debug("get audience by id={}", id);
+	return audienceDao.findById(id).get();
+    }
+
+    public void create(Audience audience) {
+	log.debug("create audience={}", audience);
+	if (isUniqueNumber(audience)) {
+	    audienceDao.create(audience);
 	}
     }
 
-    public void create(Audience audience) throws DaoException {
-	log.debug("create audience='{}'", audience);
-	if (isUniqueNumber(audience))
-	    audienceDao.create(audience);
-    }
-
-    public void update(Audience audience) throws DaoException {
+    public void update(Audience audience) {
 	log.debug("update audience='{}'", audience);
-	if (isUniqueNumber(audience))
+	if (isUniqueNumber(audience)) {
 	    audienceDao.update(audience);
+	}
     }
 
-    public List<Audience> getAll() throws DaoException {
+    public List<Audience> getAll() {
 	log.debug("get all audiences");
 	return audienceDao.findAll();
     }
 
-    public List<Audience> getByBuildingId(int id) throws DaoException {
-	log.debug("get audiences by building id='{}'", id);
+    public List<Audience> getByBuildingId(int id) {
+	log.debug("get audiences by building id={}", id);
 	return audienceDao.findByBuildingId(id);
     }
 
-    public void delete(Audience audience) throws DaoException {
-	log.debug("delete audience='{}'", audience);
+    public void delete(Audience audience) {
+	log.debug("delete audience={}", audience);
 	audienceDao.deleteById(audience.getId());
     }
 
-    private boolean isUniqueNumber(Audience audience) throws ConstraintViolationException, ServiceException {
+    private boolean isUniqueNumber(Audience audience) {
 	log.debug("is unique audience number");
-	try {
-	    Optional<Audience> existingAudience = audienceDao.findByNumberAndBuildingId(audience.getNumber(),
-		    audience.getBuilding().getId());
-	    if (existingAudience.isEmpty() || existingAudience.filter(a -> a.getId() == audience.getId()).isPresent()) {
-		log.debug("audience number is unique");
-		return true;
-	    } else {
-		String msg = format("Not unique audiences whith number=%s and building id=%s", audience.getNumber(),
-			audience.getBuilding().getId());
-		throw new ConstraintViolationException(msg);
-	    }
-	} catch (DaoException e) {
-	    throw new ServiceException(e.getMessage(), e);
+	Optional<Audience> existingAudience = audienceDao.findByNumberAndBuildingId(audience.getNumber(),
+		audience.getBuilding().getId());
+	if (existingAudience.isEmpty() || existingAudience.filter(a -> a.getId() == audience.getId()).isPresent()) {
+	    return true;
+	} else {
+	    throw new ConstraintViolationException(format("Not unique audiences whith number=%s and building id=%s",
+		    audience.getNumber(), audience.getBuilding().getId()));
 	}
     }
 
