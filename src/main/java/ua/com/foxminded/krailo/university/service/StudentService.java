@@ -54,6 +54,6 @@ public class StudentService {
 
     private boolean isEnoughtGroupCapacity(Student student) {
 	System.out.println(groupMaxCapacity);
-	return (groupDao.findById(student.getGroup().getId()).getStudents().size() + 1) <= groupMaxCapacity;
+	return (groupDao.findById(student.getGroup().getId()).get().getStudents().size() + 1) <= groupMaxCapacity;
     }
 }

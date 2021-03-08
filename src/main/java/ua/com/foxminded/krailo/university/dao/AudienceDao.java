@@ -17,7 +17,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import ua.com.foxminded.krailo.university.exception.ConstraintViolationException;
+import ua.com.foxminded.krailo.university.exception.DaoConstraintViolationException;
 import ua.com.foxminded.krailo.university.exception.DaoException;
 import ua.com.foxminded.krailo.university.model.Audience;
 
@@ -62,7 +62,7 @@ public class AudienceDao {
 	try {
 	    return jdbcTemplate.query(SQL_SELECT_AUDIENCE_BY_NUMBER, new Object[] { number }, audienceRowMapper);
 	} catch (DataAccessException e) {
-	    throw new DaoException("Unable to find audiences with number=" + number, e);
+	    throw new DaoException(format("Unable to find audiences with number=%s", number), e);
 	}
     }
 
@@ -71,7 +71,7 @@ public class AudienceDao {
 	try {
 	    return jdbcTemplate.query(SQL_SELECT_AUDIENCES_BY_BUILDING, audienceRowMapper, buildingId);
 	} catch (DataAccessException e) {
-	    throw new DaoException("Unable to find audiences with building id=" + buildingId, e);
+	    throw new DaoException(format("Unable to find audiences with building id=%s", buildingId), e);
 	}
     }
 
@@ -98,9 +98,9 @@ public class AudienceDao {
 	    }, keyHolder);
 	    audience.setId(keyHolder.getKey().intValue());
 	} catch (DataIntegrityViolationException e) {
-	    throw new ConstraintViolationException("Audiences not created", e);
+	    throw new DaoConstraintViolationException("Audiences not created", e);
 	} catch (DataAccessException e) {
-	    throw new DaoException("Unable to create audience=" + audience, e);
+	    throw new DaoException(format("Unable to create audience=%s", audience), e);
 	}
 	log.info("audience created={}", audience);
     }
@@ -112,9 +112,9 @@ public class AudienceDao {
 	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, audience.getNumber(), audience.getBuilding().getId(),
 		    audience.getCapacity(), audience.getDescription(), audience.getId());
 	} catch (DataIntegrityViolationException e) {
-	    throw new ConstraintViolationException("Audiences not updated" + audience, e);
+	    throw new DaoConstraintViolationException(format("Audience not updated audience=%s", audience), e);
 	} catch (DataAccessException e) {
-	    throw new DaoException("Unable to update audience" + audience, e);
+	    throw new DaoException(format("Unable to update audience=%s", audience), e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("audience updated={}", audience);

@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.AudienceDao;
-import ua.com.foxminded.krailo.university.exception.ConstraintViolationException;
-import ua.com.foxminded.krailo.university.exception.DaoException;
 import ua.com.foxminded.krailo.university.exception.ServiceException;
 import ua.com.foxminded.krailo.university.model.Audience;
 
@@ -28,21 +26,25 @@ public class AudienceService {
 
     public Audience getById(int id) {
 	log.debug("get audience by id={}", id);
-	return audienceDao.findById(id).get();
+	Optional<Audience> existingAudience = audienceDao.findById(id);
+	if (existingAudience.isPresent()) {
+	    return existingAudience.get();
+	} else {
+	    throw new ServiceException(format("audience whith id=%s not exist", id));
+	}
     }
 
     public void create(Audience audience) {
 	log.debug("create audience={}", audience);
-	if (isUniqueNumber(audience)) {
-	    audienceDao.create(audience);
-	}
+	isUniqueNumber(audience);
+	audienceDao.create(audience);
+
     }
 
     public void update(Audience audience) {
-	log.debug("update audience='{}'", audience);
-	if (isUniqueNumber(audience)) {
-	    audienceDao.update(audience);
-	}
+	log.debug("update audience={}", audience);
+	isUniqueNumber(audience);
+	audienceDao.update(audience);
     }
 
     public List<Audience> getAll() {
@@ -60,14 +62,14 @@ public class AudienceService {
 	audienceDao.deleteById(audience.getId());
     }
 
-    private boolean isUniqueNumber(Audience audience) {
-	log.debug("is unique audience number");
+    private void isUniqueNumber(Audience audience) {
+	log.debug("is audience number unique ?");
 	Optional<Audience> existingAudience = audienceDao.findByNumberAndBuildingId(audience.getNumber(),
 		audience.getBuilding().getId());
 	if (existingAudience.isEmpty() || existingAudience.filter(a -> a.getId() == audience.getId()).isPresent()) {
-	    return true;
+	    log.debug("audience number is unique");
 	} else {
-	    throw new ConstraintViolationException(format("Not unique audiences whith number=%s and building id=%s",
+	    throw new ServiceException(format("audiences number=%s and building id=%s not unique ",
 		    audience.getNumber(), audience.getBuilding().getId()));
 	}
     }

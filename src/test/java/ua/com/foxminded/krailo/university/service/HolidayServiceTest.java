@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,7 +51,7 @@ class HolidayServiceTest {
     @Test
     void givenHolidayId_whenGetById_thenGot() {
 	Holiday holiday = createHoliday();
-	when(holidayDao.findById(1)).thenReturn(holiday);
+	when(holidayDao.findById(1)).thenReturn(Optional.of(holiday));
 	Holiday expected = createHoliday();
 
 	Holiday actual = holidayService.getById(1);

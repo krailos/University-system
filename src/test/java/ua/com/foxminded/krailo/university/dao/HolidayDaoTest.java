@@ -48,7 +48,7 @@ class HolidayDaoTest {
     void givenId_whenFindById_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "holidays", "id = 1");
 
-	int actual = holidayDao.findById(1).getId();
+	int actual = holidayDao.findById(1).get().getId();
 
 	assertEquals(expected, actual);
     }
@@ -75,7 +75,7 @@ class HolidayDaoTest {
     void givenId_whenFindByDate_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "holidays", "date = '2021-01-01'");
 
-	int actual = holidayDao.findById(1).getId();
+	int actual = holidayDao.findById(1).get().getId();
 
 	assertEquals(expected, actual);
     }

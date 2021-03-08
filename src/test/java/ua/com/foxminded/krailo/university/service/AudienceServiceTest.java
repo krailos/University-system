@@ -1,7 +1,7 @@
 package ua.com.foxminded.krailo.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.never;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.krailo.university.dao.AudienceDao;
+import ua.com.foxminded.krailo.university.exception.ServiceException;
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Building;
 
@@ -39,15 +40,13 @@ class AudienceServiceTest {
     }
 
     @Test
-    void givenAudienceWithExistingNumber_whenCreate_thenNotCreated() {
+    void givenAudienceWithExistingNumber_whenCreate_thenThrowServiceException() {
 	Audience audience = createAudience();
 	audience.setId(0);
 	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
 		.thenReturn(Optional.of(Audience.builder().id(1).build()));
 
-	audienceService.create(audience);
-
-	verify(audienceDao, never()).create(audience);
+	assertThrows(ServiceException.class, () -> audienceService.update(audience));
     }
 
     @Test
@@ -72,14 +71,12 @@ class AudienceServiceTest {
     }
 
     @Test
-    void givenAudienceWithExistingNumber_whenUpdate_thenNotUpdated() {
+    void givenAudienceWithExistingNumber_whenUpdate_thenThrowServiceException() {
 	Audience audience = createAudience();
 	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
 		.thenReturn(Optional.of(Audience.builder().id(9).build()));
-
-	audienceService.update(audience);
-
-	verify(audienceDao, never()).update(audience);
+	
+	assertThrows(ServiceException.class, () -> audienceService.update(audience));
     }
 
     @Test

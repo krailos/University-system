@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +42,7 @@ class DepartmentServiceTest {
 
     @Test
     void givenDepartment_whenUpdate_thanUpdeted() {
-	Department department =Department.builder().id(1).name("name").build();
+	Department department = Department.builder().id(1).name("name").build();
 	doNothing().when(departmentDao).update(department);
 
 	departmentService.update(department);
@@ -51,8 +52,8 @@ class DepartmentServiceTest {
 
     @Test
     void givenDepartmentId_whenGetById_thenGot() {
-	Department department =  Department.builder().id(1).name("name").build();
-	when(departmentDao.findById(1)).thenReturn(department);
+	Department department = Department.builder().id(1).name("name").build();
+	when(departmentDao.findById(1)).thenReturn(Optional.of(department));
 
 	Department actual = departmentService.getById(1);
 
@@ -62,16 +63,14 @@ class DepartmentServiceTest {
 
     @Test
     void givenDepartments_whenGetAll_thenGot() {
-	List<Department> departments = new ArrayList<>(
-		Arrays.asList(Department.builder().id(1).name("name").build(),
-			 Department.builder().id(2).name("name2").build()));
+	List<Department> departments = new ArrayList<>(Arrays.asList(Department.builder().id(1).name("name").build(),
+		Department.builder().id(2).name("name2").build()));
 	when(departmentDao.findAll()).thenReturn(departments);
 
 	List<Department> actual = departmentService.getAll();
 
-	List<Department> expected = new ArrayList<>(
-		Arrays.asList(Department.builder().id(1).name("name").build(),
-			Department.builder().id(2).name("name2").build()));
+	List<Department> expected = new ArrayList<>(Arrays.asList(Department.builder().id(1).name("name").build(),
+		Department.builder().id(2).name("name2").build()));
 	assertEquals(expected, actual);
     }
 

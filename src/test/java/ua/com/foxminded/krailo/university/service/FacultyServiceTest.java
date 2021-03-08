@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,7 +54,7 @@ class FacultyServiceTest {
     @Test
     void givenFacultyId_whenGetById_thenGot() {
 	Faculty faculty = createFaculty();
-	when(facultyDao.findById(1)).thenReturn(faculty);
+	when(facultyDao.findById(1)).thenReturn(Optional.of(faculty));
 
 	Faculty actual = facultyService.getById(1);
 

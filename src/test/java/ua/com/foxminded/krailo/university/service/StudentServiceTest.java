@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +41,7 @@ class StudentServiceTest {
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
-	when(groupDao.findById(student.getGroup().getId())).thenReturn(group);
+	when(groupDao.findById(student.getGroup().getId())).thenReturn(Optional.of(group));
 
 	studentService.create(student);
 
@@ -53,7 +54,7 @@ class StudentServiceTest {
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
-	when(groupDao.findById(student.getGroup().getId())).thenReturn(group);
+	when(groupDao.findById(student.getGroup().getId())).thenReturn(Optional.of(group));
 
 	studentService.create(student);
 
@@ -66,7 +67,7 @@ class StudentServiceTest {
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
-	when(groupDao.findById(student.getGroup().getId())).thenReturn(group);
+	when(groupDao.findById(student.getGroup().getId())).thenReturn(Optional.of(group));
 
 	studentService.update(student);
 
@@ -79,7 +80,7 @@ class StudentServiceTest {
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
-	when(groupDao.findById(student.getGroup().getId())).thenReturn(group);
+	when(groupDao.findById(student.getGroup().getId())).thenReturn(Optional.of(group));
 
 	studentService.update(student);
 

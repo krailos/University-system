@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,7 +50,7 @@ class DeansOfficeServiceTest {
     @Test
     void givenDeansOfficeId_whenGetById_thenGot() {
 	DeansOffice deansOffice = createDeanceOffice();
-	when(deansOfficeDao.findById(1)).thenReturn(deansOffice);
+	when(deansOfficeDao.findById(1)).thenReturn(Optional.of(deansOffice));
 
 	DeansOffice actual = deansOfficeService.getById(1);
 

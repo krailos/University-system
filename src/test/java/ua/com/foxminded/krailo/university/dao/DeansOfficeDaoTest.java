@@ -53,7 +53,7 @@ class DeansOfficeDaoTest {
     void givenId_whenFindById_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "deans_office", "id =1");
 
-	int actual = deansOfficeDao.findById(1).getId();
+	int actual = deansOfficeDao.findById(1).get().getId();
 
 	assertEquals(expected, actual);
     }

@@ -23,7 +23,7 @@ public class FacultyRowMapper implements RowMapper<Faculty> {
 	Faculty faculty = new Faculty();
 	faculty.setId(rs.getInt("id"));
 	faculty.setName(rs.getString("name"));
-	faculty.setDeansOffice(deansOfficeDao.findById(rs.getInt("deans_office_id")));
+	faculty.setDeansOffice(deansOfficeDao.findById(rs.getInt("deans_office_id")).get());
 	return faculty;
     }
 

@@ -33,7 +33,7 @@ public class StudentRowMapper implements RowMapper<Student> {
 	student.setAddress(rs.getString("address"));
 	student.setRank(rs.getString("rank"));
 	student.setGender(Gender.valueOf(rs.getString("gender")));
-	student.setGroup(groupDao.findById(rs.getInt("group_id")));
+	student.setGroup(groupDao.findById(rs.getInt("group_id")).get());
 	return student;
     }
 

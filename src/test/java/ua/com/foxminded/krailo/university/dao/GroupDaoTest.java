@@ -56,7 +56,7 @@ class GroupDaoTest {
     void givenId_whenFindById_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "groups", "id = 1");
 
-	int actual = groupDao.findById(1).getId();
+	int actual = groupDao.findById(1).get().getId();
 
 	assertEquals(expected, actual);
     }
@@ -107,7 +107,7 @@ class GroupDaoTest {
     void givenGroupName_whenFindByName_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "groups", "name = 'group 1' and year_id = 1");
 
-	int actual = groupDao.findByNameAndYearId("group 1", 1).getId();
+	int actual = groupDao.findByNameAndYearId("group 1", 1).get().getId();
 
 	assertEquals(expected, actual);
     }

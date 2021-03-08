@@ -23,7 +23,7 @@ public class AudienceRowMapper implements RowMapper<Audience> {
 	Audience audience = new Audience();
 	audience.setId(rs.getInt("id"));
 	audience.setNumber(rs.getString("number"));
-	audience.setBuilding(buildingDao.findById(rs.getInt("building_id")));
+	audience.setBuilding(buildingDao.findById(rs.getInt("building_id")).get());
 	audience.setCapacity(rs.getInt("capacity"));
 	audience.setDescription(rs.getString("description"));
 	return audience;

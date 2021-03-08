@@ -36,7 +36,7 @@ public class TeacherRowMapper implements RowMapper<Teacher> {
 	teacher.setAddress(rs.getString("address"));
 	teacher.setDegree(rs.getString("degree"));
 	teacher.setGender(Gender.valueOf(rs.getString("gender")));
-	teacher.setDepartment(departmentDao.findById(rs.getInt("department_id")));
+	teacher.setDepartment(departmentDao.findById(rs.getInt("department_id")).get());
 	teacher.setSubjects(subjectDao.findByTeacherId(teacher.getId()));
 	return teacher;
     }

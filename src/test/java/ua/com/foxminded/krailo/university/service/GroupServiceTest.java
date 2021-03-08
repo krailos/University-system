@@ -1,14 +1,15 @@
 package ua.com.foxminded.krailo.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.StudentDao;
+import ua.com.foxminded.krailo.university.exception.ServiceException;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Year;
 
@@ -34,7 +36,7 @@ class GroupServiceTest {
     @Test
     void givenGroup_whenCereate_thanCreated() {
 	Group group = createGroup();
-	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId())).thenReturn(null);
+	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId())).thenReturn(Optional.empty());
 
 	groupService.create(group);
 
@@ -42,19 +44,18 @@ class GroupServiceTest {
     }
 
     @Test
-    void givenGroupWithExistingName_whenCereate_thanNotCreated() {
+    void givenGroupWithExistingName_whenCereate_thanTrowServiceException() {
 	Group group = Group.builder().id(1).name("name1").year(Year.builder().id(1).build()).build();
-	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId())).thenReturn(Group.builder().name("name").build());
-
-	groupService.create(group);
-
-	verify(groupDao, never()).create(group);
+	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId()))
+		.thenReturn(Optional.of(Group.builder().name("name").build()));
+	
+	assertThrows(ServiceException.class, () -> groupService.update(group));
     }
 
     @Test
     void givenGroup_whenUpdate_thanUpdeted() {
 	Group group = createGroup();
-	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId())).thenReturn(null);
+	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId())).thenReturn(Optional.empty());
 
 	groupService.update(group);
 
@@ -62,20 +63,18 @@ class GroupServiceTest {
     }
 
     @Test
-    void givenGroupWithExistingName_whenUpdate_thanNotUpdated() {
+    void givenGroupWithExistingName_whenUpdate_thanThrowServiceException() {
 	Group group = Group.builder().id(1).name("name1").year(Year.builder().id(1).build()).build();
-	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId()))
-		.thenReturn(Group.builder().id(2).name("name1").year(Year.builder().id(1).build()).build());
+	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId())).thenReturn(
+		Optional.of(Group.builder().id(2).name("name1").year(Year.builder().id(1).build()).build()));
 
-	groupService.update(group);
-
-	verify(groupDao, never()).update(group);
+	assertThrows(ServiceException.class, () -> groupService.update(group));
     }
 
     @Test
     void givenGroupId_whenGetById_thenGot() {
 	Group group = createGroup();
-	when(groupDao.findById(1)).thenReturn(group);
+	when(groupDao.findById(1)).thenReturn(Optional.of(group));
 	Group expected = createGroup();
 
 	Group actual = groupService.getById(1);

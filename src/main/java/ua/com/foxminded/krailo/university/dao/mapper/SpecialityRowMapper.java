@@ -23,7 +23,7 @@ public class SpecialityRowMapper implements RowMapper<Speciality> {
 	Speciality speciality = new Speciality();
 	speciality.setId(rs.getInt("id"));
 	speciality.setName(rs.getString("name"));
-	speciality.setFaculty(facultyDao.findById(rs.getInt("faculty_id")));
+	speciality.setFaculty(facultyDao.findById(rs.getInt("faculty_id")).get());
 	return speciality;
     }
 
