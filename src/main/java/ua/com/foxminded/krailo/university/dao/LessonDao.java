@@ -4,7 +4,12 @@ import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import static java.lang.String.format;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,6 +17,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.krailo.university.dao.mapper.LessonRowMapper;
+import ua.com.foxminded.krailo.university.exception.DaoConstraintViolationException;
+import ua.com.foxminded.krailo.university.exception.DaoException;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.Student;
@@ -20,6 +27,7 @@ import ua.com.foxminded.krailo.university.model.Teacher;
 @Component
 public class LessonDao {
 
+    private static final Logger log = LoggerFactory.getLogger(LessonDao.class);
     private static final String SQL_SELECT_ALL = "SELECT * FROM lessons ORDER BY id";
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM lessons WHERE id = ?";
     private static final String SQL_UPDATE_BY_ID = "UPDATE lessons SET date = ?, lesson_time_id = ?, subject_id = ?, teacher_id = ?, audience_id = ? WHERE id = ?";
@@ -48,89 +56,193 @@ public class LessonDao {
 	this.lessonRowMapper = lessonRowMapper;
     }
 
-    public Lesson findById(int id) {
-	return jdbcTemplate.queryForObject(SQL_SELECT_BY_ID, lessonRowMapper, id);
+    public Optional<Lesson> findById(int id) {
+	log.debug("Find Lesson by id={}", id);
+	try {
+	    return Optional.of(jdbcTemplate.queryForObject(SQL_SELECT_BY_ID, lessonRowMapper, id));
+	} catch (EmptyResultDataAccessException e) {
+	    log.debug("Lesson with id={} not found", id);
+	    return Optional.empty();
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to find Lesson by id=%s", id), e);
+	}
+
     }
 
     public List<Lesson> findAll() {
-	return jdbcTemplate.query(SQL_SELECT_ALL, lessonRowMapper);
-    }
-
-    public void create(Lesson lesson) {
-	KeyHolder keyHolder = new GeneratedKeyHolder();
-	jdbcTemplate.update(connection -> {
-	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_INTO_LESSONS, new String[] { "id" });
-	    ps.setObject(1, lesson.getDate());
-	    ps.setInt(2, lesson.getLessonTime().getId());
-	    ps.setInt(3, lesson.getSubject().getId());
-	    ps.setInt(4, lesson.getTeacher().getId());
-	    ps.setInt(5, lesson.getAudience().getId());
-	    return ps;
-	}, keyHolder);
-	lesson.setId(keyHolder.getKey().intValue());
-	for (Group group : lesson.getGroups()) {
-	    jdbcTemplate.update(SQL_INSERT_INTO_LESSONS_GROUPS, lesson.getId(), group.getId());
+	log.debug("Find all Lesson");
+	try {
+	    return jdbcTemplate.query(SQL_SELECT_ALL, lessonRowMapper);
+	} catch (DataAccessException e) {
+	    throw new DaoException("Unable to find all Lesson", e);
 	}
     }
 
+    public void create(Lesson lesson) {
+	log.debug("Create lesson={}", lesson);
+	try {
+	    KeyHolder keyHolder = new GeneratedKeyHolder();
+	    jdbcTemplate.update(connection -> {
+		PreparedStatement ps = connection.prepareStatement(SQL_INSERT_INTO_LESSONS, new String[] { "id" });
+		ps.setObject(1, lesson.getDate());
+		ps.setInt(2, lesson.getLessonTime().getId());
+		ps.setInt(3, lesson.getSubject().getId());
+		ps.setInt(4, lesson.getTeacher().getId());
+		ps.setInt(5, lesson.getAudience().getId());
+		return ps;
+	    }, keyHolder);
+	    lesson.setId(keyHolder.getKey().intValue());
+	    for (Group group : lesson.getGroups()) {
+		log.debug("insert lesson and group into lessons_groups lessonId={}, groupId={}", lesson.getId(),
+			group.getId());
+		jdbcTemplate.update(SQL_INSERT_INTO_LESSONS_GROUPS, lesson.getId(), group.getId());
+	    }
+	} catch (DataIntegrityViolationException e) {
+	    throw new DaoConstraintViolationException(format("Not created lesson=%", lesson));
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to create lesson=%s", lesson), e);
+	}
+	log.info("Created lesson={}", lesson);
+    }
+
     public void update(Lesson lesson) {
-	jdbcTemplate.update(SQL_UPDATE_BY_ID, lesson.getDate(), lesson.getLessonTime().getId(),
-		lesson.getSubject().getId(), lesson.getTeacher().getId(), lesson.getAudience().getId(), lesson.getId());
-	List<Group> groupsOld = findById(lesson.getId()).getGroups();
-	groupsOld.stream().filter(g -> !lesson.getGroups().contains(g)).forEach(
-		g -> jdbcTemplate.update(SQL_DELETE_LESSONS_GROUPS_BY_LESSON_ID_GROUP_ID, lesson.getId(), g.getId()));
-	lesson.getGroups().stream().filter(g -> !groupsOld.contains(g))
-		.forEach(g -> jdbcTemplate.update(SQL_INSERT_INTO_LESSONS_GROUPS, lesson.getId(), g.getId()));
+	log.debug("Update lesson={}", lesson);
+	int rowsAffected = 0;
+	try {
+	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, lesson.getDate(), lesson.getLessonTime().getId(),
+		    lesson.getSubject().getId(), lesson.getTeacher().getId(), lesson.getAudience().getId(),
+		    lesson.getId());
+	    List<Group> groupsOld = findById(lesson.getId()).get().getGroups();
+	    groupsOld.stream().filter(g -> !lesson.getGroups().contains(g)).forEach(g -> {
+		log.debug("delete lesson and group from lessons_groups where lessonId={}, groupId={}", lesson.getId(),
+			g.getId());
+		jdbcTemplate.update(SQL_DELETE_LESSONS_GROUPS_BY_LESSON_ID_GROUP_ID, lesson.getId(), g.getId());
+	    });
+	    lesson.getGroups().stream().filter(g -> !groupsOld.contains(g)).forEach(g -> {
+		log.debug("insert lesson and group into lessons_groups lessonId={}, groupId={}", lesson.getId(),
+			g.getId());
+		jdbcTemplate.update(SQL_INSERT_INTO_LESSONS_GROUPS, lesson.getId(), g.getId());
+	    });
+	} catch (DataIntegrityViolationException e) {
+	    throw new DaoConstraintViolationException(format("Not created, lesson=%", lesson));
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to update lesson=%s", lesson));
+	}
+	if (rowsAffected > 0) {
+	    log.info("Updated lesson={}", lesson);
+	} else {
+	    log.debug("Not updated lesson={}", lesson);
+	}
     }
 
     public void deleteById(int id) {
-	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
+	log.debug("Delete lesson by id={}", id);
+	int rowsAffected = 0;
+	try {
+	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BY_ID, id);
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to delete lesson by id=%s", id), e);
+	}
+	if (rowsAffected > 0) {
+	    log.info("Deleted lesson  by id={}", id);
+	} else {
+	    log.debug("Not deleted lesson by id={}", id);
+	}
     }
 
     public List<Lesson> findByDate(LocalDate date) {
-	return jdbcTemplate.query(SQL_SELECT_BY_DATE, lessonRowMapper, date);
+	log.debug("Find lessons by date={}", date);
+	try {
+	    return jdbcTemplate.query(SQL_SELECT_BY_DATE, lessonRowMapper, date);
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to find lessons by date=%s", date), e);
+	}
     }
 
     public List<Lesson> findByTeacherBetweenDates(Teacher teacher, LocalDate start, LocalDate end) {
-	return jdbcTemplate.query(SQL_SELECT_BY_TEACHER_BETWEEN_DATES, lessonRowMapper, teacher.getId(), start, end);
+	log.debug("Find lessons by teacher={} and startDate={} and endDate={}", teacher, start, end);
+	try {
+	    return jdbcTemplate.query(SQL_SELECT_BY_TEACHER_BETWEEN_DATES, lessonRowMapper, teacher.getId(), start,
+		    end);
+	} catch (DataAccessException e) {
+	    throw new DaoException(
+		    format("Unable to find lessons by teacher=%s and startDate=%s and endDate=%s", teacher, start, end),
+		    e);
+	}
     }
 
     public List<Lesson> findByTeacherAndDate(Teacher teacher, LocalDate date) {
-	return jdbcTemplate.query(SQL_SELECT_BY_TEACHER_AND_DATE, lessonRowMapper, teacher.getId(), date);
+	log.debug("Find lessons by teacher={} and date={}", teacher, date);
+	try {
+	    return jdbcTemplate.query(SQL_SELECT_BY_TEACHER_AND_DATE, lessonRowMapper, teacher.getId(), date);
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to find lessons by teacher=%s and date=%s", teacher, date), e);
+	}
     }
 
     public List<Lesson> findByStudentBetweenDates(Student student, LocalDate start, LocalDate end) {
-	return jdbcTemplate.query(SQL_SELECT_BY_STUDENT_BETWEEN_DATES, lessonRowMapper, student.getId(), start, end);
+	log.debug("Find lessons by student={} between startDate={} and endDate={}", student, start, end);
+	try {
+	    return jdbcTemplate.query(SQL_SELECT_BY_STUDENT_BETWEEN_DATES, lessonRowMapper, student.getId(), start,
+		    end);
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to find lessons by student=%s between startDate=%s and endDate=%s",
+		    student, start, end), e);
+	}
     }
 
     public List<Lesson> findByStudentAndDate(Student student, LocalDate date) {
-	return jdbcTemplate.query(SQL_SELECT_BY_STUDENT_AND_DATE, lessonRowMapper, student.getId(), date);
+	log.debug("Find lessons by student={} and endDate={}", student, date);
+	try {
+	    return jdbcTemplate.query(SQL_SELECT_BY_STUDENT_AND_DATE, lessonRowMapper, student.getId(), date);
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to find lessons by student=%s and endDate=%s", student, date), e);
+	}
     }
 
     public Optional<Lesson> findByDateAndTeacherAndLessonTime(Lesson lesson) {
+	log.debug("Find Lesson by date={} and teacher={} and lessonTime id={}", lesson.getDate(), lesson.getTeacher(),
+		lesson.getLessonTime());
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(SQL_SELECT_BY_DATE_AND_TEACHER_AND_LESSON_TIME,
 		    lessonRowMapper, lesson.getDate(), lesson.getTeacher().getId(), lesson.getLessonTime().getId()));
 	} catch (EmptyResultDataAccessException e) {
+	    log.debug("Lesson not found by date={} and teacher={} and lessonTime id={}", lesson.getDate(),
+		    lesson.getTeacher(), lesson.getLessonTime());
 	    return Optional.empty();
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to find Lesson by date=%s and teacher=%s and lessonTime id=%s",
+		    lesson.getDate(), lesson.getTeacher(), lesson.getLessonTime()), e);
 	}
     }
 
     public Optional<Lesson> findByDateAndAudienceAndLessonTime(Lesson lesson) {
+	log.debug("Find Lesson by date={} and audience={} and lessonTime id={}", lesson.getDate(), lesson.getAudience(),
+		lesson.getLessonTime());
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(SQL_SELECT_BY_DATE_AND_AUDIENCE_AND_LESSON_TIME,
 		    lessonRowMapper, lesson.getDate(), lesson.getAudience().getId(), lesson.getLessonTime().getId()));
 	} catch (EmptyResultDataAccessException e) {
+	    log.debug("Lesson not found  by date={} and audience={} and lessonTime id={}", lesson.getDate(),
+		    lesson.getAudience(), lesson.getLessonTime());
 	    return Optional.empty();
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to find Lesson by date=%s and audience=%s and lessonTime id=%s",
+		    lesson.getDate(), lesson.getAudience(), lesson.getLessonTime()), e);
 	}
     }
 
     public Optional<Lesson> findByDateAndLessonTimeIdAndGroupId(LocalDate date, int lessonTimeId, int groupId) {
+	log.debug("Find Lesson by date={} and lessonTimeId={}  and groupId={} ", date, lessonTimeId, groupId);
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(SQL_SELECT_BY_DATE_AND_LESSON_TIME_ID_AND_GROUP_ID,
 		    lessonRowMapper, date, lessonTimeId, groupId));
 	} catch (EmptyResultDataAccessException e) {
+	    log.debug("Lesson not found  by date={} and lessonTimeId={}  and groupId={}", date, lessonTimeId, groupId);
 	    return Optional.empty();
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to find Lesson by date=%s and lessonTimeId=%s  and groupId=%s", date,
+		    lessonTimeId, groupId), e);
 	}
     }
 

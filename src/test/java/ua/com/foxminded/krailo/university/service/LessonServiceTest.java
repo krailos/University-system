@@ -1,6 +1,7 @@
 package ua.com.foxminded.krailo.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -23,6 +24,7 @@ import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
+import ua.com.foxminded.krailo.university.exception.ServiceException;
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Building;
 import ua.com.foxminded.krailo.university.model.Group;
@@ -52,7 +54,7 @@ class LessonServiceTest {
     @Test
     void givenLessonId_whenGetById_thenGot() {
 	Lesson lesson = createLesson();
-	when(lessonDao.findById(1)).thenReturn(lesson);
+	when(lessonDao.findById(1)).thenReturn(Optional.of(lesson));
 
 	Lesson actual = lessonService.getById(1);
 
@@ -98,89 +100,72 @@ class LessonServiceTest {
     }
 
     @Test
-    void givenLessonWithBookedAudience_whenCreate_thenNotCreated() {
+    void givenLessonWithBookedAudience_whenCreate_thenTrowServiceException() {
 	Lesson lesson = createLesson();
 	when(lessonDao.findByDateAndAudienceAndLessonTime(lesson))
 		.thenReturn(Optional.of(Lesson.builder().id(1).build()));
 
-	lessonService.create(lesson);
-
-	verify(lessonDao, never()).create(lesson);
+	assertThrows(ServiceException.class, () -> lessonService.create(lesson));
     }
 
     @Test
-    void givenLessonWithBookedTeacher_whenCreate_thenNotCreated() {
+    void givenLessonWithBookedTeacher_whenCreate_thenTrowServiceException() {
 	Lesson lesson = createLesson();
 	when(lessonDao.findByDateAndTeacherAndLessonTime(lesson))
 		.thenReturn(Optional.of(Lesson.builder().id(1).build()));
 
-	lessonService.create(lesson);
-
-	verify(lessonDao, never()).create(lesson);
+	assertThrows(ServiceException.class, () -> lessonService.create(lesson));
     }
 
     @Test
-    void givenLessonWithAudienceCapacityLessThenStuentsAmount_whenCreate_thenNotCreated() {
+    void givenLessonWithAudienceCapacityLessThenStuentsAmount_whenCreate_thenTrowServiceException() {
 	Lesson lesson = createLesson();
 	lesson.getAudience().setCapacity(1);
 
-	lessonService.create(lesson);
-
-	verify(lessonDao, never()).create(lesson);
+	assertThrows(ServiceException.class, () -> lessonService.create(lesson));
     }
 
     @Test
-    void givenLessonWhithTeacherOnVocation_whenCreate_thenNotCreated() {
+    void givenLessonWhithTeacherOnVocation_whenCreate_thenTrowServiceException() {
 	Lesson lesson = createLesson();
 	when(vocationDao.findByTeacherIdAndDate(lesson.getTeacher().getId(), lesson.getDate()))
 		.thenReturn(Optional.of(Vocation.builder().id(1).build()));
 
-	lessonService.create(lesson);
-
-	verify(lessonDao, never()).create(lesson);
+	assertThrows(ServiceException.class, () -> lessonService.create(lesson));
     }
 
     @Test
-    void givenLessonWhithDateThatMatchToHoliday_whenCreate_thenNotCreated() {
+    void givenLessonWhithDateThatMatchToHoliday_whenCreate_thenThrowServiceException() {
 	Lesson lesson = createLesson();
 	when(holidayDao.findByDate(lesson.getDate())).thenReturn(Optional.of(Holiday.builder().id(1).build()));
 
-	lessonService.create(lesson);
-
-	verify(lessonDao, never()).create(lesson);
+	assertThrows(ServiceException.class, () -> lessonService.create(lesson));
     }
 
     @Test
-    void givenLessonWhithDateThatMatchToWeekend_whenCreate_thenNotCreated() {
+    void givenLessonWhithDateThatMatchToWeekend_whenCreate_thenThrowServiceException() {
 	Lesson lesson = createLesson();
 	lesson.setDate(LocalDate.of(2021, 01, 02));
 
-	lessonService.create(lesson);
-
-	verify(lessonDao, never()).create(lesson);
+	assertThrows(ServiceException.class, () -> lessonService.create(lesson));
     }
 
     @Test
-    void givenLessonWhithTeacherThatNotTeachesLessonSubject_whenCreate_thenNotCreated() {
+    void givenLessonWhithTeacherThatNotTeachesLessonSubject_whenCreate_thenThrowServiceException() {
 	Lesson lesson = createLesson();
-	lesson.getTeacher().getSubjects().add(Subject.builder().id(1).name("new subject1").build());
+	lesson.getTeacher().getSubjects().remove(0);
 
-
-	lessonService.create(lesson);
-
-	verify(lessonDao, never()).create(lesson);
+	assertThrows(ServiceException.class, () -> lessonService.create(lesson));
     }
 
     @Test
-    void givenLessonWhithGroupThatNotFree_whenCreate_thenNotCreated() {
+    void givenLessonWhithGroupThatNotFree_whenCreate_thenThrowServiceException() {
 	Lesson lesson = createLesson();
 	lesson.getTeacher().getSubjects().add(Subject.builder().id(1).name("subject1").build());
 	when(lessonDao.findByDateAndLessonTimeIdAndGroupId(lesson.getDate(), lesson.getLessonTime().getId(),
 		lesson.getGroups().get(0).getId())).thenReturn(Optional.of(createLesson()));
 
-	lessonService.create(lesson);
-
-	verify(lessonDao, never()).create(lesson);
+	assertThrows(ServiceException.class, () -> lessonService.create(lesson));
     }
 
     @Test
@@ -200,87 +185,71 @@ class LessonServiceTest {
     }
 
     @Test
-    void givenLessonWithBookedAudience_whenUpdate_thenNotUpdated() {
+    void givenLessonWithBookedAudience_whenUpdate_thenTrowServiceWxception() {
 	Lesson lesson = createLesson();
 	when(lessonDao.findByDateAndAudienceAndLessonTime(lesson))
 		.thenReturn(Optional.of(Lesson.builder().id(1).build()));
 
-	lessonService.update(lesson);
-
-	verify(lessonDao, never()).update(lesson);
+	assertThrows(ServiceException.class, () -> lessonService.update(lesson));
     }
 
     @Test
-    void givenLessonWithBookedTeacher_whenUpdate_thenNotUpdated() {
+    void givenLessonWithBookedTeacher_whenUpdate_thenTrowServiceException() {
 	Lesson lesson = createLesson();
 	when(lessonDao.findByDateAndTeacherAndLessonTime(lesson))
 		.thenReturn(Optional.of(Lesson.builder().id(1).build()));
 
-	lessonService.update(lesson);
-
-	verify(lessonDao, never()).update(lesson);
+	assertThrows(ServiceException.class, () -> lessonService.update(lesson));
     }
 
     @Test
-    void givenLessonWithAudienceCapacityLessThenStuentsAmount_whenUpdate_thenNotUpdated() {
+    void givenLessonWithAudienceCapacityLessThenStuentsAmount_whenUpdate_thenThrowServiceException() {
 	Lesson lesson = createLesson();
 	lesson.getAudience().setCapacity(1);
 
-	lessonService.update(lesson);
-
-	verify(lessonDao, never()).update(lesson);
+	assertThrows(ServiceException.class, () -> lessonService.update(lesson));
     }
 
     @Test
-    void givenLessonWhithTeacherOnVocation_whenUpdate_thenNotUpdated() {
+    void givenLessonWhithTeacherOnVocation_whenUpdate_thenThrowServiceException() {
 	Lesson lesson = createLesson();
 	when(vocationDao.findByTeacherIdAndDate(lesson.getTeacher().getId(), lesson.getDate()))
 		.thenReturn(Optional.of(Vocation.builder().id(1).build()));
 
-	lessonService.update(lesson);
-
-	verify(lessonDao, never()).update(lesson);
+	assertThrows(ServiceException.class, () -> lessonService.update(lesson));
     }
 
     @Test
-    void givenLessonWhithDateThatMatchToHoliday_whenUpdate_thenNotUpdated() {
+    void givenLessonWhithDateThatMatchToHoliday_whenUpdate_thenTrowsServiceException() {
 	Lesson lesson = createLesson();
 	when(holidayDao.findByDate(lesson.getDate())).thenReturn(Optional.of(Holiday.builder().id(1).build()));
 
-	lessonService.update(lesson);
-
-	verify(lessonDao, never()).update(lesson);
+	assertThrows(ServiceException.class, () -> lessonService.update(lesson));
     }
 
     @Test
-    void givenLessonWhithDateThatMatchToWeekend_whenUpdate_thenNotUpdated() {
+    void givenLessonWhithDateThatMatchToWeekend_whenUpdate_thenTrowsServiceException() {
 	Lesson lesson = createLesson();
 	lesson.setDate(LocalDate.of(2021, 01, 02));
 
-	lessonService.update(lesson);
-
-	verify(lessonDao, never()).update(lesson);
+	assertThrows(ServiceException.class, () -> lessonService.update(lesson));
     }
 
     @Test
-    void givenLessonWhithTeacherThatNotTeachesLessonSubject_whenUpdate_thenNotUpdated() {
+    void givenLessonWhithTeacherThatNotTeachesLessonSubject_whenUpdate_thenThrowServiceException() {
 	Lesson lesson = createLesson();
-	lesson.getTeacher().getSubjects().add(Subject.builder().id(1).name("new subject1").build());
+	lesson.getTeacher().getSubjects().remove(0);
 
-	lessonService.update(lesson);
-
-	verify(lessonDao, never()).update(lesson);
+	assertThrows(ServiceException.class, () -> lessonService.update(lesson));
     }
 
     @Test
-    void givenLessonWhithGroupThatNotFree_whenUpdate_thenNotUpdated() {
+    void givenLessonWhithGroupThatNotFree_whenUpdate_thenThrowServiceException() {
 	Lesson lesson = createLesson();
 	when(lessonDao.findByDateAndLessonTimeIdAndGroupId(lesson.getDate(), lesson.getLessonTime().getId(),
 		lesson.getGroups().get(0).getId())).thenReturn(Optional.of(createLesson()));
 
-	lessonService.update(lesson);
-
-	verify(lessonDao, never()).update(lesson);
+	assertThrows(ServiceException.class, () -> lessonService.update(lesson));
     }
 
     private Lesson createLesson() {
@@ -297,7 +266,7 @@ class LessonServiceTest {
 	LessonTime lessonTime1 = LessonTime.builder().id(1).orderNumber("order number 1").startTime(LocalTime.of(8, 45))
 		.endTime(LocalTime.of(9, 30)).lessonsTimeSchedule(lessonsTimeSchedule).build();
 	Audience audience = Audience.builder().id(1).number("number 1").building(Building.builder().id(1).build())
-		.capacity(4).description("description").build();
+		.capacity(5).description("description").build();
 	Lesson lesson = Lesson.builder().id(1).date(LocalDate.of(2021, 01, 01)).lessonTime(lessonTime1)
 		.subject(subject1).audience(audience).teacher(teacher1).groups(Arrays.asList(group1, group2)).build();
 	return lesson;

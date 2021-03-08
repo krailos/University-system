@@ -15,7 +15,9 @@ import ua.com.foxminded.krailo.university.model.Department;
 
 @Service
 public class DepartmentService {
+    
     private static final Logger log = LoggerFactory.getLogger(DepartmentService.class);
+    
     private DepartmentDao departmentDao;
 
     public DepartmentService(DepartmentDao departmentDao) {
