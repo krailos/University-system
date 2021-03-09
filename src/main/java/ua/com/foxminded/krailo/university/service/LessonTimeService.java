@@ -1,14 +1,22 @@
 package ua.com.foxminded.krailo.university.service;
 
-import java.util.List;
+import static java.lang.String.format;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.LessonTimeDao;
+import ua.com.foxminded.krailo.university.exception.ServiceException;
 import ua.com.foxminded.krailo.university.model.LessonTime;
 
 @Service
 public class LessonTimeService {
+
+    private static final Logger log = LoggerFactory.getLogger(LessonTimeService.class);
 
     private LessonTimeDao lessonTimeDao;
 
@@ -17,31 +25,43 @@ public class LessonTimeService {
     }
 
     public void create(LessonTime lessonTime) {
-	if (isLessonTimeFree(lessonTime)) {
-	    lessonTimeDao.create(lessonTime);
-	}
+	log.debug("Create lessonTime={}", lessonTime);
+	isLessonTimeFree(lessonTime);
+	lessonTimeDao.create(lessonTime);
     }
 
     public void update(LessonTime lessonTime) {
-	if (isLessonTimeFree(lessonTime)) {
-	    lessonTimeDao.update(lessonTime);
-	}
+	log.debug("Update lessonTime={}", lessonTime);
+	isLessonTimeFree(lessonTime);
+	lessonTimeDao.update(lessonTime);
     }
 
     public LessonTime getById(int id) {
-	return lessonTimeDao.findById(id);
+	log.debug("Get lessonTime by id={}", id);
+	Optional<LessonTime> existingDepartment = lessonTimeDao.findById(id);
+	if (existingDepartment.isPresent()) {
+	    return existingDepartment.get();
+	} else {
+	    throw new ServiceException(format("lessonTime with id=%s not exist", id));
+	}
     }
 
     public List<LessonTime> getAll() {
+	log.debug("Get all lessonTimes");
 	return lessonTimeDao.findAll();
     }
 
     public void delete(LessonTime lessonTime) {
+	log.debug("Delete lessonTime={}", lessonTime);
 	lessonTimeDao.deleteById(lessonTime.getId());
     }
 
-    private boolean isLessonTimeFree(LessonTime lessonTime) {
-	return lessonTimeDao.findByStartOrEndLessonTime(lessonTime).isEmpty();
+    private void isLessonTimeFree(LessonTime lessonTime) {
+	log.debug("is lessonTime={} free", lessonTime);
+	if (lessonTimeDao.findByStartOrEndLessonTime(lessonTime).isPresent()) {
+	    throw new ServiceException(format("lessonTime=%s not free", lessonTime));
+	}
+	log.debug("lessonTime={} is free", lessonTime);
     }
 
 }

@@ -23,7 +23,7 @@ public class GroupRowMapper implements RowMapper<Group> {
 	Group group = new Group();
 	group.setId(rs.getInt("id"));
 	group.setName(rs.getString("name"));
-	group.setYear(yearDao.findById(rs.getInt("year_id")));
+	group.setYear(yearDao.findById(rs.getInt("year_id")).get());
 	return group;
     }
 

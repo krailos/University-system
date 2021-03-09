@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,7 +53,7 @@ class LessonTimeSceduleServiceTest {
     @Test
     void givenLessonsTimeScheduleId_whenGetById_thenGot() {
 	LessonsTimeSchedule lessonsTimeSchedule = createLessonsTimeSchedule();
-	when(lessonTimeScheduleDao.findById(1)).thenReturn(lessonsTimeSchedule);
+	when(lessonTimeScheduleDao.findById(1)).thenReturn(Optional.of(lessonsTimeSchedule));
 	LessonsTimeSchedule expected = createLessonsTimeSchedule();
 
 	LessonsTimeSchedule actual = lessonsTimeScheduleService.getById(1);

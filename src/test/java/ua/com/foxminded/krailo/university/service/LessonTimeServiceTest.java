@@ -1,10 +1,10 @@
 package ua.com.foxminded.krailo.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.never;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.krailo.university.dao.LessonTimeDao;
+import ua.com.foxminded.krailo.university.exception.ServiceException;
 import ua.com.foxminded.krailo.university.model.LessonTime;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,14 +40,12 @@ class LessonTimeServiceTest {
     }
 
     @Test
-    void givenExistingLessonTime_whenCereate_thanNotCreated() {
+    void givenExistingLessonTime_whenCereate_thanThrowServiceException() {
 	LessonTime lessonTime = createLessonTime();
 	when(lessonTimeDao.findByStartOrEndLessonTime(lessonTime))
 		.thenReturn(Optional.of(LessonTime.builder().id(1).build()));
 
-	lessonTimeService.create(lessonTime);
-
-	verify(lessonTimeDao, never()).create(lessonTime);
+	assertThrows(ServiceException.class, () -> lessonTimeService.update(lessonTime));
     }
 
     @Test
@@ -60,20 +59,18 @@ class LessonTimeServiceTest {
     }
 
     @Test
-    void givenExistingLessonTime_whenUpdate_thanNotUpdated() {
+    void givenExistingLessonTime_whenUpdate_thanThrowServiceException() {
 	LessonTime lessonTime = createLessonTime();
 	when(lessonTimeDao.findByStartOrEndLessonTime(lessonTime))
 		.thenReturn(Optional.of(LessonTime.builder().id(1).build()));
 
-	lessonTimeService.update(lessonTime);
-
-	verify(lessonTimeDao, never()).update(lessonTime);
+	assertThrows(ServiceException.class, () -> lessonTimeService.update(lessonTime));
     }
 
     @Test
     void givenLessonTimeId_whenGetById_thenGot() {
 	LessonTime lessonTime = createLessonTime();
-	when(lessonTimeDao.findById(1)).thenReturn(lessonTime);
+	when(lessonTimeDao.findById(1)).thenReturn(Optional.of(lessonTime));
 	LessonTime expected = createLessonTime();
 
 	LessonTime actual = lessonTimeService.getById(1);

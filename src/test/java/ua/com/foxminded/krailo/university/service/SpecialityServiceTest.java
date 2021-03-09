@@ -1,14 +1,15 @@
 package ua.com.foxminded.krailo.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.never;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.krailo.university.dao.SpecialityDao;
 import ua.com.foxminded.krailo.university.dao.YearDao;
+import ua.com.foxminded.krailo.university.exception.ServiceException;
 import ua.com.foxminded.krailo.university.model.Faculty;
 import ua.com.foxminded.krailo.university.model.Speciality;
 
@@ -35,51 +37,47 @@ class SpecialityServiceTest {
     void givenSpeciality_whenCereate_thanCreated() {
 	Speciality speciality = createSpeciality();
 	when(specialityDao.findByNameAndFacultyId(speciality.getName(), speciality.getFaculty().getId()))
-		.thenReturn(null);
+		.thenReturn(Optional.empty());
 
 	specialityService.create(speciality);
 
 	verify(specialityDao).create(speciality);
     }
-    
+
     @Test
-    void givenSpecialityWithNotUniqueName_whenCereate_thanNotCreated() {
+    void givenSpecialityWithNotUniqueName_whenCereate_thanTrowServiceException() {
 	Speciality speciality = createSpeciality();
 	when(specialityDao.findByNameAndFacultyId(speciality.getName(), speciality.getFaculty().getId()))
-		.thenReturn(Speciality.builder().id(2).name("name").build());
+		.thenReturn(Optional.of(Speciality.builder().id(2).name("name").build()));
 
-	specialityService.create(speciality);
-
-	verify(specialityDao, never()).create(speciality);
+	assertThrows(ServiceException.class, () -> specialityService.create(speciality));
     }
 
     @Test
     void givenSpeciality_whenUpdate_thanUpdeted() {
 	Speciality speciality = createSpeciality();
 	when(specialityDao.findByNameAndFacultyId(speciality.getName(), speciality.getFaculty().getId()))
-		.thenReturn(Speciality.builder().id(1).name("name").build());
-	
+		.thenReturn(Optional.of(Speciality.builder().id(1).name("name").build()));
+
 	specialityService.update(speciality);
 
 	verify(specialityDao).update(speciality);
     }
-    
+
     @Test
-    void givenSpecialityWithNotUniqueNam_whenUpdate_thanNotUpdeted() {
+    void givenSpecialityWithNotUniqueNam_whenUpdate_thanTrowServiceException() {
 	Speciality speciality = createSpeciality();
 	when(specialityDao.findByNameAndFacultyId(speciality.getName(), speciality.getFaculty().getId()))
-	.thenReturn(Speciality.builder().id(2).name("name").build());
+		.thenReturn(Optional.of(Speciality.builder().id(2).name("name").build()));
 
-	
-	specialityService.update(speciality);
+	assertThrows(ServiceException.class, () -> specialityService.update(speciality));
 
-	verify(specialityDao, never()).update(speciality);
     }
 
     @Test
     void givenSpecialityId_whenGetById_thenGot() {
 	Speciality speciality = createSpeciality();
-	when(specialityDao.findById(1)).thenReturn(speciality);
+	when(specialityDao.findById(1)).thenReturn(Optional.of(speciality));
 	Speciality expected = createSpeciality();
 
 	Speciality actual = specialityService.getById(1);

@@ -51,7 +51,7 @@ class SpecialityDaoTest {
     void givenId_whenFindById_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "specialities", "id =1");
 
-	int actual = specialityDao.findById(1).getId();
+	int actual = specialityDao.findById(1).get().getId();
 
 	assertEquals(expected, actual);
     }
@@ -87,7 +87,7 @@ class SpecialityDaoTest {
     void givenSpecialityNameAndFaculyId_whenFindByNamrAndFacultyId_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "specialities", "name = 'speciality 1' and faculty_id  = 1");
 
-	int actual = specialityDao.findByNameAndFacultyId("speciality 1", 1).getId();
+	int actual = specialityDao.findByNameAndFacultyId("speciality 1", 1).get().getId();
 
 	assertEquals(expected, actual);
     }

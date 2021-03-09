@@ -23,7 +23,7 @@ public class DeansOfficeRowMapper implements RowMapper<DeansOffice> {
 	DeansOffice deansOffice = new DeansOffice();
 	deansOffice.setId(rs.getInt("id"));
 	deansOffice.setName(rs.getString("name"));
-	deansOffice.setUniversityOffice(universityOfficeDao.findById(rs.getInt("university_office_id")));
+	deansOffice.setUniversityOffice(universityOfficeDao.findById(rs.getInt("university_office_id")).get());
 	return deansOffice;
     }
 

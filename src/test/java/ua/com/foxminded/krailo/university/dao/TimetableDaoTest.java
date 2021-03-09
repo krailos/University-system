@@ -44,7 +44,7 @@ class TimetableDaoTest {
     void givenId_whenFindById_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "timetables", "id =1");
 
-	int actual = timetableDao.findById(1).getId();
+	int actual = timetableDao.findById(1).get().getId();
 
 	assertEquals(expected, actual);
     }

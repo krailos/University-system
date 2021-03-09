@@ -50,7 +50,7 @@ public class DepartmentDao {
 	    }, keyHolder);
 	    department.setId(keyHolder.getKey().intValue());
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not created department=%", department));
+	    throw new DaoConstraintViolationException(format("Not created department=%s", department));
 	} catch (DataAccessException e) {
 	    throw new DaoException(format("Unable to create department=%s", department), e);
 	}
@@ -63,7 +63,7 @@ public class DepartmentDao {
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, department.getName(), department.getId());
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not created, department=%", department));
+	    throw new DaoConstraintViolationException(format("Not created, department=%s", department));
 	} catch (DataAccessException e) {
 	    throw new DaoException(format("Unable to update department=%s", department));
 	}

@@ -91,7 +91,7 @@ class TeacherDaoTest {
     void givenId_whenFindById_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers", "id = 1");
 
-	int actual = teacherDao.findById(1).getId();
+	int actual = teacherDao.findById(1).get().getId();
 
 	assertEquals(expected, actual);
     }

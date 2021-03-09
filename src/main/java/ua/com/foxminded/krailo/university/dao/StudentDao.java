@@ -3,18 +3,29 @@ package ua.com.foxminded.krailo.university.dao;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
+import static java.lang.String.format;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import ua.com.foxminded.krailo.university.exception.DaoConstraintViolationException;
+import ua.com.foxminded.krailo.university.exception.DaoException;
 import ua.com.foxminded.krailo.university.model.Student;
 
 @Repository
 public class StudentDao {
 
+    private static final Logger log = LoggerFactory.getLogger(DepartmentDao.class);
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM students WHERE id = ?";
     private static final String SQL_SELECT_BY_GROUO_ID = "SELECT * FROM students WHERE group_id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM students";
@@ -31,44 +42,95 @@ public class StudentDao {
     }
 
     public void create(Student student) {
-	KeyHolder keyHolder = new GeneratedKeyHolder();
-	jdbcTemplate.update(connection -> {
-	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_STUDENT, new String[] { "id" });
-	    ps.setString(1, student.getStudentId());
-	    ps.setString(2, student.getFirstName());
-	    ps.setString(3, student.getLastName());
-	    ps.setDate(4, Date.valueOf(student.getBirthDate()));
-	    ps.setString(5, student.getPhone());
-	    ps.setString(6, student.getEmail());
-	    ps.setString(7, student.getAddress());
-	    ps.setString(8, student.getRank());
-	    ps.setString(9, student.getGender().toString());
-	    ps.setInt(10, student.getGroup().getId());
-	    return ps;
-	}, keyHolder);
-	student.setId(keyHolder.getKey().intValue());
+	log.debug("Create student={}", student);
+	try {
+	    KeyHolder keyHolder = new GeneratedKeyHolder();
+	    jdbcTemplate.update(connection -> {
+		PreparedStatement ps = connection.prepareStatement(SQL_INSERT_STUDENT, new String[] { "id" });
+		ps.setString(1, student.getStudentId());
+		ps.setString(2, student.getFirstName());
+		ps.setString(3, student.getLastName());
+		ps.setDate(4, Date.valueOf(student.getBirthDate()));
+		ps.setString(5, student.getPhone());
+		ps.setString(6, student.getEmail());
+		ps.setString(7, student.getAddress());
+		ps.setString(8, student.getRank());
+		ps.setString(9, student.getGender().toString());
+		ps.setInt(10, student.getGroup().getId());
+		return ps;
+	    }, keyHolder);
+	    student.setId(keyHolder.getKey().intValue());
+	} catch (DataIntegrityViolationException e) {
+	    throw new DaoConstraintViolationException(format("Not created student=%s", student));
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to create student=%s", student), e);
+	}
+	log.info("Created student={}", student);
     }
 
     public void update(Student student) {
-	jdbcTemplate.update(SQL_UPDATE_BY_ID, student.getStudentId(), student.getFirstName(), student.getLastName(),
-		Date.valueOf(student.getBirthDate()), student.getPhone(), student.getAddress(), student.getEmail(),
-		student.getRank(), student.getGender().toString(), student.getGroup().getId(), student.getId());
+	log.debug("Update student={}", student);
+	int rowsAffected = 0;
+	try {
+	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, student.getStudentId(), student.getFirstName(),
+		    student.getLastName(), Date.valueOf(student.getBirthDate()), student.getPhone(),
+		    student.getAddress(), student.getEmail(), student.getRank(), student.getGender().toString(),
+		    student.getGroup().getId(), student.getId());
+	} catch (DataIntegrityViolationException e) {
+	    throw new DaoConstraintViolationException(format("Not updated, student=%s", student));
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to update student=%s", student));
+	}
+	if (rowsAffected > 0) {
+	    log.info("Updated student={}", student);
+	} else {
+	    log.debug("Not updated student={}", student);
+	}
     }
 
-    public Student findById(int id) {
-	return jdbcTemplate.queryForObject(SQL_SELECT_BY_ID, studentRowMapper, id);
+    public Optional<Student> findById(int id) {
+	log.debug("Find student by id={}", id);
+	try {
+	    return Optional.of(jdbcTemplate.queryForObject(SQL_SELECT_BY_ID, studentRowMapper, id));
+	} catch (EmptyResultDataAccessException e) {
+	    log.debug("student with id={} not found", id);
+	    return Optional.empty();
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to find student by id=%s", id), e);
+	}
     }
 
     public List<Student> findAll() {
-	return jdbcTemplate.query(SQL_SELECT_ALL, studentRowMapper);
+	log.debug("Find all students");
+	try {
+	    return jdbcTemplate.query(SQL_SELECT_ALL, studentRowMapper);
+	} catch (DataAccessException e) {
+	    throw new DaoException("Unable to find all students", e);
+	}
     }
-    
+
     public List<Student> findByGroupId(int groupId) {
-	return jdbcTemplate.query(SQL_SELECT_BY_GROUO_ID, studentRowMapper, groupId);
+	log.debug("Find students by groupId={}", groupId);
+	try {
+	    return jdbcTemplate.query(SQL_SELECT_BY_GROUO_ID, studentRowMapper, groupId);
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to find students by groupId=%s", groupId), e);
+	}
     }
 
     public void deleteById(int studentId) {
-	jdbcTemplate.update(SQL_DELETE_BY_ID, studentId);
+	log.debug("Delete student by id={}", studentId);
+	int rowsAffected = 0;
+	try {
+	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BY_ID, studentId);
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to delete student by id=%s", studentId), e);
+	}
+	if (rowsAffected > 0) {
+	    log.info("Deleted student  by id={}", studentId);
+	} else {
+	    log.debug("Not deleted student by id={}", studentId);
+	}
     }
 
 }

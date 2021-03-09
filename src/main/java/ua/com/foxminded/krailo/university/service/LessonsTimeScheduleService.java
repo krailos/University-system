@@ -1,14 +1,22 @@
 package ua.com.foxminded.krailo.university.service;
 
-import java.util.List;
+import static java.lang.String.format;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.LessonTimeScheduleDao;
+import ua.com.foxminded.krailo.university.exception.ServiceException;
 import ua.com.foxminded.krailo.university.model.LessonsTimeSchedule;
 
 @Service
 public class LessonsTimeScheduleService {
+
+    private static final Logger log = LoggerFactory.getLogger(LessonsTimeScheduleService.class);
 
     private LessonTimeScheduleDao lessonTimeScheduleDao;
 
@@ -17,22 +25,32 @@ public class LessonsTimeScheduleService {
     }
 
     public void create(LessonsTimeSchedule lessonsTimeSchedule) {
+	log.debug("Create lessonsTimeSchedule={}", lessonsTimeSchedule);
 	lessonTimeScheduleDao.create(lessonsTimeSchedule);
     }
 
     public void update(LessonsTimeSchedule lessonsTimeSchedule) {
+	log.debug("Update lessonsTimeSchedule={}", lessonsTimeSchedule);
 	lessonTimeScheduleDao.update(lessonsTimeSchedule);
     }
 
     public LessonsTimeSchedule getById(int id) {
-	return lessonTimeScheduleDao.findById(id);
+	log.debug("Get lessonsTimeSchedule by id={}", id);
+	Optional<LessonsTimeSchedule> existingLessonsTimeSchedule = lessonTimeScheduleDao.findById(id);
+	if (existingLessonsTimeSchedule.isPresent()) {
+	    return existingLessonsTimeSchedule.get();
+	} else {
+	    throw new ServiceException(format("lessonsTimeSchedule with id=%s not exist", id));
+	}
     }
 
     public List<LessonsTimeSchedule> getAll() {
+	log.debug("Get all lessonsTimeSchedules");
 	return lessonTimeScheduleDao.findAll();
     }
 
     public void delete(LessonsTimeSchedule lessonsTimeSchedule) {
+	log.debug("Delete lessonsTimeSchedule={}", lessonsTimeSchedule);
 	lessonTimeScheduleDao.deleteById(lessonsTimeSchedule.getId());
     }
 

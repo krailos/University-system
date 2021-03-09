@@ -83,7 +83,7 @@ class YearDaoTest {
     void givenId_whenFindById_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "years", "id =1");
 
-	int actual = yearDao.findById(1).getId();
+	int actual = yearDao.findById(1).get().getId();
 
 	assertEquals(expected, actual);
     }

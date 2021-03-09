@@ -2,18 +2,29 @@ package ua.com.foxminded.krailo.university.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
+import static java.lang.String.format;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import ua.com.foxminded.krailo.university.exception.DaoConstraintViolationException;
+import ua.com.foxminded.krailo.university.exception.DaoException;
 import ua.com.foxminded.krailo.university.model.UniversityOffice;
 
 @Repository
 public class UniversityOfficeDao {
 
+    private static final Logger log = LoggerFactory.getLogger(DepartmentDao.class);
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM university_office  WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM university_office";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM university_office WHERE id = ?";
@@ -28,32 +39,78 @@ public class UniversityOfficeDao {
 	this.universityOfficeRowMapper = universityOfficeRowMapper;
     }
 
-    public UniversityOffice findById(int id) {
-	return jdbcTemplate.queryForObject(SQL_SELECT_BY_ID, new Object[] { id }, universityOfficeRowMapper);
+    public Optional<UniversityOffice> findById(int id) {
+	log.debug("Find universityOffice by id={}", id);
+	try {
+	    return Optional
+		    .of(jdbcTemplate.queryForObject(SQL_SELECT_BY_ID, new Object[] { id }, universityOfficeRowMapper));
+	} catch (EmptyResultDataAccessException e) {
+	    log.debug("universityOffice with id={} not found", id);
+	    return Optional.empty();
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to find universityOffice by id=%s", id), e);
+	}
     }
 
     public List<UniversityOffice> findAll() {
-	return jdbcTemplate.query(SQL_SELECT_ALL, universityOfficeRowMapper);
+	log.debug("Find all universityOffices");
+	try {
+	    return jdbcTemplate.query(SQL_SELECT_ALL, universityOfficeRowMapper);
+	} catch (DataAccessException e) {
+	    throw new DaoException("Unable to find all universityOffices", e);
+	}
     }
 
     public void deleteById(int id) {
-	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
+	log.debug("Delete universityOffice by id={}", id);
+	int rowsAffected = 0;
+	try {
+	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BY_ID, id);
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to delete universityOffice by id=%s", id), e);
+	}
+	if (rowsAffected > 0) {
+	    log.info("Deleted universityOffice  by id={}", id);
+	} else {
+	    log.debug("Not deleted universityOffice by id={}", id);
+	}
     }
 
     public void update(UniversityOffice universityOffice) {
-	jdbcTemplate.update(SQL_UPDATE_BY_ID, universityOffice.getName(), universityOffice.getAddress(),
-		universityOffice.getId());
+	log.debug("Update universityOffice={}", universityOffice);
+	int rowsAffected = 0;
+	try {
+	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, universityOffice.getName(),
+		    universityOffice.getAddress(), universityOffice.getId());
+	} catch (DataIntegrityViolationException e) {
+	    throw new DaoConstraintViolationException(format("Not updated, universityOffice=%s", universityOffice));
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to update universityOffice=%s", universityOffice));
+	}
+	if (rowsAffected > 0) {
+	    log.info("Updated universityOffice={}", universityOffice);
+	} else {
+	    log.debug("Not updated universityOffice={}", universityOffice);
+	}
     }
 
     public void create(UniversityOffice universityOffice) {
-	KeyHolder keyHolder = new GeneratedKeyHolder();
-	jdbcTemplate.update(connection -> {
-	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_UNIVERSITY_OFFICE, new String[] { "id" });
-	    ps.setString(1, universityOffice.getName());
-	    ps.setString(2, universityOffice.getAddress());
-	    return ps;
-	}, keyHolder);
-	universityOffice.setId(keyHolder.getKey().intValue());
+	log.debug("Create universityOffice={}", universityOffice);
+	try {
+	    KeyHolder keyHolder = new GeneratedKeyHolder();
+	    jdbcTemplate.update(connection -> {
+		PreparedStatement ps = connection.prepareStatement(SQL_INSERT_UNIVERSITY_OFFICE, new String[] { "id" });
+		ps.setString(1, universityOffice.getName());
+		ps.setString(2, universityOffice.getAddress());
+		return ps;
+	    }, keyHolder);
+	    universityOffice.setId(keyHolder.getKey().intValue());
+	} catch (DataIntegrityViolationException e) {
+	    throw new DaoConstraintViolationException(format("Not created universityOffice=%s", universityOffice));
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to create universityOffice=%s", universityOffice), e);
+	}
+	log.info("Created universityOffice={}", universityOffice);
     }
 
 }

@@ -26,7 +26,7 @@ public class LessonTimeRowMapper implements RowMapper<LessonTime> {
 	lessonTime.setOrderNumber(rs.getString("order_number"));
 	lessonTime.setStartTime(rs.getObject("start_time", LocalTime.class));
 	lessonTime.setEndTime(rs.getObject("end_time", LocalTime.class));
-	lessonTime.setLessonsTimeSchedule(lessonTimeSceduleDao.findById(rs.getInt("lessons_timeschedule_id")));
+	lessonTime.setLessonsTimeSchedule(lessonTimeSceduleDao.findById(rs.getInt("lessons_timeschedule_id")).get());
 	return lessonTime;
     }
 

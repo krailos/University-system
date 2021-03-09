@@ -62,7 +62,7 @@ class VocationDaoTest {
     void givenId_whenFindById_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "vocations", "id = 1");
 	
-	int actual = vocationDao.findById(1).getId();
+	int actual = vocationDao.findById(1).get().getId();
 	
 	assertEquals(expected, actual);
     }

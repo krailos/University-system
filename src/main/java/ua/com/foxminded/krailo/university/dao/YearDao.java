@@ -2,19 +2,30 @@ package ua.com.foxminded.krailo.university.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
+import static java.lang.String.format;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import ua.com.foxminded.krailo.university.exception.DaoConstraintViolationException;
+import ua.com.foxminded.krailo.university.exception.DaoException;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @Repository
 public class YearDao {
 
+    private static final Logger log = LoggerFactory.getLogger(DepartmentDao.class);
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM years WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM years ";
     private static final String SQL_SELECT_BY_SPECIALITY_ID = "SELECT * FROM years WHERE speciality_id = ? ";
@@ -33,48 +44,112 @@ public class YearDao {
     }
 
     public void create(Year year) {
-	KeyHolder keyHolder = new GeneratedKeyHolder();
-	jdbcTemplate.update(connection -> {
-	    PreparedStatement ps = connection.prepareStatement(SQL_INSERT_YEAR, new String[] { "id" });
-	    ps.setString(1, year.getName());
-	    ps.setInt(2, year.getSpeciality().getId());
-	    return ps;
-	}, keyHolder);
-	year.setId(keyHolder.getKey().intValue());
-	for (Subject subject : year.getSubjects()) {
-	    addSubjectToYear(subject, year);
+	log.debug("Create year={}", year);
+	try {
+	    KeyHolder keyHolder = new GeneratedKeyHolder();
+	    jdbcTemplate.update(connection -> {
+		PreparedStatement ps = connection.prepareStatement(SQL_INSERT_YEAR, new String[] { "id" });
+		ps.setString(1, year.getName());
+		ps.setInt(2, year.getSpeciality().getId());
+		return ps;
+	    }, keyHolder);
+	    year.setId(keyHolder.getKey().intValue());
+	    for (Subject subject : year.getSubjects()) {
+		addSubjectToYear(subject, year);
+	    }
+	} catch (DataIntegrityViolationException e) {
+	    throw new DaoConstraintViolationException(format("Not created year=%s", year));
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to create year=%s", year), e);
 	}
+	log.info("Created year={}", year);
     }
 
     public void update(Year year) {
-	jdbcTemplate.update(SQL_UPDATE_BY_ID, year.getName(), year.getSpeciality().getId(), year.getId());
+	log.debug("Update year={}", year);
+	int rowsAffected = 0;
+	try {
+	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, year.getName(), year.getSpeciality().getId(),
+		    year.getId());
 
-	List<Subject> subjectsOld = findById(year.getId()).getSubjects();
-	subjectsOld.stream().filter(s -> !year.getSubjects().contains(s)).forEach(
-		s -> jdbcTemplate.update(SQL_DELETE_YEARS_SUBJECTS, year.getId(), s.getId()));
-	year.getSubjects().stream().filter(s -> !subjectsOld.contains(s))
-		.forEach(s -> jdbcTemplate.update(SQL_INSERT_INTO_YEARS_SUBJECTS, year.getId(), s.getId()));
+	    List<Subject> subjectsOld = findById(year.getId()).get().getSubjects();
+	    subjectsOld.stream().filter(s -> !year.getSubjects().contains(s))
+		    .forEach(s -> jdbcTemplate.update(SQL_DELETE_YEARS_SUBJECTS, year.getId(), s.getId()));
+	    year.getSubjects().stream().filter(s -> !subjectsOld.contains(s))
+		    .forEach(s -> jdbcTemplate.update(SQL_INSERT_INTO_YEARS_SUBJECTS, year.getId(), s.getId()));
+	} catch (DataIntegrityViolationException e) {
+	    throw new DaoConstraintViolationException(format("Not updated, year=%s", year));
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to update year=%s", year));
+	}
+	if (rowsAffected > 0) {
+	    log.info("Updated year={}", year);
+	} else {
+	    log.debug("Not updated year={}", year);
+	}
 
     }
 
-    public Year findById(int id) {
-	return jdbcTemplate.queryForObject(SQL_SELECT_BY_ID, yearRowMapper, id);
+    public Optional<Year> findById(int id) {
+	log.debug("Find year by id={}", id);
+	try {
+	    return Optional.of(jdbcTemplate.queryForObject(SQL_SELECT_BY_ID, yearRowMapper, id));
+	} catch (EmptyResultDataAccessException e) {
+	    log.debug("year with id={} not found", id);
+	    return Optional.empty();
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to find year by id=%s", id), e);
+	}
     }
 
     public List<Year> findAll() {
-	return jdbcTemplate.query(SQL_SELECT_ALL, yearRowMapper);
+	log.debug("Find all years");
+	try {
+	    return jdbcTemplate.query(SQL_SELECT_ALL, yearRowMapper);
+	} catch (DataAccessException e) {
+	    throw new DaoException("Unable to find all years", e);
+	}
     }
 
-    public List<Year> findBySpecialityId(int id) {
-	return jdbcTemplate.query(SQL_SELECT_BY_SPECIALITY_ID, yearRowMapper, id);
+    public List<Year> findBySpecialityId(int specialityId) {
+	log.debug("Find year by specialityId={}", specialityId);
+	try {
+	    return jdbcTemplate.query(SQL_SELECT_BY_SPECIALITY_ID, yearRowMapper, specialityId);
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to find years by specialityId=%s", specialityId), e);
+	}
     }
 
     public void deleteById(int id) {
-	jdbcTemplate.update(SQL_DELETE_BY_ID, id);
+	log.debug("Delete year by id={}", id);
+	int rowsAffected = 0;
+	try {
+	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BY_ID, id);
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to delete year by id=%s", id), e);
+	}
+	if (rowsAffected > 0) {
+	    log.info("Deleted year  by id={}", id);
+	} else {
+	    log.debug("Not deleted year by id={}", id);
+	}
     }
 
     private void addSubjectToYear(Subject subject, Year year) {
-	jdbcTemplate.update(SQL_INSERT_INTO_YEARS_SUBJECTS, year.getId(), subject.getId());
+	log.debug("Add subjet={} to year={}", subject, year);
+	int rowsAffected = 0;
+	try {
+	    rowsAffected = jdbcTemplate.update(SQL_INSERT_INTO_YEARS_SUBJECTS, year.getId(), subject.getId());
+	} catch (DataIntegrityViolationException e) {
+	    throw new DaoConstraintViolationException(format("Not add subject=%s to year=%s", subject, year));
+	} catch (DataAccessException e) {
+	    throw new DaoException(format("Unable to add subject=%s to year=%s", subject, year));
+	}
+	if (rowsAffected > 0) {
+	    log.info("Added subject={} to year={}", subject, year);
+	} else {
+	    log.debug("Not added subject={} to year={}", subject, year);
+	}
     }
 
 }
