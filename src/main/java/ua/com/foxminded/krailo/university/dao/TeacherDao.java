@@ -1,11 +1,11 @@
 package ua.com.foxminded.krailo.university.dao;
 
+import static java.lang.String.format;
+
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
-
-import static java.lang.String.format;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ import ua.com.foxminded.krailo.university.model.Teacher;
 @Repository
 public class TeacherDao {
 
-    private static final Logger log = LoggerFactory.getLogger(DepartmentDao.class);
+    private static final Logger log = LoggerFactory.getLogger(TeacherDao.class);
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM teachers WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM teachers";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM teachers WHERE id = ?";

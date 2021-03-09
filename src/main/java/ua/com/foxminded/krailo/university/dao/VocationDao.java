@@ -1,12 +1,13 @@
 package ua.com.foxminded.krailo.university.dao;
 
+import static java.lang.String.format;
+
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
 import java.util.Optional;
-import static java.lang.String.format;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ import ua.com.foxminded.krailo.university.model.Vocation;
 @Component
 public class VocationDao {
 
-    private static final Logger log = LoggerFactory.getLogger(DepartmentDao.class);
+    private static final Logger log = LoggerFactory.getLogger(VocationDao.class);
     private static final String SQL_SELECT_ALL = "SELECT * FROM vocations ORDER BY id";
     private static final String SQL_SELECT_BY_TEACHER_ID = "SELECT * FROM vocations where teacher_id = ?";
     private static final String SQL_SELECT_BY_TEACHER_ID_AND_YEAR = "SELECT * FROM vocations where teacher_id = ? AND EXTRACT(YEAR FROM start_date) = ?";

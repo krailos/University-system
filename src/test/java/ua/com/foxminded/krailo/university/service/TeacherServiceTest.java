@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,7 +52,7 @@ class TeacherServiceTest {
     @Test
     void givenTeacherId_whenGetById_thenGot() {
 	Teacher teacher = createTeacher();
-	when(teacherDao.findById(1)).thenReturn(teacher);
+	when(teacherDao.findById(1)).thenReturn(Optional.of(teacher));
 	Teacher expected = createTeacher();
 
 	Teacher actual = teacherService.getById(1);
@@ -81,18 +82,16 @@ class TeacherServiceTest {
     }
 
     private Teacher createTeacher() {
-	return  Teacher.builder().id(1).firstName("first name").lastName("last name")
-		.gender(Gender.MALE).department(new Department.DepartmentBuilder().id(1).build()).build();
+	return Teacher.builder().id(1).firstName("first name").lastName("last name").gender(Gender.MALE)
+		.department(new Department.DepartmentBuilder().id(1).build()).build();
     }
 
     private List<Teacher> createTeachers() {
 	return new ArrayList<>(Arrays.asList(
-		 Teacher.builder().id(1).firstName("first name").lastName("last name")
-			.gender(Gender.MALE).department(new Department.DepartmentBuilder().id(1).build())
-			.build(),
-		 Teacher.builder().id(2).firstName("first name 2").lastName("last name 2")
-			.gender(Gender.MALE).department(new Department.DepartmentBuilder().id(1).build())
-			.build()));
+		Teacher.builder().id(1).firstName("first name").lastName("last name").gender(Gender.MALE)
+			.department(new Department.DepartmentBuilder().id(1).build()).build(),
+		Teacher.builder().id(2).firstName("first name 2").lastName("last name 2").gender(Gender.MALE)
+			.department(new Department.DepartmentBuilder().id(1).build()).build()));
     }
 
 }

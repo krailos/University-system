@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,7 +51,7 @@ class YearServiceTest {
     @Test
     void givenYearId_whenGetById_thenGot() {
 	Year year = createYear();
-	when(yearDao.findById(1)).thenReturn(year);
+	when(yearDao.findById(1)).thenReturn(Optional.of(year));
 	Year expected = createYear();
 
 	Year actual = yearService.getById(1);

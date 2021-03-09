@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,7 +53,7 @@ class SubjectServiceTest {
     @Test
     void givenSubjectId_whenGetById_thenGot() {
 	Subject subject = createSubject();
-	when(subjectDao.findById(1)).thenReturn(subject);
+	when(subjectDao.findById(1)).thenReturn(Optional.of(subject));
 	Subject expected = createSubject();
 
 	Subject actual = subjectService.getById(1);

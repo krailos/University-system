@@ -95,6 +95,7 @@ public class LessonService {
     }
 
     private void isEnoughAudienceCapacity(Lesson lesson) {
+	log.debug("is enought audience capacity={}", lesson.getAudience().getCapacity());
 	if (lesson.getAudience().getCapacity() <= lesson.getGroups().stream().map(Group::getStudents)
 		.mapToInt(List::size).sum()) {
 	    throw new ServiceException(

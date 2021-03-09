@@ -1,10 +1,10 @@
 package ua.com.foxminded.krailo.university.dao;
 
+import static java.lang.String.format;
+
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
-
-import static java.lang.String.format;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ import ua.com.foxminded.krailo.university.model.UniversityOffice;
 @Repository
 public class UniversityOfficeDao {
 
-    private static final Logger log = LoggerFactory.getLogger(DepartmentDao.class);
+    private static final Logger log = LoggerFactory.getLogger(UniversityOfficeDao.class);
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM university_office  WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM university_office";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM university_office WHERE id = ?";

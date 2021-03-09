@@ -1,8 +1,8 @@
 package ua.com.foxminded.krailo.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -20,6 +20,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.StudentDao;
+import ua.com.foxminded.krailo.university.exception.ServiceException;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Student;
@@ -49,16 +50,15 @@ class StudentServiceTest {
     }
 
     @Test
-    void givenStudentWithNotEnoughtGroupCapacity_whenCreate_thenNotCreated() {
+    void givenStudentWithNotEnoughtGroupCapacity_whenCreate_thenThrowServiceException(){
 	ReflectionTestUtils.setField(studentService, "groupMaxCapacity", 1);
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
 	when(groupDao.findById(student.getGroup().getId())).thenReturn(Optional.of(group));
 
-	studentService.create(student);
-
-	verify(studentDao, never()).create(student);
+	assertThrows(ServiceException.class,() -> studentService.create(student));
+	
     }
 
     @Test
@@ -75,22 +75,21 @@ class StudentServiceTest {
     }
 
     @Test
-    void givenStudentWithNotEnoughtGroupCapacity_whenUpdate_thenNotUpdated() {
+    void givenStudentWithNotEnoughtGroupCapacity_whenUpdate_thenThrowServiceException(){
 	ReflectionTestUtils.setField(studentService, "groupMaxCapacity", 1);
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
 	when(groupDao.findById(student.getGroup().getId())).thenReturn(Optional.of(group));
 
-	studentService.update(student);
+	assertThrows(ServiceException.class,() -> studentService.update(student));
 
-	verify(studentDao, never()).update(student);
     }
 
     @Test
     void givenStudentId_whenGetById_thenGot() {
 	Student student = createStudent();
-	when(studentDao.findById(1)).thenReturn(student);
+	when(studentDao.findById(1)).thenReturn(Optional.of(student));
 
 	Student actual = studentService.getById(1);
 

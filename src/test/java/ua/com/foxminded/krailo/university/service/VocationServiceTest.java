@@ -1,8 +1,8 @@
 package ua.com.foxminded.krailo.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +24,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
+import ua.com.foxminded.krailo.university.exception.ServiceException;
 import ua.com.foxminded.krailo.university.model.Holiday;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.Teacher;
@@ -52,15 +54,14 @@ class VocationServiceTest {
     }
 
     @Test
-    void givenVocationPeriodDurationMoreThenMaxDuration_whenCereate_thenNotCreated() {
+    void givenVocationPeriodDurationMoreThenMaxDuration_whenCereate_thenTrowServiceException() {
 	ReflectionTestUtils.setField(vocationService, "vocationDurationBykind", getVocationDurationBykind());
 	Vocation vocation = createVocation();
 	vocation.setStart(LocalDate.of(2021, 10, 01));
 	vocation.setEnd(LocalDate.of(2021, 10, 25));
 
-	vocationService.create(vocation);
+	assertThrows(ServiceException.class, () -> vocationService.create(vocation));
 
-	verify(vocationDao, never()).create(vocation);
     }
 
     @Test
@@ -94,7 +95,7 @@ class VocationServiceTest {
     }
 
     @Test
-    void givenVocationThatMatchesLessons_whenCereate_thenNotCreated() {
+    void givenVocationThatMatchesLessons_whenCereate_thenTrowServiceException() {
 	ReflectionTestUtils.setField(vocationService, "vocationDurationBykind", getVocationDurationBykind());
 	Vocation vocation = createVocation();
 	vocation.setStart(LocalDate.of(2021, 01, 01));
@@ -103,33 +104,30 @@ class VocationServiceTest {
 	when(lessonDao.findByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
 		.thenReturn(lessons);
 
-	vocationService.create(vocation);
+	assertThrows(ServiceException.class, () -> vocationService.create(vocation));
 
-	verify(vocationDao, never()).create(vocation);
     }
 
     @Test
-    void givenVocationWithEndLessThenStart_whenCereate_thenNotCreated() {
+    void givenVocationWithEndLessThenStart_whenCereate_thenTrowServiceException() {
 	ReflectionTestUtils.setField(vocationService, "vocationDurationBykind", getVocationDurationBykind());
 	Vocation vocation = createVocation();
 	vocation.setStart(LocalDate.of(2021, 01, 02));
 	vocation.setEnd(LocalDate.of(2021, 01, 01));
 
-	vocationService.create(vocation);
+	assertThrows(ServiceException.class, () -> vocationService.create(vocation));
 
-	verify(vocationDao, never()).create(vocation);
     }
 
     @Test
-    void givenVocationWithStartAndEndDateWIthDifrentYear_whenCreate_thenNotCreated() {
+    void givenVocationWithStartAndEndDateWIthDifrentYear_whenCreate_thenTrowServiceException() {
 	ReflectionTestUtils.setField(vocationService, "vocationDurationBykind", getVocationDurationBykind());
 	Vocation vocation = createVocation();
 	vocation.setStart(LocalDate.of(2021, 12, 31));
 	vocation.setEnd(LocalDate.of(2022, 01, 10));
 
-	vocationService.create(vocation);
+	assertThrows(ServiceException.class, () -> vocationService.create(vocation));
 
-	verify(vocationDao, never()).create(vocation);
     }
 
     @Test
@@ -175,46 +173,43 @@ class VocationServiceTest {
     }
 
     @Test
-    void givenVocationPeriodWithLessons_whenUpdate_thenNotUpdated() {
+    void givenVocationPeriodWithLessons_whenUpdate_thenTrowServiceException() {
 	ReflectionTestUtils.setField(vocationService, "vocationDurationBykind", getVocationDurationBykind());
 	Vocation vocation = createVocation();
 	List<Lesson> lessons = createLessons();
 	when(lessonDao.findByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
 		.thenReturn(lessons);
 
-	vocationService.update(vocation);
+	assertThrows(ServiceException.class, () -> vocationService.update(vocation));
 
-	verify(vocationDao, never()).update(vocation);
     }
 
     @Test
-    void givenVocationWithEndDateLessThenStart_whenUpdate_thenNotUpdated() {
+    void givenVocationWithEndDateLessThenStart_whenUpdate_thenTrowServiceException() {
 	ReflectionTestUtils.setField(vocationService, "vocationDurationBykind", getVocationDurationBykind());
 	Vocation vocation = createVocation();
 	vocation.setStart(LocalDate.of(2021, 01, 02));
 	vocation.setEnd(LocalDate.of(2021, 01, 01));
 
-	vocationService.update(vocation);
+	assertThrows(ServiceException.class, () -> vocationService.update(vocation));
 
-	verify(vocationDao, never()).update(vocation);
     }
 
     @Test
-    void givenVocationWithStartAndEndDateWIthDifrentYear_whenUpdate_thenNotUpdated() {
+    void givenVocationWithStartAndEndDateWIthDifrentYear_whenUpdate_thenTrowServiceException() {
 	ReflectionTestUtils.setField(vocationService, "vocationDurationBykind", getVocationDurationBykind());
 	Vocation vocation = createVocation();
 	vocation.setStart(LocalDate.of(2021, 12, 31));
 	vocation.setEnd(LocalDate.of(2022, 01, 10));
 
-	vocationService.update(vocation);
+	assertThrows(ServiceException.class, () -> vocationService.update(vocation));
 
-	verify(vocationDao, never()).update(vocation);
     }
 
     @Test
     void givenVocationId_whenGetById_thenGot() {
 	Vocation vocation = createVocation();
-	when(vocationDao.findById(1)).thenReturn(vocation);
+	when(vocationDao.findById(1)).thenReturn(Optional.of(vocation));
 	Vocation expected = createVocation();
 
 	Vocation actual = vocationService.getById(1);

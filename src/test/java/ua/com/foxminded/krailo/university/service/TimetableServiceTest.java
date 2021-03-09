@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,7 +57,7 @@ class TimetableServiceTest {
     @Test
     void givenTimetableId_whenGetById_thenGot() {
 	Timetable timetable = createTimetable();
-	when(timetableDao.findById(1)).thenReturn(timetable);
+	when(timetableDao.findById(1)).thenReturn(Optional.of(timetable));
 	Timetable expected = createTimetable();
 
 	Timetable actual = timetableService.getById(1);
@@ -90,7 +91,7 @@ class TimetableServiceTest {
 	Timetable timetable = Timetable.builder().name("for teacher by date").build();
 	List<Lesson> lessons = new ArrayList<>(
 		Arrays.asList(Lesson.builder().id(1).build(), Lesson.builder().id(2).build()));
-	when(timetableDao.findById(1)).thenReturn(timetable);
+	when(timetableDao.findById(1)).thenReturn(Optional.of(timetable));
 	when(lessonDao.findByTeacherAndDate(teacher, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
 
 	Timetable actual = timetableService.getTimetableForTeacherByDate(1, teacher, LocalDate.of(2021, 01, 02));
@@ -107,7 +108,7 @@ class TimetableServiceTest {
 	Timetable timetable = Timetable.builder().name("for teacher by date").build();
 	List<Lesson> lessons = new ArrayList<>(
 		Arrays.asList(Lesson.builder().id(1).build(), Lesson.builder().id(2).build()));
-	when(timetableDao.findById(1)).thenReturn(timetable);
+	when(timetableDao.findById(1)).thenReturn(Optional.of(timetable));
 	when(lessonDao.findByTeacherBetweenDates(teacher, LocalDate.of(2021, 01, 02),
 		LocalDate.of(2021, 01, 02).plusMonths(1))).thenReturn(lessons);
 
@@ -125,7 +126,7 @@ class TimetableServiceTest {
 	Timetable timetable = Timetable.builder().name("for teacher by date").build();
 	List<Lesson> lessons = new ArrayList<>(
 		Arrays.asList(Lesson.builder().id(1).build(), Lesson.builder().id(2).build()));
-	when(timetableDao.findById(1)).thenReturn(timetable);
+	when(timetableDao.findById(1)).thenReturn(Optional.of(timetable));
 	when(lessonDao.findByStudentAndDate(student, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
 
 	Timetable actual = timetableService.getTimetableForStudentByDate(1, student, LocalDate.of(2021, 01, 02));
@@ -142,7 +143,7 @@ class TimetableServiceTest {
 	Timetable timetable = Timetable.builder().name("for teacher by date").build();
 	List<Lesson> lessons = new ArrayList<>(
 		Arrays.asList(Lesson.builder().id(1).build(), Lesson.builder().id(2).build()));
-	when(timetableDao.findById(1)).thenReturn(timetable);
+	when(timetableDao.findById(1)).thenReturn(Optional.of(timetable));
 	when(lessonDao.findByStudentBetweenDates(student, LocalDate.of(2021, 01, 02),
 		LocalDate.of(2021, 01, 02).plusMonths(1))).thenReturn(lessons);
 
