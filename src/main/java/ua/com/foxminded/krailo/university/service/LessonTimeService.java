@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.LessonTimeDao;
+import ua.com.foxminded.krailo.university.exception.LessonTimeNotFreeException;
 import ua.com.foxminded.krailo.university.exception.ServiceException;
 import ua.com.foxminded.krailo.university.model.LessonTime;
 
@@ -26,13 +27,13 @@ public class LessonTimeService {
 
     public void create(LessonTime lessonTime) {
 	log.debug("Create lessonTime={}", lessonTime);
-	isLessonTimeFree(lessonTime);
+	checkLessonTimeBeFree(lessonTime);
 	lessonTimeDao.create(lessonTime);
     }
 
     public void update(LessonTime lessonTime) {
 	log.debug("Update lessonTime={}", lessonTime);
-	isLessonTimeFree(lessonTime);
+	checkLessonTimeBeFree(lessonTime);
 	lessonTimeDao.update(lessonTime);
     }
 
@@ -56,10 +57,10 @@ public class LessonTimeService {
 	lessonTimeDao.deleteById(lessonTime.getId());
     }
 
-    private void isLessonTimeFree(LessonTime lessonTime) {
+    private void checkLessonTimeBeFree(LessonTime lessonTime) {
 	log.debug("is lessonTime={} free", lessonTime);
 	if (lessonTimeDao.findByStartOrEndLessonTime(lessonTime).isPresent()) {
-	    throw new ServiceException(format("lessonTime=%s not free", lessonTime));
+	    throw new LessonTimeNotFreeException(format("lessonTime=%s not free", lessonTime));
 	}
 	log.debug("lessonTime={} is free", lessonTime);
     }

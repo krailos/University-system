@@ -8,11 +8,15 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan("ua.com.foxminded.krailo.university")
 @PropertySource("classpath:config.properties")
+@EnableTransactionManagement
 public class UniversityConfig {
 
     @Value("${jdbc.driver}")
@@ -37,7 +41,13 @@ public class UniversityConfig {
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
 	return new JdbcTemplate(dataSource);
+    }
 
+    @Bean
+    public PlatformTransactionManager transactionManager(DataSource dataSource) {
+	DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager();
+	dataSourceTransactionManager.setDataSource(dataSource);
+	return dataSourceTransactionManager;
     }
 
 }

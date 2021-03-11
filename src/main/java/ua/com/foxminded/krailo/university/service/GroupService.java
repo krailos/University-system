@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.GroupDao;
+import ua.com.foxminded.krailo.university.exception.GroupNameNotUniqueException;
 import ua.com.foxminded.krailo.university.exception.ServiceException;
 import ua.com.foxminded.krailo.university.model.Group;
 
@@ -25,13 +26,13 @@ public class GroupService {
 
     public void create(Group group) {
 	log.debug("create group={}", group);
-	isUniqueGroupName(group);
+	checkGroupNameBeUnique(group);
 	groupDao.create(group);
     }
 
     public void update(Group group) {
 	log.debug("update group={}", group);
-	isUniqueGroupName(group);
+	checkGroupNameBeUnique(group);
 	groupDao.update(group);
     }
 
@@ -55,14 +56,14 @@ public class GroupService {
 	groupDao.deleteById(group.getId());
     }
 
-    private void isUniqueGroupName(Group group) {
+    private void checkGroupNameBeUnique(Group group) {
 	log.debug("is group name unique ?");
 	Optional<Group> existingGroup = groupDao.findByNameAndYearId(group.getName(), group.getYear().getId());
 	if (existingGroup.isEmpty() || existingGroup.filter(a -> a.getId() == group.getId()).isPresent()) {
 	    log.debug("group name is unique");
 	} else {
-	    throw new ServiceException(
-		    format("group name=%s and yearId=%s not unique ", group.getName(), group.getYear().getId()));
+	    throw new GroupNameNotUniqueException(
+		    format("group name=%s and yearId=%s not unique", group.getName(), group.getYear().getId()));
 	}
     }
 

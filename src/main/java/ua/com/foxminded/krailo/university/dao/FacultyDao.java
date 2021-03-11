@@ -25,6 +25,7 @@ import ua.com.foxminded.krailo.university.model.Faculty;
 public class FacultyDao {
 
     private static final Logger log = LoggerFactory.getLogger(FacultyDao.class);
+    
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM faculties WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM faculties";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM faculties WHERE id = ?";

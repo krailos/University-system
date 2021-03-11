@@ -46,11 +46,10 @@ class HolidayDaoTest {
 
     @Test
     void givenId_whenFindById_thenFound() {
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "holidays", "id = 1");
 
-	int actual = holidayDao.findById(1).get().getId();
+	Holiday actual = holidayDao.findById(1).get();
 
-	assertEquals(expected, actual);
+	assertEquals(1, actual.getId());
     }
 
     @Test

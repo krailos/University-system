@@ -25,6 +25,7 @@ import ua.com.foxminded.krailo.university.model.Audience;
 public class AudienceDao {
 
     private static final Logger log = LoggerFactory.getLogger(AudienceDao.class);
+    
     private static final String SQL_SELECT_AUDIENCE_BY_ID = "SELECT * FROM audiences  WHERE id = ?";
     private static final String SQL_SELECT_AUDIENCE_BY_NUMBER = "SELECT * FROM audiences  WHERE number = ?";
     private static final String SQL_SELECT_AUDIENCE_BY_NUMBER_AND_BUILDING_ID = "SELECT * FROM audiences  WHERE number = ? AND building_id = ?";
@@ -138,7 +139,7 @@ public class AudienceDao {
 	}
     }
 
-    public Optional<Audience> findByNumberAndBuildingId(String number, int buildingId) throws DaoException {
+    public Optional<Audience> findByNumberAndBuildingId(String number, int buildingId) {
 	log.debug("find audience  by number={} and building id={}", number, buildingId);
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(SQL_SELECT_AUDIENCE_BY_NUMBER_AND_BUILDING_ID,

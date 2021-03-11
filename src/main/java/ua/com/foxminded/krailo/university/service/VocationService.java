@@ -20,6 +20,10 @@ import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
 import ua.com.foxminded.krailo.university.exception.ServiceException;
+import ua.com.foxminded.krailo.university.exception.VocationDurationMoreTnenMaxDurationException;
+import ua.com.foxminded.krailo.university.exception.VocationEndDateBeforeStartDateException;
+import ua.com.foxminded.krailo.university.exception.VocationPeriodNotFreeException;
+import ua.com.foxminded.krailo.university.exception.VocationStartAndEndDateNotBelongsTheSameYearException;
 import ua.com.foxminded.krailo.university.model.Holiday;
 import ua.com.foxminded.krailo.university.model.Vocation;
 import ua.com.foxminded.krailo.university.model.VocationKind;
@@ -43,19 +47,19 @@ public class VocationService {
 
     public void create(Vocation vocation) {
 	log.debug("Create vocation={}", vocation);
-	isVocationDuratioMoreThenMaxDuration(vocation);
-	isVocationPeriodFreeFromLessons(vocation);
-	isVocationsEndDateMoreThenStart(vocation);
-	isVocationsStartAndEndDateBelongsTheSameYear(vocation);
+	checkVocationDuratioMoreThenMaxDuration(vocation);
+	checkVocationPeriodBeFree(vocation);
+	checkVocationsEndDateMoreThenStart(vocation);
+	checkVocationsStartAndEndDateBelongsTheSameYear(vocation);
 	vocationDao.create(vocation);
     }
 
     public void update(Vocation vocation) {
 	log.debug("Update vocation={}", vocation);
-	isVocationDuratioMoreThenMaxDuration(vocation);
-	isVocationPeriodFreeFromLessons(vocation);
-	isVocationsEndDateMoreThenStart(vocation);
-	isVocationsStartAndEndDateBelongsTheSameYear(vocation);
+	checkVocationDuratioMoreThenMaxDuration(vocation);
+	checkVocationPeriodBeFree(vocation);
+	checkVocationsEndDateMoreThenStart(vocation);
+	checkVocationsStartAndEndDateBelongsTheSameYear(vocation);
 	vocationDao.update(vocation);
     }
 
@@ -79,35 +83,36 @@ public class VocationService {
 	vocationDao.deleteById(vocation.getId());
     }
 
-    private void isVocationPeriodFreeFromLessons(Vocation vocation) {
+    private void checkVocationPeriodBeFree(Vocation vocation) {
 	log.debug("is vocation period is free from lessons");
 	if (!lessonDao.findByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd())
 		.isEmpty()) {
-	    throw new ServiceException("vocation period is not free grom lessons");
+	    throw new VocationPeriodNotFreeException("vocation period is not free from lessons");
 	} else {
 	    log.debug("vocation period is free from lessons");
 	}
     }
 
-    private void isVocationsEndDateMoreThenStart(Vocation vocation) {
+    private void checkVocationsEndDateMoreThenStart(Vocation vocation) {
 	log.debug("is vocation end date more then start date");
 	if (vocation.getStart().isAfter(vocation.getEnd())) {
-	    throw new ServiceException("vocation end date more then start date");
+	    throw new VocationEndDateBeforeStartDateException("vocation end date less then start date");
 	} else {
 	    log.debug("vocation end date less then start date");
 	}
     }
 
-    private void isVocationsStartAndEndDateBelongsTheSameYear(Vocation vocation) {
+    private void checkVocationsStartAndEndDateBelongsTheSameYear(Vocation vocation) {
 	log.debug("is vocation start and end date belongs the same year");
 	if (vocation.getStart().getYear() != vocation.getEnd().getYear()) {
-	    throw new ServiceException("vocation start and end dates not belong the same year");
+	    throw new VocationStartAndEndDateNotBelongsTheSameYearException(
+		    "vocation start and end dates not belong the same year");
 	} else {
 	    log.debug("vocation start and end date belongs the same year");
 	}
     }
 
-    private void isVocationDuratioMoreThenMaxDuration(Vocation vocation) {
+    private void checkVocationDuratioMoreThenMaxDuration(Vocation vocation) {
 	log.debug("is vocation duration more then max duration");
 	List<Vocation> vocations = vocationDao.findByTeacherIdAndYear(vocation.getTeacher().getId(),
 		Year.from(vocation.getStart()));
@@ -116,7 +121,7 @@ public class VocationService {
 	List<LocalDate> holidays = holidayDao.findAll().stream().map(Holiday::getDate).collect(Collectors.toList());
 	if (vocationDates.stream().filter(d -> !isDateWeekend(d)).filter(d -> !holidays.contains(d))
 		.count() > vocationDurationBykind.get(vocation.getKind())) {
-	    throw new ServiceException("vocation duration more then max duration");
+	    throw new VocationDurationMoreTnenMaxDurationException("vocation duration more then max duration");
 	} else {
 	    log.debug("vocation duration less then max duration");
 	}

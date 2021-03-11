@@ -50,7 +50,8 @@ class SpecialityServiceTest {
 	when(specialityDao.findByNameAndFacultyId(speciality.getName(), speciality.getFaculty().getId()))
 		.thenReturn(Optional.of(Speciality.builder().id(2).name("name").build()));
 
-	assertThrows(ServiceException.class, () -> specialityService.create(speciality));
+	assertEquals("speciality name=name is not unique",
+		assertThrows(ServiceException.class, () -> specialityService.create(speciality)).getMessage());
     }
 
     @Test
@@ -70,7 +71,8 @@ class SpecialityServiceTest {
 	when(specialityDao.findByNameAndFacultyId(speciality.getName(), speciality.getFaculty().getId()))
 		.thenReturn(Optional.of(Speciality.builder().id(2).name("name").build()));
 
-	assertThrows(ServiceException.class, () -> specialityService.update(speciality));
+	assertEquals("speciality name=name is not unique",
+		assertThrows(ServiceException.class, () -> specialityService.update(speciality)).getMessage());
 
     }
 

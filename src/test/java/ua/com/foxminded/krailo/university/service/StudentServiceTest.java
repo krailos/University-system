@@ -35,7 +35,6 @@ class StudentServiceTest {
     @Mock
     private GroupDao groupDao;
 
-   
     @Test
     void givenStudent_whenCreate_thenCreated() {
 	ReflectionTestUtils.setField(studentService, "groupMaxCapacity", 30);
@@ -50,15 +49,16 @@ class StudentServiceTest {
     }
 
     @Test
-    void givenStudentWithNotEnoughtGroupCapacity_whenCreate_thenThrowServiceException(){
+    void givenStudentWithNotEnoughtGroupCapacity_whenCreate_thenThrowServiceException() {
 	ReflectionTestUtils.setField(studentService, "groupMaxCapacity", 1);
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
 	when(groupDao.findById(student.getGroup().getId())).thenReturn(Optional.of(group));
 
-	assertThrows(ServiceException.class,() -> studentService.create(student));
-	
+	assertEquals("group capacity more then maxGroupCapacity=1",
+		assertThrows(ServiceException.class, () -> studentService.create(student)).getMessage());
+
     }
 
     @Test
@@ -75,14 +75,15 @@ class StudentServiceTest {
     }
 
     @Test
-    void givenStudentWithNotEnoughtGroupCapacity_whenUpdate_thenThrowServiceException(){
+    void givenStudentWithNotEnoughtGroupCapacity_whenUpdate_thenThrowServiceException() {
 	ReflectionTestUtils.setField(studentService, "groupMaxCapacity", 1);
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
 	when(groupDao.findById(student.getGroup().getId())).thenReturn(Optional.of(group));
 
-	assertThrows(ServiceException.class,() -> studentService.update(student));
+	assertEquals("group capacity more then maxGroupCapacity=1",
+		assertThrows(ServiceException.class, () -> studentService.update(student)).getMessage());
 
     }
 

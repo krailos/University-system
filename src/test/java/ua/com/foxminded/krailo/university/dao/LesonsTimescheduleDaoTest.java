@@ -45,11 +45,10 @@ class LesonsTimescheduleDaoTest {
 
     @Test
     void givenId_whenFindById_thenFound() {
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons_timeschedule", "id =1");
+	
+	LessonsTimeSchedule actual = lessonsTimesceduleDao.findById(1).get();
 
-	int actual = lessonsTimesceduleDao.findById(1).get().getId();
-
-	assertEquals(expected, actual);
+	assertEquals(1, actual.getId());
     }
 
     @Test

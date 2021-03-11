@@ -25,6 +25,7 @@ import static java.lang.String.format;
 public class BuildingDao {
 
     private static final Logger log = LoggerFactory.getLogger(BuildingDao.class);
+    
     private static final String SQL_SELECT_BUILDINGS = "SELECT * FROM buildings ORDER BY id";
     private static final String SQL_SELECT_BUILDING_BY_ID = "SELECT * FROM buildings WHERE id = ?";
     private static final String SQL_DELETE_BUILDING_BY_ID = "DELETE FROM buildings WHERE id = ?";

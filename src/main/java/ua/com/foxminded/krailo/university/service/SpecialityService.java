@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.SpecialityDao;
 import ua.com.foxminded.krailo.university.exception.ServiceException;
+import ua.com.foxminded.krailo.university.exception.SpecialityNameNotUniqueException;
 import ua.com.foxminded.krailo.university.model.Speciality;
 
 @Service
@@ -26,13 +27,13 @@ public class SpecialityService {
 
     public void create(Speciality speciality) {
 	log.debug("Create speciality={}", speciality);
-	isUniqueSpecialityName(speciality);
+	chekSpecialityNameBeUnique(speciality);
 	specialityDao.create(speciality);
     }
 
     public void update(Speciality speciality) {
 	log.debug("Update speciality={}", speciality);
-	isUniqueSpecialityName(speciality);
+	chekSpecialityNameBeUnique(speciality);
 	specialityDao.update(speciality);
     }
 
@@ -56,7 +57,7 @@ public class SpecialityService {
 	specialityDao.deleteById(speciality.getId());
     }
 
-    private void isUniqueSpecialityName(Speciality speciality) {
+    private void chekSpecialityNameBeUnique(Speciality speciality) {
 	log.debug("is speciality name unique ?");
 	Optional<Speciality> existingSpeciality = specialityDao.findByNameAndFacultyId(speciality.getName(),
 		speciality.getFaculty().getId());
@@ -64,7 +65,8 @@ public class SpecialityService {
 		|| existingSpeciality.filter(s -> s.getId() == speciality.getId()).isPresent()) {
 	    log.debug("speciality name is unique");
 	} else {
-	    throw new ServiceException(format("speciality name=%s is not unique ", speciality.getName()));
+	    throw new SpecialityNameNotUniqueException(
+		    format("speciality name=%s is not unique", speciality.getName()));
 	}
 
     }

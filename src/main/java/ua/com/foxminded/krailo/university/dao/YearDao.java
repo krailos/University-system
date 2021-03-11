@@ -16,6 +16,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.exception.DaoConstraintViolationException;
 import ua.com.foxminded.krailo.university.exception.DaoException;
@@ -26,6 +29,7 @@ import ua.com.foxminded.krailo.university.model.Year;
 public class YearDao {
 
     private static final Logger log = LoggerFactory.getLogger(YearDao.class);
+    
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM years WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM years ";
     private static final String SQL_SELECT_BY_SPECIALITY_ID = "SELECT * FROM years WHERE speciality_id = ? ";
@@ -42,7 +46,8 @@ public class YearDao {
 	this.jdbcTemplate = jdbcTemplate;
 	this.yearRowMapper = yearRowMapper;
     }
-
+    
+    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void create(Year year) {
 	log.debug("Create year={}", year);
 	try {
@@ -65,22 +70,33 @@ public class YearDao {
 	log.info("Created year={}", year);
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void update(Year year) {
+	log.debug("existing year={}", findById(year.getId()).get());
 	log.debug("Update year={}", year);
 	int rowsAffected = 0;
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, year.getName(), year.getSpeciality().getId(),
 		    year.getId());
-
+	    log.debug("year={} was updated", year);
+	    log.debug("update years_subject table");
 	    List<Subject> subjectsOld = findById(year.getId()).get().getSubjects();
 	    subjectsOld.stream().filter(s -> !year.getSubjects().contains(s))
-		    .forEach(s -> jdbcTemplate.update(SQL_DELETE_YEARS_SUBJECTS, year.getId(), s.getId()));
+		    .forEach(s -> { 
+			log.debug("delelete rows from year_subjects which will be apdated");
+		    jdbcTemplate.update(SQL_DELETE_YEARS_SUBJECTS, year.getId(), s.getId());
+			log.debug("rows deleleted from years_subjects");
+		    });
 	    year.getSubjects().stream().filter(s -> !subjectsOld.contains(s))
-		    .forEach(s -> jdbcTemplate.update(SQL_INSERT_INTO_YEARS_SUBJECTS, year.getId(), s.getId()));
+		    .forEach(s -> {
+			log.debug("insert new rows into  years_subjects");
+			jdbcTemplate.update(SQL_INSERT_INTO_YEARS_SUBJECTS, year.getId(), s.getId());
+			log.debug("inserted new rows into years_subjects");
+		    });
 	} catch (DataIntegrityViolationException e) {
 	    throw new DaoConstraintViolationException(format("Not updated, year=%s", year));
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to update year=%s", year));
+	    throw new DaoException(format("Unable to update year=%s", year), e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Updated year={}", year);

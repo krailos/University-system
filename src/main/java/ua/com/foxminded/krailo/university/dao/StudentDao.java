@@ -26,6 +26,7 @@ import ua.com.foxminded.krailo.university.model.Student;
 public class StudentDao {
 
     private static final Logger log = LoggerFactory.getLogger(StudentDao.class);
+    
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM students WHERE id = ?";
     private static final String SQL_SELECT_BY_GROUO_ID = "SELECT * FROM students WHERE group_id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM students";

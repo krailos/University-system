@@ -63,11 +63,9 @@ class AudienceDaoTest {
 
     @Test
     void givenId_whenFindById_thenFound() {
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "Audiences", "id = 1");
 
-	int actual = audienceDao.findById(1).get().getId();
-
-	assertEquals(expected, actual);
+	Audience actual = audienceDao.findById(1).get();
+	assertEquals(1, actual.getId());
     }
 
     @Test
@@ -94,11 +92,11 @@ class AudienceDaoTest {
 
     @Test
     void givenAudience_whenFindByNumberAndBuildingId_thenFound() {
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "Audiences", "number = 1 AND building_id = 1");
 
-	int actual = audienceDao.findByNumberAndBuildingId("1", 1).get().getId();
+	Audience actual = audienceDao.findByNumberAndBuildingId("1", 1).get();
 
-	assertEquals(expected, actual);
+	assertEquals(1, actual.getId());
+	assertEquals(1, actual.getBuilding().getId());
     }
 
 }

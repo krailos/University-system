@@ -33,7 +33,6 @@ class LessonTimeSceduleServiceTest {
     @Test
     void givenLessonsTimeSchedule_whenCereate_thanCreated() {
 	LessonsTimeSchedule lessonsTimeSchedule = createLessonsTimeSchedule();
-	doNothing().when(lessonTimeScheduleDao).create(lessonsTimeSchedule);
 
 	lessonsTimeScheduleService.create(lessonsTimeSchedule);
 
@@ -43,7 +42,6 @@ class LessonTimeSceduleServiceTest {
     @Test
     void givenLessonsTimeSchedule_whenUpdate_thanUpdeted() {
 	LessonsTimeSchedule lessonsTimeSchedule = createLessonsTimeSchedule();
-	doNothing().when(lessonTimeScheduleDao).update(lessonsTimeSchedule);
 
 	lessonsTimeScheduleService.update(lessonsTimeSchedule);
 

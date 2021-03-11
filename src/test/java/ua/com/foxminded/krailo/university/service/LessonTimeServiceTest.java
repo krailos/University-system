@@ -45,7 +45,8 @@ class LessonTimeServiceTest {
 	when(lessonTimeDao.findByStartOrEndLessonTime(lessonTime))
 		.thenReturn(Optional.of(LessonTime.builder().id(1).build()));
 
-	assertThrows(ServiceException.class, () -> lessonTimeService.update(lessonTime));
+	assertEquals("lessonTime=from: 08:30 - to: 09:15 not free",
+		assertThrows(ServiceException.class, () -> lessonTimeService.create(lessonTime)).getMessage());
     }
 
     @Test
@@ -64,7 +65,8 @@ class LessonTimeServiceTest {
 	when(lessonTimeDao.findByStartOrEndLessonTime(lessonTime))
 		.thenReturn(Optional.of(LessonTime.builder().id(1).build()));
 
-	assertThrows(ServiceException.class, () -> lessonTimeService.update(lessonTime));
+	assertEquals("lessonTime=from: 08:30 - to: 09:15 not free",
+		assertThrows(ServiceException.class, () -> lessonTimeService.update(lessonTime)).getMessage());
     }
 
     @Test

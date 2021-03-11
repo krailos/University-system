@@ -25,6 +25,7 @@ import ua.com.foxminded.krailo.university.model.Timetable;
 public class TimetableDao {
 
     private static final Logger log = LoggerFactory.getLogger(TimetableDao.class);
+    
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM timetables WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM timetables";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM timetables WHERE id = ?";

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.krailo.university.dao.DepartmentDao;
 import ua.com.foxminded.krailo.university.dao.SubjectDao;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Teacher;
 
@@ -36,7 +37,7 @@ public class TeacherRowMapper implements RowMapper<Teacher> {
 	teacher.setAddress(rs.getString("address"));
 	teacher.setDegree(rs.getString("degree"));
 	teacher.setGender(Gender.valueOf(rs.getString("gender")));
-	teacher.setDepartment(departmentDao.findById(rs.getInt("department_id")).get());
+	teacher.setDepartment(departmentDao.findById(rs.getInt("department_id")).orElseThrow(()-> new EntityNotFoundException("department not found")));
 	teacher.setSubjects(subjectDao.findByTeacherId(teacher.getId()));
 	return teacher;
     }

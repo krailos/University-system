@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.AudienceDao;
+import ua.com.foxminded.krailo.university.exception.AudienceNumberNotUniqueException;
 import ua.com.foxminded.krailo.university.exception.ServiceException;
 import ua.com.foxminded.krailo.university.model.Audience;
 
@@ -36,14 +37,14 @@ public class AudienceService {
 
     public void create(Audience audience) {
 	log.debug("create audience={}", audience);
-	isUniqueNumber(audience);
+	checkAudienceNumberBeUnique(audience);
 	audienceDao.create(audience);
 
     }
 
     public void update(Audience audience) {
 	log.debug("update audience={}", audience);
-	isUniqueNumber(audience);
+	checkAudienceNumberBeUnique(audience);
 	audienceDao.update(audience);
     }
 
@@ -62,14 +63,14 @@ public class AudienceService {
 	audienceDao.deleteById(audience.getId());
     }
 
-    private void isUniqueNumber(Audience audience) {
+    private void checkAudienceNumberBeUnique(Audience audience) {
 	log.debug("is audience number unique ?");
 	Optional<Audience> existingAudience = audienceDao.findByNumberAndBuildingId(audience.getNumber(),
 		audience.getBuilding().getId());
 	if (existingAudience.isEmpty() || existingAudience.filter(a -> a.getId() == audience.getId()).isPresent()) {
 	    log.debug("audience number is unique");
 	} else {
-	    throw new ServiceException(format("audiences number=%s and building id=%s not unique ",
+	    throw new AudienceNumberNotUniqueException(format("audiences number=%s and buildingId=%s not unique",
 		    audience.getNumber(), audience.getBuilding().getId()));
 	}
     }

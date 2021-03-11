@@ -44,11 +44,10 @@ class BuildingDaoTest {
 
     @Test
     void givenId_whenFindById_thenFound() {
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "buildings", "id = 1");
+	
+	Building actual = buildingDao.findById(1).get();
 
-	int actual = buildingDao.findById(1).get().getId();
-
-	assertEquals(expected, actual);
+	assertEquals(1, actual.getId());
     }
 
     @Test

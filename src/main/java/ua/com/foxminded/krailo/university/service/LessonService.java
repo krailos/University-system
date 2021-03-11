@@ -13,7 +13,15 @@ import org.springframework.stereotype.Service;
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
+import ua.com.foxminded.krailo.university.exception.AudienceCapacityNotEnoughException;
+import ua.com.foxminded.krailo.university.exception.AudienceNotFreeException;
+import ua.com.foxminded.krailo.university.exception.LessonDateOnHolidayException;
+import ua.com.foxminded.krailo.university.exception.LessonDateOnWeekendException;
+import ua.com.foxminded.krailo.university.exception.LessonGroupNotFreeException;
 import ua.com.foxminded.krailo.university.exception.ServiceException;
+import ua.com.foxminded.krailo.university.exception.TeacherNotFreeException;
+import ua.com.foxminded.krailo.university.exception.TeacherNotTeachLessonException;
+import ua.com.foxminded.krailo.university.exception.TeacherOnVocationException;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
 
@@ -34,27 +42,27 @@ public class LessonService {
 
     public void create(Lesson lesson) {
 	log.debug("create lesson");
-	isTeacherFree(lesson);
-	isEnoughAudienceCapacity(lesson);
-	isTeacherOnVocation(lesson);
-	isAudienceFree(lesson);
-	isLessonDateOutoffHoliday(lesson);
-	isLessonDateWeekday(lesson);
-	isTeacherTeachesLessonSubject(lesson);
-	isLessonGroupsFree(lesson);
+	checkTeacherBeFree(lesson);
+	checkEnoughAudienceCapacity(lesson);
+	checkTeacherBeOnVocation(lesson);
+	checkAudienceBeFree(lesson);
+	checkLessonDateBeOutoffHoliday(lesson);
+	checkLessonDateBeWeekend(lesson);
+	checkTeacherBeTeachLessonSubject(lesson);
+	checkLessonGroupsBeFree(lesson);
 	lessonDao.create(lesson);
     }
 
     public void update(Lesson lesson) {
 	log.debug("update lesson");
-	isTeacherFree(lesson);
-	isEnoughAudienceCapacity(lesson);
-	isTeacherOnVocation(lesson);
-	isAudienceFree(lesson);
-	isLessonDateOutoffHoliday(lesson);
-	isLessonDateWeekday(lesson);
-	isTeacherTeachesLessonSubject(lesson);
-	isLessonGroupsFree(lesson);
+	checkTeacherBeFree(lesson);
+	checkEnoughAudienceCapacity(lesson);
+	checkTeacherBeOnVocation(lesson);
+	checkAudienceBeFree(lesson);
+	checkLessonDateBeOutoffHoliday(lesson);
+	checkLessonDateBeWeekend(lesson);
+	checkTeacherBeTeachLessonSubject(lesson);
+	checkLessonGroupsBeFree(lesson);
 	lessonDao.update(lesson);
     }
 
@@ -78,71 +86,75 @@ public class LessonService {
 	lessonDao.deleteById(lesson.getId());
     }
 
-    private void isTeacherFree(Lesson lesson) {
+    private void checkTeacherBeFree(Lesson lesson) {
 	log.debug("is teacher free tacherId={}", lesson.getTeacher().getId());
-	if (lessonDao.findByDateAndTeacherAndLessonTime(lesson).isPresent()) {
-	    throw new ServiceException(format("Teacher not free teacherId=%s", lesson.getTeacher().getId()));
+	if (lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), lesson.getTeacher().getId(),
+		lesson.getLessonTime().getId()).isPresent()) {
+	    throw new TeacherNotFreeException(format("Teacher not free teacherId=%s", lesson.getTeacher().getId()));
 	}
 	log.debug("teacher is free teacherId={}", lesson.getTeacher().getId());
     }
 
-    private void isAudienceFree(Lesson lesson) {
-	log.debug("is audience free audienceIdId={}", lesson.getAudience().getId());
-	if (lessonDao.findByDateAndAudienceAndLessonTime(lesson).isPresent()) {
-	    throw new ServiceException(format("Audience not free audienceId=%s", lesson.getAudience().getId()));
+    private void checkAudienceBeFree(Lesson lesson) {
+	log.debug("is audience free audienceId={}", lesson.getAudience().getId());
+	if (lessonDao.findByDateAndAudienceIdAndLessonTimeId(lesson.getDate(), lesson.getAudience().getId(),
+		lesson.getLessonTime().getId()).isPresent()) {
+	    throw new AudienceNotFreeException(format("Audience not free audienceId=%s", lesson.getAudience().getId()));
 	}
 	log.debug("audience is free audienceId={}", lesson.getAudience().getId());
     }
 
-    private void isEnoughAudienceCapacity(Lesson lesson) {
+    private void checkEnoughAudienceCapacity(Lesson lesson) {
 	log.debug("is enought audience capacity={}", lesson.getAudience().getCapacity());
 	if (lesson.getAudience().getCapacity() <= lesson.getGroups().stream().map(Group::getStudents)
 		.mapToInt(List::size).sum()) {
-	    throw new ServiceException(
-		    format("audience with capacity=%s is not big enought", lesson.getAudience().getCapacity()));
+	    throw new AudienceCapacityNotEnoughException(
+		    format("audience with capacity=%s is not big enough", lesson.getAudience().getCapacity()));
 	}
-	log.debug("audience capacity is big enought");
+	log.debug("audience capacity is big enough");
     }
 
-    private void isTeacherOnVocation(Lesson lesson) {
+    private void checkTeacherBeOnVocation(Lesson lesson) {
 	log.debug("is techer on vocation");
 	if (vocationDao.findByTeacherIdAndDate(lesson.getTeacher().getId(), lesson.getDate()).isPresent()) {
-	    throw new ServiceException(format("teacher with id=%s is on vocation", lesson.getTeacher().getId()));
+	    throw new TeacherOnVocationException(
+		    format("teacher with id=%s is on vocation", lesson.getTeacher().getId()));
 	}
 	log.debug("tecaher is not on vocation");
     }
 
-    private void isLessonDateOutoffHoliday(Lesson lesson) {
+    private void checkLessonDateBeOutoffHoliday(Lesson lesson) {
 	log.debug("is lesson date holliday");
 	if (holidayDao.findByDate(lesson.getDate()).isPresent()) {
-	    throw new ServiceException(format("lesson date=%s is holiday", lesson.getDate()));
+	    throw new LessonDateOnHolidayException(format("lesson date=%s is holiday", lesson.getDate()));
 	}
 	log.debug("lesson date is not holiday");
     }
 
-    private void isLessonDateWeekday(Lesson lesson) {
+    private void checkLessonDateBeWeekend(Lesson lesson) {
 	log.debug("is lesson date weekday");
 	if (lesson.getDate().getDayOfWeek() == DayOfWeek.SATURDAY
 		|| lesson.getDate().getDayOfWeek() == DayOfWeek.SUNDAY) {
-	    throw new ServiceException(format("lesson date is weekday=%s", lesson.getDate().getDayOfWeek()));
+	    throw new LessonDateOnWeekendException(
+		    format("lesson date is weekend=%s", lesson.getDate().getDayOfWeek()));
 	}
-	log.debug("lesson date is not weekday");
+	log.debug("lesson date is not weekend");
     }
 
-    private void isTeacherTeachesLessonSubject(Lesson lesson) {
+    private void checkTeacherBeTeachLessonSubject(Lesson lesson) {
 	log.debug("is teacher teches lesson subject");
 	if (!lesson.getTeacher().getSubjects().contains(lesson.getSubject())) {
-	    throw new ServiceException("teacher dosn't teach lesson's subject");
+	    throw new TeacherNotTeachLessonException("teacher dosn't teach lesson's subject");
 	}
 	log.debug("teacher teches lesson subject");
     }
 
-    private void isLessonGroupsFree(Lesson lesson) {
+    private void checkLessonGroupsBeFree(Lesson lesson) {
 	log.debug("is lessons group free");
 	if (lesson.getGroups().stream().anyMatch(g -> lessonDao
 		.findByDateAndLessonTimeIdAndGroupId(lesson.getDate(), lesson.getLessonTime().getId(), g.getId())
 		.isPresent())) {
-	    throw new ServiceException("lessons groups are not free");
+	    throw new LessonGroupNotFreeException("lessons groups are not free");
 	}
 	log.debug("lessons groups are free");
     }

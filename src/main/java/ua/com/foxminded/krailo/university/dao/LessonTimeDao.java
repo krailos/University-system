@@ -25,6 +25,7 @@ import ua.com.foxminded.krailo.university.model.LessonTime;
 public class LessonTimeDao {
 
     private static final Logger log = LoggerFactory.getLogger(LessonTimeDao.class);
+    
     private static final String SQL_SELECT = "SELECT * FROM lesson_times WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM lesson_times ";
     private static final String SQL_SELECT_BY_LESSON_TIME_SCHEDULE_ID = "SELECT * FROM lesson_times WHERE lessons_timeschedule_id = ? ";

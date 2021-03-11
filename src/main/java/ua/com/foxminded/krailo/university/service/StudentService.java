@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.StudentDao;
+import ua.com.foxminded.krailo.university.exception.GroupCapacityTooBigException;
 import ua.com.foxminded.krailo.university.exception.ServiceException;
 import ua.com.foxminded.krailo.university.model.Student;
 
@@ -34,13 +35,13 @@ public class StudentService {
 
     public void create(Student student) {
 	log.debug("Create student={}", student);
-	isEnoughtGroupCapacity(student);
+	checkGroupCapacityNotTooBig(student);
 	studentDao.create(student);
     }
 
     public void update(Student student) {
 	log.debug("Update student={}", student);
-	isEnoughtGroupCapacity(student);
+	checkGroupCapacityNotTooBig(student);
 	studentDao.update(student);
     }
 
@@ -69,10 +70,11 @@ public class StudentService {
 	studentDao.deleteById(student.getId());
     }
 
-    private void isEnoughtGroupCapacity(Student student) {
+    private void checkGroupCapacityNotTooBig(Student student) {
 	log.debug("is enought group capacity");
 	if ((groupDao.findById(student.getGroup().getId()).get().getStudents().size() + 1) > groupMaxCapacity) {
-	    throw new ServiceException(format("group capacity more then maxGroupCapacity=%s", groupMaxCapacity));
+	    throw new GroupCapacityTooBigException(
+		    format("group capacity more then maxGroupCapacity=%s", groupMaxCapacity));
 	}
 	log.debug("group capacity less then maxGroupCapacity={}", groupMaxCapacity);
     }

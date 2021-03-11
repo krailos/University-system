@@ -26,6 +26,7 @@ import ua.com.foxminded.krailo.university.model.Holiday;
 public class HolidayDao {
 
     private static final Logger log = LoggerFactory.getLogger(HolidayDao.class);
+    
     private static final String SQL_SELECT_HOLIDAYS = "SELECT * FROM holidays ORDER BY id";
     private static final String SQL_SELECT_HOLIDAY_BY_ID = "SELECT * FROM holidays WHERE id = ?";
     private static final String SQL_SELECT_HOLIDAY_BY_DATE = "SELECT * FROM holidays WHERE date = ?";

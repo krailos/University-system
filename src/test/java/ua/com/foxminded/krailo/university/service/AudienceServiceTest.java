@@ -46,7 +46,8 @@ class AudienceServiceTest {
 	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
 		.thenReturn(Optional.of(Audience.builder().id(1).build()));
 
-	assertThrows(ServiceException.class, () -> audienceService.update(audience));
+	assertEquals("audiences number=number 1 and buildingId=1 not unique",
+		assertThrows(ServiceException.class, () -> audienceService.create(audience)).getMessage());
     }
 
     @Test
@@ -75,8 +76,9 @@ class AudienceServiceTest {
 	Audience audience = createAudience();
 	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
 		.thenReturn(Optional.of(Audience.builder().id(9).build()));
-	
-	assertThrows(ServiceException.class, () -> audienceService.update(audience));
+
+	assertEquals("audiences number=number 1 and buildingId=1 not unique",
+		assertThrows(ServiceException.class, () -> audienceService.update(audience)).getMessage());
     }
 
     @Test

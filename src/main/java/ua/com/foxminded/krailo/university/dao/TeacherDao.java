@@ -17,6 +17,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.exception.DaoConstraintViolationException;
 import ua.com.foxminded.krailo.university.exception.DaoException;
@@ -27,6 +30,7 @@ import ua.com.foxminded.krailo.university.model.Teacher;
 public class TeacherDao {
 
     private static final Logger log = LoggerFactory.getLogger(TeacherDao.class);
+    
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM teachers WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM teachers";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM teachers WHERE id = ?";
@@ -45,6 +49,7 @@ public class TeacherDao {
 	this.teacherRowMapper = teacherRowMapper;
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void create(Teacher teacher) {
 	log.debug("Create teacher={}", teacher);
 	try {
@@ -75,6 +80,7 @@ public class TeacherDao {
 	log.info("Created teacher={}", teacher);
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void update(Teacher teacher) {
 	log.debug("Update teacher={}", teacher);
 	int rowsAffected = 0;

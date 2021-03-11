@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.krailo.university.dao.SpecialityDao;
 import ua.com.foxminded.krailo.university.dao.SubjectDao;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @Component
@@ -26,7 +27,7 @@ public class YearRowMapper implements RowMapper<Year> {
 	Year year = new Year();
 	year.setId(rs.getInt("id"));
 	year.setName(rs.getString("name"));
-	year.setSpeciality(specialityDao.findById(rs.getInt("speciality_id")).get());
+	year.setSpeciality(specialityDao.findById(rs.getInt("speciality_id")).orElseThrow(()-> new EntityNotFoundException("speciality not found")));
 	year.setSubjects(subjectDao.findByYearId(rs.getInt("id")));
 	return year;
     }

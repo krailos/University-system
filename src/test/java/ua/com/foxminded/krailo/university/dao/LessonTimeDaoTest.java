@@ -1,6 +1,7 @@
 package ua.com.foxminded.krailo.university.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalTime;
 
@@ -50,11 +51,10 @@ class LessonTimeDaoTest {
 
     @Test
     void givenId_whenFindById_thenFound() {
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lesson_times", "id =1");
 
-	int actual = lessonTimeDao.findById(1).get().getId();
+	LessonTime actual = lessonTimeDao.findById(1).get();
 
-	assertEquals(expected, actual);
+	assertEquals(1, actual.getId());
     }
 
     @Test
@@ -86,15 +86,13 @@ class LessonTimeDaoTest {
 
     @Test
     void givenLessonTime_whenFindByStartEndLessonTime_thenFound() {
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lesson_times",
-		"'08:46:00' BETWEEN start_time AND end_time " + " OR '09:25:00' BETWEEN start_time AND end_time");
-
-	LessonTime lessonTime = LessonTime.builder().startTime(LocalTime.of(8, 46)).endTime(LocalTime.of(9, 25))
+	LessonTime lessonTime = LessonTime.builder().startTime(LocalTime.of(8, 30)).endTime(LocalTime.of(9, 15))
 		.build();
 
-	int actual = lessonTimeDao.findByStartOrEndLessonTime(lessonTime).get().getId();
+	LessonTime actual = lessonTimeDao.findByStartOrEndLessonTime(lessonTime).get();
 
-	assertEquals(expected, actual);
+	assertTrue(actual.getStartTime().isAfter(LocalTime.of(8, 29)) && actual.getStartTime().isBefore(LocalTime.of(9, 16)));
+	assertTrue(actual.getEndTime().isAfter(LocalTime.of(8, 29)) && actual.getEndTime().isBefore(LocalTime.of(9, 16)));
     }
 
 }

@@ -25,6 +25,7 @@ import ua.com.foxminded.krailo.university.model.Subject;
 public class SubjectDao {
 
     private static final Logger log = LoggerFactory.getLogger(SubjectDao.class);
+    
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM subjects WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM subjects";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM subjects WHERE id = ?";

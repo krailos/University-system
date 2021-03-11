@@ -49,7 +49,8 @@ class GroupServiceTest {
 	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId()))
 		.thenReturn(Optional.of(Group.builder().name("name").build()));
 	
-	assertThrows(ServiceException.class, () -> groupService.update(group));
+	assertEquals("group name=name1 and yearId=1 not unique",
+		assertThrows(ServiceException.class, () -> groupService.create(group)).getMessage());
     }
 
     @Test
@@ -68,7 +69,8 @@ class GroupServiceTest {
 	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId())).thenReturn(
 		Optional.of(Group.builder().id(2).name("name1").year(Year.builder().id(1).build()).build()));
 
-	assertThrows(ServiceException.class, () -> groupService.update(group));
+	assertEquals("group name=name1 and yearId=1 not unique",
+		assertThrows(ServiceException.class, () -> groupService.update(group)).getMessage());
     }
 
     @Test

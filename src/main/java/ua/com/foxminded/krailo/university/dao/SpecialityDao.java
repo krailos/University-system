@@ -25,6 +25,7 @@ import ua.com.foxminded.krailo.university.model.Speciality;
 public class SpecialityDao {
 
     private static final Logger log = LoggerFactory.getLogger(SpecialityDao.class);
+    
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM specialities WHERE id = ?";
     private static final String SQL_SELECT_BY_NAME_AND_FACULTY_ID = "SELECT * FROM specialities WHERE name = ? AND id = ?";
     private static final String SQL_SELECT_BY_FACULTY_ID = "SELECT * FROM specialities WHERE faculty_id = ?";

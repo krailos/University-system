@@ -89,11 +89,10 @@ class LessonDaoTest {
 
     @Test
     void givenId_whenFindById_thenFound() {
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons", "id = 1");
 
-	int actual = lessonDao.findById(1).get().getId();
+	Lesson actual = lessonDao.findById(1).get();
 
-	assertEquals(expected, actual);
+	assertEquals(1, actual.getId());
     }
 
     @Test
@@ -180,24 +179,26 @@ class LessonDaoTest {
     void givenId_whenFindByDateByTeacherByLessonTime_thenFound() {
 	Lesson lesson = Lesson.builder().date(LocalDate.of(2021, 01, 01)).teacher(Teacher.builder().id(1).build())
 		.lessonTime(LessonTime.builder().id(1).build()).build();
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons",
-		" date = '2021-001-01' AND  teacher_id = 1 AND lesson_time_id = 1");
 
-	int actual = lessonDao.findByDateAndTeacherAndLessonTime(lesson).get().getId();
+	Lesson actual = lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), lesson.getTeacher().getId(),
+		lesson.getLessonTime().getId()).get();
 
-	assertEquals(expected, actual);
+	assertEquals(lesson.getDate(), actual.getDate());
+	assertEquals(lesson.getTeacher().getId(), actual.getTeacher().getId());
+	assertEquals(lesson.getLessonTime().getId(), actual.getLessonTime().getId());
     }
 
     @Test
     void givenLesson_whenFindByDateAndAudienceAndLessonTime_thenFound() {
 	Lesson lesson = Lesson.builder().date(LocalDate.of(2021, 01, 01)).audience(Audience.builder().id(1).build())
 		.lessonTime(LessonTime.builder().id(1).build()).build();
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons",
-		" date = '2021-001-01' AND  audience_id = 1 AND lesson_time_id = 1");
 
-	int actual = lessonDao.findByDateAndAudienceAndLessonTime(lesson).get().getId();
+	Lesson actual = lessonDao.findByDateAndAudienceIdAndLessonTimeId(lesson.getDate(), lesson.getAudience().getId(),
+		lesson.getLessonTime().getId()).get();
 
-	assertEquals(expected, actual);
+	assertEquals(lesson.getDate(), actual.getDate());
+	assertEquals(lesson.getAudience().getId(), actual.getAudience().getId());
+	assertEquals(lesson.getLessonTime().getId(), actual.getLessonTime().getId());
     }
 
     @Test
@@ -206,10 +207,12 @@ class LessonDaoTest {
 		.lessonTime(LessonTime.builder().id(1).build()).build();
 	lesson.getGroups().add(Group.builder().id(1).build());
 
-	int actual = lessonDao.findByDateAndLessonTimeIdAndGroupId(lesson.getDate(), lesson.getLessonTime().getId(),
-		lesson.getGroups().get(0).getId()).get().getId();
+	Lesson actual = lessonDao.findByDateAndLessonTimeIdAndGroupId(lesson.getDate(), lesson.getLessonTime().getId(),
+		lesson.getGroups().get(0).getId()).get();
 
-	assertEquals(1, actual);
+	assertEquals(lesson.getDate(), actual.getDate());
+	assertEquals(lesson.getLessonTime().getId(), actual.getLessonTime().getId());
+	assertEquals(lesson.getGroups().get(0).getId(), actual.getGroups().get(0).getId());
     }
 
 }

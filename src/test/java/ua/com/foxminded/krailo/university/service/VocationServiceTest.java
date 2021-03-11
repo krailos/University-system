@@ -24,7 +24,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
-import ua.com.foxminded.krailo.university.exception.ServiceException;
+import ua.com.foxminded.krailo.university.exception.VocationDurationMoreTnenMaxDurationException;
+import ua.com.foxminded.krailo.university.exception.VocationEndDateBeforeStartDateException;
+import ua.com.foxminded.krailo.university.exception.VocationPeriodNotFreeException;
+import ua.com.foxminded.krailo.university.exception.VocationStartAndEndDateNotBelongsTheSameYearException;
 import ua.com.foxminded.krailo.university.model.Holiday;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.Teacher;
@@ -60,7 +63,9 @@ class VocationServiceTest {
 	vocation.setStart(LocalDate.of(2021, 10, 01));
 	vocation.setEnd(LocalDate.of(2021, 10, 25));
 
-	assertThrows(ServiceException.class, () -> vocationService.create(vocation));
+	assertEquals("vocation duration more then max duration",
+		assertThrows(VocationDurationMoreTnenMaxDurationException.class, () -> vocationService.create(vocation))
+			.getMessage());
 
     }
 
@@ -104,7 +109,9 @@ class VocationServiceTest {
 	when(lessonDao.findByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
 		.thenReturn(lessons);
 
-	assertThrows(ServiceException.class, () -> vocationService.create(vocation));
+	assertEquals("vocation period is not free from lessons",
+		assertThrows(VocationPeriodNotFreeException.class, () -> vocationService.create(vocation))
+			.getMessage());
 
     }
 
@@ -115,7 +122,9 @@ class VocationServiceTest {
 	vocation.setStart(LocalDate.of(2021, 01, 02));
 	vocation.setEnd(LocalDate.of(2021, 01, 01));
 
-	assertThrows(ServiceException.class, () -> vocationService.create(vocation));
+	assertEquals("vocation end date less then start date",
+		assertThrows(VocationEndDateBeforeStartDateException.class, () -> vocationService.create(vocation))
+			.getMessage());
 
     }
 
@@ -126,7 +135,9 @@ class VocationServiceTest {
 	vocation.setStart(LocalDate.of(2021, 12, 31));
 	vocation.setEnd(LocalDate.of(2022, 01, 10));
 
-	assertThrows(ServiceException.class, () -> vocationService.create(vocation));
+	assertEquals("vocation start and end dates not belong the same year",
+		assertThrows(VocationStartAndEndDateNotBelongsTheSameYearException.class,
+			() -> vocationService.create(vocation)).getMessage());
 
     }
 
@@ -180,7 +191,9 @@ class VocationServiceTest {
 	when(lessonDao.findByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
 		.thenReturn(lessons);
 
-	assertThrows(ServiceException.class, () -> vocationService.update(vocation));
+	assertEquals("vocation period is not free from lessons",
+		assertThrows(VocationPeriodNotFreeException.class, () -> vocationService.update(vocation))
+			.getMessage());
 
     }
 
@@ -191,7 +204,9 @@ class VocationServiceTest {
 	vocation.setStart(LocalDate.of(2021, 01, 02));
 	vocation.setEnd(LocalDate.of(2021, 01, 01));
 
-	assertThrows(ServiceException.class, () -> vocationService.update(vocation));
+	assertEquals("vocation end date less then start date",
+		assertThrows(VocationEndDateBeforeStartDateException.class, () -> vocationService.update(vocation))
+			.getMessage());
 
     }
 
@@ -202,7 +217,9 @@ class VocationServiceTest {
 	vocation.setStart(LocalDate.of(2021, 12, 31));
 	vocation.setEnd(LocalDate.of(2022, 01, 10));
 
-	assertThrows(ServiceException.class, () -> vocationService.update(vocation));
+	assertEquals("vocation start and end dates not belong the same year",
+		assertThrows(VocationStartAndEndDateNotBelongsTheSameYearException.class,
+			() -> vocationService.update(vocation)).getMessage());
 
     }
 

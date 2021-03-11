@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.TimetableDao;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.ServiceException;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.Student;
@@ -63,7 +64,7 @@ public class TimetableService {
 
     public Timetable getTimetableForTeacherByDate(int timetableId, Teacher teacher, LocalDate date) {
 	log.debug("get timetable for teacher={} by date={}", teacher, date);
-	Timetable timetable = timetableDao.findById(timetableId).get();
+	Timetable timetable = timetableDao.findById(timetableId).orElseThrow(()-> new EntityNotFoundException("timetable not found"));
 	List<Lesson> lessons = lessonDao.findByTeacherAndDate(teacher, date);
 	timetable.setLessons(lessons);
 	timetable.setTeacher(teacher);
@@ -72,7 +73,7 @@ public class TimetableService {
 
     public Timetable getTimetableForTeacherByMonth(int timetableId, Teacher teacher, LocalDate date) {
 	log.debug("get timetable for teacher={} by month", teacher);
-	Timetable timetable = timetableDao.findById(timetableId).get();
+	Timetable timetable = timetableDao.findById(timetableId).orElseThrow(()-> new EntityNotFoundException("timetable not found"));
 	List<Lesson> lessons = lessonDao.findByTeacherBetweenDates(teacher, date, date.plusMonths(1));
 	timetable.setLessons(lessons);
 	timetable.setTeacher(teacher);
@@ -81,7 +82,7 @@ public class TimetableService {
 
     public Timetable getTimetableForStudentByDate(int timetableId, Student student, LocalDate date) {
 	log.debug("get timetable for student={} by date={}", student, date);
-	Timetable timetable = timetableDao.findById(timetableId).get();
+	Timetable timetable = timetableDao.findById(timetableId).orElseThrow(()-> new EntityNotFoundException("timetable not found"));
 	List<Lesson> lessons = lessonDao.findByStudentAndDate(student, date);
 	timetable.setLessons(lessons);
 	timetable.setStudent(student);
@@ -90,7 +91,7 @@ public class TimetableService {
 
     public Timetable getTimetableForStudentByMonth(int timetableId, Student student, LocalDate date) {
 	log.debug("get timetable for student={} by month", student);
-	Timetable timetable = timetableDao.findById(timetableId).get();
+	Timetable timetable = timetableDao.findById(timetableId).orElseThrow(()-> new EntityNotFoundException("timetable not found"));
 	List<Lesson> lessons = lessonDao.findByStudentBetweenDates(student, date, date.plusMonths(1));
 	timetable.setLessons(lessons);
 	timetable.setStudent(student);

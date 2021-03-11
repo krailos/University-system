@@ -49,11 +49,10 @@ class SpecialityDaoTest {
 
     @Test
     void givenId_whenFindById_thenFound() {
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "specialities", "id =1");
+	
+	Speciality actual = specialityDao.findById(1).get();
 
-	int actual = specialityDao.findById(1).get().getId();
-
-	assertEquals(expected, actual);
+	assertEquals(1, actual.getId());
     }
 
     @Test
@@ -84,12 +83,12 @@ class SpecialityDaoTest {
     }
     
     @Test
-    void givenSpecialityNameAndFaculyId_whenFindByNamrAndFacultyId_thenFound() {
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "specialities", "name = 'speciality 1' and faculty_id  = 1");
+    void givenSpecialityNameAndFaculyId_whenFindByNameAndFacultyId_thenFound() {
+	
+	Speciality actual = specialityDao.findByNameAndFacultyId("speciality 1", 1).get();
 
-	int actual = specialityDao.findByNameAndFacultyId("speciality 1", 1).get().getId();
-
-	assertEquals(expected, actual);
+	assertEquals("speciality 1", actual.getName());
+	assertEquals(1, actual.getFaculty().getId());
     }
 
 }

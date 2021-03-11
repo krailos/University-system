@@ -25,6 +25,7 @@ import ua.com.foxminded.krailo.university.model.Group;
 public class GroupDao {
 
     private static final Logger log = LoggerFactory.getLogger(GroupDao.class);
+    
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM groups WHERE id = ?";
     private static final String SQL_SELECT_BY_NAME_YEAR_ID = "SELECT * FROM groups WHERE name = ? AND year_id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM groups ";
