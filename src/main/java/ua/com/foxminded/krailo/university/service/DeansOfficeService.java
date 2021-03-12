@@ -1,16 +1,16 @@
 package ua.com.foxminded.krailo.university.service;
 
+import static java.lang.String.format;
+
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.DeansOfficeDao;
-import ua.com.foxminded.krailo.university.exception.ServiceException;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.DeansOffice;
-import static java.lang.String.format;
 
 @Service
 public class DeansOfficeService {
@@ -34,12 +34,8 @@ public class DeansOfficeService {
 
     public DeansOffice getById(int id) {
 	log.debug("Get deansOffice by id={}", id);
-	Optional<DeansOffice> existingDeansOffice = deansOfficeDao.findById(id);
-	if (existingDeansOffice.isPresent()) {
-	    return existingDeansOffice.get();
-	} else {
-	    throw new ServiceException(format("DeansOffice whith id=%s not exist", id));
-	}
+	return deansOfficeDao.findById(id)
+		.orElseThrow(() -> new EntityNotFoundException(format("DeansOffice whith id=%s not exist", id)));
     }
 
     public List<DeansOffice> getAll() {

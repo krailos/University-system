@@ -10,14 +10,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.GroupDao;
-import ua.com.foxminded.krailo.university.exception.GroupNameNotUniqueException;
-import ua.com.foxminded.krailo.university.exception.ServiceException;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
+import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
 import ua.com.foxminded.krailo.university.model.Group;
 
 @Service
 public class GroupService {
 
     private static final Logger log = LoggerFactory.getLogger(GroupService.class);
+    
     private GroupDao groupDao;
 
     public GroupService(GroupDao groupDao) {
@@ -38,12 +39,8 @@ public class GroupService {
 
     public Group getById(int id) {
 	log.debug("get group by id={}", id);
-	Optional<Group> existingGroup = groupDao.findById(id);
-	if (existingGroup.isPresent()) {
-	    return existingGroup.get();
-	} else {
-	    throw new ServiceException(format("group whith id=%s not exist", id));
-	}
+	return groupDao.findById(id)
+		.orElseThrow(() -> new EntityNotFoundException(format("Group whith id=%s not exist", id)));
     }
 
     public List<Group> getAll() {
@@ -57,12 +54,9 @@ public class GroupService {
     }
 
     private void checkGroupNameBeUnique(Group group) {
-	log.debug("is group name unique ?");
 	Optional<Group> existingGroup = groupDao.findByNameAndYearId(group.getName(), group.getYear().getId());
-	if (existingGroup.isEmpty() || existingGroup.filter(a -> a.getId() == group.getId()).isPresent()) {
-	    log.debug("group name is unique");
-	} else {
-	    throw new GroupNameNotUniqueException(
+	if (!existingGroup.isEmpty() || !existingGroup.filter(a -> a.getId() == group.getId()).isPresent()) {
+	    throw new NotUniqueNameException(
 		    format("group name=%s and yearId=%s not unique", group.getName(), group.getYear().getId()));
 	}
     }

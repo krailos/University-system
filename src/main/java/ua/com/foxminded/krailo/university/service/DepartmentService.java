@@ -3,21 +3,20 @@ package ua.com.foxminded.krailo.university.service;
 import static java.lang.String.format;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.DepartmentDao;
-import ua.com.foxminded.krailo.university.exception.ServiceException;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Department;
 
 @Service
 public class DepartmentService {
-    
+
     private static final Logger log = LoggerFactory.getLogger(DepartmentService.class);
-    
+
     private DepartmentDao departmentDao;
 
     public DepartmentService(DepartmentDao departmentDao) {
@@ -36,12 +35,8 @@ public class DepartmentService {
 
     public Department getById(int id) {
 	log.debug("Get department by id={}", id);
-	Optional<Department> existingDepartment = departmentDao.findById(id);
-	if (existingDepartment.isPresent()) {
-	    return existingDepartment.get();
-	} else {
-	    throw new ServiceException(format("Department with id=%s not exist", id));
-	}
+	return departmentDao.findById(id)
+		.orElseThrow(() -> new EntityNotFoundException(format("Department whith id=%s not exist", id)));
     }
 
     public List<Department> getAll() {

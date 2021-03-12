@@ -3,7 +3,6 @@ package ua.com.foxminded.krailo.university.service;
 import static java.lang.String.format;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +12,9 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.StudentDao;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.GroupCapacityTooBigException;
-import ua.com.foxminded.krailo.university.exception.ServiceException;
+import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Student;
 
 @Service
@@ -47,12 +47,8 @@ public class StudentService {
 
     public Student getById(int id) {
 	log.debug("Get student by id={}", id);
-	Optional<Student> existingStudent = studentDao.findById(id);
-	if (existingStudent.isPresent()) {
-	    return existingStudent.get();
-	} else {
-	    throw new ServiceException(format("student with id=%s not exist", id));
-	}
+	return studentDao.findById(id)
+		.orElseThrow(() -> new EntityNotFoundException(format("Student whith id=%s not exist", id)));
     }
 
     public List<Student> getAll() {
@@ -71,11 +67,11 @@ public class StudentService {
     }
 
     private void checkGroupCapacityNotTooBig(Student student) {
-	log.debug("is enought group capacity");
-	if ((groupDao.findById(student.getGroup().getId()).get().getStudents().size() + 1) > groupMaxCapacity) {
-	    throw new GroupCapacityTooBigException(
-		    format("group capacity more then maxGroupCapacity=%s", groupMaxCapacity));
+	Group existingGroup = groupDao.findById(student.getGroup().getId())
+		.orElseThrow(() -> new EntityNotFoundException(
+			"group for this student not found, groupId=" + student.getGroup().getId()));
+	if ((existingGroup.getStudents().size() + 1) > groupMaxCapacity) {
+	    throw new GroupCapacityTooBigException("group capacity more then maxGroupCapacity=%s" + groupMaxCapacity);
 	}
-	log.debug("group capacity less then maxGroupCapacity={}", groupMaxCapacity);
     }
 }

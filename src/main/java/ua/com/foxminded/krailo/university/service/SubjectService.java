@@ -3,14 +3,13 @@ package ua.com.foxminded.krailo.university.service;
 import static java.lang.String.format;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.SubjectDao;
-import ua.com.foxminded.krailo.university.exception.ServiceException;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Subject;
 
 @Service
@@ -36,12 +35,8 @@ public class SubjectService {
 
     public Subject getById(int id) {
 	log.debug("Get subject by id={}", id);
-	Optional<Subject> existingSubject = subjectDao.findById(id);
-	if (existingSubject.isPresent()) {
-	    return existingSubject.get();
-	} else {
-	    throw new ServiceException(format("subject with id=%s not exist", id));
-	}
+	return subjectDao.findById(id)
+		.orElseThrow(() -> new EntityNotFoundException(format("Subject whith id=%s not exist", id)));
     }
 
     public List<Subject> getAll() {

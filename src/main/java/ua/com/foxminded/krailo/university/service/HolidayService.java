@@ -3,14 +3,13 @@ package ua.com.foxminded.krailo.university.service;
 import static java.lang.String.format;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
-import ua.com.foxminded.krailo.university.exception.ServiceException;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Holiday;
 
 @Service
@@ -35,12 +34,8 @@ public class HolidayService {
 
     public Holiday getById(int id) {
 	log.debug("Get holiday by id={}", id);
-	Optional<Holiday> existingHoliday = holidayDao.findById(id);
-	if (existingHoliday.isPresent()) {
-	    return existingHoliday.get();
-	} else {
-	    throw new ServiceException(format("Holiday with id=%s not exist", id));
-	}
+	return holidayDao.findById(id)
+		.orElseThrow(() -> new EntityNotFoundException(format("Holiday whith id=%s not exist", id)));
     }
 
     public List<Holiday> getAll() {

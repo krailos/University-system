@@ -16,9 +16,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.exception.DaoConstraintViolationException;
 import ua.com.foxminded.krailo.university.exception.DaoException;
@@ -47,7 +44,6 @@ public class YearDao {
 	this.yearRowMapper = yearRowMapper;
     }
     
-    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void create(Year year) {
 	log.debug("Create year={}", year);
 	try {
@@ -70,7 +66,6 @@ public class YearDao {
 	log.info("Created year={}", year);
     }
 
-    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void update(Year year) {
 	log.debug("existing year={}", findById(year.getId()).get());
 	log.debug("Update year={}", year);

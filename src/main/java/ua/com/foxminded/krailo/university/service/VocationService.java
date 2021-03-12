@@ -8,7 +8,6 @@ import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -19,11 +18,11 @@ import org.springframework.stereotype.Service;
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
-import ua.com.foxminded.krailo.university.exception.ServiceException;
-import ua.com.foxminded.krailo.university.exception.VocationDurationMoreTnenMaxDurationException;
-import ua.com.foxminded.krailo.university.exception.VocationEndDateBeforeStartDateException;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
+import ua.com.foxminded.krailo.university.exception.VocationEndBoforeStartException;
 import ua.com.foxminded.krailo.university.exception.VocationPeriodNotFreeException;
-import ua.com.foxminded.krailo.university.exception.VocationStartAndEndDateNotBelongsTheSameYearException;
+import ua.com.foxminded.krailo.university.exception.VocationPeriodNotSameYearException;
+import ua.com.foxminded.krailo.university.exception.VocationPeriodTooLongException;
 import ua.com.foxminded.krailo.university.model.Holiday;
 import ua.com.foxminded.krailo.university.model.Vocation;
 import ua.com.foxminded.krailo.university.model.VocationKind;
@@ -65,12 +64,8 @@ public class VocationService {
 
     public Vocation getById(int id) {
 	log.debug("Get vocation by id={}", id);
-	Optional<Vocation> existingVocation = vocationDao.findById(id);
-	if (existingVocation.isPresent()) {
-	    return existingVocation.get();
-	} else {
-	    throw new ServiceException(format("vocation with id=%s not exist", id));
-	}
+	return vocationDao.findById(id)
+		.orElseThrow(() -> new EntityNotFoundException(format("Vocation whith id=%s not exist", id)));
     }
 
     public List<Vocation> getAll() {
@@ -84,36 +79,25 @@ public class VocationService {
     }
 
     private void checkVocationPeriodBeFree(Vocation vocation) {
-	log.debug("is vocation period is free from lessons");
 	if (!lessonDao.findByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd())
 		.isEmpty()) {
 	    throw new VocationPeriodNotFreeException("vocation period is not free from lessons");
-	} else {
-	    log.debug("vocation period is free from lessons");
 	}
     }
 
     private void checkVocationsEndDateMoreThenStart(Vocation vocation) {
-	log.debug("is vocation end date more then start date");
 	if (vocation.getStart().isAfter(vocation.getEnd())) {
-	    throw new VocationEndDateBeforeStartDateException("vocation end date less then start date");
-	} else {
-	    log.debug("vocation end date less then start date");
+	    throw new VocationEndBoforeStartException("vocation end date less then start date");
 	}
     }
 
     private void checkVocationsStartAndEndDateBelongsTheSameYear(Vocation vocation) {
-	log.debug("is vocation start and end date belongs the same year");
 	if (vocation.getStart().getYear() != vocation.getEnd().getYear()) {
-	    throw new VocationStartAndEndDateNotBelongsTheSameYearException(
-		    "vocation start and end dates not belong the same year");
-	} else {
-	    log.debug("vocation start and end date belongs the same year");
+	    throw new VocationPeriodNotSameYearException("vocation start and end dates not belong the same year");
 	}
     }
 
     private void checkVocationDuratioMoreThenMaxDuration(Vocation vocation) {
-	log.debug("is vocation duration more then max duration");
 	List<Vocation> vocations = vocationDao.findByTeacherIdAndYear(vocation.getTeacher().getId(),
 		Year.from(vocation.getStart()));
 	vocations.add(vocation);
@@ -121,9 +105,7 @@ public class VocationService {
 	List<LocalDate> holidays = holidayDao.findAll().stream().map(Holiday::getDate).collect(Collectors.toList());
 	if (vocationDates.stream().filter(d -> !isDateWeekend(d)).filter(d -> !holidays.contains(d))
 		.count() > vocationDurationBykind.get(vocation.getKind())) {
-	    throw new VocationDurationMoreTnenMaxDurationException("vocation duration more then max duration");
-	} else {
-	    log.debug("vocation duration less then max duration");
+	    throw new VocationPeriodTooLongException("vocation duration more then max duration");
 	}
     }
 

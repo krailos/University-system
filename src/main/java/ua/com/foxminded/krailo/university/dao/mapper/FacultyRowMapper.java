@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.krailo.university.dao.DeansOfficeDao;
-import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Faculty;
 
 @Component
@@ -24,7 +23,7 @@ public class FacultyRowMapper implements RowMapper<Faculty> {
 	Faculty faculty = new Faculty();
 	faculty.setId(rs.getInt("id"));
 	faculty.setName(rs.getString("name"));
-	faculty.setDeansOffice(deansOfficeDao.findById(rs.getInt("deans_office_id")).orElseThrow(()-> new EntityNotFoundException("deansOffice not found")));
+	deansOfficeDao.findById(rs.getInt("deans_office_id")).ifPresent(faculty::setDeansOffice);
 	return faculty;
     }
 

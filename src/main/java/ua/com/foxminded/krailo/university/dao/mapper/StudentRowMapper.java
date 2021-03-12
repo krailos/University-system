@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.krailo.university.dao.GroupDao;
-import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Student;
 
@@ -28,13 +27,13 @@ public class StudentRowMapper implements RowMapper<Student> {
 	student.setStudentId(rs.getString("student_id"));
 	student.setFirstName(rs.getString("first_name"));
 	student.setLastName(rs.getString("last_name"));
-	student.setBirthDate(rs.getObject("birth_date", LocalDate.class ));
+	student.setBirthDate(rs.getObject("birth_date", LocalDate.class));
 	student.setPhone(rs.getString("phone"));
 	student.setEmail(rs.getString("email"));
 	student.setAddress(rs.getString("address"));
 	student.setRank(rs.getString("rank"));
 	student.setGender(Gender.valueOf(rs.getString("gender")));
-	student.setGroup(groupDao.findById(rs.getInt("group_id")).orElseThrow(()-> new EntityNotFoundException("group not found")));
+	groupDao.findById(rs.getInt("group_id")).ifPresent(student::setGroup);
 	return student;
     }
 

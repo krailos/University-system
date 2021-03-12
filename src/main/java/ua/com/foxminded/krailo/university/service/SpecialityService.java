@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.SpecialityDao;
-import ua.com.foxminded.krailo.university.exception.ServiceException;
-import ua.com.foxminded.krailo.university.exception.SpecialityNameNotUniqueException;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
+import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
 import ua.com.foxminded.krailo.university.model.Speciality;
 
 @Service
@@ -39,12 +39,8 @@ public class SpecialityService {
 
     public Speciality getById(int id) {
 	log.debug("Get department by id={}", id);
-	Optional<Speciality> existinSpeciality = specialityDao.findById(id);
-	if (existinSpeciality.isPresent()) {
-	    return existinSpeciality.get();
-	} else {
-	    throw new ServiceException(format("speciality with id=%s not exist", id));
-	}
+	return specialityDao.findById(id)
+		.orElseThrow(() -> new EntityNotFoundException(format("Speciality whith id=%s not exist", id)));
     }
 
     public List<Speciality> getAll() {
@@ -58,15 +54,11 @@ public class SpecialityService {
     }
 
     private void chekSpecialityNameBeUnique(Speciality speciality) {
-	log.debug("is speciality name unique ?");
 	Optional<Speciality> existingSpeciality = specialityDao.findByNameAndFacultyId(speciality.getName(),
 		speciality.getFaculty().getId());
-	if (existingSpeciality.isEmpty()
-		|| existingSpeciality.filter(s -> s.getId() == speciality.getId()).isPresent()) {
-	    log.debug("speciality name is unique");
-	} else {
-	    throw new SpecialityNameNotUniqueException(
-		    format("speciality name=%s is not unique", speciality.getName()));
+	if (!existingSpeciality.isEmpty()
+		|| !existingSpeciality.filter(s -> s.getId() == speciality.getId()).isPresent()) {
+	    throw new NotUniqueNameException(format("speciality name=%s is not unique", speciality.getName()));
 	}
 
     }

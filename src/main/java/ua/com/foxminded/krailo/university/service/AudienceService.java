@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.AudienceDao;
-import ua.com.foxminded.krailo.university.exception.AudienceNumberNotUniqueException;
-import ua.com.foxminded.krailo.university.exception.ServiceException;
+import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Audience;
 
 @Service
@@ -27,12 +27,8 @@ public class AudienceService {
 
     public Audience getById(int id) {
 	log.debug("get audience by id={}", id);
-	Optional<Audience> existingAudience = audienceDao.findById(id);
-	if (existingAudience.isPresent()) {
-	    return existingAudience.get();
-	} else {
-	    throw new ServiceException(format("audience whith id=%s not exist", id));
-	}
+	return audienceDao.findById(id)
+		.orElseThrow(() -> new EntityNotFoundException(format("Audience whith id=%s not exist", id)));
     }
 
     public void create(Audience audience) {
@@ -64,13 +60,11 @@ public class AudienceService {
     }
 
     private void checkAudienceNumberBeUnique(Audience audience) {
-	log.debug("is audience number unique ?");
 	Optional<Audience> existingAudience = audienceDao.findByNumberAndBuildingId(audience.getNumber(),
 		audience.getBuilding().getId());
-	if (existingAudience.isEmpty() || existingAudience.filter(a -> a.getId() == audience.getId()).isPresent()) {
-	    log.debug("audience number is unique");
+	if (!existingAudience.isEmpty() || !existingAudience.filter(a -> a.getId() == audience.getId()).isPresent()) {
 	} else {
-	    throw new AudienceNumberNotUniqueException(format("audiences number=%s and buildingId=%s not unique",
+	    throw new NotUniqueNameException(format("audiences number=%s and buildingId=%s not unique",
 		    audience.getNumber(), audience.getBuilding().getId()));
 	}
     }

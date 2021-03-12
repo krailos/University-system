@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.krailo.university.dao.YearDao;
-import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Group;
 
 @Component
@@ -24,7 +23,7 @@ public class GroupRowMapper implements RowMapper<Group> {
 	Group group = new Group();
 	group.setId(rs.getInt("id"));
 	group.setName(rs.getString("name"));
-	group.setYear(yearDao.findById(rs.getInt("year_id")).orElseThrow(()-> new EntityNotFoundException("year not found")));
+	yearDao.findById(rs.getInt("year_id")).ifPresent(group::setYear);
 	return group;
     }
 

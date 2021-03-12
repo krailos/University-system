@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.krailo.university.dao.BuildingDao;
-import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Audience;
 
 @Component
@@ -24,7 +23,7 @@ public class AudienceRowMapper implements RowMapper<Audience> {
 	Audience audience = new Audience();
 	audience.setId(rs.getInt("id"));
 	audience.setNumber(rs.getString("number"));
-	audience.setBuilding(buildingDao.findById(rs.getInt("building_id")).orElseThrow(()-> new EntityNotFoundException("building not found")));
+	buildingDao.findById(rs.getInt("building_id")).ifPresent(audience::setBuilding);
 	audience.setCapacity(rs.getInt("capacity"));
 	audience.setDescription(rs.getString("description"));
 	return audience;

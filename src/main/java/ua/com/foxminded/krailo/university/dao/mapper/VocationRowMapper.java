@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
-import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Vocation;
 import ua.com.foxminded.krailo.university.model.VocationKind;
 
@@ -29,7 +28,7 @@ public class VocationRowMapper implements RowMapper<Vocation> {
 	vocation.setApplyingDate(rs.getObject("applying_date", LocalDate.class));
 	vocation.setStart(rs.getObject("start_date", LocalDate.class));
 	vocation.setEnd(rs.getObject("end_date", LocalDate.class));
-	vocation.setTeacher(teacherDao.findById(rs.getInt("teacher_id")).orElseThrow(()-> new EntityNotFoundException("teacher not found")));
+	teacherDao.findById(rs.getInt("teacher_id")).ifPresent(vocation::setTeacher);
 	return vocation;
     }
 

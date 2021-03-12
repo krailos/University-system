@@ -24,10 +24,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
-import ua.com.foxminded.krailo.university.exception.VocationDurationMoreTnenMaxDurationException;
-import ua.com.foxminded.krailo.university.exception.VocationEndDateBeforeStartDateException;
+import ua.com.foxminded.krailo.university.exception.VocationPeriodTooLongException;
+import ua.com.foxminded.krailo.university.exception.VocationEndBoforeStartException;
 import ua.com.foxminded.krailo.university.exception.VocationPeriodNotFreeException;
-import ua.com.foxminded.krailo.university.exception.VocationStartAndEndDateNotBelongsTheSameYearException;
+import ua.com.foxminded.krailo.university.exception.VocationPeriodNotSameYearException;
 import ua.com.foxminded.krailo.university.model.Holiday;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.Teacher;
@@ -64,7 +64,7 @@ class VocationServiceTest {
 	vocation.setEnd(LocalDate.of(2021, 10, 25));
 
 	assertEquals("vocation duration more then max duration",
-		assertThrows(VocationDurationMoreTnenMaxDurationException.class, () -> vocationService.create(vocation))
+		assertThrows(VocationPeriodTooLongException.class, () -> vocationService.create(vocation))
 			.getMessage());
 
     }
@@ -123,7 +123,7 @@ class VocationServiceTest {
 	vocation.setEnd(LocalDate.of(2021, 01, 01));
 
 	assertEquals("vocation end date less then start date",
-		assertThrows(VocationEndDateBeforeStartDateException.class, () -> vocationService.create(vocation))
+		assertThrows(VocationEndBoforeStartException.class, () -> vocationService.create(vocation))
 			.getMessage());
 
     }
@@ -136,7 +136,7 @@ class VocationServiceTest {
 	vocation.setEnd(LocalDate.of(2022, 01, 10));
 
 	assertEquals("vocation start and end dates not belong the same year",
-		assertThrows(VocationStartAndEndDateNotBelongsTheSameYearException.class,
+		assertThrows(VocationPeriodNotSameYearException.class,
 			() -> vocationService.create(vocation)).getMessage());
 
     }
@@ -205,7 +205,7 @@ class VocationServiceTest {
 	vocation.setEnd(LocalDate.of(2021, 01, 01));
 
 	assertEquals("vocation end date less then start date",
-		assertThrows(VocationEndDateBeforeStartDateException.class, () -> vocationService.update(vocation))
+		assertThrows(VocationEndBoforeStartException.class, () -> vocationService.update(vocation))
 			.getMessage());
 
     }
@@ -218,7 +218,7 @@ class VocationServiceTest {
 	vocation.setEnd(LocalDate.of(2022, 01, 10));
 
 	assertEquals("vocation start and end dates not belong the same year",
-		assertThrows(VocationStartAndEndDateNotBelongsTheSameYearException.class,
+		assertThrows(VocationPeriodNotSameYearException.class,
 			() -> vocationService.update(vocation)).getMessage());
 
     }

@@ -16,9 +16,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.dao.mapper.LessonRowMapper;
 import ua.com.foxminded.krailo.university.exception.DaoConstraintViolationException;
@@ -83,7 +80,6 @@ public class LessonDao {
 	}
     }
 
-    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void create(Lesson lesson) {
 	log.debug("Create lesson={}", lesson);
 	try {
@@ -111,7 +107,6 @@ public class LessonDao {
 	log.info("Created lesson={}", lesson);
     }
 
-    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void update(Lesson lesson) {
 	log.debug("Update lesson={}", lesson);
 	int rowsAffected = 0;

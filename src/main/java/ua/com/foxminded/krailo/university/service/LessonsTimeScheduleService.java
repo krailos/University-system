@@ -3,14 +3,13 @@ package ua.com.foxminded.krailo.university.service;
 import static java.lang.String.format;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.LessonTimeScheduleDao;
-import ua.com.foxminded.krailo.university.exception.ServiceException;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.LessonsTimeSchedule;
 
 @Service
@@ -36,12 +35,8 @@ public class LessonsTimeScheduleService {
 
     public LessonsTimeSchedule getById(int id) {
 	log.debug("Get lessonsTimeSchedule by id={}", id);
-	Optional<LessonsTimeSchedule> existingLessonsTimeSchedule = lessonTimeScheduleDao.findById(id);
-	if (existingLessonsTimeSchedule.isPresent()) {
-	    return existingLessonsTimeSchedule.get();
-	} else {
-	    throw new ServiceException(format("lessonsTimeSchedule with id=%s not exist", id));
-	}
+	return lessonTimeScheduleDao.findById(id)
+		.orElseThrow(() -> new EntityNotFoundException(format("LessonTimeSchedule whith id=%s not exist", id)));
     }
 
     public List<LessonsTimeSchedule> getAll() {

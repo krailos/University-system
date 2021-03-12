@@ -3,14 +3,13 @@ package ua.com.foxminded.krailo.university.service;
 import static java.lang.String.format;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.krailo.university.dao.UniversityOfficeDao;
-import ua.com.foxminded.krailo.university.exception.ServiceException;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.UniversityOffice;
 
 @Service
@@ -36,13 +35,8 @@ public class UniversityOfficeService {
 
     public UniversityOffice getById(int id) {
 	log.debug("Get universityOffice by id={}", id);
-	Optional<UniversityOffice> existingUniversityOffice = universityOfficeDao.findById(id);
-	if (existingUniversityOffice.isPresent()) {
-	    return existingUniversityOffice.get();
-	} else {
-	    throw new ServiceException(format("universityOffice with id=%s not exist", id));
-	}
-
+	return universityOfficeDao.findById(id)
+		.orElseThrow(() -> new EntityNotFoundException(format("UniversityOffice whith id=%s not exist", id)));
     }
 
     public List<UniversityOffice> getAll() {

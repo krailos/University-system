@@ -1,7 +1,6 @@
 package ua.com.foxminded.krailo.university.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +14,6 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.exception.DaoConstraintViolationException;
 import ua.com.foxminded.krailo.university.model.Speciality;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Year;
@@ -79,20 +77,6 @@ class YearDaoTest {
 	int expected = 2;
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "years_subjects", "year_id = 1");
 	assertEquals(expected, actual);
-    }
-
-    @Test
-    void givenNewSubjectsOfYearWithNotExistingId_whenUpdate_thenThrowExceptionAndTransactionRollBack() {
-	Year year = Year.builder().id(1).name("new name")
-		.speciality(Speciality.builder().id(1).name("new name").build()).build();
-	List<Subject> subjects = new ArrayList<>(Arrays.asList(Subject.builder().id(10).name("new subject").build(),
-		Subject.builder().id(2).name("new subject").build()));
-	year.setSubjects(subjects);
-	
-	assertThrows(DaoConstraintViolationException.class, () -> yearDao.update(year));
-	
-	assertEquals("year 1", yearDao.findById(1).get().getName());
-	
     }
 
     @Test
