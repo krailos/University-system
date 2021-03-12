@@ -62,8 +62,7 @@ public class AudienceService {
     private void checkAudienceNumberBeUnique(Audience audience) {
 	Optional<Audience> existingAudience = audienceDao.findByNumberAndBuildingId(audience.getNumber(),
 		audience.getBuilding().getId());
-	if (!existingAudience.isEmpty() || !existingAudience.filter(a -> a.getId() == audience.getId()).isPresent()) {
-	} else {
+	if (existingAudience.isPresent() && existingAudience.filter(a -> a.getId() != audience.getId()).isPresent()) {
 	    throw new NotUniqueNameException(format("audiences number=%s and buildingId=%s not unique",
 		    audience.getNumber(), audience.getBuilding().getId()));
 	}

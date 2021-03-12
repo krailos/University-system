@@ -55,7 +55,7 @@ public class GroupService {
 
     private void checkGroupNameBeUnique(Group group) {
 	Optional<Group> existingGroup = groupDao.findByNameAndYearId(group.getName(), group.getYear().getId());
-	if (!existingGroup.isEmpty() || !existingGroup.filter(a -> a.getId() == group.getId()).isPresent()) {
+	if (existingGroup.isPresent() && existingGroup.filter(a -> a.getId() != group.getId()).isPresent()) {
 	    throw new NotUniqueNameException(
 		    format("group name=%s and yearId=%s not unique", group.getName(), group.getYear().getId()));
 	}

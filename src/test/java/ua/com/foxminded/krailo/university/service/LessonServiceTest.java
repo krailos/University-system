@@ -104,7 +104,7 @@ class LessonServiceTest {
     void givenLessonWithBookedAudience_whenCreate_thenTrowServiceException() {
 	Lesson lesson = createLesson();
 	when(lessonDao.findByDateAndAudienceIdAndLessonTimeId(lesson.getDate(), lesson.getAudience().getId(),
-		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(1).build()));
+		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
 
 	assertThrows(ServiceException.class, () -> lessonService.create(lesson));
     }
@@ -113,9 +113,9 @@ class LessonServiceTest {
     void givenLessonWithBookedTeacher_whenCreate_thenTrowServiceException() {
 	Lesson lesson = createLesson();
 	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), lesson.getTeacher().getId(),
-		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(1).build()));
+		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
 
-	assertEquals("Teacher not free teacherId=1",
+	assertEquals("Teacher not free, teacherId=1",
 		assertThrows(ServiceException.class, () -> lessonService.create(lesson)).getMessage());
     }
 
@@ -124,7 +124,7 @@ class LessonServiceTest {
 	Lesson lesson = createLesson();
 	lesson.getAudience().setCapacity(1);
 
-	assertEquals("audience with capacity=1 is not big enough",
+	assertEquals("audience capacity not big enough, audience capacity=1",
 		assertThrows(ServiceException.class, () -> lessonService.create(lesson)).getMessage());
     }
 
@@ -167,6 +167,7 @@ class LessonServiceTest {
     @Test
     void givenLessonWhithGroupThatNotFree_whenCreate_thenThrowServiceException() {
 	Lesson lesson = createLesson();
+	lesson.setId(2);
 	lesson.getTeacher().getSubjects().add(Subject.builder().id(1).name("subject1").build());
 	when(lessonDao.findByDateAndLessonTimeIdAndGroupId(lesson.getDate(), lesson.getLessonTime().getId(),
 		lesson.getGroups().get(0).getId())).thenReturn(Optional.of(createLesson()));
@@ -197,9 +198,9 @@ class LessonServiceTest {
     void givenLessonWithBookedAudience_whenUpdate_thenTrowServiceWxception() {
 	Lesson lesson = createLesson();
 	when(lessonDao.findByDateAndAudienceIdAndLessonTimeId(lesson.getDate(), lesson.getAudience().getId(),
-		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(1).build()));
+		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
 
-	assertEquals("Audience not free audienceId=1",
+	assertEquals("Audience not free, audienceId=1",
 		assertThrows(ServiceException.class, () -> lessonService.update(lesson)).getMessage());
     }
 
@@ -207,9 +208,9 @@ class LessonServiceTest {
     void givenLessonWithBookedTeacher_whenUpdate_thenTrowServiceException() {
 	Lesson lesson = createLesson();
 	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), lesson.getTeacher().getId(),
-		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(1).build()));
+		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
 
-	assertEquals("Teacher not free teacherId=1",
+	assertEquals("Teacher not free, teacherId=1",
 		assertThrows(ServiceException.class, () -> lessonService.update(lesson)).getMessage());
     }
 
@@ -218,7 +219,7 @@ class LessonServiceTest {
 	Lesson lesson = createLesson();
 	lesson.getAudience().setCapacity(1);
 
-	assertEquals("audience with capacity=1 is not big enough",
+	assertEquals("audience capacity not big enough, audience capacity=1",
 		assertThrows(ServiceException.class, () -> lessonService.update(lesson)).getMessage());
     }
 
@@ -228,7 +229,7 @@ class LessonServiceTest {
 	when(vocationDao.findByTeacherIdAndDate(lesson.getTeacher().getId(), lesson.getDate()))
 		.thenReturn(Optional.of(Vocation.builder().id(1).build()));
 
-	assertEquals("teacher with id=1 is on vocation",
+	assertEquals("teacher on vocation, teacherId=1",
 		assertThrows(ServiceException.class, () -> lessonService.update(lesson)).getMessage());
     }
 
@@ -262,6 +263,7 @@ class LessonServiceTest {
     @Test
     void givenLessonWhithGroupThatNotFree_whenUpdate_thenThrowServiceException() {
 	Lesson lesson = createLesson();
+	lesson.setId(2);
 	when(lessonDao.findByDateAndLessonTimeIdAndGroupId(lesson.getDate(), lesson.getLessonTime().getId(),
 		lesson.getGroups().get(0).getId())).thenReturn(Optional.of(createLesson()));
 
