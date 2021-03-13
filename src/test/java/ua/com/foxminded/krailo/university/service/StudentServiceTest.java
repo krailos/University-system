@@ -37,7 +37,7 @@ class StudentServiceTest {
 
     @Test
     void givenStudent_whenCreate_thenCreated() {
-	ReflectionTestUtils.setField(studentService, "groupMaxCapacity", 30);
+	ReflectionTestUtils.setField(studentService, "groupMaxSize", 30);
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
@@ -50,20 +50,20 @@ class StudentServiceTest {
 
     @Test
     void givenStudentWithNotEnoughtGroupCapacity_whenCreate_thenThrowServiceException() {
-	ReflectionTestUtils.setField(studentService, "groupMaxCapacity", 1);
+	ReflectionTestUtils.setField(studentService, "groupMaxSize", 1);
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
 	when(groupDao.findById(student.getGroup().getId())).thenReturn(Optional.of(group));
 
-	assertEquals("group capacity more then maxGroupCapacity=1",
+	assertEquals("group capacity more then groupMaxSize=1",
 		assertThrows(ServiceException.class, () -> studentService.create(student)).getMessage());
 
     }
 
     @Test
     void givenStudent_whenUpdate_thenUpdated() {
-	ReflectionTestUtils.setField(studentService, "groupMaxCapacity", 30);
+	ReflectionTestUtils.setField(studentService, "groupMaxSize", 30);
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
@@ -76,13 +76,13 @@ class StudentServiceTest {
 
     @Test
     void givenStudentWithNotEnoughtGroupCapacity_whenUpdate_thenThrowServiceException() {
-	ReflectionTestUtils.setField(studentService, "groupMaxCapacity", 1);
+	ReflectionTestUtils.setField(studentService, "groupMaxSize", 1);
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
 	when(groupDao.findById(student.getGroup().getId())).thenReturn(Optional.of(group));
 
-	assertEquals("group capacity more then maxGroupCapacity=1",
+	assertEquals("group capacity more then groupMaxSize=1",
 		assertThrows(ServiceException.class, () -> studentService.update(student)).getMessage());
 
     }

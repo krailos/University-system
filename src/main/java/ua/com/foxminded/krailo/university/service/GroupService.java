@@ -18,7 +18,7 @@ import ua.com.foxminded.krailo.university.model.Group;
 public class GroupService {
 
     private static final Logger log = LoggerFactory.getLogger(GroupService.class);
-    
+
     private GroupDao groupDao;
 
     public GroupService(GroupDao groupDao) {
@@ -55,7 +55,7 @@ public class GroupService {
 
     private void checkGroupNameBeUnique(Group group) {
 	Optional<Group> existingGroup = groupDao.findByNameAndYearId(group.getName(), group.getYear().getId());
-	if (existingGroup.isPresent() && existingGroup.filter(a -> a.getId() != group.getId()).isPresent()) {
+	if (existingGroup.filter(a -> a.getId() != group.getId()).isPresent()) {
 	    throw new NotUniqueNameException(
 		    format("group name=%s and yearId=%s not unique", group.getName(), group.getYear().getId()));
 	}

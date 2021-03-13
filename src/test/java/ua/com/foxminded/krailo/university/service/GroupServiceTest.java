@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.StudentDao;
-import ua.com.foxminded.krailo.university.exception.ServiceException;
+import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Year;
 
@@ -44,13 +44,16 @@ class GroupServiceTest {
     }
 
     @Test
-    void givenGroupWithExistingName_whenCereate_thanTrowServiceException() {
+    void givenGroupWithExistingName_whenCereate_thenNotUniqueNameExceptionThrown() {
 	Group group = Group.builder().id(1).name("name1").year(Year.builder().id(1).build()).build();
 	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId()))
 		.thenReturn(Optional.of(Group.builder().name("name").build()));
-	
-	assertEquals("group name=name1 and yearId=1 not unique",
-		assertThrows(ServiceException.class, () -> groupService.create(group)).getMessage());
+
+	Exception exception = assertThrows(NotUniqueNameException.class, () -> groupService.create(group));
+
+	String expectedMessage = "group name=name1 and yearId=1 not unique";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -64,13 +67,16 @@ class GroupServiceTest {
     }
 
     @Test
-    void givenGroupWithExistingName_whenUpdate_thanThrowServiceException() {
+    void givenGroupWithExistingNameAndDiffrentId_whenUpdate_thenNotUniqueNameExceptionThrown() {
 	Group group = Group.builder().id(1).name("name1").year(Year.builder().id(1).build()).build();
 	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId())).thenReturn(
 		Optional.of(Group.builder().id(2).name("name1").year(Year.builder().id(1).build()).build()));
 
-	assertEquals("group name=name1 and yearId=1 not unique",
-		assertThrows(ServiceException.class, () -> groupService.update(group)).getMessage());
+	Exception exception = assertThrows(NotUniqueNameException.class, () -> groupService.update(group));
+
+	String expectedMessage = "group name=name1 and yearId=1 not unique";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
     }
 
     @Test

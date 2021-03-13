@@ -51,7 +51,7 @@ public class AudienceService {
 
     public List<Audience> getByBuildingId(int id) {
 	log.debug("get audiences by building id={}", id);
-	return audienceDao.findByBuildingId(id);
+	return audienceDao.findByBuildingId(id); 
     }
 
     public void delete(Audience audience) {
@@ -62,7 +62,7 @@ public class AudienceService {
     private void checkAudienceNumberBeUnique(Audience audience) {
 	Optional<Audience> existingAudience = audienceDao.findByNumberAndBuildingId(audience.getNumber(),
 		audience.getBuilding().getId());
-	if (existingAudience.isPresent() && existingAudience.filter(a -> a.getId() != audience.getId()).isPresent()) {
+	if (existingAudience.filter(a -> a.getId() != audience.getId()).isPresent()) {
 	    throw new NotUniqueNameException(format("audiences number=%s and buildingId=%s not unique",
 		    audience.getNumber(), audience.getBuilding().getId()));
 	}

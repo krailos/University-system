@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.StudentDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
-import ua.com.foxminded.krailo.university.exception.GroupCapacityTooBigException;
+import ua.com.foxminded.krailo.university.exception.GroupOverflowException;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Student;
 
@@ -25,8 +25,8 @@ public class StudentService {
 
     private StudentDao studentDao;
     private GroupDao groupDao;
-    @Value("${group.maxCapacity}")
-    private int groupMaxCapacity;
+    @Value("${group.maxSize}")
+    private int groupMaxSize;
 
     public StudentService(StudentDao studentDao, GroupDao groupDao) {
 	this.studentDao = studentDao;
@@ -70,8 +70,8 @@ public class StudentService {
 	Group existingGroup = groupDao.findById(student.getGroup().getId())
 		.orElseThrow(() -> new EntityNotFoundException(
 			"group for this student not found, groupId=" + student.getGroup().getId()));
-	if ((existingGroup.getStudents().size() + 1) > groupMaxCapacity) {
-	    throw new GroupCapacityTooBigException("group capacity more then maxGroupCapacity=%s" + groupMaxCapacity);
+	if (existingGroup.getStudents().size() >= groupMaxSize) {
+	    throw new GroupOverflowException("group capacity more then groupMaxSize=" + groupMaxSize);
 	}
     }
 }

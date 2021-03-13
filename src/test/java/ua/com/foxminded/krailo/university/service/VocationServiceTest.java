@@ -24,10 +24,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
-import ua.com.foxminded.krailo.university.exception.VocationPeriodTooLongException;
 import ua.com.foxminded.krailo.university.exception.VocationEndBoforeStartException;
 import ua.com.foxminded.krailo.university.exception.VocationPeriodNotFreeException;
 import ua.com.foxminded.krailo.university.exception.VocationPeriodNotSameYearException;
+import ua.com.foxminded.krailo.university.exception.VocationPeriodTooLongException;
 import ua.com.foxminded.krailo.university.model.Holiday;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.Teacher;
@@ -57,15 +57,34 @@ class VocationServiceTest {
     }
 
     @Test
-    void givenVocationPeriodDurationMoreThenMaxDuration_whenCereate_thenTrowServiceException() {
+    void givenVocationPeriodDurationMoreThenMaxDuration_whenCereate_thenVocationPeriodTooLongExceptionThrown() {
 	ReflectionTestUtils.setField(vocationService, "vocationDurationBykind", getVocationDurationBykind());
 	Vocation vocation = createVocation();
 	vocation.setStart(LocalDate.of(2021, 10, 01));
 	vocation.setEnd(LocalDate.of(2021, 10, 25));
 
-	assertEquals("vocation duration more then max duration",
-		assertThrows(VocationPeriodTooLongException.class, () -> vocationService.create(vocation))
-			.getMessage());
+	Exception exception = assertThrows(VocationPeriodTooLongException.class,
+		() -> vocationService.create(vocation));
+
+	String expectedMessage = "vocation duration more then max duration";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
+
+    }
+
+    @Test
+    void givenVocationPeriodDurationMoreThenMaxDuration_whenUpdate_thenVocationPeriodTooLongExceptionThrown() {
+	ReflectionTestUtils.setField(vocationService, "vocationDurationBykind", getVocationDurationBykind());
+	Vocation vocation = createVocation();
+	vocation.setStart(LocalDate.of(2021, 10, 01));
+	vocation.setEnd(LocalDate.of(2021, 10, 25));
+
+	Exception exception = assertThrows(VocationPeriodTooLongException.class,
+		() -> vocationService.update(vocation));
+
+	String expectedMessage = "vocation duration more then max duration";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage); 
 
     }
 
@@ -100,7 +119,7 @@ class VocationServiceTest {
     }
 
     @Test
-    void givenVocationThatMatchesLessons_whenCereate_thenTrowServiceException() {
+    void givenVocationThatMatchesLessons_whenCereate_thenVocationPeriodNotFreeExceptionThrown() {
 	ReflectionTestUtils.setField(vocationService, "vocationDurationBykind", getVocationDurationBykind());
 	Vocation vocation = createVocation();
 	vocation.setStart(LocalDate.of(2021, 01, 01));
@@ -109,36 +128,90 @@ class VocationServiceTest {
 	when(lessonDao.findByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
 		.thenReturn(lessons);
 
-	assertEquals("vocation period is not free from lessons",
-		assertThrows(VocationPeriodNotFreeException.class, () -> vocationService.create(vocation))
-			.getMessage());
+	Exception exception = assertThrows(VocationPeriodNotFreeException.class,
+		() -> vocationService.create(vocation));
 
+	String expectedMessage = "vocation period is not free from lessons";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
-    void givenVocationWithEndLessThenStart_whenCereate_thenTrowServiceException() {
+    void givenVocationThatMatchesLessons_whenUpdate_thenVocationPeriodNotFreeExceptionThrown() {
+	ReflectionTestUtils.setField(vocationService, "vocationDurationBykind", getVocationDurationBykind());
+	Vocation vocation = createVocation();
+	vocation.setStart(LocalDate.of(2021, 01, 01));
+	vocation.setEnd(LocalDate.of(2021, 01, 03));
+	List<Lesson> lessons = createLessons();
+	when(lessonDao.findByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
+		.thenReturn(lessons);
+
+	Exception exception = assertThrows(VocationPeriodNotFreeException.class,
+		() -> vocationService.update(vocation));
+
+	String expectedMessage = "vocation period is not free from lessons";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void givenVocationWithEndLessThenStart_whenCereate_thenVocationEndBoforeStartExceptionThrown() {
 	ReflectionTestUtils.setField(vocationService, "vocationDurationBykind", getVocationDurationBykind());
 	Vocation vocation = createVocation();
 	vocation.setStart(LocalDate.of(2021, 01, 02));
 	vocation.setEnd(LocalDate.of(2021, 01, 01));
 
-	assertEquals("vocation end date less then start date",
-		assertThrows(VocationEndBoforeStartException.class, () -> vocationService.create(vocation))
-			.getMessage());
+	Exception exception = assertThrows(VocationEndBoforeStartException.class,
+		() -> vocationService.create(vocation));
 
+	String expectedMessage = "vocation end date less then start date";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
-    void givenVocationWithStartAndEndDateWIthDifrentYear_whenCreate_thenTrowServiceException() {
+    void givenVocationWithEndLessThenStart_whenUpdate_thenVocationEndBoforeStartExceptionThrown() {
+	ReflectionTestUtils.setField(vocationService, "vocationDurationBykind", getVocationDurationBykind());
+	Vocation vocation = createVocation();
+	vocation.setStart(LocalDate.of(2021, 01, 02));
+	vocation.setEnd(LocalDate.of(2021, 01, 01));
+
+	Exception exception = assertThrows(VocationEndBoforeStartException.class,
+		() -> vocationService.update(vocation));
+
+	String expectedMessage = "vocation end date less then start date";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void givenVocationWithStartAndEndDateWIthDifrentYear_whenCreate_thenThrown() {
 	ReflectionTestUtils.setField(vocationService, "vocationDurationBykind", getVocationDurationBykind());
 	Vocation vocation = createVocation();
 	vocation.setStart(LocalDate.of(2021, 12, 31));
 	vocation.setEnd(LocalDate.of(2022, 01, 10));
 
-	assertEquals("vocation start and end dates not belong the same year",
-		assertThrows(VocationPeriodNotSameYearException.class,
-			() -> vocationService.create(vocation)).getMessage());
+	Exception exception = assertThrows(VocationPeriodNotSameYearException.class,
+		() -> vocationService.create(vocation));
 
+	String expectedMessage = "vocation start and end dates not belong the same year";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void givenVocationWithStartAndEndDateWIthDifrentYear_whenUpdate_thenThrown() {
+	ReflectionTestUtils.setField(vocationService, "vocationDurationBykind", getVocationDurationBykind());
+	Vocation vocation = createVocation();
+	vocation.setStart(LocalDate.of(2021, 12, 31));
+	vocation.setEnd(LocalDate.of(2022, 01, 10));
+
+	Exception exception = assertThrows(VocationPeriodNotSameYearException.class,
+		() -> vocationService.update(vocation));
+
+	String expectedMessage = "vocation start and end dates not belong the same year";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -181,46 +254,6 @@ class VocationServiceTest {
 	vocationService.update(vocation);
 
 	verify(vocationDao).update(vocation);
-    }
-
-    @Test
-    void givenVocationPeriodWithLessons_whenUpdate_thenTrowServiceException() {
-	ReflectionTestUtils.setField(vocationService, "vocationDurationBykind", getVocationDurationBykind());
-	Vocation vocation = createVocation();
-	List<Lesson> lessons = createLessons();
-	when(lessonDao.findByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
-		.thenReturn(lessons);
-
-	assertEquals("vocation period is not free from lessons",
-		assertThrows(VocationPeriodNotFreeException.class, () -> vocationService.update(vocation))
-			.getMessage());
-
-    }
-
-    @Test
-    void givenVocationWithEndDateLessThenStart_whenUpdate_thenTrowServiceException() {
-	ReflectionTestUtils.setField(vocationService, "vocationDurationBykind", getVocationDurationBykind());
-	Vocation vocation = createVocation();
-	vocation.setStart(LocalDate.of(2021, 01, 02));
-	vocation.setEnd(LocalDate.of(2021, 01, 01));
-
-	assertEquals("vocation end date less then start date",
-		assertThrows(VocationEndBoforeStartException.class, () -> vocationService.update(vocation))
-			.getMessage());
-
-    }
-
-    @Test
-    void givenVocationWithStartAndEndDateWIthDifrentYear_whenUpdate_thenTrowServiceException() {
-	ReflectionTestUtils.setField(vocationService, "vocationDurationBykind", getVocationDurationBykind());
-	Vocation vocation = createVocation();
-	vocation.setStart(LocalDate.of(2021, 12, 31));
-	vocation.setEnd(LocalDate.of(2022, 01, 10));
-
-	assertEquals("vocation start and end dates not belong the same year",
-		assertThrows(VocationPeriodNotSameYearException.class,
-			() -> vocationService.update(vocation)).getMessage());
-
     }
 
     @Test

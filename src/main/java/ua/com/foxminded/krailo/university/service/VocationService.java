@@ -47,7 +47,7 @@ public class VocationService {
     public void create(Vocation vocation) {
 	log.debug("Create vocation={}", vocation);
 	checkVocationDuratioMoreThenMaxDuration(vocation);
-	checkVocationPeriodBeFree(vocation);
+	checkVocationPeriodIsFree(vocation);
 	checkVocationsEndDateMoreThenStart(vocation);
 	checkVocationsStartAndEndDateBelongsTheSameYear(vocation);
 	vocationDao.create(vocation);
@@ -56,7 +56,7 @@ public class VocationService {
     public void update(Vocation vocation) {
 	log.debug("Update vocation={}", vocation);
 	checkVocationDuratioMoreThenMaxDuration(vocation);
-	checkVocationPeriodBeFree(vocation);
+	checkVocationPeriodIsFree(vocation);
 	checkVocationsEndDateMoreThenStart(vocation);
 	checkVocationsStartAndEndDateBelongsTheSameYear(vocation);
 	vocationDao.update(vocation);
@@ -78,7 +78,7 @@ public class VocationService {
 	vocationDao.deleteById(vocation.getId());
     }
 
-    private void checkVocationPeriodBeFree(Vocation vocation) {
+    private void checkVocationPeriodIsFree(Vocation vocation) {
 	if (!lessonDao.findByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd())
 		.isEmpty()) {
 	    throw new VocationPeriodNotFreeException("vocation period is not free from lessons");

@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.krailo.university.dao.AudienceDao;
-import ua.com.foxminded.krailo.university.exception.ServiceException;
+import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Building;
 
@@ -29,7 +29,7 @@ class AudienceServiceTest {
     private AudienceDao audienceDao;
 
     @Test
-    void givenAudienceWithNewNumber_whenCreate_thenCreated() {
+    void givenAudience_whenCreate_thenCreated() {
 	Audience audience = createAudience();
 	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
 		.thenReturn(Optional.empty());
@@ -40,18 +40,7 @@ class AudienceServiceTest {
     }
 
     @Test
-    void givenAudienceWithExistingNumber_whenCreate_thenThrowServiceException() {
-	Audience audience = createAudience();
-	audience.setId(0);
-	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
-		.thenReturn(Optional.of(Audience.builder().id(1).build()));
-
-	assertEquals("audiences number=number 1 and buildingId=1 not unique",
-		assertThrows(ServiceException.class, () -> audienceService.create(audience)).getMessage());
-    }
-
-    @Test
-    void givenAudienceWithNewNumber_whenUpdate_thenUpdated() {
+    void givenAudience_whenUpdate_thenUpdated() {
 	Audience audience = createAudience();
 	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
 		.thenReturn(Optional.empty());
@@ -61,24 +50,30 @@ class AudienceServiceTest {
     }
 
     @Test
-    void givenAudienceWithNotChangedNumber_whenUpdate_thenUpdated() {
+    void givenAudienceWithExistingNumber_whenCreate_thenNotUniqueNameExceptionThrow() {
 	Audience audience = createAudience();
+	audience.setId(0);
 	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
 		.thenReturn(Optional.of(Audience.builder().id(1).build()));
 
-	audienceService.update(audience);
+	Exception exception = assertThrows(NotUniqueNameException.class, () -> audienceService.create(audience));
 
-	verify(audienceDao).update(audience);
+	String expectedMessage = "audiences number=number 1 and buildingId=1 not unique";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
-    void givenAudienceWithExistingNumber_whenUpdate_thenThrowServiceException() {
+    void givenAudienceWithExistingNumberAndDiffrentId_whenUpdate_thenNotUniqueNameExceptionThrow() {
 	Audience audience = createAudience();
 	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
 		.thenReturn(Optional.of(Audience.builder().id(9).build()));
 
-	assertEquals("audiences number=number 1 and buildingId=1 not unique",
-		assertThrows(ServiceException.class, () -> audienceService.update(audience)).getMessage());
+	Exception exception = assertThrows(NotUniqueNameException.class, () -> audienceService.update(audience));
+
+	String expectedMessage = "audiences number=number 1 and buildingId=1 not unique";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
     }
 
     @Test

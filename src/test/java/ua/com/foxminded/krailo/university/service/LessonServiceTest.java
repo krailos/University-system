@@ -6,8 +6,10 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +25,14 @@ import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
-import ua.com.foxminded.krailo.university.exception.ServiceException;
+import ua.com.foxminded.krailo.university.exception.AudienceNotFreeException;
+import ua.com.foxminded.krailo.university.exception.AudienceOverflowException;
+import ua.com.foxminded.krailo.university.exception.GroupNotFreeException;
+import ua.com.foxminded.krailo.university.exception.LessonDateOnHolidayException;
+import ua.com.foxminded.krailo.university.exception.LessonDateOnWeekendException;
+import ua.com.foxminded.krailo.university.exception.TeacherNotFreeException;
+import ua.com.foxminded.krailo.university.exception.TeacherNotTeachLessonException;
+import ua.com.foxminded.krailo.university.exception.TeacherOnVocationException;
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Building;
 import ua.com.foxminded.krailo.university.model.Group;
@@ -101,82 +110,6 @@ class LessonServiceTest {
     }
 
     @Test
-    void givenLessonWithBookedAudience_whenCreate_thenTrowServiceException() {
-	Lesson lesson = createLesson();
-	when(lessonDao.findByDateAndAudienceIdAndLessonTimeId(lesson.getDate(), lesson.getAudience().getId(),
-		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
-
-	assertThrows(ServiceException.class, () -> lessonService.create(lesson));
-    }
-
-    @Test
-    void givenLessonWithBookedTeacher_whenCreate_thenTrowServiceException() {
-	Lesson lesson = createLesson();
-	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), lesson.getTeacher().getId(),
-		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
-
-	assertEquals("Teacher not free, teacherId=1",
-		assertThrows(ServiceException.class, () -> lessonService.create(lesson)).getMessage());
-    }
-
-    @Test
-    void givenLessonWithAudienceCapacityLessThenStuentsAmount_whenCreate_thenTrowServiceException() {
-	Lesson lesson = createLesson();
-	lesson.getAudience().setCapacity(1);
-
-	assertEquals("audience capacity not big enough, audience capacity=1",
-		assertThrows(ServiceException.class, () -> lessonService.create(lesson)).getMessage());
-    }
-
-    @Test
-    void givenLessonWhithTeacherOnVocation_whenCreate_thenTrowServiceException() {
-	Lesson lesson = createLesson();
-	when(vocationDao.findByTeacherIdAndDate(lesson.getTeacher().getId(), lesson.getDate()))
-		.thenReturn(Optional.of(Vocation.builder().id(1).build()));
-
-	assertThrows(ServiceException.class, () -> lessonService.create(lesson));
-    }
-
-    @Test
-    void givenLessonWhithDateThatMatchToHoliday_whenCreate_thenThrowServiceException() {
-	Lesson lesson = createLesson();
-	when(holidayDao.findByDate(lesson.getDate())).thenReturn(Optional.of(Holiday.builder().id(1).build()));
-
-	assertEquals("lesson date=2021-01-01 is holiday",
-		assertThrows(ServiceException.class, () -> lessonService.create(lesson)).getMessage());
-    }
-
-    @Test
-    void givenLessonWhithDateThatMatchToWeekend_whenCreate_thenThrowServiceException() {
-	Lesson lesson = createLesson();
-	lesson.setDate(LocalDate.of(2021, 01, 02));
-
-	assertEquals("lesson date is weekend=SATURDAY",
-		assertThrows(ServiceException.class, () -> lessonService.create(lesson)).getMessage());
-    }
-
-    @Test
-    void givenLessonWhithTeacherThatNotTeachesLessonSubject_whenCreate_thenThrowServiceException() {
-	Lesson lesson = createLesson();
-	lesson.getTeacher().getSubjects().remove(0);
-
-	assertEquals("teacher dosn't teach lesson's subject",
-		assertThrows(ServiceException.class, () -> lessonService.create(lesson)).getMessage());
-    }
-
-    @Test
-    void givenLessonWhithGroupThatNotFree_whenCreate_thenThrowServiceException() {
-	Lesson lesson = createLesson();
-	lesson.setId(2);
-	lesson.getTeacher().getSubjects().add(Subject.builder().id(1).name("subject1").build());
-	when(lessonDao.findByDateAndLessonTimeIdAndGroupId(lesson.getDate(), lesson.getLessonTime().getId(),
-		lesson.getGroups().get(0).getId())).thenReturn(Optional.of(createLesson()));
-
-	assertEquals("lessons groups are not free",
-		assertThrows(ServiceException.class, () -> lessonService.create(lesson)).getMessage());
-    }
-
-    @Test
     void givenLessonWhithAllCorrectFields_whenUpdate_thenUpdated() {
 	Lesson lesson = createLesson();
 	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), lesson.getTeacher().getId(),
@@ -195,80 +128,231 @@ class LessonServiceTest {
     }
 
     @Test
-    void givenLessonWithBookedAudience_whenUpdate_thenTrowServiceWxception() {
+    void givenLessonInWhichAudienceIsBooked_whenCreate_thenAudienceNotFreeExceptionThrown() {
 	Lesson lesson = createLesson();
 	when(lessonDao.findByDateAndAudienceIdAndLessonTimeId(lesson.getDate(), lesson.getAudience().getId(),
 		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
 
-	assertEquals("Audience not free, audienceId=1",
-		assertThrows(ServiceException.class, () -> lessonService.update(lesson)).getMessage());
+	Exception exception = assertThrows(AudienceNotFreeException.class, () -> lessonService.create(lesson));
+
+	String expectedMessage = "Audience not free, audienceId=1";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
-    void givenLessonWithBookedTeacher_whenUpdate_thenTrowServiceException() {
+    void givenLessonInWhichAudienceIsBooked_whenUpdate_thenAudienceNotFreeExceptionThrown() {
+	Lesson lesson = createLesson();
+	when(lessonDao.findByDateAndAudienceIdAndLessonTimeId(lesson.getDate(), lesson.getAudience().getId(),
+		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
+
+	Exception exception = assertThrows(AudienceNotFreeException.class, () -> lessonService.update(lesson));
+
+	String expectedMessage = "Audience not free, audienceId=1";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void givenLessonInWhichAudienceIsBookedByTheSameLesson_whenUpdate_thenUpdated() {
+	Lesson lesson = createLesson();
+	when(lessonDao.findByDateAndAudienceIdAndLessonTimeId(lesson.getDate(), lesson.getAudience().getId(),
+		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(1).build()));
+
+	lessonService.update(lesson);
+
+	verify(lessonDao).update(lesson);
+    }
+
+    @Test
+    void givenLessonInWhichTeacherIsBooked_whenCreate_thenTeacherNotFreeExceptionThrown() {
 	Lesson lesson = createLesson();
 	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), lesson.getTeacher().getId(),
 		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
 
-	assertEquals("Teacher not free, teacherId=1",
-		assertThrows(ServiceException.class, () -> lessonService.update(lesson)).getMessage());
+	Exception exception = assertThrows(TeacherNotFreeException.class, () -> lessonService.create(lesson));
+
+	String expectedMessage = "Teacher not free, teacherId=1";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
-    void givenLessonWithAudienceCapacityLessThenStuentsAmount_whenUpdate_thenThrowServiceException() {
+    void givenLessonInWhichTeacherIsBooked_whenUpdate_thenTeacherNotFreeExceptionThrown() {
+	Lesson lesson = createLesson();
+	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), lesson.getTeacher().getId(),
+		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
+
+	Exception exception = assertThrows(TeacherNotFreeException.class, () -> lessonService.update(lesson));
+
+	String expectedMessage = "Teacher not free, teacherId=1";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void givenLessonInWhichTeacherIsBookedByTheSameLesson_whenUpdate_thenUpdated() {
+	Lesson lesson = createLesson();
+	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), lesson.getTeacher().getId(),
+		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(1).build()));
+
+	lessonService.update(lesson);
+
+	verify(lessonDao).update(lesson);
+    }
+
+    @Test
+    void givenLessonInWhihcAudienceCapacityLessThenStuentsAmount_whenCreate_thenAudienceOverflowExceptionThrown() {
 	Lesson lesson = createLesson();
 	lesson.getAudience().setCapacity(1);
 
-	assertEquals("audience capacity not big enough, audience capacity=1",
-		assertThrows(ServiceException.class, () -> lessonService.update(lesson)).getMessage());
+	Exception exception = assertThrows(AudienceOverflowException.class, () -> lessonService.create(lesson));
+
+	String expectedMessage = "audience is owerflowed, audience capacity=1";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
-    void givenLessonWhithTeacherOnVocation_whenUpdate_thenThrowServiceException() {
+    void givenLessonInWhihcAudienceCapacityLessThenStuentsAmount_whenUpdate_thenAudienceOverflowExceptionThrown() {
+	Lesson lesson = createLesson();
+	lesson.getAudience().setCapacity(1);
+
+	Exception exception = assertThrows(AudienceOverflowException.class, () -> lessonService.update(lesson));
+
+	String expectedMessage = "audience is owerflowed, audience capacity=1";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void givenLessonInWhichTeacherIsOnVocation_whenCreate_thenTeacherOnVocationExceptionThrown() {
 	Lesson lesson = createLesson();
 	when(vocationDao.findByTeacherIdAndDate(lesson.getTeacher().getId(), lesson.getDate()))
 		.thenReturn(Optional.of(Vocation.builder().id(1).build()));
 
-	assertEquals("teacher on vocation, teacherId=1",
-		assertThrows(ServiceException.class, () -> lessonService.update(lesson)).getMessage());
+	Exception exception = assertThrows(TeacherOnVocationException.class, () -> lessonService.create(lesson));
+
+	String expectedMessage = "teacher on vocation, teacherId=1";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
-    void givenLessonWhithDateThatMatchToHoliday_whenUpdate_thenTrowsServiceException() {
+    void givenLessonInWhichTeacherIsOnVocation_whenUpdate_thenTeacherOnVocationExceptionThrown() {
+	Lesson lesson = createLesson();
+	when(vocationDao.findByTeacherIdAndDate(lesson.getTeacher().getId(), lesson.getDate()))
+		.thenReturn(Optional.of(Vocation.builder().id(1).build()));
+
+	Exception exception = assertThrows(TeacherOnVocationException.class, () -> lessonService.update(lesson));
+
+	String expectedMessage = "teacher on vocation, teacherId=1";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void givenLessonOnHoliday_whenCreate_thenLessonDateOnHolidayExceptionThrown() {
 	Lesson lesson = createLesson();
 	when(holidayDao.findByDate(lesson.getDate())).thenReturn(Optional.of(Holiday.builder().id(1).build()));
 
-	assertEquals("lesson date=2021-01-01 is holiday",
-		assertThrows(ServiceException.class, () -> lessonService.update(lesson)).getMessage());
+	Exception exception = assertThrows(LessonDateOnHolidayException.class, () -> lessonService.create(lesson));
+
+	String expectedMessage = "lesson date=2021-01-01 is holiday";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
-    void givenLessonWhithDateThatMatchToWeekend_whenUpdate_thenTrowsServiceException() {
+    void givenLessonOnHoliday_whenUpdate_thenLessonDateOnHolidayExceptionThrown() {
 	Lesson lesson = createLesson();
-	lesson.setDate(LocalDate.of(2021, 01, 02));
+	when(holidayDao.findByDate(lesson.getDate())).thenReturn(Optional.of(Holiday.builder().id(1).build()));
 
-	assertEquals("lesson date is weekend=SATURDAY",
-		assertThrows(ServiceException.class, () -> lessonService.update(lesson)).getMessage());
+	Exception exception = assertThrows(LessonDateOnHolidayException.class, () -> lessonService.update(lesson));
+
+	String expectedMessage = "lesson date=2021-01-01 is holiday";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
-    void givenLessonWhithTeacherThatNotTeachesLessonSubject_whenUpdate_thenThrowServiceException() {
+    void givenLessonOnWeekend_whenCreate_thenLessonDateOnHolidayExceptionThrown() {
+	Lesson lesson = createLesson();
+	LocalDate nextSunday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SUNDAY));
+	lesson.setDate(nextSunday);
+
+	Exception exception = assertThrows(LessonDateOnWeekendException.class, () -> lessonService.create(lesson));
+
+	String expectedMessage = "lesson date is weekend=SUNDAY";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void givenLessonOnWeekend_whenUpdae_thenLessonDateOnHolidayExceptionThrown() {
+	Lesson lesson = createLesson();
+	LocalDate nextSunday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SUNDAY));
+	lesson.setDate(nextSunday);
+
+	Exception exception = assertThrows(LessonDateOnWeekendException.class, () -> lessonService.update(lesson));
+
+	String expectedMessage = "lesson date is weekend=SUNDAY";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void givenLessonWhithTeacherThatNotTeachesLessonSubject_whenCreate_thenTeacherNotTeachLessonExceptionThrown() {
 	Lesson lesson = createLesson();
 	lesson.getTeacher().getSubjects().remove(0);
 
-	assertEquals("teacher dosn't teach lesson's subject",
-		assertThrows(ServiceException.class, () -> lessonService.update(lesson)).getMessage());
+	Exception exception = assertThrows(TeacherNotTeachLessonException.class, () -> lessonService.create(lesson));
+
+	String expectedMessage = "teacher dosn't teach lesson's subject";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
-    void givenLessonWhithGroupThatNotFree_whenUpdate_thenThrowServiceException() {
+    void givenLessonWhithTeacherThatNotTeachesLessonSubject_whenUpdate_thenTeacherNotTeachLessonExceptionThrown() {
+	Lesson lesson = createLesson();
+	lesson.getTeacher().getSubjects().remove(0);
+
+	Exception exception = assertThrows(TeacherNotTeachLessonException.class, () -> lessonService.update(lesson));
+
+	String expectedMessage = "teacher dosn't teach lesson's subject";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void givenLessonInWhichGroupIsBooked_whenCreate_thenGroupNotFreeExceptionThrown() {
 	Lesson lesson = createLesson();
 	lesson.setId(2);
+	lesson.getTeacher().getSubjects().add(Subject.builder().id(1).name("subject1").build());
 	when(lessonDao.findByDateAndLessonTimeIdAndGroupId(lesson.getDate(), lesson.getLessonTime().getId(),
 		lesson.getGroups().get(0).getId())).thenReturn(Optional.of(createLesson()));
 
-	assertEquals("lessons groups are not free",
-		assertThrows(ServiceException.class, () -> lessonService.update(lesson)).getMessage());
+	Exception exception = assertThrows(GroupNotFreeException.class, () -> lessonService.create(lesson));
+
+	String expectedMessage = "lesson groups are not free";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void givenLessonInWhichGroupIsBooked_whenUpdate_thenGroupNotFreeExceptionThrown() {
+	Lesson lesson = createLesson();
+	lesson.setId(2);
+	lesson.getTeacher().getSubjects().add(Subject.builder().id(1).name("subject1").build());
+	when(lessonDao.findByDateAndLessonTimeIdAndGroupId(lesson.getDate(), lesson.getLessonTime().getId(),
+		lesson.getGroups().get(0).getId())).thenReturn(Optional.of(createLesson()));
+
+	Exception exception = assertThrows(GroupNotFreeException.class, () -> lessonService.update(lesson));
+
+	String expectedMessage = "lesson groups are not free";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
     }
 
     private Lesson createLesson() {

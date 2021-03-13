@@ -19,7 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.krailo.university.dao.LessonTimeDao;
-import ua.com.foxminded.krailo.university.exception.ServiceException;
+import ua.com.foxminded.krailo.university.exception.LessonTimeNotFreeException;
 import ua.com.foxminded.krailo.university.model.LessonTime;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,13 +40,31 @@ class LessonTimeServiceTest {
     }
 
     @Test
-    void givenExistingLessonTime_whenCereate_thanThrowServiceException() {
+    void givenExistingLessonTime_whenCereate_thanLessonTimeNotFreeExceptionThrown() {
 	LessonTime lessonTime = createLessonTime();
 	when(lessonTimeDao.findByStartOrEndLessonTime(lessonTime))
 		.thenReturn(Optional.of(LessonTime.builder().id(1).build()));
 
-	assertEquals("lessonTime=from: 08:30 - to: 09:15 not free",
-		assertThrows(ServiceException.class, () -> lessonTimeService.create(lessonTime)).getMessage());
+	Exception exception = assertThrows(LessonTimeNotFreeException.class,
+		() -> lessonTimeService.create(lessonTime));
+
+	String expectedMessage = "lessonTime not free, lessonTime=from: 08:30 - to: 09:15";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void givenExistingLessonTime_whenUpdate_thanLessonTimeNotFreeExceptionThrown() {
+	LessonTime lessonTime = createLessonTime();
+	when(lessonTimeDao.findByStartOrEndLessonTime(lessonTime))
+		.thenReturn(Optional.of(LessonTime.builder().id(1).build()));
+
+	Exception exception = assertThrows(LessonTimeNotFreeException.class,
+		() -> lessonTimeService.update(lessonTime));
+
+	String expectedMessage = "lessonTime not free, lessonTime=from: 08:30 - to: 09:15";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -57,16 +75,6 @@ class LessonTimeServiceTest {
 	lessonTimeService.update(lessonTime);
 
 	verify(lessonTimeDao).update(lessonTime);
-    }
-
-    @Test
-    void givenExistingLessonTime_whenUpdate_thanThrowServiceException() {
-	LessonTime lessonTime = createLessonTime();
-	when(lessonTimeDao.findByStartOrEndLessonTime(lessonTime))
-		.thenReturn(Optional.of(LessonTime.builder().id(1).build()));
-
-	assertEquals("lessonTime=from: 08:30 - to: 09:15 not free",
-		assertThrows(ServiceException.class, () -> lessonTimeService.update(lessonTime)).getMessage());
     }
 
     @Test

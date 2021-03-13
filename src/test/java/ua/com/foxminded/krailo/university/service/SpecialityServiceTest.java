@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.krailo.university.dao.SpecialityDao;
 import ua.com.foxminded.krailo.university.dao.YearDao;
-import ua.com.foxminded.krailo.university.exception.ServiceException;
+import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
 import ua.com.foxminded.krailo.university.model.Faculty;
 import ua.com.foxminded.krailo.university.model.Speciality;
 
@@ -34,7 +34,7 @@ class SpecialityServiceTest {
     private SpecialityService specialityService;
 
     @Test
-    void givenSpeciality_whenCereate_thanCreated() {
+    void givenSpeciality_whenCereate_thenCreated() {
 	Speciality speciality = createSpeciality();
 	when(specialityDao.findByNameAndFacultyId(speciality.getName(), speciality.getFaculty().getId()))
 		.thenReturn(Optional.empty());
@@ -45,17 +45,20 @@ class SpecialityServiceTest {
     }
 
     @Test
-    void givenSpecialityWithNotUniqueName_whenCereate_thanTrowServiceException() {
+    void givenSpecialityWithNotUniqueName_whenCereate_thenNotUniqueNameExceptionThrown() {
 	Speciality speciality = createSpeciality();
 	when(specialityDao.findByNameAndFacultyId(speciality.getName(), speciality.getFaculty().getId()))
 		.thenReturn(Optional.of(Speciality.builder().id(2).name("name").build()));
 
-	assertEquals("speciality name=name is not unique",
-		assertThrows(ServiceException.class, () -> specialityService.create(speciality)).getMessage());
+	Exception exception = assertThrows(NotUniqueNameException.class, () -> specialityService.create(speciality));
+
+	String expectedMessage = "speciality name=name is not unique";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
-    void givenSpeciality_whenUpdate_thanUpdeted() {
+    void givenSpeciality_whenUpdate_thenUpdeted() {
 	Speciality speciality = createSpeciality();
 	when(specialityDao.findByNameAndFacultyId(speciality.getName(), speciality.getFaculty().getId()))
 		.thenReturn(Optional.of(Speciality.builder().id(1).name("name").build()));
@@ -66,13 +69,16 @@ class SpecialityServiceTest {
     }
 
     @Test
-    void givenSpecialityWithNotUniqueNam_whenUpdate_thanTrowServiceException() {
+    void givenSpecialityWithNotUniqueNameAndDiffrentId_whenUpdate_thenTrowServiceException() {
 	Speciality speciality = createSpeciality();
 	when(specialityDao.findByNameAndFacultyId(speciality.getName(), speciality.getFaculty().getId()))
 		.thenReturn(Optional.of(Speciality.builder().id(2).name("name").build()));
 
-	assertEquals("speciality name=name is not unique",
-		assertThrows(ServiceException.class, () -> specialityService.update(speciality)).getMessage());
+	Exception exception = assertThrows(NotUniqueNameException.class, () -> specialityService.create(speciality));
+
+	String expectedMessage = "speciality name=name is not unique";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
 
     }
 

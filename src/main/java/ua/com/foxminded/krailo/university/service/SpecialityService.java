@@ -56,8 +56,7 @@ public class SpecialityService {
     private void chekSpecialityNameBeUnique(Speciality speciality) {
 	Optional<Speciality> existingSpeciality = specialityDao.findByNameAndFacultyId(speciality.getName(),
 		speciality.getFaculty().getId());
-	if (existingSpeciality.isPresent()
-		&& existingSpeciality.filter(s -> s.getId() != speciality.getId()).isPresent()) {
+	if (existingSpeciality.filter(s -> s.getId() != speciality.getId()).isPresent()) {
 	    throw new NotUniqueNameException(format("speciality name=%s is not unique", speciality.getName()));
 	}
 

@@ -54,7 +54,7 @@ public class LessonTimeService {
 
     private void checkLessonTimeBeFree(LessonTime lessonTime) {
 	if (lessonTimeDao.findByStartOrEndLessonTime(lessonTime).isPresent()) {
-	    throw new LessonTimeNotFreeException("lessonTime not free, lessonTime=%s" + lessonTime);
+	    throw new LessonTimeNotFreeException("lessonTime not free, lessonTime=" + lessonTime);
 	}
     }
 
