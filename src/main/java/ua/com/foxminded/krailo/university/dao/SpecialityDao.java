@@ -40,7 +40,7 @@ public class SpecialityDao {
     public SpecialityDao(JdbcTemplate jdbcTemplate, RowMapper<Speciality> specialityRowMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.specialityRowMapper = specialityRowMapper;
-    }
+    } 
 
     public void create(Speciality speciality) {
 	log.debug("Create speciality={}", speciality);
@@ -54,9 +54,9 @@ public class SpecialityDao {
 	    }, keyHolder);
 	    speciality.setId(keyHolder.getKey().intValue());
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not created speciality=%s", speciality));
+	    throw new DaoConstraintViolationException("Not created speciality=" + speciality, e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to create speciality=%s", speciality), e);
+	    throw new DaoException("Unable to create speciality=" + speciality, e);
 	}
 	log.info("Created speciality={}", speciality);
     }
@@ -70,7 +70,7 @@ public class SpecialityDao {
 	} catch (DataIntegrityViolationException e) {
 	    throw new DaoConstraintViolationException(format("Not created, speciality=%s", speciality));
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to update speciality=%s", speciality));
+	    throw new DaoException("Unable to update speciality=" + speciality, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Updated speciality={}", speciality);
@@ -87,7 +87,7 @@ public class SpecialityDao {
 	    log.debug("speciality with id={} not found", id);
 	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find speciality by id=%s", id), e);
+	    throw new DaoException("Unable to find speciality by id=" + id, e);
 	}
     }
 
@@ -106,7 +106,7 @@ public class SpecialityDao {
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BY_ID, id);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to delete speciality by id=%s", id), e);
+	    throw new DaoException("Unable to delete speciality by id=" + id, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Deleted speciality  by id={}", id);
@@ -120,7 +120,7 @@ public class SpecialityDao {
 	try {
 	    return jdbcTemplate.query(SQL_SELECT_BY_FACULTY_ID, specialityRowMapper, facultyId);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find specialities by facultyId=%s", facultyId), e);
+	    throw new DaoException("Unable to find specialities by facultyId=" + facultyId, e);
 	}
     }
 

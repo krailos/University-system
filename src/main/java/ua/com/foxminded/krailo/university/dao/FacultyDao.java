@@ -40,7 +40,7 @@ public class FacultyDao {
 	this.facultyRowMapper = facultyRowMapper;
     }
 
-    public void create(Faculty faculty) {
+    public void create(Faculty faculty) {  
 	log.debug("Create faculty={}", faculty);
 	try {
 	    KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -54,7 +54,7 @@ public class FacultyDao {
 	} catch (DataIntegrityViolationException e) {
 	    throw new DaoConstraintViolationException(format("Not created, faculty=%", faculty));
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to  create faculty=%s", faculty), e);
+	    throw new DaoException("Unable to  create faculty=" + faculty, e);
 	}
 	log.info("Created faculty={}", faculty);
     }
@@ -68,7 +68,7 @@ public class FacultyDao {
 	} catch (DataIntegrityViolationException e) {
 	    throw new DaoConstraintViolationException(format("Not created, faculty=%", faculty));
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to update faculty=%s", faculty));
+	    throw new DaoException("Unable to update faculty=" + faculty, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Updated faculty={}", faculty);
@@ -85,7 +85,7 @@ public class FacultyDao {
 	    log.debug("Faculty with id={} not found", id);
 	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find faculty by id=%s", id), e);
+	    throw new DaoException("Unable to find faculty by id=" + id, e);
 	}
     }
 
@@ -104,7 +104,7 @@ public class FacultyDao {
 	try {
 	    jdbcTemplate.update(SQL_DELETE_BY_ID, id);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to delete faculty by id=%s", id), e);
+	    throw new DaoException("Unable to delete faculty by id=" + id, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Deleted faculty by id={}", id);

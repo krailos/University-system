@@ -1,7 +1,5 @@
 package ua.com.foxminded.krailo.university.dao;
 
-import static java.lang.String.format;
-
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
@@ -51,10 +49,9 @@ public class TimetableDao {
 	    }, keyHolder);
 	    timetable.setId(keyHolder.getKey().intValue());
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not created timetable=%s", timetable));
+	    throw new DaoConstraintViolationException("Not created timetable=" + timetable, e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to create timetable=%s", timetable), e);
-	}
+	    throw new DaoException("Unable to create timetable=" + timetable, e);	}
 	log.info("Created timetable={}", timetable);
 
     }
@@ -65,9 +62,9 @@ public class TimetableDao {
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, timetable.getName(), timetable.getId());
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not updated, timetable=%s", timetable));
+	    throw new DaoConstraintViolationException("Not updated, timetable=" + timetable, e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to update timetable=%s", timetable));
+	    throw new DaoException("Unable to update timetable=" + timetable, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Updated timetable={}", timetable);
@@ -84,7 +81,7 @@ public class TimetableDao {
 	    log.debug("timetable with id={} not found", id);
 	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find timetable by id=%s", id), e);
+	    throw new DaoException("Unable to find timetable by id=" + id, e);
 	}
     }
 
@@ -104,7 +101,7 @@ public class TimetableDao {
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BY_ID, id);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to delete timetable by id=%s", id), e);
+	    throw new DaoException("Unable to delete timetable by id=" + id, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Deleted timetable  by id={}", id);

@@ -26,7 +26,7 @@ import ua.com.foxminded.krailo.university.model.Year;
 public class YearDao {
 
     private static final Logger log = LoggerFactory.getLogger(YearDao.class);
-    
+
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM years WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM years ";
     private static final String SQL_SELECT_BY_SPECIALITY_ID = "SELECT * FROM years WHERE speciality_id = ? ";
@@ -43,7 +43,7 @@ public class YearDao {
 	this.jdbcTemplate = jdbcTemplate;
 	this.yearRowMapper = yearRowMapper;
     }
-    
+
     public void create(Year year) {
 	log.debug("Create year={}", year);
 	try {
@@ -59,9 +59,9 @@ public class YearDao {
 		addSubjectToYear(subject, year);
 	    }
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not created year=%s", year));
+	    throw new DaoConstraintViolationException("Not created year=" + year, e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to create year=%s", year), e);
+	    throw new DaoException("Unable to create year=" + year, e);
 	}
 	log.info("Created year={}", year);
     }
@@ -76,22 +76,20 @@ public class YearDao {
 	    log.debug("year={} was updated", year);
 	    log.debug("update years_subject table");
 	    List<Subject> subjectsOld = findById(year.getId()).get().getSubjects();
-	    subjectsOld.stream().filter(s -> !year.getSubjects().contains(s))
-		    .forEach(s -> { 
-			log.debug("delelete rows from year_subjects which will be apdated");
-		    jdbcTemplate.update(SQL_DELETE_YEARS_SUBJECTS, year.getId(), s.getId());
-			log.debug("rows deleleted from years_subjects");
-		    });
-	    year.getSubjects().stream().filter(s -> !subjectsOld.contains(s))
-		    .forEach(s -> {
-			log.debug("insert new rows into  years_subjects");
-			jdbcTemplate.update(SQL_INSERT_INTO_YEARS_SUBJECTS, year.getId(), s.getId());
-			log.debug("inserted new rows into years_subjects");
-		    });
+	    subjectsOld.stream().filter(s -> !year.getSubjects().contains(s)).forEach(s -> {
+		log.debug("delelete rows from year_subjects which will be apdated");
+		jdbcTemplate.update(SQL_DELETE_YEARS_SUBJECTS, year.getId(), s.getId());
+		log.debug("rows deleleted from years_subjects");
+	    });
+	    year.getSubjects().stream().filter(s -> !subjectsOld.contains(s)).forEach(s -> {
+		log.debug("insert new rows into  years_subjects");
+		jdbcTemplate.update(SQL_INSERT_INTO_YEARS_SUBJECTS, year.getId(), s.getId());
+		log.debug("inserted new rows into years_subjects");
+	    });
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not updated, year=%s", year));
+	    throw new DaoConstraintViolationException("Not updated, year=" + year, e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to update year=%s", year), e);
+	    throw new DaoException("Unable to update year=" + year, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Updated year={}", year);
@@ -109,7 +107,7 @@ public class YearDao {
 	    log.debug("year with id={} not found", id);
 	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find year by id=%s", id), e);
+	    throw new DaoException("Unable to find year by id=" + id, e);
 	}
     }
 
@@ -127,7 +125,7 @@ public class YearDao {
 	try {
 	    return jdbcTemplate.query(SQL_SELECT_BY_SPECIALITY_ID, yearRowMapper, specialityId);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find years by specialityId=%s", specialityId), e);
+	    throw new DaoException("Unable to find years by specialityId=" + specialityId, e);
 	}
     }
 
@@ -137,7 +135,7 @@ public class YearDao {
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BY_ID, id);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to delete year by id=%s", id), e);
+	    throw new DaoException("Unable to delete year by id=" + id, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Deleted year  by id={}", id);

@@ -49,7 +49,7 @@ public class LessonDao {
     private static final String SQL_SELECT_BY_DATE_AND_TEACHER_AND_LESSON_TIME = "SELECT * FROM lessons WHERE date = ? AND teacher_id = ? AND lesson_time_id = ?";
     private static final String SQL_SELECT_BY_DATE_AND_AUDIENCE_AND_LESSON_TIME = "SELECT * FROM lessons WHERE date = ? AND audience_id = ? AND lesson_time_id = ?";
     private static final String SQL_SELECT_BY_DATE_AND_LESSON_TIME_ID_AND_GROUP_ID = "SELECT * FROM lessons JOIN lessons_groups ON (lessons.id = lessons_groups.lesson_id) WHERE date = ? AND lesson_time_id = ? AND group_id = ?";
-
+ 
     private JdbcTemplate jdbcTemplate;
     private LessonRowMapper lessonRowMapper;
 
@@ -66,7 +66,7 @@ public class LessonDao {
 	    log.debug("Lesson with id={} not found", id);
 	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find Lesson by id=%s", id), e);
+	    throw new DaoException("Unable to find Lesson by id=" + id, e);
 	}
 
     }
@@ -100,9 +100,9 @@ public class LessonDao {
 		jdbcTemplate.update(SQL_INSERT_INTO_LESSONS_GROUPS, lesson.getId(), group.getId());
 	    }
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not created lesson=%", lesson));
+	    throw new DaoConstraintViolationException("Not created lesson=" + lesson, e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to create lesson=%s", lesson), e);
+	    throw new DaoException("Unable to create lesson=" + lesson, e);
 	}
 	log.info("Created lesson={}", lesson);
     }
@@ -126,9 +126,9 @@ public class LessonDao {
 		jdbcTemplate.update(SQL_INSERT_INTO_LESSONS_GROUPS, lesson.getId(), g.getId());
 	    });
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not created, lesson=%", lesson));
+	    throw new DaoConstraintViolationException("Not created, lesson=" + lesson);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to update lesson=%s", lesson));
+	    throw new DaoException("Unable to update lesson=" + lesson, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Updated lesson={}", lesson);
@@ -143,7 +143,7 @@ public class LessonDao {
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BY_ID, id);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to delete lesson by id=%s", id), e);
+	    throw new DaoException("Unable to delete lesson by id=" + id, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Deleted lesson  by id={}", id);
@@ -157,7 +157,7 @@ public class LessonDao {
 	try {
 	    return jdbcTemplate.query(SQL_SELECT_BY_DATE, lessonRowMapper, date);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find lessons by date=%s", date), e);
+	    throw new DaoException("Unable to find lessons by date=" + date, e);
 	}
     }
 

@@ -4,8 +4,6 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 
-import static java.lang.String.format;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -35,7 +33,7 @@ public class LessonTimeScheduleDao {
     private JdbcTemplate jdbcTemplate;
     private RowMapper<LessonsTimeSchedule> lessonsTimeScheduleRowMapper;
 
-    public LessonTimeScheduleDao(JdbcTemplate jdbcTemplate,
+    public LessonTimeScheduleDao(JdbcTemplate jdbcTemplate, 
 	    RowMapper<LessonsTimeSchedule> lessonsTimescheduleRowMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.lessonsTimeScheduleRowMapper = lessonsTimescheduleRowMapper;
@@ -54,9 +52,9 @@ public class LessonTimeScheduleDao {
 	    lessonsTimeSchedule.setId(keyHolder.getKey().intValue());
 	} catch (DataIntegrityViolationException e) {
 	    throw new DaoConstraintViolationException(
-		    format("Not created LessonsTimeSchedule=%s", lessonsTimeSchedule));
+		    "Not created LessonsTimeSchedule=" + lessonsTimeSchedule);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to create LessonsTimeSchedule=%s", lessonsTimeSchedule), e);
+	    throw new DaoException("Unable to create LessonsTimeSchedule=" + lessonsTimeSchedule, e);
 	}
 	log.info("Created LessonsTimeSchedule={}", lessonsTimeSchedule);
     }
@@ -69,9 +67,9 @@ public class LessonTimeScheduleDao {
 		    lessonsTimeSchedule.getId());
 	} catch (DataIntegrityViolationException e) {
 	    throw new DaoConstraintViolationException(
-		    format("Not created, lessonsTimeSchedule=%s", lessonsTimeSchedule));
+		    "Not created, lessonsTimeSchedule=" + lessonsTimeSchedule, e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to update lessonsTimeSchedule=%s", lessonsTimeSchedule));
+	    throw new DaoException("Unable to update lessonsTimeSchedule=" + lessonsTimeSchedule, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Updated lessonsTimeSchedule={}", lessonsTimeSchedule);
@@ -88,7 +86,7 @@ public class LessonTimeScheduleDao {
 	    log.debug("lessonsTimeSchedule with id={} not found", id);
 	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find lessonsTimeSchedule by id=%s", id), e);
+	    throw new DaoException("Unable to find lessonsTimeSchedule by id=" + id, e);
 	}
     }
 
@@ -107,7 +105,7 @@ public class LessonTimeScheduleDao {
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BY_ID, id);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to delete lessonsTimeSchedule by id=%s", id), e);
+	    throw new DaoException("Unable to delete lessonsTimeSchedule by id=" + id, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Deleted lessonsTimeSchedule  by id={}", id);

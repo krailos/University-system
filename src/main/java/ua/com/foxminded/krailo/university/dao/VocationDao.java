@@ -28,7 +28,7 @@ import ua.com.foxminded.krailo.university.model.Vocation;
 public class VocationDao {
 
     private static final Logger log = LoggerFactory.getLogger(VocationDao.class);
-    
+
     private static final String SQL_SELECT_ALL = "SELECT * FROM vocations ORDER BY id";
     private static final String SQL_SELECT_BY_TEACHER_ID = "SELECT * FROM vocations where teacher_id = ?";
     private static final String SQL_SELECT_BY_TEACHER_ID_AND_YEAR = "SELECT * FROM vocations where teacher_id = ? AND EXTRACT(YEAR FROM start_date) = ?";
@@ -54,7 +54,7 @@ public class VocationDao {
 	    log.debug("vocation with id={} not found", id);
 	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find vocation by id=%s", id), e);
+	    throw new DaoException("Unable to find vocation by id=" + id, e);
 	}
     }
 
@@ -72,7 +72,7 @@ public class VocationDao {
 	try {
 	    return jdbcTemplate.query(SQL_SELECT_BY_TEACHER_ID, vocationRowMapper, teacherId);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find vocations by teacherId=%s", teacherId), e);
+	    throw new DaoException("Unable to find vocations by teacherId=" + teacherId, e);
 	}
     }
 
@@ -91,9 +91,9 @@ public class VocationDao {
 	    }, keyHolder);
 	    vocation.setId(keyHolder.getKey().intValue());
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not created vocation=%s", vocation));
+	    throw new DaoConstraintViolationException("Not created vocation=" + vocation, e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to create vocation=%s", vocation), e);
+	    throw new DaoException("Unable to create vocation=" + vocation, e);
 	}
 	log.info("Created vocation={}", vocation);
     }
@@ -106,9 +106,9 @@ public class VocationDao {
 		    Date.valueOf(vocation.getApplyingDate()), Date.valueOf(vocation.getStart()),
 		    Date.valueOf(vocation.getEnd()), vocation.getTeacher().getId(), vocation.getId());
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not updated, vocation=%s", vocation));
+	    throw new DaoConstraintViolationException("Not updated, vocation=" + vocation, e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to update vocation=%s", vocation));
+	    throw new DaoException("Unable to update vocation=" + vocation, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Updated vocation={}", vocation);
@@ -123,7 +123,7 @@ public class VocationDao {
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BY_ID, id);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to delete vocation by id=%s", id), e);
+	    throw new DaoException("Unable to delete vocation by id=" + id, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Deleted vocation  by id={}", id);

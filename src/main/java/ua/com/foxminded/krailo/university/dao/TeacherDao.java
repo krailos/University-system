@@ -1,7 +1,5 @@
 package ua.com.foxminded.krailo.university.dao;
 
-import static java.lang.String.format;
-
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -69,9 +67,9 @@ public class TeacherDao {
 		jdbcTemplate.update(SQL_INSERT_TEACHERS_SUBJECTS, teacher.getId(), subject.getId());
 	    }
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not created teacher=%s", teacher));
+	    throw new DaoConstraintViolationException("Not created teacher=" + teacher, e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to create teacher=%s", teacher), e);
+	    throw new DaoException("Unable to create teacher=" + teacher, e);
 	}
 	log.info("Created teacher={}", teacher);
     }
@@ -90,9 +88,9 @@ public class TeacherDao {
 	    teacher.getSubjects().stream().filter(s -> !subjectsOld.contains(s))
 		    .forEach(s -> jdbcTemplate.update(SQL_INSERT_TEACHERS_SUBJECTS, teacher.getId(), s.getId()));
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not updated, teacher=%s", teacher));
+	    throw new DaoConstraintViolationException("Not updated, teacher=" + teacher, e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to update teacher=%s", teacher));
+	    throw new DaoException("Unable to update teacher=" + teacher, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Updated teacher={}", teacher);
@@ -109,7 +107,7 @@ public class TeacherDao {
 	    log.debug("teacher with id={} not found", id);
 	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find teacher by id=%s", id), e);
+	    throw new DaoException("Unable to find teacher by id=" + id, e);
 	}
     }
 
@@ -128,7 +126,7 @@ public class TeacherDao {
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BY_ID, id);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to delete teacher by id=%s", id), e);
+	    throw new DaoException("Unable to delete teacher by id=" + id, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Deleted teacher  by id={}", id);
@@ -142,7 +140,7 @@ public class TeacherDao {
 	try {
 	    return jdbcTemplate.query(SQL_SELECT_BY_SUBJECT_ID, new Object[] { id }, teacherRowMapper);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find teachers by subjectId=%s", id), e);
+	    throw new DaoException("Unable to find teachers by subjectId=" + id, e);
 	}
     }
 
@@ -151,7 +149,7 @@ public class TeacherDao {
 	try {
 	    return jdbcTemplate.query(SQL_SELECT_BY_DEPARTMENT_ID, new Object[] { id }, teacherRowMapper);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find teachers by departmentId=%s", id), e);
+	    throw new DaoException("Unable to find teachers by departmentId=" + id, e);
 	}
     }
 

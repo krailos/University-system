@@ -42,7 +42,7 @@ public class DepartmentDao {
 
     public void create(Department department) {
 	log.debug("Create department={}", department);
-	try {
+	try { 
 	    KeyHolder keyHolder = new GeneratedKeyHolder();
 	    jdbcTemplate.update(connection -> {
 		PreparedStatement ps = connection.prepareStatement(SQL_INSERT_DEPARTMENT, new String[] { "id" });
@@ -53,7 +53,7 @@ public class DepartmentDao {
 	} catch (DataIntegrityViolationException e) {
 	    throw new DaoConstraintViolationException(format("Not created department=%s", department));
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to create department=%s", department), e);
+	    throw new DaoException("Unable to create department=" + department, e);
 	}
 	log.info("Created department={}", department);
     }
@@ -66,7 +66,7 @@ public class DepartmentDao {
 	} catch (DataIntegrityViolationException e) {
 	    throw new DaoConstraintViolationException(format("Not created, department=%s", department));
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to update department=%s", department));
+	    throw new DaoException("Unable to update department=" + department, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Updated department={}", department);
@@ -83,7 +83,7 @@ public class DepartmentDao {
 	    log.debug("Department with id={} not found", id);
 	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find department by id=%s", id), e);
+	    throw new DaoException("Unable to find department by id=" + id, e);
 	}
     }
 
@@ -102,7 +102,7 @@ public class DepartmentDao {
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BY_ID, id);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to delete department by id=%s", id), e);
+	    throw new DaoException("Unable to delete department by id=" + id, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Deleted department  by id={}", id);

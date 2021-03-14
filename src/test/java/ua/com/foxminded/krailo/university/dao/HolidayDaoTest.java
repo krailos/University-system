@@ -21,7 +21,7 @@ class HolidayDaoTest {
     @Autowired
     private HolidayDao holidayDao;
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate; 
 
     @Test
     void givenNewHoliday_whenCreate_thenCreated() {

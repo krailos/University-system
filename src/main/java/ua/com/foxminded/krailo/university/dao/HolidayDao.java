@@ -26,7 +26,7 @@ import ua.com.foxminded.krailo.university.model.Holiday;
 public class HolidayDao {
 
     private static final Logger log = LoggerFactory.getLogger(HolidayDao.class);
-    
+
     private static final String SQL_SELECT_HOLIDAYS = "SELECT * FROM holidays ORDER BY id";
     private static final String SQL_SELECT_HOLIDAY_BY_ID = "SELECT * FROM holidays WHERE id = ?";
     private static final String SQL_SELECT_HOLIDAY_BY_DATE = "SELECT * FROM holidays WHERE date = ?";
@@ -50,7 +50,7 @@ public class HolidayDao {
 	    log.debug("Holiday with id={} not found", id);
 	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find holiday by id=%s", id), e);
+	    throw new DaoException("Unable to find holiday by id=" + id, e);
 	}
     }
 
@@ -59,7 +59,7 @@ public class HolidayDao {
 	try {
 	    return jdbcTemplate.query(SQL_SELECT_HOLIDAYS, holidayRowMapper);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find all holidays"), e);
+	    throw new DaoException("Unable to find all holidays", e);
 	}
     }
 
@@ -77,7 +77,7 @@ public class HolidayDao {
 	} catch (DataIntegrityViolationException e) {
 	    throw new DaoConstraintViolationException(format("Not created holiday=%", holiday));
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to create holiday=%s", holiday), e);
+	    throw new DaoException("Unable to create holiday=%s" + holiday, e);
 	}
 	log.info("Created holiday={}", holiday);
     }
@@ -91,7 +91,7 @@ public class HolidayDao {
 	} catch (DataIntegrityViolationException e) {
 	    throw new DaoConstraintViolationException(format("Not created, holiday=%", holiday));
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to update department=%s", holiday));
+	    throw new DaoException("Unable to update department=" + holiday, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Updated holiday={}", holiday);
@@ -106,7 +106,7 @@ public class HolidayDao {
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_DELETE_HOLIDAY_BY_ID, id);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to delete holiday by id=%s", id), e);
+	    throw new DaoException("Unable to delete holiday by id=" + id, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Deleted holiday by id={}", id);
@@ -123,7 +123,7 @@ public class HolidayDao {
 	    log.debug("Holiday with date={} not found", date);
 	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find holiday by date=%s", date), e);
+	    throw new DaoException("Unable to find holiday by date=" + date, e);
 	}
     }
 

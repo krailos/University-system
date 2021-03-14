@@ -31,7 +31,13 @@ public class AudienceService {
 		.orElseThrow(() -> new EntityNotFoundException(format("Audience whith id=%s not exist", id)));
     }
 
-    public void create(Audience audience) {
+    public Audience getByNumberAndBuildingId(String number, int buildingId) {
+	log.debug("get audience by number={} and buildingId id={}", number, buildingId);
+	return audienceDao.findByNumberAndBuildingId(number, buildingId).orElseThrow(() -> new EntityNotFoundException(
+		format("audience whith number=%s and buildingId id=%s not exist", number, buildingId)));
+    }
+
+    public void create(Audience audience) { 
 	log.debug("create audience={}", audience);
 	checkAudienceNumberBeUnique(audience);
 	audienceDao.create(audience);
@@ -51,7 +57,7 @@ public class AudienceService {
 
     public List<Audience> getByBuildingId(int id) {
 	log.debug("get audiences by building id={}", id);
-	return audienceDao.findByBuildingId(id); 
+	return audienceDao.findByBuildingId(id);
     }
 
     public void delete(Audience audience) {

@@ -16,13 +16,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.krailo.university.dao.AudienceDao;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Building;
 
 @ExtendWith(MockitoExtension.class)
 class AudienceServiceTest {
-
+ 
     @InjectMocks
     private AudienceService audienceService;
     @Mock
@@ -38,7 +39,7 @@ class AudienceServiceTest {
 
 	verify(audienceDao).create(audience);
     }
-
+ 
     @Test
     void givenAudience_whenUpdate_thenUpdated() {
 	Audience audience = createAudience();
@@ -50,7 +51,7 @@ class AudienceServiceTest {
     }
 
     @Test
-    void givenAudienceWithExistingNumber_whenCreate_thenNotUniqueNameExceptionThrow() {
+    void givenAudienceWithExistingNumber_whenCreate_thenNotUniqueNameExceptionThrown() {
 	Audience audience = createAudience();
 	audience.setId(0);
 	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
@@ -64,7 +65,7 @@ class AudienceServiceTest {
     }
 
     @Test
-    void givenAudienceWithExistingNumberAndDiffrentId_whenUpdate_thenNotUniqueNameExceptionThrow() {
+    void givenAudienceWithExistingNumberAndDiffrentId_whenUpdate_thenNotUniqueNameExceptionThrown() {
 	Audience audience = createAudience();
 	when(audienceDao.findByNumberAndBuildingId(audience.getNumber(), audience.getBuilding().getId()))
 		.thenReturn(Optional.of(Audience.builder().id(9).build()));
@@ -86,7 +87,42 @@ class AudienceServiceTest {
 	Audience expected = createAudience();
 	assertEquals(expected, actual);
     }
+    
+    @Test
+    void givenEmptyOptional_whenGetById_thenEntityNotFoundExceptionThrown() {
+	when(audienceDao.findById(10)).thenReturn(Optional.empty());
 
+	Exception exception = assertThrows(EntityNotFoundException.class,
+		() -> audienceService.getById(10));
+
+	String expectedMessage = "Audience whith id=10 not exist";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void givenNumberAndBuildingId_whenGetByNumberAndBuildingId_thenGot() {
+	Optional<Audience> audience = Optional.of(createAudience());
+	when(audienceDao.findByNumberAndBuildingId("1", 1)).thenReturn(audience);
+
+	Audience actual = audienceService.getByNumberAndBuildingId("1", 1);
+
+	Audience expected = createAudience();
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenEmptyOptional_whenGetByNumberAndBuildingId_thenEntityNotFoundExceptionThrown() {
+	when(audienceDao.findByNumberAndBuildingId("10", 1)).thenReturn(Optional.empty());
+
+	Exception exception = assertThrows(EntityNotFoundException.class,
+		() -> audienceService.getByNumberAndBuildingId("10", 1));
+
+	String expectedMessage = "audience whith number=10 and buildingId id=1 not exist";
+	String actualMessage = exception.getMessage();
+	assertEquals(expectedMessage, actualMessage);
+    }
+    
     @Test
     void givenAudiences_whenGetAll_thenGot() {
 	List<Audience> audiences = createAudiences();
@@ -115,7 +151,7 @@ class AudienceServiceTest {
 
 	audienceService.delete(audience);
 
-	verify(audienceDao).deleteById(1);
+	verify(audienceDao).deleteById(1); 
     }
 
     private Audience createAudience() {

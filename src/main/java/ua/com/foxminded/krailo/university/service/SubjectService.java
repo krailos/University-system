@@ -24,7 +24,7 @@ public class SubjectService {
     }
 
     public void create(Subject subject) {
-	log.debug("Create subject={}", subject);
+	log.debug("Create subject={}", subject); 
 	subjectDao.create(subject);
     }
 

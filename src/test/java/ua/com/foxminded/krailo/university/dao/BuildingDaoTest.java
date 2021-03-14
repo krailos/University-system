@@ -21,7 +21,7 @@ class BuildingDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Test
+    @Test 
     void givenNewBuilding_whenCreate_thenCreated() {
 	Building building = Building.builder().name("Building 3").address("Address 3").build();
 

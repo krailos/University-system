@@ -42,7 +42,7 @@ public class GroupDao {
 	this.jdbcTemplate = jdbcTemplate;
 	this.groupRowMapper = groupRowMapper;
     }
-
+ 
     public void create(Group group) {
 	log.debug("Create group={}", group);
 	try {
@@ -57,7 +57,7 @@ public class GroupDao {
 	} catch (DataIntegrityViolationException e) {
 	    throw new DaoConstraintViolationException(format("Not created, group=%", group));
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to create group=%s", group), e);
+	    throw new DaoException("Unable to create group=" + group, e);
 	}
 	log.info("Created group={}", group);
 
@@ -72,7 +72,7 @@ public class GroupDao {
 	} catch (DataIntegrityViolationException e) {
 	    throw new DaoConstraintViolationException(format("Not created, group=%", group));
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to update group=%s", group));
+	    throw new DaoException("Unable to update group=" + group);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Updated group={}", group);
@@ -89,7 +89,7 @@ public class GroupDao {
 	    log.debug("Group with id={} not found", id);
 	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find group by id=%s", id), e);
+	    throw new DaoException("Unable to find group by id=" + id, e);
 	}
     }
 
@@ -108,7 +108,7 @@ public class GroupDao {
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BY_ID, id);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to delete group by id=%s", id), e);
+	    throw new DaoException("Unable to delete group by id=" + id, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Deleted group  by id={}", id);
@@ -122,7 +122,7 @@ public class GroupDao {
 	try {
 	    return jdbcTemplate.query(SQL_SELECT_GROUPS_BY_LESSON_ID, new Object[] { lessonId }, groupRowMapper);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find groups by lessonId=%s", lessonId), e);
+	    throw new DaoException("Unable to find groups by lessonId=" + lessonId, e);
 	}
     }
 
@@ -131,7 +131,7 @@ public class GroupDao {
 	try {
 	    return jdbcTemplate.query(SQL_SELECT_GROUPS_BY_YEAR_ID, groupRowMapper, yearId);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find groups by yearId=%s", yearId), e);
+	    throw new DaoException("Unable to find groups by yearId=" + yearId, e);
 	}
     }
 

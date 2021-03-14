@@ -50,7 +50,7 @@ class LessonServiceTest {
 
     @InjectMocks
     private LessonService lessonService;
-    @Mock
+    @Mock 
     private LessonDao lessonDao;
     @Mock
     private VocationDao vocationDao;
@@ -69,7 +69,7 @@ class LessonServiceTest {
 	Lesson expected = createLesson();
 	assertEquals(expected, actual);
     }
-
+ 
     @Test
     void givenLessons_whenGetAll_thenGotAll() {
 	List<Lesson> lessons = createLessons();

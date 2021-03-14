@@ -1,7 +1,5 @@
 package ua.com.foxminded.krailo.university.dao;
 
-import static java.lang.String.format;
-
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +23,7 @@ import ua.com.foxminded.krailo.university.model.UniversityOffice;
 public class UniversityOfficeDao {
 
     private static final Logger log = LoggerFactory.getLogger(UniversityOfficeDao.class);
-    
+
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM university_office  WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM university_office";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM university_office WHERE id = ?";
@@ -49,7 +47,7 @@ public class UniversityOfficeDao {
 	    log.debug("universityOffice with id={} not found", id);
 	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find universityOffice by id=%s", id), e);
+	    throw new DaoException("Unable to find universityOffice by id=" + id, e);
 	}
     }
 
@@ -68,7 +66,7 @@ public class UniversityOfficeDao {
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BY_ID, id);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to delete universityOffice by id=%s", id), e);
+	    throw new DaoException("Unable to delete universityOffice by id=" + id, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Deleted universityOffice  by id={}", id);
@@ -84,9 +82,9 @@ public class UniversityOfficeDao {
 	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, universityOffice.getName(),
 		    universityOffice.getAddress(), universityOffice.getId());
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not updated, universityOffice=%s", universityOffice));
+	    throw new DaoConstraintViolationException("Not updated, universityOffice=" + universityOffice, e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to update universityOffice=%s", universityOffice));
+	    throw new DaoException("Unable to update universityOffice=" + universityOffice, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Updated universityOffice={}", universityOffice);
@@ -107,9 +105,9 @@ public class UniversityOfficeDao {
 	    }, keyHolder);
 	    universityOffice.setId(keyHolder.getKey().intValue());
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not created universityOffice=%s", universityOffice));
+	    throw new DaoConstraintViolationException("Not created universityOffice=" + universityOffice, e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to create universityOffice=%s", universityOffice), e);
+	    throw new DaoException("Unable to create universityOffice=" + universityOffice, e);
 	}
 	log.info("Created universityOffice={}", universityOffice);
     }

@@ -25,7 +25,7 @@ import ua.com.foxminded.krailo.university.model.LessonTime;
 public class LessonTimeDao {
 
     private static final Logger log = LoggerFactory.getLogger(LessonTimeDao.class);
-    
+
     private static final String SQL_SELECT = "SELECT * FROM lesson_times WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM lesson_times ";
     private static final String SQL_SELECT_BY_LESSON_TIME_SCHEDULE_ID = "SELECT * FROM lesson_times WHERE lessons_timeschedule_id = ? ";
@@ -56,9 +56,9 @@ public class LessonTimeDao {
 	    }, keyHolder);
 	    lessonTime.setId(keyHolder.getKey().intValue());
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not created lessonTime=%", lessonTime));
+	    throw new DaoConstraintViolationException("Not created lessonTime=" + lessonTime, e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to create lessonTime=%s", lessonTime), e);
+	    throw new DaoException("Unable to create lessonTime=" + lessonTime, e);
 	}
 	log.info("Created lessonTime={}", lessonTime);
     }
@@ -70,9 +70,9 @@ public class LessonTimeDao {
 	    rowsAffected = jdbcTemplate.update(SQL_UPDATE, lessonTime.getOrderNumber(), lessonTime.getStartTime(),
 		    lessonTime.getEndTime(), lessonTime.getLessonsTimeSchedule().getId(), lessonTime.getId());
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not created, lessonTime=%", lessonTime));
+	    throw new DaoConstraintViolationException("Not created, lessonTime=" + lessonTime);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to update lessonTime=%s", lessonTime));
+	    throw new DaoException("Unable to update lessonTime=" + lessonTime);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Updated lessonTime={}", lessonTime);
@@ -89,7 +89,7 @@ public class LessonTimeDao {
 	    log.debug("lessonTime with id={} not found", id);
 	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find lessonTime by id=%s", id), e);
+	    throw new DaoException("Unable to find lessonTime by id=" + id, e);
 	}
     }
 
@@ -117,7 +117,7 @@ public class LessonTimeDao {
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_DELETE, id);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to delete LessonTime by id=%s", id), e);
+	    throw new DaoException("Unable to delete LessonTime by id=" + id, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Deleted LessonTime  by id={}", id);

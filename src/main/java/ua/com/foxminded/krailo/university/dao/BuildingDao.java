@@ -38,7 +38,7 @@ public class BuildingDao {
     public BuildingDao(JdbcTemplate jdbcTemplate, BuildingRowMapper buildingRowMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.buildingRowMapper = buildingRowMapper;
-    }
+    } 
 
     public List<Building> findAll() {
 	log.debug("find all buildings");
@@ -58,7 +58,7 @@ public class BuildingDao {
 	    log.debug("Building with id={} not found", id);
 	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("unable to find buildings by id=%s", id), e);
+	    throw new DaoException("unable to find buildings by id=" + id, e);
 	}
     }
 
@@ -76,7 +76,7 @@ public class BuildingDao {
 	} catch (DataIntegrityViolationException e) {
 	    throw new DaoConstraintViolationException("Building not created", e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to create building=%s", building), e);
+	    throw new DaoException("Unable to create building=" + building, e);
 	}
 	log.info("building created={}", building);
     }
@@ -90,7 +90,7 @@ public class BuildingDao {
 	} catch (DataIntegrityViolationException e) {
 	    throw new DaoConstraintViolationException(format("Building not updated building=%s", building), e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to update building=%s", building), e);
+	    throw new DaoException("Unable to update building=" + building, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("building updated={}", building);
@@ -105,7 +105,7 @@ public class BuildingDao {
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BUILDING_BY_ID, id);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to update building by id=%s", id), e);
+	    throw new DaoException("Unable to update building by id=" + id, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("building deleted by id={}", id);

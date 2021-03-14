@@ -1,6 +1,6 @@
 package ua.com.foxminded.krailo.university.exception;
 
-public class EntityNotFoundException extends RuntimeException {
+public class EntityNotFoundException extends DaoException {
 
     public EntityNotFoundException() {
     }

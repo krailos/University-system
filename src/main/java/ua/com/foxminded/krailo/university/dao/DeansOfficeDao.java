@@ -36,7 +36,7 @@ public class DeansOfficeDao {
 
     public DeansOfficeDao(JdbcTemplate jdbcTemplate, RowMapper<DeansOffice> deansOfficeRowMapper) {
 	this.jdbcTemplate = jdbcTemplate;
-	this.deansOfficeRowMapper = deansOfficeRowMapper;
+	this.deansOfficeRowMapper = deansOfficeRowMapper; 
     }
 
     public void create(DeansOffice deansOffice) {
@@ -54,7 +54,7 @@ public class DeansOfficeDao {
 	    throw new DaoConstraintViolationException(format("DeansOffice not created, deanseOffice=%s", deansOffice),
 		    e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to create deansOffice=%s", deansOffice), e);
+	    throw new DaoException("Unable to create deansOffice=" + deansOffice, e);
 	}
 	log.info("Created deansOffice={}", deansOffice);
     }
@@ -66,7 +66,7 @@ public class DeansOfficeDao {
 	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, deansOffice.getName(),
 		    deansOffice.getUniversityOffice().getId(), deansOffice.getId());
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to update deansOffice=%s", deansOffice), e);
+	    throw new DaoException("Unable to update deansOffice=" + deansOffice, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Updated deansOffice={}", deansOffice);
@@ -83,7 +83,7 @@ public class DeansOfficeDao {
 	    log.debug("DeansOffice with id={} not found", id);
 	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find deansOffice by id=%s", id), e);
+	    throw new DaoException("Unable to find deansOffice by id=" + id, e);
 	}
     }
 
@@ -102,7 +102,7 @@ public class DeansOfficeDao {
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BY_ID, id);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to delete deansOffice by id=%s", id), e);
+	    throw new DaoException("Unable to delete deansOffice by id=" + id, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Deleted deansOffice  by id={}", id);

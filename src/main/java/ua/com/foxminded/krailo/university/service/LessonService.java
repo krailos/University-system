@@ -39,7 +39,7 @@ public class LessonService {
 
     public LessonService(LessonDao lessonDao, VocationDao vocationDao, HolidayDao holidayDao) {
 	this.lessonDao = lessonDao;
-	this.vocationDao = vocationDao;
+	this.vocationDao = vocationDao; 
 	this.holidayDao = holidayDao;
     }
 

@@ -37,7 +37,7 @@ class BuildingServiceTest {
 	buildingService.create(building);
 
 	verify(buildingDao).create(building);
-    }
+    } 
 
     @Test
     void givenBuilding_whenUpdate_thanUpdeted() {

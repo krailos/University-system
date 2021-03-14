@@ -1,6 +1,6 @@
 package ua.com.foxminded.krailo.university.exception;
 
-public class DaoConstraintViolationException extends RuntimeException {
+public class DaoConstraintViolationException extends DaoException {
 
     public DaoConstraintViolationException() {
     }

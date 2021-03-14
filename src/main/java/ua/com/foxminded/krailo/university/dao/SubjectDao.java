@@ -1,7 +1,5 @@
 package ua.com.foxminded.krailo.university.dao;
 
-import static java.lang.String.format;
-
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +23,7 @@ import ua.com.foxminded.krailo.university.model.Subject;
 public class SubjectDao {
 
     private static final Logger log = LoggerFactory.getLogger(SubjectDao.class);
-    
+
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM subjects WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM subjects";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM subjects WHERE id = ?";
@@ -53,9 +51,9 @@ public class SubjectDao {
 	    }, keyHolder);
 	    subject.setId(keyHolder.getKey().intValue());
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not created subject=%s", subject));
+	    throw new DaoConstraintViolationException("Not created subject=" + subject, e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to create subject=%s", subject), e);
+	    throw new DaoException("Unable to create subject=" + subject, e);
 	}
 	log.info("Created subject={}", subject);
     }
@@ -66,9 +64,9 @@ public class SubjectDao {
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, subject.getName(), subject.getId());
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not updated, subject=%s", subject));
+	    throw new DaoConstraintViolationException("Not updated, subject=" + subject, e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to update subject=%s", subject));
+	    throw new DaoException("Unable to update subject=" + subject, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Updated subject={}", subject);
@@ -85,7 +83,7 @@ public class SubjectDao {
 	    log.debug("subject with id={} not found", id);
 	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find subject by id=%s", id), e);
+	    throw new DaoException("Unable to find subject by id=" + id, e);
 	}
     }
 
@@ -104,7 +102,7 @@ public class SubjectDao {
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BY_ID, id);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to delete subject by id=%s", id), e);
+	    throw new DaoException("Unable to delete subject by id=" + id, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Deleted subject  by id={}", id);
@@ -118,7 +116,7 @@ public class SubjectDao {
 	try {
 	    return jdbcTemplate.query(SQL_SELECT_SUBJECTS_BY_TEACHER_ID, new Object[] { teacherId }, subjectRowMapper);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find subjects by teacherId=%s", teacherId), e);
+	    throw new DaoException("Unable to find subjects by teacherId=" + teacherId, e);
 	}
     }
 
@@ -127,7 +125,7 @@ public class SubjectDao {
 	try {
 	    return jdbcTemplate.query(SQL_SELECT_SUBJECTS_BY_YEAR_ID, new Object[] { yearId }, subjectRowMapper);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find subjects by yearId=%s", yearId), e);
+	    throw new DaoException("Unable to find subjects by yearId=" + yearId, e);
 	}
     }
 

@@ -1,7 +1,5 @@
 package ua.com.foxminded.krailo.university.dao;
 
-import static java.lang.String.format;
-
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -41,7 +39,7 @@ public class StudentDao {
 	this.jdbcTemplate = jdbcTemplate;
 	this.studentRowMapper = studentRowMapper;
     }
-
+ 
     public void create(Student student) {
 	log.debug("Create student={}", student);
 	try {
@@ -62,9 +60,9 @@ public class StudentDao {
 	    }, keyHolder);
 	    student.setId(keyHolder.getKey().intValue());
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not created student=%s", student));
+	    throw new DaoConstraintViolationException("Not created student=" + student, e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to create student=%s", student), e);
+	    throw new DaoException("Unable to create student=" + student, e);
 	}
 	log.info("Created student={}", student);
     }
@@ -78,9 +76,9 @@ public class StudentDao {
 		    student.getAddress(), student.getEmail(), student.getRank(), student.getGender().toString(),
 		    student.getGroup().getId(), student.getId());
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException(format("Not updated, student=%s", student));
+	    throw new DaoConstraintViolationException("Not updated, student= " + student, e);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to update student=%s", student));
+	    throw new DaoException("Unable to update student=" + student, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Updated student={}", student);
@@ -97,7 +95,7 @@ public class StudentDao {
 	    log.debug("student with id={} not found", id);
 	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find student by id=%s", id), e);
+	    throw new DaoException("Unable to find student by id=" + id, e);
 	}
     }
 
@@ -115,7 +113,7 @@ public class StudentDao {
 	try {
 	    return jdbcTemplate.query(SQL_SELECT_BY_GROUO_ID, studentRowMapper, groupId);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to find students by groupId=%s", groupId), e);
+	    throw new DaoException("Unable to find students by groupId=" + groupId, e);
 	}
     }
 
@@ -125,7 +123,7 @@ public class StudentDao {
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_DELETE_BY_ID, studentId);
 	} catch (DataAccessException e) {
-	    throw new DaoException(format("Unable to delete student by id=%s", studentId), e);
+	    throw new DaoException("Unable to delete student by id=" + studentId, e);
 	}
 	if (rowsAffected > 0) {
 	    log.info("Deleted student  by id={}", studentId);
