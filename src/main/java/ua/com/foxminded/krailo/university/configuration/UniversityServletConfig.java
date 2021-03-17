@@ -14,7 +14,6 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 @Configuration
 @ComponentScan("ua.com.foxminded.krailo.university")
-//@Import(UniversityConfig.class)
 @EnableWebMvc
 public class UniversityServletConfig implements WebMvcConfigurer {
 
