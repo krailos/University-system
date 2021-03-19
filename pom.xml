@@ -24,6 +24,7 @@
 		<h2.version>1.4.200</h2.version>
 		<mockito.version>2.23.0</mockito.version>
 		<logback.version>1.2.3</logback.version>
+
 		<thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
 		<servelet-api.version>4.0.1</servelet-api.version>
 	</properties>
@@ -49,6 +50,7 @@
 			<artifactId>spring-tx</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
@@ -72,6 +74,7 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>${postgresql.version}</version>
@@ -118,6 +121,7 @@
 		</dependency>
 	</dependencies>
 
+
 	<build>
 		<finalName>university-mvc-spring</finalName>
 		<pluginManagement><!-- lock down plugins versions to avoid using Maven 
@@ -156,3 +160,4 @@
 		</pluginManagement>
 	</build>
 </project>
+
