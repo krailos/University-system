@@ -1,13 +1,22 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+	xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 <meta charset="UTF-8">
 <title>University</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
 </head>
 
 <body>
-	<h1>Hello University</h1>
+	<h1 class="helloH1" align="center">Hello University</h1>
+
+	<div align="center" >
+		<a class="helloA" href="students/">students</a> 
+		<br> 
+		<a class="helloA" href="subjects/">subjects</a>
+	</div>
+
 </body>
 
 </html>

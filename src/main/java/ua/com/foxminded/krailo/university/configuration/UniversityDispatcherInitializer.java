@@ -11,9 +11,9 @@ public class UniversityDispatcherInitializer extends AbstractAnnotationConfigDis
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-	return new Class[] { UniversityServletConfig.class };
+	return new Class[] { WebUniversityConfig.class };
     }
-
+ 
     @Override
     protected String[] getServletMappings() {
 	return new String[] { "/" };

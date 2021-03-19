@@ -9,14 +9,11 @@ xmlns="http://www.w3.org/1999/xhtml" >
 </head>
 
 <body>
-	<h1 class="studentsH3" align="center">Students</h1>
+	<h1 class="studentsH3" align="center">Subjects</h1>
 	
 	<table align="center">
-		<tr th:each="student : ${students}">
-			<td th:text="${student.studentId}"></td>
-			<td th:text="${student.firstName}"></td>
-			<td th:text="${student.email}"></td>
-			<td th:text="${student.phone}"></td>
+		<tr th:each="subject : ${subjects}">
+			<td th:text="${subject.name}"></td>
 		</tr>
 	</table>
 </body>

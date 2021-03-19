@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -15,12 +16,13 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 @Configuration
 @ComponentScan("ua.com.foxminded.krailo.university")
 @EnableWebMvc
-public class UniversityServletConfig implements WebMvcConfigurer {
+public class WebUniversityConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
-
+    
+    
     @Autowired
-    public UniversityServletConfig(ApplicationContext applicationContext) {
+    public WebUniversityConfig(ApplicationContext applicationContext) {
 	this.applicationContext = applicationContext;
     }
 
@@ -30,7 +32,8 @@ public class UniversityServletConfig implements WebMvcConfigurer {
 	templateResolver.setApplicationContext(applicationContext);
 	templateResolver.setPrefix("/WEB-INF/views/");
 	templateResolver.setSuffix(".html");
-	return templateResolver;
+	templateResolver.setCacheable(false);
+	return templateResolver;	
     }
 
     @Bean
@@ -47,5 +50,12 @@ public class UniversityServletConfig implements WebMvcConfigurer {
 	resolver.setTemplateEngine(templateEngine());
 	registry.viewResolver(resolver);
     }
+    
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+         registry.addResourceHandler("/**")
+               .addResourceLocations("classpath:/static/");
+    }
+    
 
 }

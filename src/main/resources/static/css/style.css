@@ -1,0 +1,18 @@
+body {
+	background: rgb(255, 255, 255);
+}
+
+.helloH1 {
+	color: rgb(199, 9, 161);
+	font-size: 40px;
+}
+
+.studentsH3 {
+	color: rgb(199, 9, 161);
+	font-size: 30px;
+}
+
+.helloA {
+	color: rgb(9, 193, 199);
+	font-size: 20px;
+}
