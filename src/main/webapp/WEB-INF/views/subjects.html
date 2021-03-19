@@ -1,21 +1,50 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en"
-xmlns="http://www.w3.org/1999/xhtml" >
+	xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-<meta charset="UTF-8">
-<title>Students</title>
-<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>University</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+<link rel="stylesheet" type="text/css"
+	th:href="@{bootstrap/css/bootstrap.min.css}">
+<script th:src="@{jquery/jquery-3.6.0.min.js}"></script>
+<script th:src="@{bootstrap/js/bootstrap.min.js}"></script>
+
+<style>
+.col-md-12 {
+	background: #dedede;
+}
+
+.box {
+	margin: 200px auto;
+	width: 180px;
+}
+</style>
 </head>
 
 <body>
-	<h1 class="studentsH3" align="center">Subjects</h1>
-	
-	<table align="center">
-		<tr th:each="subject : ${subjects}">
-			<td th:text="${subject.name}"></td>
-		</tr>
-	</table>
+
+	<div class="container">
+		<ul class="nav nav-pills">
+			<li class="active"><a href="/university/wellcome">Home</a></li>
+		</ul>
+
+		<h2 class="text-center display-4 font-weight-bold pt-5 text-info">Subjects</h2>
+		<div class="panel panel-default"></div>
+		<div class="panel-heading text-center">All subjects</div>
+		<div class="col-md-6 col-md-offset-3">
+			<table class="table table-sriped">
+				<tr th:each="subject : ${subjects}">
+					<td th:text="${subject.name}"></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+
 </body>
 
 </html>
