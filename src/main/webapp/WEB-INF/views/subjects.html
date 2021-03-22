@@ -1,42 +1,78 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en"
 	xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+	xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 <meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>University</title>
-<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
 <link rel="stylesheet" type="text/css"
 	th:href="@{bootstrap/css/bootstrap.min.css}">
-<script th:src="@{jquery/jquery-3.6.0.min.js}"></script>
 <script th:src="@{bootstrap/js/bootstrap.min.js}"></script>
 
-<style>
-.col-md-12 {
-	background: #dedede;
-}
+<!-- Jquery CSS -->
+<script th:src="@{jquery/jquery-3.6.0.min.js}"></script>
 
-.box {
-	margin: 200px auto;
-	width: 180px;
-}
-</style>
+<!-- Custom css -->
+<link rel="stylesheet" type="text/css" th:href="@{custom/css/style.css}" />
+
+<!-- Web font awesome 5 local -->
+<link rel="stylesheet" th:href="@{webfonts/fontawesome/css/all.min.css}">
+
+<!-- Web font bootstrap 4 local -->
+<link rel="stylesheet"
+	th:href="@{webfonts/bootstrap-icon/bootstrap-icons.css}">
+
+<!-- Web font awesome 4 local -->
+<link rel="stylesheet"
+	th:href="@{webfonts/font-awesome-4/font-awesome-4.7.0/css/font-awesome.min.css}">
+
+<title>Subjects</title>
+
 </head>
 
 <body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<a class="navbar-brand" href="/university">
+			<img src="#" alt=""> University
+		</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false"
+			aria-label="Toggle navigation">
+			<i class="fas fa-bars"></i>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+
+				<li class="nav-item"><a class="nav-link" href="#">Faculty</a></li>
+				<li class="nav-item"><a class="nav-link"
+						href="/university/subjects">Subjects</a></li>
+				<li class="nav-item"><a class="nav-link" href="#">Teachers</a>
+				</li>
+				<li class="nav-item"><a class="nav-link"
+						href="/university/students">Students</a></li>
+		</div>
+	</nav>
 
 	<div class="container">
-		<ul class="nav nav-pills">
-			<li class="active"><a href="/university/wellcome">Home</a></li>
-		</ul>
 
 		<h2 class="text-center display-4 font-weight-bold pt-5 text-info">Subjects</h2>
 		<div class="panel panel-default"></div>
 		<div class="panel-heading text-center">All subjects</div>
-		<div class="col-md-6 col-md-offset-3">
+
+		<div class="col-md-6 offset-md-3">
 			<table class="table table-sriped">
+				<tr>
+					<th>Name</th>
+				</tr>
+
 				<tr th:each="subject : ${subjects}">
 					<td th:text="${subject.name}"></td>
 				</tr>

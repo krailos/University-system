@@ -51,7 +51,7 @@ public class GroupDao {
 		PreparedStatement ps = connection.prepareStatement(SQL_INSERT_GROUP, new String[] { "id" });
 		ps.setString(1, group.getName());
 		ps.setInt(2, group.getYear().getId());
-		return ps;
+		return ps;  
 	    }, keyHolder);
 	    group.setId(keyHolder.getKey().intValue());
 	} catch (DataIntegrityViolationException e) {

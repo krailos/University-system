@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en"
 	xmlns="http://www.w3.org/1999/xhtml">
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en"
-	xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 <meta charset="utf-8">
@@ -34,13 +31,15 @@
 
 
 
-<title>Students</title>
+<title>University</title>
 </head>
 
 <body>
 
+	<header class="main-header">
+
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-			<a class="navbar-brand" href="/university">
+			<a class="navbar-brand" href="#">
 				<img src="#" alt=""> University
 			</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -53,7 +52,7 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 
-					<li class="nav-item"><a class="nav-link" href="#">Faculty</a>
+					<li class="nav-item"><a class="nav-link" href="#">Faculties</a>
 					</li>
 					<li class="nav-item"><a class="nav-link"
 							href="/university/subjects">Subjects</a></li>
@@ -64,38 +63,23 @@
 			</div>
 		</nav>
 
-
-	<div class="container">
-
-
-		<div class="col-md-12">
-			<h1 class="display-6 text-center text-info">Students</h1>
-			<br>
-			<p class="h4  text-center ">All students</p>
+		<div class="main-header-text">
+			<div class="display-4  text-info  text-center">Wellcome</div>
+			<div class="display-2 text-info text-center">University</div>
 		</div>
 
-		<div class="col-md-6 offset-md-3 ">
-			<table class="table table-hover">
-				<thead class="table-light">
-					<tr>
-						<th>Student id</th>
-						<th>First name</th>
-						<th>Email</th>
-						<th>Phone</th>
-					</tr>
-				</thead>
-				<tr th:each="student : ${students}">
-					<td th:text="${student.studentId}"></td>
-					<td th:text="${student.firstName}"></td>
-					<td th:text="${student.email}"></td>
-					<td th:text="${student.phone}"></td>
-				</tr>
-			</table>
+		<div class="main-header-buttons text-center">
+			<button type="button" class="btn btn-info rounded-pill">I am
+				student</button>
+			<button type="button" class="btn btn-info rounded-pill">I am
+				teacher</button>
 		</div>
-		
-	</div>
+
+	</header>
 
 
 </body>
+
+</html>
 
 </html>
