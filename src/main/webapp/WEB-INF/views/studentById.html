@@ -70,42 +70,26 @@
 
 	<div class="container">
 
-		<div class="col-md-3 text-left">
-			<a href="/university/students/formAddStudent"
-				class="btn btn-primary active" role="button" aria-pressed="true">Add
-				new student</a>
-		</div>
-
-		<div class="col-md-3 text-left">
-			<a href="/university/students/formStudentById"
-				class="btn btn-primary active" role="button" aria-pressed="true">Find student by ID</a>
-		</div>
-
-
 		<div class="col-md-12">
-			<h1 class="display-6 text-center text-info">Students</h1>
+			<h1 class="display-6 text-center text-info">Student by ID</h1>
 			<br>
-			<p class="h4  text-center ">All students</p>
+			<p class="h4  text-center ">Student</p>
 		</div>
 
-		<div class="col-md-12 ">
+		<div class="col-md-6 offset-md-3 ">
 			<table class="table table-hover">
 				<thead class="table-light">
 					<tr>
 						<th>Student id</th>
 						<th>First name</th>
-						<th>last name</th>
 						<th>Email</th>
-						<th>Address</th>
 						<th>Phone</th>
 					</tr>
 				</thead>
-				<tr th:each="student : ${students}">
+				<tr th:each="student : ${studentById}">
 					<td th:text="${student.studentId}"></td>
 					<td th:text="${student.firstName}"></td>
-					<td th:text="${student.lastName}"></td>
 					<td th:text="${student.email}"></td>
-					<td th:text="${student.address}"></td>
 					<td th:text="${student.phone}"></td>
 				</tr>
 			</table>

@@ -19,7 +19,8 @@
 <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
 
 <!-- Web font awesome 5 local -->
-<link rel="stylesheet" th:href="@{/webfonts/fontawesome/css/all.min.css}">
+<link rel="stylesheet"
+	th:href="@{/webfonts/fontawesome/css/all.min.css}">
 
 <!-- Web font bootstrap 4 local -->
 <link rel="stylesheet"
@@ -30,14 +31,12 @@
 	th:href="@{/webfonts/font-awesome-4/font-awesome-4.7.0/css/font-awesome.min.css}">
 
 
-
-<title>University</title>
+<title>AddStudent</title>
 </head>
 
 <body>
 
-	<header class="main-header">
-
+	<header class="form-header">
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<a class="navbar-brand" href="#">
 				<img src="#" alt=""> University
@@ -48,39 +47,47 @@
 				aria-label="Toggle navigation">
 				<i class="fas fa-bars"></i>
 			</button>
-
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
-
 					<li class="nav-item">
-						<a class="nav-link" href="#">Faculties</a>
+						<a class="nav-link" href="#">Faculty</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/university/subjects">Subjects</a>
+						<a class="nav-link" href="#">Subjects</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="#">Teachers</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/university/students">Students</a>
+						<a class="nav-link" href="#">Students</a>
 					</li>
-					</ul>
+				</ul>
 			</div>
 		</nav>
-
-		<div class="main-header-text">
-			<div class="display-4  text-info  text-center">Wellcome</div>
-			<div class="display-2 text-info text-center">University</div>
-		</div>
-
-		<div class="main-header-buttons text-center">
-			<button type="button" class="btn btn-info rounded-pill">I am
-				student</button>
-			<button type="button" class="btn btn-info rounded-pill">I am
-				teacher</button>
-		</div>
-
 	</header>
+
+	<section class="section-form text-center">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-8 offset-2">
+					<h4>Find student by ID</h4>
+					<form action="/university/students/findStudentById" method="POST">
+						<div class="form-group row">
+							<label for="colFormLabel"
+								class="col-sm-3 col-form-label text-right">Enter student ID</label>
+							<div class="col-sm-6">
+								<input type="text" class="form-control" id="colFormLabel"
+									placeholder="student id" name="id">
+							</div>
+							<button type="submit" class="btn btn-secondary">Submit</button>
+						</div>
+					</form>
+
+
+				</div>
+			</div>
+		</div>	
+	</section>
 
 </body>
 

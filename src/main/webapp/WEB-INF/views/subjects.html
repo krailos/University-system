@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en"
 	xmlns="http://www.w3.org/1999/xhtml">
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en"
-	xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 <meta charset="utf-8">
@@ -12,25 +9,25 @@
 
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" type="text/css"
-	th:href="@{bootstrap/css/bootstrap.min.css}">
-<script th:src="@{bootstrap/js/bootstrap.min.js}"></script>
+	th:href="@{/bootstrap/css/bootstrap.min.css}">
+<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
 
 <!-- Jquery CSS -->
-<script th:src="@{jquery/jquery-3.6.0.min.js}"></script>
+<script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
 
 <!-- Custom css -->
-<link rel="stylesheet" type="text/css" th:href="@{custom/css/style.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
 
 <!-- Web font awesome 5 local -->
-<link rel="stylesheet" th:href="@{webfonts/fontawesome/css/all.min.css}">
+<link rel="stylesheet" th:href="@{/webfonts/fontawesome/css/all.min.css}">
 
 <!-- Web font bootstrap 4 local -->
 <link rel="stylesheet"
-	th:href="@{webfonts/bootstrap-icon/bootstrap-icons.css}">
+	th:href="@{/webfonts/bootstrap-icon/bootstrap-icons.css}">
 
 <!-- Web font awesome 4 local -->
 <link rel="stylesheet"
-	th:href="@{webfonts/font-awesome-4/font-awesome-4.7.0/css/font-awesome.min.css}">
+	th:href="@{/webfonts/font-awesome-4/font-awesome-4.7.0/css/font-awesome.min.css}">
 
 <title>Subjects</title>
 
@@ -51,13 +48,19 @@
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
 
-				<li class="nav-item"><a class="nav-link" href="#">Faculty</a></li>
-				<li class="nav-item"><a class="nav-link"
-						href="/university/subjects">Subjects</a></li>
-				<li class="nav-item"><a class="nav-link" href="#">Teachers</a>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Faculty</a>
 				</li>
-				<li class="nav-item"><a class="nav-link"
-						href="/university/students">Students</a></li>
+				<li class="nav-item">
+					<a class="nav-link" href="/university/subjects">Subjects</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Teachers</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/university/students">Students</a>
+				</li>
+			</ul>
 		</div>
 	</nav>
 
