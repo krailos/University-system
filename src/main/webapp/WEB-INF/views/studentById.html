@@ -85,9 +85,9 @@
 					th:text="${studentById.firstName} + '  ' +  ${studentById.lastName}">
 				</span>
 
-				<a title="update" th:href="@{/students/update/{id}(id=${studentById.id})}" class="btn btn-outline-success"
+				<a title="update" th:href="@{/students/formUpdate/{id}(id=${studentById.id})}" class="btn btn-outline-success"
 					role="button" aria-pressed="true"><i class="bi bi-pencil-square"></i></a>
-				<a title="delete" th:href="@{/students/formDelete/{id}(id=${studentById.id})}" class="btn btn-outline-success"
+				<a title="delete" th:href="@{/students/formDelete/{id}(id=${studentById.id})}" class="btn btn-outline-danger"
 					role="button" aria-pressed="true"><i class="bi bi-x-circle"></i></a>
 
 			</div>

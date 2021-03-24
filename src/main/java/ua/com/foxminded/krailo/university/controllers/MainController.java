@@ -77,7 +77,7 @@ public class MainController {
     }
     
     
-    @GetMapping("/students/update/{id}")
+    @GetMapping("/students/formUpdate/{id}")
     public String getFormUpdateStudent (@PathVariable("id") int id, Model model) {
 	Student student = studentService.getById(id);
 	model.addAttribute("student", student);
