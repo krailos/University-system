@@ -37,8 +37,8 @@
 <body>
 
 	<header class="form-header">
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-			<a class="navbar-brand" href="#">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-info">
+			<a class="navbar-brand" href="/university">
 				<img src="#" alt=""> University
 			</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -47,47 +47,54 @@
 				aria-label="Toggle navigation">
 				<i class="fas fa-bars"></i>
 			</button>
+			
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
-				<ul class="navbar-nav mr-auto">
-					<li class="nav-item">
-						<a class="nav-link" href="#">Faculty</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Subjects</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Teachers</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Students</a>
-					</li>
-				</ul>
-			</div>
-		</nav>
+			<ul class="navbar-nav mr-auto">
+
+				<li class="nav-item">
+					<a class="nav-link" href="#">Faculty</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/university/subjects">Subjects</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Teachers</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/university/students">Students</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	
 	</header>
+	<br>
 
 	<section class="section-form text-center">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-8 offset-2">
+				<div class="col-md-8 offset-2 text-info">
 					<h4>Find student by ID</h4>
 					<form action="/university/students/findStudentById" method="POST">
 						<div class="form-group row">
 							<label for="colFormLabel"
-								class="col-sm-3 col-form-label text-right">Enter student ID</label>
+								class="col-sm-3 col-form-label text-right">Enter student
+								ID</label>
 							<div class="col-sm-6">
 								<input type="text" class="form-control" id="colFormLabel"
 									placeholder="student id" name="id">
 							</div>
-							<button type="submit" class="btn btn-secondary">Submit</button>
+							<button type="submit" class="btn btn-success">Submit</button>
 						</div>
 					</form>
 
 
 				</div>
 			</div>
-		</div>	
+		</div>
 	</section>
+
+
 
 </body>
 

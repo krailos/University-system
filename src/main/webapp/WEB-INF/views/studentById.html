@@ -37,66 +37,147 @@
 
 <body>
 
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		<a class="navbar-brand" href="/university">
-			<img src="#" alt=""> University
-		</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse"
-			data-target="#navbarSupportedContent"
-			aria-controls="navbarSupportedContent" aria-expanded="false"
-			aria-label="Toggle navigation">
-			<i class="fas fa-bars"></i>
-		</button>
+	<header>
 
-		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul class="navbar-nav mr-auto">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-info">
+			<a class="navbar-brand" href="/university">
+				<img src="#" alt=""> University
+			</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<i class="fas fa-bars"></i>
+			</button>
 
-				<li class="nav-item">
-					<a class="nav-link" href="#">Faculty</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/university/subjects">Subjects</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Teachers</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/university/students">Students</a>
-				</li>
-			</ul>
-		</div>
-	</nav>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
 
+					<li class="nav-item">
+						<a class="nav-link" href="#">Faculty</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/university/subjects">Subjects</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Teachers</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/university/students">Students</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+	</header>
+
+	<br>
 
 	<div class="container">
 
-		<div class="col-md-12">
-			<h1 class="display-6 text-center text-info">Student by ID</h1>
-			<br>
-			<p class="h4  text-center ">Student</p>
+		<div class="row text-center">
+			<h1 class="col display-5 text-center text-info">Student</h1>
 		</div>
 
-		<div class="col-md-6 offset-md-3 ">
-			<table class="table table-hover">
-				<thead class="table-light">
-					<tr>
-						<th>Student id</th>
-						<th>First name</th>
-						<th>Email</th>
-						<th>Phone</th>
-					</tr>
-				</thead>
-				<tr th:each="student : ${studentById}">
-					<td th:text="${student.studentId}"></td>
-					<td th:text="${student.firstName}"></td>
-					<td th:text="${student.email}"></td>
-					<td th:text="${student.phone}"></td>
-				</tr>
-			</table>
+		<div class="row text-center">
+			<div class="col h3  text-center  text-info">
+				<span
+					th:text="${studentById.firstName} + '  ' +  ${studentById.lastName}">
+				</span>
+
+				<a title="update" th:href="@{/students/update/{id}(id=${studentById.id})}" class="btn btn-outline-success"
+					role="button" aria-pressed="true"><i class="bi bi-pencil-square"></i></a>
+				<a title="delete" href="#" class="btn btn-outline-success"
+					role="button" aria-pressed="true"><i class="bi bi-x-circle"></i></a>
+
+			</div>
+		</div>
+
+		<br>
+
+		<div class="row text-center">
+			<div class="col-md-6 offset-md-3">
+				<table class="table table-hover table-sm">
+					<thead>
+						<tr class="row">
+							<th class="col-md-1 text-center	">#</th>
+							<th class="col-md-3 text-center">Description</th>
+							<th class="col-md-8 text-center">Value</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="row">
+							<td class="col-md-1">1</td>
+							<td class="col-md-3">id</td>
+							<td class="col-md-8 text-center"><span
+									th:text="${studentById.id}"></span></td>
+						</tr>
+						<tr class="row">
+							<td class="col-md-1">2</td>
+							<td class="col-md-3">Student id</td>
+							<td class="col-md-8 text-center"><span
+									th:text="${studentById.studentId}"></span></td>
+						</tr>
+						<tr class="row">
+							<td class="col-md-1">3</td>
+							<td class="col-md-3">First name</td>
+							<td class="col-md-8 text-center"><span
+									th:text="${studentById.firstName}"></span></td>
+						</tr>
+						<tr class="row">
+							<td class="col-md-1">4</td>
+							<td class="col-md-3">Last name</td>
+							<td class="col-md-8 text-center"><span
+									th:text="${studentById.lastName}"></span></td>
+						</tr>
+						<tr class="row">
+							<td class="col-md-1">5</td>
+							<td class="col-md-3">Birth date</td>
+							<td class="col-md-8 text-center"><span
+									th:text="${studentById.birthDate}"></span></td>
+						</tr>
+						<tr class="row">
+							<td class="col-md-1">6</td>
+							<td class="col-md-3">Email</td>
+							<td class="col-md-8 text-center"><span
+									th:text="${studentById.email}"></span></td>
+						</tr>
+						<tr class="row">
+							<td class="col-md-1">7</td>
+							<td class="col-md-3">Address</td>
+							<td class="col-md-8 text-center"><span
+									th:text="${studentById.address}"></span></td>
+						</tr>
+						<tr class="row">
+							<td class="col-md-1">8</td>
+							<td class="col-md-3">Phone</td>
+							<td class="col-md-8 text-center"><span
+									th:text="${studentById.phone}"></span></td>
+						</tr>
+						<tr class="row">
+							<td class="col-md-1">9</td>
+							<td class="col-md-3">Rank</td>
+							<td class="col-md-8 text-center"><span
+									th:text="${studentById.rank}"></span></td>
+						</tr>
+						<tr class="row">
+							<td class="col-md-1">10</td>
+							<td class="col-md-3">Gender</td>
+							<td class="col-md-8 text-center"><span
+									th:text="${studentById.gender}"></span></td>
+						</tr>
+						<tr class="row">
+							<td class="col-md-1">11</td>
+							<td class="col-md-3">Group</td>
+							<td class="col-md-8 text-center"><span
+									th:text="${studentById.group.name}"></span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 
 	</div>
-
 
 </body>
 

@@ -2,12 +2,15 @@ package ua.com.foxminded.krailo.university.model;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class Student {
 
     private int id;
     private String studentId;
     private String firstName;
     private String lastName;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
     private String phone;
     private String address;
@@ -132,6 +135,7 @@ public class Student {
 	private String studentId;
 	private String firstName;
 	private String lastName;
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate birthDate;
 	private String phone;
 	private String address;

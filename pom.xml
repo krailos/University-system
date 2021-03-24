@@ -16,16 +16,16 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<postgresql.version>42.2.12</postgresql.version>
 		<spring.version>5.1.5.RELEASE</spring.version>
 		<junit.version>5.7.0</junit.version>
 		<h2.version>1.4.200</h2.version>
 		<mockito.version>2.23.0</mockito.version>
 		<logback.version>1.2.3</logback.version>
-
 		<thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
+		<thymeleaf-extras.version>3.0.4.RELEASE</thymeleaf-extras.version>
 		<servelet-api.version>4.0.1</servelet-api.version>
 	</properties>
 
@@ -61,7 +61,11 @@
 			<artifactId>thymeleaf-spring5</artifactId>
 			<version>${thymeleaf.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-java8time</artifactId>
+			<version>${thymeleaf-extras.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>

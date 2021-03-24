@@ -1,6 +1,5 @@
 package ua.com.foxminded.krailo.university.controllers;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.model.Subject;
@@ -61,11 +59,8 @@ public class MainController {
     
     @PostMapping("/students/createStudent")
     public String createStudent(@ModelAttribute("student") Student student) {
-	System.out.println(student);
 	Group group = groupService.getById(2);
 	student.setGroup(group);
-	student.setBirthDate(LocalDate.of(2021, 03, 01));
-	//student.setGender(Gender.MALE);
 	studentService.create(student);
 	return "redirect:/students";
     }
@@ -79,6 +74,22 @@ public class MainController {
     public String findStudentById(@RequestParam("id") int id, Model model) {
 	model.addAttribute("studentById", studentService.getById(id));
 	return "studentById";
+    }
+    
+    
+    @GetMapping("/students/update/{id}")
+    public String getFormUpdateStudent (@PathVariable("id") int id, Model model) {
+	Student student = studentService.getById(id);
+	model.addAttribute("student", student);
+	return "formUpdateStudent";
+    }
+    
+    @PostMapping("/students/update/{id}")
+    public String updateStudent (@ModelAttribute("student") Student student) {
+	Group group = groupService.getById(2);
+	student.setGroup(group);
+	studentService.update(student);
+	return "redirect:/students";
     }
     
     

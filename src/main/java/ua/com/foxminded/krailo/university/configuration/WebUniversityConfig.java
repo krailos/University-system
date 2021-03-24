@@ -57,5 +57,4 @@ public class WebUniversityConfig implements WebMvcConfigurer {
                .addResourceLocations("classpath:/static/");
     }
     
-
 }
