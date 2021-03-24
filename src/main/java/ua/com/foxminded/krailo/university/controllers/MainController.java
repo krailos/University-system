@@ -92,6 +92,20 @@ public class MainController {
 	return "redirect:/students";
     }
     
+    @GetMapping("/students/formDelete/{id}")
+    public String getFormDeleteStudent (@PathVariable("id") int id, Model model) {
+	Student student = studentService.getById(id);
+	model.addAttribute("student", student);
+	return "formDeleteStudent";
+    }
+    
+    @GetMapping("/students/delete/{id}")
+    public String deleteStudent (@PathVariable("id") int id, Model model) {
+	Student student = studentService.getById(id);
+	studentService.delete(student);
+	return "redirect:/students";
+    }
+    
     
 
 }

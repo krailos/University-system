@@ -38,6 +38,7 @@
 <body>
 
 	<header>
+
 		<nav class="navbar navbar-expand-lg navbar-dark bg-info">
 			<a class="navbar-brand" href="/university">
 				<img src="#" alt=""> University
@@ -53,61 +54,45 @@
 				<ul class="navbar-nav mr-auto">
 
 					<li class="nav-item">
-						<a class="nav-link" href="/university/students/formAddStudent">Add
-							student</a>
+						<a class="nav-link" href="#">Faculty</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/university/students/formStudentById">Find
-							student</a>
+						<a class="nav-link" href="/university/subjects">Subjects</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Teachers</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/university/students">Students</a>
 					</li>
 				</ul>
 			</div>
 		</nav>
+
 	</header>
-
-
+	
+	<br>
+	
 	<div class="container">
-
-
-
-		<div class="col-md-12">
-			<h1 class="display-6 text-center text-info">Students</h1>
-			<br>
-			<p class="h4  text-center ">All students</p>
+		<div class="row">
+			<div class="col-md-6 offset-md-3 text-center text-danger">
+				<h5>Do you want delete this student?</h5>
+			</div>
 		</div>
-
-		<div class="col-md-12 ">
-			<table class="table table-hover table-sm ">
-				<thead class="table-light">
-					<tr>
-						<th>id</th>
-						<th>Stud.id</th>
-						<th>First name</th>
-						<th>Last name</th>
-						<th>Email</th>
-						<th>Address</th>
-						<th>Phone</th>
-						<th>Gender</th>
-						<th>Birth date</th>
-					</tr>
-				</thead>
-				<tr th:each="student : ${students}">
-					<td th:text="${student.id}"></td>
-					<td th:text="${student.studentId}"></td>
-					<td th:text="${student.firstName}"></td>
-					<td th:text="${student.lastName}"></td>
-					<td th:text="${student.email}"></td>
-					<td th:text="${student.address}"></td>
-					<td th:text="${student.phone}"></td>
-					<td th:text="${student.gender}"></td>
-					<td th:text="${student.birthDate}"></td>
-				</tr>
-			</table>
+		<div class="row m-3">
+			<div class="col-md-6 offset-md-3 text-center text-info">
+				<h1 th:text="${student.firstName} + '  ' + ${student.lastName}"></h1>
+			</div>
 		</div>
-
+		<div class="row m-3">
+			<div class="col-md-6 offset-md-3 text-center">
+				<a class="btn btn-danger mr-3" th:href="@{/students/delete/{id}(id=${student.id})}" role="button" style="width: 100px;">Yes</a>
+				<a class="btn btn-success mr-3" href="#" role="button" style="width: 100px;">No</a>
+			</div>
+		</div>
 	</div>
 
 
-</body>
 
+</body>
 </html>
