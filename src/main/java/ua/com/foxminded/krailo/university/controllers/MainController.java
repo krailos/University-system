@@ -33,9 +33,14 @@ public class MainController {
 
     @GetMapping("/students")
     public String getStudentsPage(Model model) {
+	return "students";
+    }
+    
+    @GetMapping("/students/all")
+    public String getAllStudents(Model model) {
 	List<Student> students = studentService.getAll();
 	model.addAttribute("students", students);
-	return "students";
+	return "studentsAll";
     }
 
     @GetMapping("/subjects")

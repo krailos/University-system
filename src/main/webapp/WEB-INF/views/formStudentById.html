@@ -1,42 +1,34 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en"
 	xmlns="http://www.w3.org/1999/xhtml">
-
 <head>
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" type="text/css"
 	th:href="@{/bootstrap/css/bootstrap.min.css}">
 <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
-
 <!-- Jquery CSS -->
 <script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
-
 <!-- Custom css -->
 <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
-
 <!-- Web font awesome 5 local -->
 <link rel="stylesheet"
 	th:href="@{/webfonts/fontawesome/css/all.min.css}">
-
 <!-- Web font bootstrap 4 local -->
 <link rel="stylesheet"
 	th:href="@{/webfonts/bootstrap-icon/bootstrap-icons.css}">
-
 <!-- Web font awesome 4 local -->
 <link rel="stylesheet"
 	th:href="@{/webfonts/font-awesome-4/font-awesome-4.7.0/css/font-awesome.min.css}">
+<title>Students</title>
 
-
-<title>AddStudent</title>
 </head>
 
 <body>
 
-	<header class="form-header">
+	<header>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-info">
 			<a class="navbar-brand" href="/university">
 				<img src="#" alt=""> University
@@ -47,26 +39,24 @@
 				aria-label="Toggle navigation">
 				<i class="fas fa-bars"></i>
 			</button>
-			
-			<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul class="navbar-nav mr-auto">
 
-				<li class="nav-item">
-					<a class="nav-link" href="#">Faculty</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/university/subjects">Subjects</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Teachers</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/university/students">Students</a>
-				</li>
-			</ul>
-		</div>
-	</nav>
-	
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="/university/students/all"> All students</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="nav-link" href="/university/students/formAddStudent">Add
+							student</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/university/students/formStudentById">Find
+							student</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
 	</header>
 	<br>
 

@@ -1,38 +1,29 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en"
 	xmlns="http://www.w3.org/1999/xhtml">
-
 <head>
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" type="text/css"
 	th:href="@{/bootstrap/css/bootstrap.min.css}">
 <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
-
 <!-- Jquery CSS -->
 <script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
-
 <!-- Custom css -->
 <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
-
 <!-- Web font awesome 5 local -->
 <link rel="stylesheet"
 	th:href="@{/webfonts/fontawesome/css/all.min.css}">
-
 <!-- Web font bootstrap 4 local -->
 <link rel="stylesheet"
 	th:href="@{/webfonts/bootstrap-icon/bootstrap-icons.css}">
-
 <!-- Web font awesome 4 local -->
 <link rel="stylesheet"
 	th:href="@{/webfonts/font-awesome-4/font-awesome-4.7.0/css/font-awesome.min.css}">
-
-
-
 <title>Students</title>
+
 </head>
 
 <body>
@@ -51,6 +42,9 @@
 
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="/university/students/all"> All students</a>
+					</li>
 
 					<li class="nav-item">
 						<a class="nav-link" href="/university/students/formAddStudent">Add
@@ -66,46 +60,6 @@
 	</header>
 
 
-	<div class="container">
-
-
-
-		<div class="col-md-12">
-			<h1 class="display-6 text-center text-info">Students</h1>
-			<br>
-			<p class="h4  text-center ">All students</p>
-		</div>
-
-		<div class="col-md-12 ">
-			<table class="table table-hover table-sm ">
-				<thead class="table-light">
-					<tr>
-						<th>id</th>
-						<th>Stud.id</th>
-						<th>First name</th>
-						<th>Last name</th>
-						<th>Email</th>
-						<th>Address</th>
-						<th>Phone</th>
-						<th>Gender</th>
-						<th>Birth date</th>
-					</tr>
-				</thead>
-				<tr th:each="student : ${students}">
-					<td th:text="${student.id}"></td>
-					<td th:text="${student.studentId}"></td>
-					<td th:text="${student.firstName}"></td>
-					<td th:text="${student.lastName}"></td>
-					<td th:text="${student.email}"></td>
-					<td th:text="${student.address}"></td>
-					<td th:text="${student.phone}"></td>
-					<td th:text="${student.gender}"></td>
-					<td th:text="${student.birthDate}"></td>
-				</tr>
-			</table>
-		</div>
-
-	</div>
 
 
 </body>
