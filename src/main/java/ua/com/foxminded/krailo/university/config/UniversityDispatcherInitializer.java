@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.university.configuration;
+package ua.com.foxminded.krailo.university.config;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -11,7 +11,7 @@ public class UniversityDispatcherInitializer extends AbstractAnnotationConfigDis
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-	return new Class[] { WebUniversityConfig.class };
+	return new Class[] { WebConfig.class };
     }
  
     @Override

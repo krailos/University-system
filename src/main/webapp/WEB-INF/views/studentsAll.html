@@ -80,7 +80,6 @@
 							<th>Student id</th>
 							<th>First name</th>
 							<th>Last name</th>
-							<th>Year</th>
 							<th>Group</th>
 							<th class="text-center">Action</th>
 						</tr>
@@ -91,7 +90,6 @@
 						<td th:text="${student.studentId}"></td>
 						<td th:text="${student.firstName}"></td>
 						<td th:text="${student.lastName}"></td>
-						<td th:text="${student.group.year.name}"></td>
 						<td th:text="${student.group.name}"></td>
 						<td class="text-center"><a title="update"
 								th:href="@{/students/formUpdate/{id}(id=${student.id})}"

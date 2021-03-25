@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.university.configuration;
+package ua.com.foxminded.krailo.university.config;
 
 import javax.sql.DataSource;
 

@@ -17,7 +17,7 @@ public class Student {
     private String email;
     private String rank;
     private Gender gender;
-    private Group group;
+    private Group group = Group.builder().id(1).build();
 
     public Student() {
     }

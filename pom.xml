@@ -6,12 +6,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>ua.foxminded.krailo</groupId>
-	<artifactId>university-mvc-spring</artifactId>
+	<artifactId>university</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<name>university-mvc-spring Maven Webapp</name>
-	<!-- FIXME change it to the project's website -->
 	<url>http://www.example.com</url>
 
 	<properties>
@@ -50,7 +49,6 @@
 			<artifactId>spring-tx</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
@@ -78,7 +76,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>${postgresql.version}</version>
@@ -125,17 +122,14 @@
 		</dependency>
 	</dependencies>
 
-
 	<build>
 		<finalName>university-mvc-spring</finalName>
-		<pluginManagement><!-- lock down plugins versions to avoid using Maven 
-				defaults (may be moved to parent pom) -->
+		<pluginManagement>
 			<plugins>
 				<plugin>
 					<artifactId>maven-clean-plugin</artifactId>
 					<version>3.1.0</version>
 				</plugin>
-				<!-- see http://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_war_packaging -->
 				<plugin>
 					<artifactId>maven-resources-plugin</artifactId>
 					<version>3.0.2</version>
