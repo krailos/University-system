@@ -1,0 +1,74 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    min-width: 320px;
+    color: #1d1d1d;    
+}
+
+img{
+    max-width: 100;
+    height: auto;
+}
+
+/*-----------------------------------------------------------------*/
+.main-header {
+    background: url(../img/world_map.png) center no-repeat;
+    background-size: cover;
+    height: 450px;
+
+}
+.main-header-text{
+    margin-top: 50px;
+    
+}
+
+.main-header-buttons{
+    margin-top: 40px;       
+}
+
+.main-header-buttons .btn{
+    padding-left: 20px; 
+    padding-right: 20px;
+    margin-right: 10px;
+    margin-left: 10px;     
+}
+
+/*-----------------------------------------------------------------*/
+.section-progress{
+    padding: 20px;
+    color: #484848;
+}
+
+.section-progress i{
+		font-size: 60px;
+	background: linear-gradient(45deg, rgba(255,0,32,.7) 0%,rgba(68,26,130,.8) 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	padding-left: 15px;
+}
+
+
+
+.section-progress .num{
+	font-size: 50px;
+	font-weight: 400;
+	margin: 30px 0 20px;
+}
+.section-progress h4{
+	font-size: 30px;
+	height: 72px;
+	overflow: hidden;
+}
+
+.section-progress .progress-item{
+	padding-top: 0px;
+	padding-bottom: 0px;
+	transition: all .5s;
+}
+
+.section-progress .progress-item:hover{
+	background-color: #ecfcf9;
+}
+
+/*-----------------------------------------------------------------*/
+
+

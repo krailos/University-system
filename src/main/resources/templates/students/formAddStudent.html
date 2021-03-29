@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+	xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" type="text/css"
+	th:href="@{/bootstrap/css/bootstrap.min.css}">
+<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+
+<!-- Jquery CSS -->
+<script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
+
+<!-- Custom css -->
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+
+<!-- Web font awesome 5 local -->
+<link rel="stylesheet"
+	th:href="@{/webfonts/fontawesome/css/all.min.css}">
+
+<!-- Web font bootstrap 4 local -->
+<link rel="stylesheet"
+	th:href="@{/webfonts/bootstrap-icon/bootstrap-icons.css}">
+
+<!-- Web font awesome 4 local -->
+<link rel="stylesheet"
+	th:href="@{/webfonts/font-awesome-4/font-awesome-4.7.0/css/font-awesome.min.css}">
+
+
+
+<title>Admin</title>
+</head>
+
+<body>
+	<header>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-info">
+
+			<div class="font-weight-bolder">
+				<a class="navbar-brand" th:href="@{/admin}">University/Admin</a>
+			</div>
+
+
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item active"><a class="nav-link"
+						th:href="@{/students}"> Students<span class="sr-only">(current)</span>
+					</a></li>
+					<li class="nav-item active"><a class="nav-link" th:href="@{/}">Home/University</a></li>
+				</ul>
+			</div>
+		</nav>
+	</header>
+
+	<div class="container-fluid ">
+		<div class="row">
+			<div class="col-md-2 bg-info" style="height: 100vh;">
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item"><a th:href="@{/students/all}"
+						class="text-info"> <i class="fa fa-cog mr-2"
+							aria-hidden="true"></i>All students
+					</a></li>
+					<li class="list-group-item"><a
+						th:href="@{/students/formAddStudent}" class="text-info"> <i
+							class="fa fa-cog mr-2" aria-hidden="true"></i>Add student
+					</a></li>
+					<li class="list-group-item"><a
+						th:href="@{/students/formStudentById}" class="text-info"> <i
+							class="fa fa-cog mr-2" aria-hidden="true"></i>Find student
+					</a></li>
+				</ul>
+			</div>
+			<div class="col-md-10" style="height: 100vh;">
+				<div class="row">
+					<div class="col-md-8 offset-2">
+						<div class="text-center mt-2">
+							<h4 class="text-info">Add new student</h4>
+						</div>
+						<form th:method="POST" th:action="@{/students/createStudent}"
+							th:object=${student}>
+							<div class="form-group row">
+								<label for="colFormLabel"
+									class="col-sm-3 col-form-label text-right">Student id</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="colFormLabel"
+										th:field="*{studentId}">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="colFormLabel"
+									class="col-sm-3 col-form-label text-right">First name</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="colFormLabel"
+										th:value="*{firstName}" th:field="*{firstName}">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="colFormLabel"
+									class="col-sm-3 col-form-label text-right">Last name</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="colFormLabel"
+										th:field="*{lastName}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="dateId" class="col-sm-3 col-form-label text-right">Birth
+									date</label>
+								<div class="col-sm-6">
+									<input type="date" class="form-control" id="dateId"
+										th:value="*{birthDate}" th:field="*{birthDate}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="colFormLabel"
+									class="col-sm-3 col-form-label text-right">Phone</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="colFormLabel"
+										th:field="*{phone}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="colFormLabel"
+									class="col-sm-3 col-form-label text-right">Address</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="colFormLabel"
+										th:field="*{address}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="email" class="col-sm-3 col-form-label text-right">Email</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="email"
+										th:field="*{email}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="colFormLabel"
+									class="col-sm-3 col-form-label text-right">Rank</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="colFormLabel"
+										th:field="*{rank}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="colFormLabel"
+									class="col-sm-3 col-form-label text-right">Gender</label>
+								<div class="col-sm-6">
+									<select name="gender" th:field="*{gender}" class="form-control">
+										<option
+											th:each="gender : ${T(ua.com.foxminded.krailo.university.model.Gender).values()}"
+											th:value="${gender}" th:text="${gender}"></option>
+									</select>
+								</div>
+							</div>
+
+
+							<div class=" row">
+								<div class="col-md-6 offset-3 text-right">
+									<button type="submit" class="btn btn btn-success">Add
+										student</button>
+								</div>
+							</div>
+						</form>
+
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</body>
+
+</html>
