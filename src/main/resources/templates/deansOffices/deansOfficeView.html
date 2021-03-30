@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+	xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" type="text/css"
+	th:href="@{/bootstrap/css/bootstrap.min.css}">
+<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+
+<!-- Jquery CSS -->
+<script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
+
+<!-- Custom css -->
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+
+<!-- Web font awesome 5 local -->
+<link rel="stylesheet"
+	th:href="@{/webfonts/fontawesome/css/all.min.css}">
+
+<!-- Web font bootstrap 4 local -->
+<link rel="stylesheet"
+	th:href="@{/webfonts/bootstrap-icon/bootstrap-icons.css}">
+
+<!-- Web font awesome 4 local -->
+<link rel="stylesheet"
+	th:href="@{/webfonts/font-awesome-4/font-awesome-4.7.0/css/font-awesome.min.css}">
+
+<title>DeansOffices</title>
+</head>
+
+<body>
+	<header th:replace="~{deansOffices/deansOffices::header}"></header>
+
+	<div class="container-fluid ">
+
+		<div class="row">
+			<div th:replace="~{deansOffices/deansOffices::side-menu}"></div>
+
+			<div class="col-md-10" style="height: 100vh;">
+				<div class="row text-center mt-2">
+					<div class="col-md-8 offset-2">
+						<h4 class="text-info">View deansOffice</h4>
+
+						<form th:object=${deansOffice}>
+							<div class="form-group row">
+								<label for="colFormLabel"
+									class="col-sm-3 col-form-label text-right">ID</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="colFormLabel"
+										th:field="*{id}">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="colFormLabel"
+									class="col-sm-3 col-form-label text-right">Name</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="colFormLabel"
+										th:field="*{name}">
+								</div>
+							</div>
+							
+							<div class=" row">
+								<div class="col-md-6 offset-3 text-right">
+									<a class="btn btn-success mr-3" th:href="@{/deansOffices/all}"
+										role="button">Back to all deansOffices</a>
+								</div>
+							</div>
+						</form>
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

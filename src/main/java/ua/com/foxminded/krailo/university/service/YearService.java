@@ -48,6 +48,11 @@ public class YearService {
 	log.debug("Get all years");
 	return yearDao.findAll();
     }
+    
+    public List<Year> getBySpecialtyId(int specialtyId) {
+	log.debug("Get years by specialtyId={}", specialtyId);
+	return yearDao.findBySpecialityId(specialtyId);
+    }
 
     public void delete(Year year) {
 	log.debug("Delete year={}", year);
