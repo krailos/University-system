@@ -7,15 +7,15 @@ import java.time.LocalTime;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.krailo.university.dao.LessonTimeScheduleDao2;
+import ua.com.foxminded.krailo.university.dao.LessonTimeScheduleDao;
 import ua.com.foxminded.krailo.university.model.LessonTime;
 
 @Component
 public class LessonTimeRowMapper implements RowMapper<LessonTime> {
 
-    private LessonTimeScheduleDao2 lessonTimeSceduleDao;
+    private LessonTimeScheduleDao lessonTimeSceduleDao;
 
-    public LessonTimeRowMapper(LessonTimeScheduleDao2 lessonTimeSceduleDao) {
+    public LessonTimeRowMapper(LessonTimeScheduleDao lessonTimeSceduleDao) {
 	this.lessonTimeSceduleDao = lessonTimeSceduleDao;
     }
 

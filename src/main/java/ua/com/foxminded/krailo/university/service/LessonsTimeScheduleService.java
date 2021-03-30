@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import ua.com.foxminded.krailo.university.dao.LessonTimeScheduleDao2;
+import ua.com.foxminded.krailo.university.dao.LessonTimeScheduleDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.LessonsTimeSchedule;
 
@@ -17,9 +17,9 @@ public class LessonsTimeScheduleService {
 
     private static final Logger log = LoggerFactory.getLogger(LessonsTimeScheduleService.class);
 
-    private LessonTimeScheduleDao2 lessonTimeScheduleDao;
+    private LessonTimeScheduleDao lessonTimeScheduleDao;
 
-    public LessonsTimeScheduleService(LessonTimeScheduleDao2 lessonTimeScheduleDao) {
+    public LessonsTimeScheduleService(LessonTimeScheduleDao lessonTimeScheduleDao) {
 	this.lessonTimeScheduleDao = lessonTimeScheduleDao;
     }
 

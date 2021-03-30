@@ -20,9 +20,9 @@ import ua.com.foxminded.krailo.university.exception.DaoException;
 import ua.com.foxminded.krailo.university.model.LessonsTimeSchedule;
 
 @Repository
-public class LessonTimeScheduleDao2 {
+public class LessonTimeScheduleDao {
 
-    private static final Logger log = LoggerFactory.getLogger(LessonTimeScheduleDao2.class);
+    private static final Logger log = LoggerFactory.getLogger(LessonTimeScheduleDao.class);
     
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM lessons_timeschedule WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM lessons_timeschedule  ";
@@ -33,7 +33,7 @@ public class LessonTimeScheduleDao2 {
     private JdbcTemplate jdbcTemplate;
     private RowMapper<LessonsTimeSchedule> lessonsTimeScheduleRowMapper;
 
-    public LessonTimeScheduleDao2(JdbcTemplate jdbcTemplate, 
+    public LessonTimeScheduleDao(JdbcTemplate jdbcTemplate, 
 	    RowMapper<LessonsTimeSchedule> lessonsTimescheduleRowMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.lessonsTimeScheduleRowMapper = lessonsTimescheduleRowMapper;
