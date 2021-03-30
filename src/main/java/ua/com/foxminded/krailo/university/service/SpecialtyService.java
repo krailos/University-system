@@ -15,13 +15,13 @@ import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
 import ua.com.foxminded.krailo.university.model.Specialty;
 
 @Service
-public class SpecialityService {
+public class SpecialtyService {
 
-    private static final Logger log = LoggerFactory.getLogger(SpecialityService.class);
+    private static final Logger log = LoggerFactory.getLogger(SpecialtyService.class);
 
     private SpecialityDao specialityDao;
 
-    public SpecialityService(SpecialityDao specialityDao) {
+    public SpecialtyService(SpecialityDao specialityDao) {
 	this.specialityDao = specialityDao;
     }
 
@@ -46,6 +46,11 @@ public class SpecialityService {
     public List<Specialty> getAll() {
 	log.debug("Get all specialities");
 	return specialityDao.findAll();
+    }
+    
+    public List<Specialty> getByFacultyId(int facultyId) {
+	log.debug("Get specialities by Faculty id={}", facultyId);
+	return specialityDao.findByFacultyId(facultyId);
     }
 
     public void delete(Specialty speciality) {

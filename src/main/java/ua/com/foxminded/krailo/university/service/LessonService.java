@@ -81,6 +81,7 @@ public class LessonService {
 	log.debug("get all lessons");
 	return lessonDao.findAll();
     }
+    
 
     public void delete(Lesson lesson) {
 	log.debug("delete lesson={}", lesson);

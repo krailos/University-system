@@ -38,6 +38,7 @@ public class LessonDao {
     private static final String SQL_INSERT_INTO_LESSONS_GROUPS = "INSERT INTO lessons_groups (lesson_id, group_id) VALUES (?, ?)";
     private static final String SQL_DELETE_LESSONS_GROUPS_BY_LESSON_ID_GROUP_ID = "DELETE FROM lessons_groups WHERE lesson_id = ? AND group_id = ?";
     private static final String SQL_SELECT_BY_DATE = "SELECT * FROM lessons WHERE date = ?";
+    private static final String SQL_SELECT_BY_TIMETABLE = "SELECT * FROM lessons WHERE timetable_id = ?";
     private static final String SQL_SELECT_BY_TEACHER_BETWEEN_DATES = "SELECT * FROM lessons WHERE teacher_id = ? AND date BETWEEN ? AND ?";
     private static final String SQL_SELECT_BY_TEACHER_AND_DATE = "SELECT * FROM lessons WHERE teacher_id = ? AND date = ?";
     private static final String SQL_SELECT_BY_STUDENT_BETWEEN_DATES = "SELECT lessons.id, date, lesson_time_id, subject_id, teacher_id, audience_id, lesson_id, lessons_groups.group_id,"
@@ -160,7 +161,8 @@ public class LessonDao {
 	    throw new DaoException("Unable to find lessons by date=" + date, e);
 	}
     }
-
+    
+   
     public List<Lesson> findByTeacherBetweenDates(Teacher teacher, LocalDate start, LocalDate end) {
 	log.debug("Find lessons by teacher={} and startDate={} and endDate={}", teacher, start, end);
 	try {
