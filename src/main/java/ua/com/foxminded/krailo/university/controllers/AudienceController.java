@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.service.AudienceService;
 
+
 @Controller
 @RequestMapping("/audiences")
 public class AudienceController {

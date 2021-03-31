@@ -1,3 +1,4 @@
+
 package ua.com.foxminded.krailo.university.dao;
 
 import static java.lang.String.format;

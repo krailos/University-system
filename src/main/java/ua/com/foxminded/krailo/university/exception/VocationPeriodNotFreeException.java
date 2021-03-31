@@ -1,3 +1,4 @@
+
 package ua.com.foxminded.krailo.university.exception;
 
 public class VocationPeriodNotFreeException extends ServiceException {
