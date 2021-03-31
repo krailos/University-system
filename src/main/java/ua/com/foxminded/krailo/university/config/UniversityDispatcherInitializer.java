@@ -18,6 +18,5 @@ public class UniversityDispatcherInitializer extends AbstractAnnotationConfigDis
     protected String[] getServletMappings() {
 	return new String[] { "/" };
     }
-
     
 }
