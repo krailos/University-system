@@ -10,11 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import ua.com.foxminded.krailo.university.model.Audience;
-import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.service.AudienceService;
-import ua.com.foxminded.krailo.university.service.GroupService;
-import ua.com.foxminded.krailo.university.service.LessonService;
-import ua.com.foxminded.krailo.university.service.SubjectService;
 
 @Controller
 @RequestMapping("/audiences")
