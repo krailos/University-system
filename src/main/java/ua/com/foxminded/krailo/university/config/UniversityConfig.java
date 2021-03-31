@@ -12,6 +12,8 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @ComponentScan("ua.com.foxminded.krailo.university")
@@ -49,5 +51,9 @@ public class UniversityConfig {
 	dataSourceTransactionManager.setDataSource(dataSource);
 	return dataSourceTransactionManager;
     }
+    
+        
 
+    
+  
 }
