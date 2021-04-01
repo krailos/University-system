@@ -7,10 +7,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.krailo.university.dao.FacultyDao;
-import ua.com.foxminded.krailo.university.model.Specialty;
+import ua.com.foxminded.krailo.university.model.Speciality;
 
 @Component
-public class SpecialityRowMapper implements RowMapper<Specialty> {
+public class SpecialityRowMapper implements RowMapper<Speciality> {
 
     private FacultyDao facultyDao;
 
@@ -19,8 +19,8 @@ public class SpecialityRowMapper implements RowMapper<Specialty> {
     }
 
     @Override
-    public Specialty mapRow(ResultSet rs, int rowNum) throws SQLException {
-	Specialty speciality = new Specialty();
+    public Speciality mapRow(ResultSet rs, int rowNum) throws SQLException {
+	Speciality speciality = new Speciality();
 	speciality.setId(rs.getInt("id"));
 	speciality.setName(rs.getString("name"));
 	facultyDao.findById(rs.getInt("faculty_id")).ifPresent(speciality::setFaculty);
