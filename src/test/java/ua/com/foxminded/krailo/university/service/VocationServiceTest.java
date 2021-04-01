@@ -24,7 +24,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
-import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.VocationEndBoforeStartException;
 import ua.com.foxminded.krailo.university.exception.VocationPeriodNotFreeException;
 import ua.com.foxminded.krailo.university.exception.VocationPeriodNotSameYearException;
@@ -266,18 +265,6 @@ class VocationServiceTest {
 	Vocation actual = vocationService.getById(1);
 
 	assertEquals(expected, actual);
-    }
-    
-    @Test
-    void givenVocationWithNotExistingId_whenGetById_thenEntityNotFoundException() {
-	when(vocationDao.findById(1)).thenReturn(Optional.empty());
-	
-	Exception exception = assertThrows(EntityNotFoundException.class,
-		() -> vocationService.getById(1));
-
-	String expectedMessage = "Vocation whith id=1 not exist";
-	String actualMessage = exception.getMessage();
-	assertEquals(expectedMessage, actualMessage);
     }
 
     @Test

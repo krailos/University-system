@@ -7,13 +7,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 
-import ua.com.foxminded.krailo.university.config.UniversityConfig;
+import ua.com.foxminded.krailo.university.configuration.UniversityConfig;
 
 @Configuration
 @Import(UniversityConfig.class)
-@PropertySource("classpath:configTest.properties")
+@PropertySource("classpath:config.properties")
 public class ConfigTest {
 
     @Bean

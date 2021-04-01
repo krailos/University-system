@@ -7,14 +7,14 @@ public class Year {
 
     private int id;
     private String name;
-    private Specialty speciality;
+    private Speciality speciality;
     private List<Subject> subjects = new ArrayList<>();
     private List<Group> groups = new ArrayList<>();
 
     public Year() {
     }
 
-    public Year(int id, String name, Specialty speciality, List<Subject> subjects, List<Group> groups) {
+    public Year(int id, String name, Speciality speciality, List<Subject> subjects, List<Group> groups) {
 	this.id = id;
 	this.name = name;
 	this.speciality = speciality;
@@ -42,11 +42,11 @@ public class Year {
 	this.name = name;
     }
 
-    public Specialty getSpeciality() {
+    public Speciality getSpeciality() {
 	return speciality;
     }
 
-    public void setSpeciality(Specialty speciality) {
+    public void setSpeciality(Speciality speciality) {
 	this.speciality = speciality;
     }
 
@@ -70,7 +70,7 @@ public class Year {
 
 	private int id;
 	private String name;
-	private Specialty speciality;
+	private Speciality speciality;
 	private List<Subject> subjects = new ArrayList<>();
 	private List<Group> groups = new ArrayList<>();
 
@@ -84,7 +84,7 @@ public class Year {
 	    return this;
 	}
 
-	public YearBuilder speciality(Specialty speciality) {
+	public YearBuilder speciality(Speciality speciality) {
 	    this.speciality = speciality;
 	    return this;
 	}

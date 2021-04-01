@@ -8,12 +8,12 @@ public class Faculty {
     private int id;
     private String name;
     private DeansOffice deansOffice;
-    private List<Specialty> specialities = new ArrayList<>();
+    private List<Speciality> specialities = new ArrayList<>();
 
     public Faculty() {
     }
 
-    public Faculty(int id, String name, DeansOffice deansOffice, List<Specialty> specialities) {
+    public Faculty(int id, String name, DeansOffice deansOffice, List<Speciality> specialities) {
 	this.id = id;
 	this.name = name;
 	this.deansOffice = deansOffice;
@@ -40,11 +40,11 @@ public class Faculty {
 	this.name = name;
     }
 
-    public List<Specialty> getSpecialities() {
+    public List<Speciality> getSpecialities() {
 	return specialities;
     }
 
-    public void setSpecialities(List<Specialty> specialities) {
+    public void setSpecialities(List<Speciality> specialities) {
 	this.specialities = specialities;
     }
 
@@ -60,7 +60,7 @@ public class Faculty {
 	private int id;
 	private String name;
 	private DeansOffice deansOffice;
-	private List<Specialty> specialities = new ArrayList<>();
+	private List<Speciality> specialities = new ArrayList<>();
 
 	public FacultyBuilder id(int id) {
 	    this.id = id;
@@ -77,7 +77,7 @@ public class Faculty {
 	    return this;
 	}
 	
-	public FacultyBuilder specialities(List<Specialty> specialities) {
+	public FacultyBuilder specialities(List<Speciality> specialities) {
 	    this.specialities = specialities;
 	    return this;
 	}

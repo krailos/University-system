@@ -11,16 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.config.WebConfig;
-import ua.com.foxminded.krailo.university.model.Specialty;
+import ua.com.foxminded.krailo.university.model.Speciality;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Year;
 
-@SpringJUnitWebConfig(classes = { WebConfig.class, ConfigTest.class })
+@SpringJUnitConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
 class YearDaoTest {
 
@@ -31,7 +29,7 @@ class YearDaoTest {
 
     @Test
     void givenNewYear_whenCreate_thenCreated() {
-	Year year = Year.builder().name("new name").speciality(Specialty.builder().id(1).name("new name").build())
+	Year year = Year.builder().name("new name").speciality(Speciality.builder().id(1).name("new name").build())
 		.build();
 
 	yearDao.create(year);
@@ -42,7 +40,7 @@ class YearDaoTest {
 
     @Test
     void givenNewYearWithSubjects_whenCreate_thenNewRowsInYearsSubjectsCreated() {
-	Year year = Year.builder().name("new name").speciality(Specialty.builder().id(1).name("new name").build())
+	Year year = Year.builder().name("new name").speciality(Speciality.builder().id(1).name("new name").build())
 		.build();
 	List<Subject> subjects = new ArrayList<>(Arrays.asList(Subject.builder().id(3).name("new subject").build(),
 		Subject.builder().id(4).name("new subject").build()));
@@ -57,8 +55,8 @@ class YearDaoTest {
 
     @Test
     void givenNewFieldsOfYear_whenUpdate_tnenUpdated() {
-	Year year = Year.builder().id(1).name("new name").speciality(Specialty.builder().id(1).name("new name").build())
-		.build();
+	Year year = Year.builder().id(1).name("new name")
+		.speciality(Speciality.builder().id(1).name("new name").build()).build();
 
 	yearDao.update(year);
 
@@ -68,8 +66,8 @@ class YearDaoTest {
 
     @Test
     void givenNewSubjectsOfYear_whenUpdate_thenNewRowsInYearsSubjectsUpdated() {
-	Year year = Year.builder().id(1).name("new name").speciality(Specialty.builder().id(1).name("new name").build())
-		.build();
+	Year year = Year.builder().id(1).name("new name")
+		.speciality(Speciality.builder().id(1).name("new name").build()).build();
 	List<Subject> subjects = new ArrayList<>(Arrays.asList(Subject.builder().id(1).name("new subject").build(),
 		Subject.builder().id(2).name("new subject").build()));
 	year.setSubjects(subjects);

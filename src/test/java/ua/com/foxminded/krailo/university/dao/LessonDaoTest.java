@@ -11,11 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.config.WebConfig;
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
@@ -24,7 +22,7 @@ import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
 
-@SpringJUnitWebConfig(classes = { WebConfig.class, ConfigTest.class })
+@SpringJUnitConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
 class LessonDaoTest {
 

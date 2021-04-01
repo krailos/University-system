@@ -21,7 +21,7 @@ import ua.com.foxminded.krailo.university.dao.SpecialityDao;
 import ua.com.foxminded.krailo.university.dao.YearDao;
 import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
 import ua.com.foxminded.krailo.university.model.Faculty;
-import ua.com.foxminded.krailo.university.model.Specialty;
+import ua.com.foxminded.krailo.university.model.Speciality;
 
 @ExtendWith(MockitoExtension.class)
 class SpecialityServiceTest {
@@ -31,11 +31,11 @@ class SpecialityServiceTest {
     @Mock
     private YearDao yearDao;
     @InjectMocks
-    private SpecialtyService specialityService;
+    private SpecialityService specialityService;
 
     @Test
     void givenSpeciality_whenCereate_thenCreated() {
-	Specialty speciality = createSpeciality();
+	Speciality speciality = createSpeciality();
 	when(specialityDao.findByNameAndFacultyId(speciality.getName(), speciality.getFaculty().getId()))
 		.thenReturn(Optional.empty());
 
@@ -46,9 +46,9 @@ class SpecialityServiceTest {
 
     @Test
     void givenSpecialityWithNotUniqueName_whenCereate_thenNotUniqueNameExceptionThrown() {
-	Specialty speciality = createSpeciality();
+	Speciality speciality = createSpeciality();
 	when(specialityDao.findByNameAndFacultyId(speciality.getName(), speciality.getFaculty().getId()))
-		.thenReturn(Optional.of(Specialty.builder().id(2).name("name").build()));
+		.thenReturn(Optional.of(Speciality.builder().id(2).name("name").build()));
 
 	Exception exception = assertThrows(NotUniqueNameException.class, () -> specialityService.create(speciality));
 
@@ -59,9 +59,9 @@ class SpecialityServiceTest {
 
     @Test
     void givenSpeciality_whenUpdate_thenUpdeted() {
-	Specialty speciality = createSpeciality();
+	Speciality speciality = createSpeciality();
 	when(specialityDao.findByNameAndFacultyId(speciality.getName(), speciality.getFaculty().getId()))
-		.thenReturn(Optional.of(Specialty.builder().id(1).name("name").build()));
+		.thenReturn(Optional.of(Speciality.builder().id(1).name("name").build()));
 
 	specialityService.update(speciality);
 
@@ -70,9 +70,9 @@ class SpecialityServiceTest {
 
     @Test
     void givenSpecialityWithNotUniqueNameAndDiffrentId_whenUpdate_thenTrowServiceException() {
-	Specialty speciality = createSpeciality();
+	Speciality speciality = createSpeciality();
 	when(specialityDao.findByNameAndFacultyId(speciality.getName(), speciality.getFaculty().getId()))
-		.thenReturn(Optional.of(Specialty.builder().id(2).name("name").build()));
+		.thenReturn(Optional.of(Speciality.builder().id(2).name("name").build()));
 
 	Exception exception = assertThrows(NotUniqueNameException.class, () -> specialityService.create(speciality));
 
@@ -84,11 +84,11 @@ class SpecialityServiceTest {
 
     @Test
     void givenSpecialityId_whenGetById_thenGot() {
-	Specialty speciality = createSpeciality();
+	Speciality speciality = createSpeciality();
 	when(specialityDao.findById(1)).thenReturn(Optional.of(speciality));
-	Specialty expected = createSpeciality();
+	Speciality expected = createSpeciality();
 
-	Specialty actual = specialityService.getById(1);
+	Speciality actual = specialityService.getById(1);
 
 	assertEquals(expected, actual);
     }
@@ -96,18 +96,18 @@ class SpecialityServiceTest {
     @Test
     void givenSpecialities_whenGetAll_thenGot() {
 
-	List<Specialty> specialities = createSpecialities();
+	List<Speciality> specialities = createSpecialities();
 	when(specialityDao.findAll()).thenReturn(specialities);
 
-	List<Specialty> actual = specialityService.getAll();
+	List<Speciality> actual = specialityService.getAll();
 
-	List<Specialty> expected = createSpecialities();
+	List<Speciality> expected = createSpecialities();
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenSpeciality_whenDelete_thenDeleted() {
-	Specialty speciality = createSpeciality();
+	Speciality speciality = createSpeciality();
 	doNothing().when(specialityDao).deleteById(1);
 
 	specialityService.delete(speciality);
@@ -115,13 +115,13 @@ class SpecialityServiceTest {
 	verify(specialityDao).deleteById(1);
     }
 
-    private Specialty createSpeciality() {
-	return Specialty.builder().id(1).name("name").faculty(Faculty.builder().id(1).build()).build();
+    private Speciality createSpeciality() {
+	return Speciality.builder().id(1).name("name").faculty(Faculty.builder().id(1).build()).build();
     }
 
-    private List<Specialty> createSpecialities() {
-	return new ArrayList<>(Arrays.asList(Specialty.builder().id(1).name("name").build(),
-		Specialty.builder().id(2).name("name2").build()));
+    private List<Speciality> createSpecialities() {
+	return new ArrayList<>(Arrays.asList(Speciality.builder().id(1).name("name").build(),
+		Speciality.builder().id(2).name("name2").build()));
     }
 
 }
