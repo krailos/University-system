@@ -4,12 +4,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 public class Lesson {
 
     private int id;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
     private LessonTime lessonTime;
     private Subject subject;

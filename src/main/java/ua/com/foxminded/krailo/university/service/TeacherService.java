@@ -43,15 +43,15 @@ public class TeacherService {
 	return teacherDao.findById(id)
 		.orElseThrow(() -> new EntityNotFoundException(format("Teacher whith id=%s not exist", id)));
     }
-    
-    public List<Teacher> getBySubjectId(int subjectId) {
-	log.debug("Get teacher by subjectId={}", subjectId);
-	return teacherDao.findBySubjectId(subjectId);
-    }
 
     public List<Teacher> getAll() {
 	log.debug("Get all teachers");
 	return teacherDao.findAll();
+    }
+
+    public List<Teacher> getBySubjectId(int subjectId) {
+	log.debug("Get teachers by subjectid={}", subjectId);
+	return teacherDao.findBySubjectId(subjectId);
     }
 
     public void delete(Teacher teacher) {

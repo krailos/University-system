@@ -10,14 +10,13 @@ public class Student {
     private String studentId;
     private String firstName;
     private String lastName;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
     private String phone;
     private String address;
     private String email;
     private String rank;
     private Gender gender;
-    private Group group = Group.builder().id(1).build();
+    private Group group;
 
     public Student() {
     }
@@ -135,7 +134,6 @@ public class Student {
 	private String studentId;
 	private String firstName;
 	private String lastName;
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate birthDate;
 	private String phone;
 	private String address;

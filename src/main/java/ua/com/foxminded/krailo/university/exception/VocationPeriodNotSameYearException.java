@@ -1,4 +1,3 @@
-
 package ua.com.foxminded.krailo.university.exception;
 
 public class VocationPeriodNotSameYearException extends ServiceException {

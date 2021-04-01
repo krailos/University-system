@@ -38,19 +38,20 @@ public class SpecialtyService {
     }
 
     public Specialty getById(int id) {
-	log.debug("Get department by id={}", id);
+	log.debug("Get speciality by id={}", id);
 	return specialityDao.findById(id)
 		.orElseThrow(() -> new EntityNotFoundException(format("Speciality whith id=%s not exist", id)));
     }
+    
+    public List<Specialty> getByFacultyId(int facultyId) {
+	log.debug("Get speciality by FacultyId={}", facultyId);
+  	return specialityDao.findByFacultyId(facultyId);
+      }
+
 
     public List<Specialty> getAll() {
 	log.debug("Get all specialities");
 	return specialityDao.findAll();
-    }
-    
-    public List<Specialty> getByFacultyId(int facultyId) {
-	log.debug("Get specialities by Faculty id={}", facultyId);
-	return specialityDao.findByFacultyId(facultyId);
     }
 
     public void delete(Specialty speciality) {
@@ -67,4 +68,5 @@ public class SpecialtyService {
 
     }
 
+  
 }

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
@@ -38,16 +39,16 @@ class AudienceDaoTest {
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "Audiences", "id =" + audience.getId());
 	assertEquals(1, actual);
     }
-
+ 
     @Test
     void givenAudienceWithExistingNumberAndBuildingId_whenCreate_thenDaoConstraintViolationExceptionThrown() {
 	Audience audience = Audience.builder().number("1")
 		.building(Building.builder().id(2).name("name").address("address").build()).capacity(120)
 		.description("description3").build();
-
+	
 	String actual = assertThrows(DaoConstraintViolationException.class, () -> audienceDao.create(audience))
 		.getMessage();
-
+	
 	String expected = "Audiences not created, audience=0-1-2-name-address-120-description3";
 	assertEquals(actual, expected);
     }
@@ -95,7 +96,7 @@ class AudienceDaoTest {
 	assertEquals(Optional.empty(), actual);
     }
 
-    @Test
+    @Test 
     void givenNewFieldsOfAudience_whenUpdate_thenUpdated() {
 	Audience audience = Audience.builder().id(1).number("new")
 		.building(Building.builder().id(1).name("new name").address("new address").build()).capacity(1)
@@ -107,16 +108,16 @@ class AudienceDaoTest {
 		"number = 'new' AND building_id = 1 AND capacity = 1 AND description = 'new'");
 	assertEquals(1, actual);
     }
-
+    
     @Test
     void givenAudienceWithExistingNumberAndBuildingId_whenUpdate_thenDaoConstraintViolationExceptionThrown() {
 	Audience audience = Audience.builder().id(1).number("2")
 		.building(Building.builder().id(2).name("name").address("address").build()).capacity(120)
 		.description("description3").build();
-
+	
 	String actual = assertThrows(DaoConstraintViolationException.class, () -> audienceDao.update(audience))
 		.getMessage();
-
+	
 	String expected = "Audience not updated audience1-2-2-name-address-120-description3";
 	assertEquals(actual, expected);
     }

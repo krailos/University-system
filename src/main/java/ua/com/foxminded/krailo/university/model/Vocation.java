@@ -2,17 +2,12 @@ package ua.com.foxminded.krailo.university.model;
 
 import java.time.LocalDate;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 public class Vocation {
 
     private int id;
     private VocationKind kind;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate applyingDate;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate start;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate end;
     private Teacher teacher;
 

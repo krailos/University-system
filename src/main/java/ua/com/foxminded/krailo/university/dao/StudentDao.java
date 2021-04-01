@@ -2,7 +2,6 @@ package ua.com.foxminded.krailo.university.dao;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.Types;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,10 +51,10 @@ public class StudentDao {
 		ps.setString(3, student.getLastName());
 		ps.setDate(4, Date.valueOf(student.getBirthDate()));
 		ps.setString(5, student.getPhone());
-		ps.setString(6, student.getAddress());
-		ps.setString(7, student.getEmail());
+		ps.setString(6, student.getEmail());
+		ps.setString(7, student.getAddress());
 		ps.setString(8, student.getRank());
-		ps.setObject(9, student.getGender(), Types.OTHER);
+		ps.setString(9, student.getGender().toString());
 		ps.setInt(10, student.getGroup().getId());
 		return ps;
 	    }, keyHolder);

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 
 import ua.com.foxminded.krailo.university.config.UniversityConfig;
 
