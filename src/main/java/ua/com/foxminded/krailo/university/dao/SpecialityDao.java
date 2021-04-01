@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.krailo.university.exception.DaoConstraintViolationException;
 import ua.com.foxminded.krailo.university.exception.DaoException;
-import ua.com.foxminded.krailo.university.model.Specialty;
+import ua.com.foxminded.krailo.university.model.Speciality;
 
 @Repository
 public class SpecialityDao {
@@ -35,14 +35,14 @@ public class SpecialityDao {
     private static final String SQL_UPDATE_BY_ID = "UPDATE specialities SET name = ?, faculty_id = ? where id = ?";
 
     private JdbcTemplate jdbcTemplate;
-    private RowMapper<Specialty> specialityRowMapper;
+    private RowMapper<Speciality> specialityRowMapper;
 
-    public SpecialityDao(JdbcTemplate jdbcTemplate, RowMapper<Specialty> specialityRowMapper) {
+    public SpecialityDao(JdbcTemplate jdbcTemplate, RowMapper<Speciality> specialityRowMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.specialityRowMapper = specialityRowMapper;
     } 
 
-    public void create(Specialty speciality) {
+    public void create(Speciality speciality) {
 	log.debug("Create speciality={}", speciality);
 	try {
 	    KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -61,7 +61,7 @@ public class SpecialityDao {
 	log.info("Created speciality={}", speciality);
     }
 
-    public void update(Specialty speciality) {
+    public void update(Speciality speciality) {
 	log.debug("Update speciality={}", speciality);
 	int rowsAffected = 0;
 	try {
@@ -79,7 +79,7 @@ public class SpecialityDao {
 	}
     }
 
-    public Optional<Specialty> findById(int id) {
+    public Optional<Speciality> findById(int id) {
 	log.debug("Find speciality by id={}", id);
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(SQL_SELECT_BY_ID, specialityRowMapper, id));
@@ -91,7 +91,7 @@ public class SpecialityDao {
 	}
     }
 
-    public List<Specialty> findAll() {
+    public List<Speciality> findAll() {
 	log.debug("Find all specialities");
 	try {
 	    return jdbcTemplate.query(SQL_SELECT_ALL, specialityRowMapper);
@@ -115,7 +115,7 @@ public class SpecialityDao {
 	}
     }
 
-    public List<Specialty> findByFacultyId(int facultyId) {
+    public List<Speciality> findByFacultyId(int facultyId) {
 	log.debug("Find specialities by facultyId={}", facultyId);
 	try {
 	    return jdbcTemplate.query(SQL_SELECT_BY_FACULTY_ID, specialityRowMapper, facultyId);
@@ -124,7 +124,7 @@ public class SpecialityDao {
 	}
     }
 
-    public Optional<Specialty> findByNameAndFacultyId(String name, int facultyId) {
+    public Optional<Speciality> findByNameAndFacultyId(String name, int facultyId) {
 	log.debug("Find speciality by name={} and facultyId={}", name, facultyId);
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(SQL_SELECT_BY_NAME_AND_FACULTY_ID, specialityRowMapper, name,
