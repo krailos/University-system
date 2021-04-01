@@ -2,7 +2,6 @@ package ua.com.foxminded.krailo.university.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +15,12 @@ import ua.com.foxminded.krailo.university.service.HolidayService;
 @RequestMapping("/holidays")
 public class HolidaysController {
 
-    @Autowired
-    HolidayService holidayService;
-   
+    private HolidayService holidayService;
+    
+    public HolidaysController(HolidayService holidayService) {
+	this.holidayService = holidayService;
+    }
+
     @GetMapping()
     public String getHolidaysStartPage() {
 	return "holidays/holidays";

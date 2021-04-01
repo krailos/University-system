@@ -2,7 +2,6 @@ package ua.com.foxminded.krailo.university.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,20 +9,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import ua.com.foxminded.krailo.university.model.LessonTime;
-import ua.com.foxminded.krailo.university.service.GroupService;
 import ua.com.foxminded.krailo.university.service.LessonTimeService;
-import ua.com.foxminded.krailo.university.service.SubjectService;
 
 @Controller
 @RequestMapping("/lessonTimes")
 public class LessonTimeController {
 
-    @Autowired
-    LessonTimeService lessonTimeService;
-    @Autowired
-    SubjectService subjectService;
-    @Autowired
-    GroupService groupService;
+    private LessonTimeService lessonTimeService;
+
+    public LessonTimeController(LessonTimeService lessonTimeService) {
+	this.lessonTimeService = lessonTimeService;
+    }
 
     @GetMapping()
     public String getLessonTimeStartPage() {

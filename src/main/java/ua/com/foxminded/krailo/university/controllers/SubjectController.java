@@ -2,7 +2,6 @@ package ua.com.foxminded.krailo.university.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,11 +19,14 @@ import ua.com.foxminded.krailo.university.service.TeacherService;
 @RequestMapping("/subjects")
 public class SubjectController {
 
-    @Autowired
-    SubjectService subjectService;
+    private SubjectService subjectService;
 
-    @Autowired
-    TeacherService teacherService;
+    private TeacherService teacherService;
+
+    public SubjectController(SubjectService subjectService, TeacherService teacherService) {
+	this.subjectService = subjectService;
+	this.teacherService = teacherService;
+    }
 
     @GetMapping()
     public String getTeacherspage() {
@@ -62,7 +64,5 @@ public class SubjectController {
 	model.addAttribute("subject", subject);
 	return "subjects/formFindSubjectById";
     }
-
-
 
 }

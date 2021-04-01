@@ -19,7 +19,7 @@ import ua.com.foxminded.krailo.university.service.StudentService;
 public class StudentController {
 
     private StudentService studentService;
-    
+
     public StudentController(StudentService studentService) {
 	this.studentService = studentService;
     }
@@ -53,19 +53,19 @@ public class StudentController {
     public String getFormStudentById() {
 	return "students/formFindStudentById";
     }
-    
+
     @GetMapping("/findStudentById/{id}")
     public String getViewStudentGet(@PathVariable("id") int id, Model model) {
 	Student student = studentService.getById(id);
 	model.addAttribute("student", student);
 	return "students/studentView";
     }
- 
+
     @PostMapping("/findStudentById/")
     public String getViewStudentPost(@RequestParam("id") int id, Model model) {
 	Student student = studentService.getById(id);
 	model.addAttribute("student", student);
-	return  "students/studentView";
+	return "students/studentView";
     }
 
     @GetMapping("/formUpdate/{id}")
