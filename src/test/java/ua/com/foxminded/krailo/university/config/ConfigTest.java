@@ -8,8 +8,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import ua.com.foxminded.krailo.university.configuration.UniversityConfig;
-
 @Configuration
 @Import(UniversityConfig.class)
 @PropertySource("classpath:config.properties")

@@ -9,18 +9,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import ua.com.foxminded.krailo.university.model.Faculty;
-import ua.com.foxminded.krailo.university.model.Specialty;
+import ua.com.foxminded.krailo.university.model.Speciality;
 import ua.com.foxminded.krailo.university.service.FacultyService;
-import ua.com.foxminded.krailo.university.service.SpecialtyService;
+import ua.com.foxminded.krailo.university.service.SpecialityService;
 
 @Controller
 @RequestMapping("/faculties")
 public class FacultyController {
 
     private FacultyService facultyService;
-    private SpecialtyService speciltyService;
+    private SpecialityService speciltyService;
 
-    public FacultyController(FacultyService facultyService, SpecialtyService speciltyService) {
+    public FacultyController(FacultyService facultyService, SpecialityService speciltyService) {
 	this.facultyService = facultyService;
 	this.speciltyService = speciltyService;
     }
@@ -40,7 +40,7 @@ public class FacultyController {
     @GetMapping("/findFacultyById/{id}")
     public String getViewFaculty(@PathVariable("id") int id, Model model) {
 	Faculty faculty = facultyService.getById(id);
-	List<Specialty> specialties = speciltyService.getByFacultyId(faculty.getId());
+	List<Speciality> specialties = speciltyService.getByFacultyId(faculty.getId());
 	faculty.setSpecialities(specialties);
 	model.addAttribute("faculty", faculty);
 	return "faculties/facultyView";

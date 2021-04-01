@@ -48,6 +48,11 @@ public class GroupService {
 	return groupDao.findAll();
     }
 
+    public List<Group> getByYearId(int yearId) {
+	log.debug("get groups by yearId={}", yearId);
+	return groupDao.findByYearId(yearId);
+    }
+
     public void delete(Group group) {
 	log.debug("delete group={}", group);
 	groupDao.deleteById(group.getId());

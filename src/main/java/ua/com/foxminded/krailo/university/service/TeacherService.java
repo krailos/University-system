@@ -49,6 +49,11 @@ public class TeacherService {
 	return teacherDao.findAll();
     }
 
+    public List<Teacher> getBySubjectId(int subjectId) {
+	log.debug("Get teachers by subjectId={}", subjectId);
+	return teacherDao.findBySubjectId(subjectId);
+    }
+
     public void delete(Teacher teacher) {
 	log.debug("Delete teacher={}", teacher);
 	teacherDao.deleteById(teacher.getId());

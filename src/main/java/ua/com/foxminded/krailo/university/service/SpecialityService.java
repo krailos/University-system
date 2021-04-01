@@ -48,6 +48,11 @@ public class SpecialityService {
 	return specialityDao.findAll();
     }
 
+    public List<Speciality> getByFacultyId(int facultyId) {
+	log.debug("Get specialities byFacultyId");
+	return specialityDao.findByFacultyId(facultyId);
+    }
+
     public void delete(Speciality speciality) {
 	log.debug("Delete speciality={}", speciality);
 	specialityDao.deleteById(speciality.getId());

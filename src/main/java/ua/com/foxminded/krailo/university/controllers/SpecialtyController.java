@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import ua.com.foxminded.krailo.university.model.Specialty;
+import ua.com.foxminded.krailo.university.model.Speciality;
 import ua.com.foxminded.krailo.university.model.Year;
-import ua.com.foxminded.krailo.university.service.SpecialtyService;
+import ua.com.foxminded.krailo.university.service.SpecialityService;
 import ua.com.foxminded.krailo.university.service.YearService;
 
 @Controller
@@ -19,9 +19,9 @@ public class SpecialtyController {
 
     private YearService yearService;
 
-    private SpecialtyService specialtyService;
+    private SpecialityService specialtyService;
 
-    public SpecialtyController(YearService yearService, SpecialtyService specialtyService) {
+    public SpecialtyController(YearService yearService, SpecialityService specialtyService) {
 	this.yearService = yearService;
 	this.specialtyService = specialtyService;
     }
@@ -34,7 +34,7 @@ public class SpecialtyController {
     @GetMapping("/all")
     public String getAllSpecialties(Model model) {
 
-	List<Specialty> specialties = specialtyService.getAll();
+	List<Speciality> specialties = specialtyService.getAll();
 
 	model.addAttribute("specialties", specialties);
 	return "specialties/specialtiesAll";
@@ -43,7 +43,7 @@ public class SpecialtyController {
     @GetMapping("/findSpecialtyById/{id}")
     public String getViewSpecialty(@PathVariable("id") int id, Model model) {
 
-	Specialty specialty = specialtyService.getById(id);
+	Speciality specialty = specialtyService.getById(id);
 
 	List<Year> years = yearService.getBySpecialtyId(specialty.getId());
 	specialty.setYears(years);
