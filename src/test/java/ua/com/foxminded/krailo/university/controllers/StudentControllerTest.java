@@ -47,7 +47,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void givenStudentId_WhenStudentGroup_ThenStudentGot() throws Exception {
+    void givenStudentId_WhenGetStudent_ThenStudentGot() throws Exception {
 	Student expected = getStudentsForTest().get(0);
 	when(studentService.getById(1)).thenReturn(expected);
 

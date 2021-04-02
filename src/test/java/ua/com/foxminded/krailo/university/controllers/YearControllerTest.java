@@ -41,7 +41,7 @@ class YearControllerTest {
     }
 
     @Test
-    void WhenGetAllGroups_ThenAllGroupsReturned() throws Exception {
+    void WhenGetAllYears_ThenAllYearsReturned() throws Exception {
 	List<Year> expected = getYaersForTest();
 	when(yearService.getAll()).thenReturn(expected);
 
@@ -51,7 +51,7 @@ class YearControllerTest {
     }
 
     @Test
-    void givenGroupId_WhenGetGroup_ThenGroupGot() throws Exception {
+    void givenYearId_WhenGetYear_ThenYearGot() throws Exception {
 	Year expected = getYaersForTest().get(0);
 	when(yearService.getById(1)).thenReturn(expected);
 	when(groupService.getByYearId(1)).thenReturn(Arrays.asList(Group.builder().id(1).name("group1").build()));
