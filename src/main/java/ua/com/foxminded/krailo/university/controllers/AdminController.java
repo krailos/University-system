@@ -10,7 +10,7 @@ public class AdminController {
 
     @GetMapping()
     public String getAdminPage() {
-	return "admin";
+	return "adminPage";
     }
 
 }
