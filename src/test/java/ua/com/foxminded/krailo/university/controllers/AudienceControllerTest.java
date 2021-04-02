@@ -17,9 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.service.AudienceService;
@@ -48,7 +45,7 @@ class AudienceControllerTest {
     }
 
     @Test
-    void givenAudienceId_whenGetAudience_thenGotAudience() throws Exception {
+    void givenAudienceId_whenGetAudience_thenAudienceGot() throws Exception {
 	Audience expected = getAudiencesForTest().get(0);
 	when(audienceService.getById(1)).thenReturn(expected);
 

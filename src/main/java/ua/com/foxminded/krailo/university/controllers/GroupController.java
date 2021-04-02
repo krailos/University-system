@@ -38,7 +38,7 @@ public class GroupController {
     }
 
     @GetMapping("/findGroupById/{id}")
-    public String getViewGroups(@PathVariable("id") int id, Model model) {
+    public String getViewGroup(@PathVariable("id") int id, Model model) {
 	Group group = groupService.getById(id);
 	List<Student> students = studentService.getByGroupId(group.getId());
 	group.setStudents(students);
