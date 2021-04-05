@@ -38,25 +38,25 @@ class StudentControllerTest {
 
     @Test
     void WhenGetAllStudents_ThenAllStudentsReturned() throws Exception {
-	List<Student> expected = getStudentsForTest();
+	List<Student> expected = buildStudents();
 	when(studentService.getAll()).thenReturn(expected);
 
-	mockMvc.perform(get("/students/all")).andExpect(view().name("students/studentsAll")).andExpect(status().isOk())
+	mockMvc.perform(get("/students")).andExpect(view().name("students/all")).andExpect(status().isOk())
 		.andExpect(model().attribute("students", expected));
 
     }
 
     @Test
     void givenStudentId_WhenGetStudent_ThenStudentGot() throws Exception {
-	Student expected = getStudentsForTest().get(0);
+	Student expected = buildStudents().get(0);
 	when(studentService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/students/findStudentById/1")).andExpect(view().name("students/studentView"))
+	mockMvc.perform(get("/students/1")).andExpect(view().name("students/student"))
 		.andExpect(status().isOk()).andExpect(model().attribute("student", expected));
 
     }
 
-    private List<Student> getStudentsForTest() {
+    private List<Student> buildStudents() {
 	return Arrays.asList(Student.builder().id(1).firstName("Jon").build(),
 		Student.builder().id(2).firstName("Tom").build());
     }

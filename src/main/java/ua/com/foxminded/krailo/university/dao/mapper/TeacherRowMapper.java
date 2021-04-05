@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.krailo.university.dao.DepartmentDao;
 import ua.com.foxminded.krailo.university.dao.SubjectDao;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Teacher;
@@ -15,11 +14,9 @@ import ua.com.foxminded.krailo.university.model.Teacher;
 @Component
 public class TeacherRowMapper implements RowMapper<Teacher> {
 
-    private DepartmentDao departmentDao;
     private SubjectDao subjectDao;
 
-    public TeacherRowMapper(DepartmentDao departmentDao, SubjectDao subjectDao) {
-	this.departmentDao = departmentDao;
+    public TeacherRowMapper(SubjectDao subjectDao) {
 	this.subjectDao = subjectDao;
     }
 
@@ -36,7 +33,6 @@ public class TeacherRowMapper implements RowMapper<Teacher> {
 	teacher.setAddress(rs.getString("address"));
 	teacher.setDegree(rs.getString("degree"));
 	teacher.setGender(Gender.valueOf(rs.getString("gender")));
-	departmentDao.findById(rs.getInt("department_id")).ifPresent(teacher::setDepartment);
 	teacher.setSubjects(subjectDao.findByTeacherId(teacher.getId()));
 	return teacher;
     }

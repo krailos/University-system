@@ -29,40 +29,19 @@ public class SubjectController {
     }
 
     @GetMapping()
-    public String getTeacherspage() {
-	return "subjects/subjects";
-    }
-
-    @GetMapping("/all")
     public String getAllSubjects(Model model) {
 	List<Subject> subjects = subjectService.getAll();
 	model.addAttribute("subjects", subjects);
-	return "subjects/subjectsAll";
+	return "subjects/all";
     }
 
-    @GetMapping("/findSubjectById/{id}")
-    public String getViewSubjectGet(@PathVariable("id") int id, Model model) {
+    @GetMapping("/{id}")
+    public String getViewSubjectGet(@PathVariable int id, Model model) {
 	Subject subject = subjectService.getById(id);
 	List<Teacher> teachers = teacherService.getBySubjectId(id);
 	subject.setTeachers(teachers);
 	model.addAttribute("subject", subject);
-	return "subjects/subjectView";
-    }
-
-    @PostMapping("/findSubjectById/")
-    public String getViewSubjectPost(@RequestParam("id") int id, Model model) {
-	Subject subject = subjectService.getById(id);
-	List<Teacher> teachers = teacherService.getBySubjectId(id);
-	subject.setTeachers(teachers);
-	model.addAttribute("subject", subject);
-	return "subjects/subjectView";
-    }
-
-    @GetMapping("/formFindSubjectById")
-    public String getFormFindSubjectById(Model model) {
-	Subject subject = new Subject();
-	model.addAttribute("subject", subject);
-	return "subjects/formFindSubjectById";
+	return "subjects/subject";
     }
 
 }

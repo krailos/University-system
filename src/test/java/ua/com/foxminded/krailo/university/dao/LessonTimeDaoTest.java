@@ -15,7 +15,6 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.config.WebConfig;
 import ua.com.foxminded.krailo.university.model.LessonTime;
-import ua.com.foxminded.krailo.university.model.LessonsTimeSchedule;
 
 @SpringJUnitWebConfig(classes = { WebConfig.class, ConfigTest.class })
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
@@ -29,8 +28,7 @@ class LessonTimeDaoTest {
     @Test
     void givenNewLessonTime_whenCreate_thenCreated() {
 	LessonTime lessonTime = LessonTime.builder().orderNumber("new order number").startTime(LocalTime.of(12, 00))
-		.endTime(LocalTime.of(12, 45))
-		.lessonsTimeSchedule(LessonsTimeSchedule.builder().id(1).name("new name").build()).build();
+		.endTime(LocalTime.of(12, 45)).build();
 
 	lessonTimeDao.create(lessonTime);
 
@@ -41,12 +39,11 @@ class LessonTimeDaoTest {
     @Test
     void givenNewFieldsOfLossonTime_whenUpdate_tnenUpdated() {
 	LessonTime lessonTime = LessonTime.builder().orderNumber("new order number").id(1)
-		.startTime(LocalTime.of(12, 00)).endTime(LocalTime.of(12, 45))
-		.lessonsTimeSchedule(LessonsTimeSchedule.builder().id(1).name("new name").build()).build();
+		.startTime(LocalTime.of(12, 00)).endTime(LocalTime.of(12, 45)).build();
 	lessonTimeDao.update(lessonTime);
 
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lesson_times",
-		"order_number = 'new order number' AND lessons_timeschedule_id = 1");
+		"order_number = 'new order number'");
 	assertEquals(1, actual);
     }
 
@@ -68,15 +65,6 @@ class LessonTimeDaoTest {
     }
 
     @Test
-    void givenLessonTimeScheduleId_whenFindByLessonsTimeScheduleId_thenFound() {
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lesson_times", "lessons_timeschedule_id = 1");
-
-	int actual = lessonTimeDao.findBylessonTimeScheduleId(1).size();
-
-	assertEquals(expected, actual);
-    }
-
-    @Test
     void givenId_whenDeleteById_thenDeleted() {
 
 	lessonTimeDao.deleteById(1);
@@ -92,8 +80,10 @@ class LessonTimeDaoTest {
 
 	LessonTime actual = lessonTimeDao.findByStartOrEndLessonTime(lessonTime).get();
 
-	assertTrue(actual.getStartTime().isAfter(LocalTime.of(8, 29)) && actual.getStartTime().isBefore(LocalTime.of(9, 16)));
-	assertTrue(actual.getEndTime().isAfter(LocalTime.of(8, 29)) && actual.getEndTime().isBefore(LocalTime.of(9, 16)));
+	assertTrue(actual.getStartTime().isAfter(LocalTime.of(8, 29))
+		&& actual.getStartTime().isBefore(LocalTime.of(9, 16)));
+	assertTrue(
+		actual.getEndTime().isAfter(LocalTime.of(8, 29)) && actual.getEndTime().isBefore(LocalTime.of(9, 16)));
     }
 
 }

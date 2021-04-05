@@ -6,18 +6,16 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.krailo.university.dao.SpecialityDao;
 import ua.com.foxminded.krailo.university.dao.SubjectDao;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @Component
 public class YearRowMapper implements RowMapper<Year> {
 
-    private SpecialityDao specialityDao;
     private SubjectDao subjectDao;
 
-    public YearRowMapper(SpecialityDao specialityDao, SubjectDao subjectDao) {
-	this.specialityDao = specialityDao;
+    public YearRowMapper(SubjectDao subjectDao) {
+
 	this.subjectDao = subjectDao;
     }
 
@@ -26,7 +24,6 @@ public class YearRowMapper implements RowMapper<Year> {
 	Year year = new Year();
 	year.setId(rs.getInt("id"));
 	year.setName(rs.getString("name"));
-	specialityDao.findById(rs.getInt("speciality_id")).ifPresent(year::setSpeciality);
 	year.setSubjects(subjectDao.findByYearId(rs.getInt("id")));
 	return year;
     }

@@ -26,24 +26,19 @@ public class GroupController {
     }
 
     @GetMapping()
-    public String getGroupStartPage() {
-	return "groups/groups";
-    }
-
-    @GetMapping("/all")
     public String getAllGroups(Model model) {
 	List<Group> groups = groupService.getAll();
 	model.addAttribute("groups", groups);
-	return "groups/groupsAll";
+	return "groups/all";
     }
 
-    @GetMapping("/findGroupById/{id}")
-    public String getViewGroup(@PathVariable("id") int id, Model model) {
+    @GetMapping("/{id}")
+    public String getViewGroup(@PathVariable int id, Model model) {
 	Group group = groupService.getById(id);
 	List<Student> students = studentService.getByGroupId(group.getId());
 	group.setStudents(students);
 	model.addAttribute("group", group);
-	return "groups/groupView";
+	return "groups/group";
     }
 
 }

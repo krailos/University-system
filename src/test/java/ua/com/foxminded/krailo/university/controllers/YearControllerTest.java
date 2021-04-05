@@ -42,26 +42,26 @@ class YearControllerTest {
 
     @Test
     void WhenGetAllYears_ThenAllYearsReturned() throws Exception {
-	List<Year> expected = getYaersForTest();
+	List<Year> expected = buildYaers();
 	when(yearService.getAll()).thenReturn(expected);
 
-	mockMvc.perform(get("/years/all")).andExpect(view().name("years/yearsAll")).andExpect(status().isOk())
+	mockMvc.perform(get("/years")).andExpect(view().name("years/all")).andExpect(status().isOk())
 		.andExpect(model().attribute("years", expected));
 
     }
 
     @Test
     void givenYearId_WhenGetYear_ThenYearGot() throws Exception {
-	Year expected = getYaersForTest().get(0);
+	Year expected = buildYaers().get(0);
 	when(yearService.getById(1)).thenReturn(expected);
 	when(groupService.getByYearId(1)).thenReturn(Arrays.asList(Group.builder().id(1).name("group1").build()));
 
-	mockMvc.perform(get("/years/findYearById/1")).andExpect(view().name("years/yearView"))
+	mockMvc.perform(get("/years/1")).andExpect(view().name("years/year"))
 		.andExpect(status().isOk()).andExpect(model().attribute("year", expected));
 
     }
 
-    private List<Year> getYaersForTest() {
+    private List<Year> buildYaers() {
 	return Arrays.asList(
 		Year.builder().id(1).name("year1").groups(Arrays.asList(Group.builder().id(1).name("group1").build()))
 			.build(),

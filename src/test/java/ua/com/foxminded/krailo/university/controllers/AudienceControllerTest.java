@@ -37,23 +37,23 @@ class AudienceControllerTest {
 
     @Test
     void whenGetAllAudiences_thenAllAudiencesReturned() throws Exception {
-	List<Audience> expected = getAudiencesForTest();
+	List<Audience> expected = buildAudiences();
 	when(audienceService.getAll()).thenReturn(expected);
 
-	mockMvc.perform(get("/audiences/all")).andExpect(view().name("audiences/audiencesAll"))
+	mockMvc.perform(get("/audiences")).andExpect(view().name("audiences/all"))
 		.andExpect(status().isOk()).andExpect(model().attribute("audiences", expected));
     }
 
     @Test
     void givenAudienceId_whenGetAudience_thenAudienceGot() throws Exception {
-	Audience expected = getAudiencesForTest().get(0);
+	Audience expected = buildAudiences().get(0);
 	when(audienceService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/audiences/findAudienceById/1")).andExpect(view().name("audiences/audienceView"))
+	mockMvc.perform(get("/audiences/1")).andExpect(view().name("audiences/audience"))
 		.andExpect(model().attribute("audience", expected));
     }
 
-    private List<Audience> getAudiencesForTest() {
+    private List<Audience> buildAudiences() {
 	return Arrays.asList(Audience.builder().id(1).number("1").build(),
 		Audience.builder().id(2).number("2").build());
     }

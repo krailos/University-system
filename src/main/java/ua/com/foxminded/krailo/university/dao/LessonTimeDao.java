@@ -30,8 +30,8 @@ public class LessonTimeDao {
     private static final String SQL_SELECT_ALL = "SELECT * FROM lesson_times ";
     private static final String SQL_SELECT_BY_LESSON_TIME_SCHEDULE_ID = "SELECT * FROM lesson_times WHERE lessons_timeschedule_id = ? ";
     private static final String SQL_DELETE = "DELETE FROM lesson_times WHERE id = ?";
-    private static final String SQL_INSERT = "INSERT INTO lesson_times (order_number, start_time, end_time, lessons_timeschedule_id) VALUES (?, ?, ?, ?)";
-    private static final String SQL_UPDATE = "UPDATE lesson_times SET order_number = ?, start_time = ?, end_time = ?, lessons_timeschedule_id = ? where id = ?";
+    private static final String SQL_INSERT = "INSERT INTO lesson_times (order_number, start_time, end_time) VALUES (?, ?, ?)";
+    private static final String SQL_UPDATE = "UPDATE lesson_times SET order_number = ?, start_time = ?, end_time = ? where id = ?";
     private static final String SQL_SELECT_BY_START_OR_END_TIME = "SELECT * FROM lesson_times where ? between start_time and end_time or ? between start_time and end_time";
 
     private JdbcTemplate jdbcTemplate;
@@ -51,7 +51,6 @@ public class LessonTimeDao {
 		ps.setString(1, lessonTime.getOrderNumber());
 		ps.setObject(2, lessonTime.getStartTime());
 		ps.setObject(3, lessonTime.getEndTime());
-		ps.setInt(4, lessonTime.getLessonsTimeSchedule().getId());
 		return ps;
 	    }, keyHolder);
 	    lessonTime.setId(keyHolder.getKey().intValue());
@@ -68,7 +67,7 @@ public class LessonTimeDao {
 	int rowsAffected = 0;
 	try {
 	    rowsAffected = jdbcTemplate.update(SQL_UPDATE, lessonTime.getOrderNumber(), lessonTime.getStartTime(),
-		    lessonTime.getEndTime(), lessonTime.getLessonsTimeSchedule().getId(), lessonTime.getId());
+		    lessonTime.getEndTime(), lessonTime.getId());
 	} catch (DataIntegrityViolationException e) {
 	    throw new DaoConstraintViolationException("Not created, lessonTime=" + lessonTime);
 	} catch (DataAccessException e) {

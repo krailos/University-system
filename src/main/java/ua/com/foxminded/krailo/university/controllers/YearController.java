@@ -27,24 +27,19 @@ public class YearController {
     }
 
     @GetMapping()
-    public String getYearStartPage() {
-	return "years/years";
-    }
-
-    @GetMapping("/all")
     public String getAllYears(Model model) {
 	List<Year> years = yearService.getAll();
 	model.addAttribute("years", years);
-	return "years/yearsAll";
+	return "years/all";
     }
 
-    @GetMapping("/findYearById/{id}")
+    @GetMapping("/{id}")
     public String getViewYear(@PathVariable("id") int id, Model model) {
 	Year year = yearService.getById(id);
 	List<Group> groups = groupService.getByYearId(year.getId());
 	year.setGroups(groups);
 	model.addAttribute("year", year);
-	return "years/yearView";
+	return "years/year";
     }
 
 }

@@ -37,23 +37,23 @@ class TeacherControllerTest {
 
     @Test
     void WhenGetAllTeachers_ThenAllTeachersReturned() throws Exception {
-	List<Teacher> expected = getTeachersForTest();
+	List<Teacher> expected = buildTeachers();
 	when(teacherService.getAll()).thenReturn(expected);
 
-	mockMvc.perform(get("/teachers/all")).andExpect(view().name("teachers/teachersAll")).andExpect(status().isOk())
+	mockMvc.perform(get("/teachers")).andExpect(view().name("teachers/all")).andExpect(status().isOk())
 		.andExpect(model().attribute("teachers", expected));
     }
 
     @Test
     void givenTeacherId_WhenGetTeacher_ThenTeacherGot() throws Exception {
-	Teacher expected = getTeachersForTest().get(0);
+	Teacher expected = buildTeachers().get(0);
 	when(teacherService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/teachers/findTeacherById/1")).andExpect(view().name("teachers/teacherView"))
+	mockMvc.perform(get("/teachers/1")).andExpect(view().name("teachers/teacher"))
 		.andExpect(status().isOk()).andExpect(model().attribute("teacher", expected));
     }
 
-    private List<Teacher> getTeachersForTest() {
+    private List<Teacher> buildTeachers() {
 	return Arrays.asList(Teacher.builder().id(1).firstName("Jon").build(),
 		Teacher.builder().id(2).firstName("Tom").build());
     }

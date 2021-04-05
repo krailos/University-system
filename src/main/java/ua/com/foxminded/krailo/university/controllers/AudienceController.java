@@ -22,22 +22,17 @@ public class AudienceController {
     }
 
     @GetMapping()
-    public String getAudienceStartPage() {
-	return "audiences/audiences";
-    }
-
-    @GetMapping("/all")
     public String getAllAudiences(Model model) {
 	List<Audience> audiences = audienceService.getAll();
 	model.addAttribute("audiences", audiences);
-	return "audiences/audiencesAll";
+	return "audiences/all";
     }
 
-    @GetMapping("/findAudienceById/{id}")
-    public String getViewAudience(@PathVariable("id") int id, Model model) {
+    @GetMapping("/{id}")
+    public String getViewAudience(@PathVariable int id, Model model) {
 	Audience audience = audienceService.getById(id);
 	model.addAttribute("audience", audience);
-	return "audiences/audienceView";
+	return "audiences/audience";
     }
 
 }

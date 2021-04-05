@@ -1,7 +1,5 @@
 package ua.com.foxminded.krailo.university.dao;
 
-import static java.lang.String.format;
-
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
@@ -28,21 +26,19 @@ public class AudienceDao {
 
     private static final String SQL_SELECT_AUDIENCE_BY_ID = "SELECT * FROM audiences  WHERE id = ?";
     private static final String SQL_SELECT_AUDIENCE_BY_NUMBER = "SELECT * FROM audiences  WHERE number = ?";
-    private static final String SQL_SELECT_AUDIENCE_BY_NUMBER_AND_BUILDING_ID = "SELECT * FROM audiences  WHERE number = ? AND building_id = ?";
-    private static final String SQL_SELECT_AUDIENCES_BY_BUILDING = "SELECT * FROM audiences WHERE building_id = ?";
     private static final String SQL_SELECT_ALL_AUDIENCES = "SELECT * FROM audiences";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM audiences WHERE id = ?";
-    private static final String SQL_INSERT_AUDIENCE = "INSERT INTO audiences (number, building_id, capacity, description) VALUES (?, ?, ?, ?)";
-    private static final String SQL_UPDATE_BY_ID = "UPDATE audiences SET number = ?, building_id = ?, capacity = ?, description = ? where id = ?";
+    private static final String SQL_INSERT_AUDIENCE = "INSERT INTO audiences (number, capacity, description) VALUES (?, ?, ?)";
+    private static final String SQL_UPDATE_BY_ID = "UPDATE audiences SET number = ?, capacity = ?, description = ? where id = ?";
 
-    private JdbcTemplate jdbcTemplate; 
+    private JdbcTemplate jdbcTemplate;
     private RowMapper<Audience> audienceRowMapper;
 
     public AudienceDao(JdbcTemplate jdbcTemplate, RowMapper<Audience> audienceRowMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.audienceRowMapper = audienceRowMapper;
     }
- 
+
     public Optional<Audience> findById(int id) {
 	log.debug("find audience by id={}", id);
 	try {
@@ -54,24 +50,19 @@ public class AudienceDao {
 	} catch (DataAccessException e) {
 	    throw new DaoException("Unable to get audience with id=" + id, e);
 	}
- 
+
     }
 
-    public List<Audience> findByNumber(String number) {
+    public Optional<Audience> findByNumber(String number) {
 	log.debug("find audiences by number={}", number);
 	try {
-	    return jdbcTemplate.query(SQL_SELECT_AUDIENCE_BY_NUMBER, new Object[] { number }, audienceRowMapper);
+	    return Optional.of(jdbcTemplate.queryForObject(SQL_SELECT_AUDIENCE_BY_NUMBER, new Object[] { number },
+		    audienceRowMapper));
+	} catch (EmptyResultDataAccessException e) {
+	    log.debug("Audience with number={} not found", number);
+	    return Optional.empty();
 	} catch (DataAccessException e) {
-	    throw new DaoException("Unable to find audiences with number=" + number, e);
-	}
-    }
-
-    public List<Audience> findByBuildingId(int buildingId) {
-	log.debug("find audiences by building id={}", buildingId);
-	try {
-	    return jdbcTemplate.query(SQL_SELECT_AUDIENCES_BY_BUILDING, audienceRowMapper, buildingId);
-	} catch (DataAccessException e) {
-	    throw new DaoException("Unable to find audiences with building id=" + buildingId, e);
+	    throw new DaoException("Unable to get audience with number=" + number, e);
 	}
     }
 
@@ -91,16 +82,15 @@ public class AudienceDao {
 	    jdbcTemplate.update(connection -> {
 		PreparedStatement ps = connection.prepareStatement(SQL_INSERT_AUDIENCE, new String[] { "id" });
 		ps.setString(1, audience.getNumber());
-		ps.setInt(2, audience.getBuilding().getId());
-		ps.setInt(3, audience.getCapacity());
-		ps.setString(4, audience.getDescription());
+		ps.setInt(2, audience.getCapacity());
+		ps.setString(3, audience.getDescription());
 		return ps;
 	    }, keyHolder);
 	    audience.setId(keyHolder.getKey().intValue());
 	} catch (DataIntegrityViolationException e) {
-	    throw new DaoConstraintViolationException("Audiences not created, audience=" +audience, e);
+	    throw new DaoConstraintViolationException("Audiences not created, audience: " + audience, e);
 	} catch (DataAccessException e) {
-	    throw new DaoException("Unable to create audience=" + audience, e);
+	    throw new DaoException("Unable to create audience: " + audience, e);
 	}
 	log.info("audience created={}", audience);
     }
@@ -109,8 +99,8 @@ public class AudienceDao {
 	log.debug("Updating audience={}", audience);
 	int rowsAffected = 0;
 	try {
-	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, audience.getNumber(), audience.getBuilding().getId(),
-		    audience.getCapacity(), audience.getDescription(), audience.getId());
+	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, audience.getNumber(), audience.getCapacity(),
+		    audience.getDescription(), audience.getId());
 	} catch (DataIntegrityViolationException e) {
 	    throw new DaoConstraintViolationException("Audience not updated audience" + audience, e);
 	} catch (DataAccessException e) {
@@ -135,20 +125,6 @@ public class AudienceDao {
 	    log.info("audience deleted with id={}", id);
 	} else {
 	    log.debug("audience not deleted, audience with id={} not exist", id);
-	}
-    }
-
-    public Optional<Audience> findByNumberAndBuildingId(String number, int buildingId) {
-	log.debug("find audience  by number={} and building id={}", number, buildingId);
-	try {
-	    return Optional.of(jdbcTemplate.queryForObject(SQL_SELECT_AUDIENCE_BY_NUMBER_AND_BUILDING_ID,
-		    new Object[] { number, buildingId }, audienceRowMapper));
-	} catch (EmptyResultDataAccessException e) {
-	    log.debug("audiences not found by number={} and building id={}", number, buildingId);
-	    return Optional.empty();
-	} catch (DataAccessException e) {
-	    throw new DaoException(
-		    format("Unable to find audience by number %s and building id = %s", number, buildingId), e);
 	}
     }
 

@@ -11,7 +11,6 @@ public class Teacher {
     private String firstName;
     private String lastName;
     private LocalDate birthDate;
-    private Department department;
     private List<Subject> subjects = new ArrayList<>();
     private String phone;
     private String address;
@@ -23,14 +22,12 @@ public class Teacher {
     }
 
     public Teacher(int id, String teacherId, String firstName, String lastName, LocalDate birthDate,
-	    Department department, List<Subject> subjects, String phone, String address, String email, Gender gender,
-	    String degree) {
+	    List<Subject> subjects, String phone, String address, String email, Gender gender, String degree) {
 	this.id = id;
 	this.teacherId = teacherId;
 	this.firstName = firstName;
 	this.lastName = lastName;
 	this.birthDate = birthDate;
-	this.department = department;
 	this.subjects = subjects;
 	this.phone = phone;
 	this.address = address;
@@ -91,14 +88,6 @@ public class Teacher {
 	this.birthDate = birthDate;
     }
 
-    public Department getDepartment() {
-	return department;
-    }
-
-    public void setDepartment(Department department) {
-	this.department = department;
-    }
-
     public String getPhone() {
 	return phone;
     }
@@ -146,7 +135,6 @@ public class Teacher {
 	private String firstName;
 	private String lastName;
 	private LocalDate birthDate;
-	private Department department;
 	private List<Subject> subjects = new ArrayList<>();
 	private String phone;
 	private String address;
@@ -204,14 +192,9 @@ public class Teacher {
 	    return this;
 	}
 
-	public TeacherBuilder department(Department department) {
-	    this.department = department;
-	    return this;
-	}
-
 	public Teacher build() {
-	    return new Teacher(id, teacherId, firstName, lastName, birthDate, department, subjects, phone, address,
-		    email, gender, degree);
+	    return new Teacher(id, teacherId, firstName, lastName, birthDate, subjects, phone, address, email, gender,
+		    degree);
 	}
 
     }
@@ -219,7 +202,7 @@ public class Teacher {
     @Override
     public String toString() {
 	return "Teacher [id=" + id + ", teacherId=" + teacherId + ", firstName=" + firstName + ", lastName=" + lastName
-		+ ", birthDate=" + birthDate + ", department=" + department + ", subjects=" + subjects + ", phone="
+		+ ", birthDate=" + birthDate  + ", subjects=" + subjects + ", phone="
 		+ phone + ", address=" + address + ", email=" + email + ", gender=" + gender + ", degree=" + degree
 		+ "]";
     }
@@ -231,7 +214,6 @@ public class Teacher {
 	result = prime * result + ((address == null) ? 0 : address.hashCode());
 	result = prime * result + ((birthDate == null) ? 0 : birthDate.hashCode());
 	result = prime * result + ((degree == null) ? 0 : degree.hashCode());
-	result = prime * result + ((department == null) ? 0 : department.hashCode());
 	result = prime * result + ((email == null) ? 0 : email.hashCode());
 	result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 	result = prime * result + ((gender == null) ? 0 : gender.hashCode());
@@ -266,11 +248,6 @@ public class Teacher {
 	    if (other.degree != null)
 		return false;
 	} else if (!degree.equals(other.degree))
-	    return false;
-	if (department == null) {
-	    if (other.department != null)
-		return false;
-	} else if (!department.equals(other.department))
 	    return false;
 	if (email == null) {
 	    if (other.email != null)

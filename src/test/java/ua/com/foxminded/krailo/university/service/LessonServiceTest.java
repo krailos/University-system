@@ -2,7 +2,6 @@ package ua.com.foxminded.krailo.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -34,12 +33,10 @@ import ua.com.foxminded.krailo.university.exception.TeacherNotFreeException;
 import ua.com.foxminded.krailo.university.exception.TeacherNotTeachLessonException;
 import ua.com.foxminded.krailo.university.exception.TeacherOnVocationException;
 import ua.com.foxminded.krailo.university.model.Audience;
-import ua.com.foxminded.krailo.university.model.Building;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Holiday;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.LessonTime;
-import ua.com.foxminded.krailo.university.model.LessonsTimeSchedule;
 import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
@@ -50,7 +47,7 @@ class LessonServiceTest {
 
     @InjectMocks
     private LessonService lessonService;
-    @Mock 
+    @Mock
     private LessonDao lessonDao;
     @Mock
     private VocationDao vocationDao;
@@ -69,7 +66,7 @@ class LessonServiceTest {
 	Lesson expected = createLesson();
 	assertEquals(expected, actual);
     }
- 
+
     @Test
     void givenLessons_whenGetAll_thenGotAll() {
 	List<Lesson> lessons = createLessons();
@@ -84,12 +81,62 @@ class LessonServiceTest {
     @Test
     void givenLessonId_whenDeleteById_thenDeleted() {
 	Lesson lesson = createLesson();
-	doNothing().when(lessonDao).deleteById(1);
 
 	lessonService.delete(lesson);
 
 	verify(lessonDao).deleteById(1);
     }
+
+    @Test
+    void givenTeacherAndDate_whenGetLessonsForTeacherByDate_thenGot() {
+	Teacher teacher = Teacher.builder().id(1).build();
+	List<Lesson> lessons = createLessons();
+	when(lessonDao.findByTeacherAndDate(teacher, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
+
+	List<Lesson> actual = lessonService.getLessonsForTeacherByDate(teacher, LocalDate.of(2021, 01, 02));
+	List<Lesson> expected = createLessons();
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenTeacherAndDate_whenGetTimetableForTeacherByMonth_thenGot() {
+	Teacher teacher = Teacher.builder().id(1).build();
+	List<Lesson> lessons = createLessons();
+	when(lessonDao.findByTeacherBetweenDates(teacher, LocalDate.of(2021, 01, 02),
+		LocalDate.of(2021, 01, 02).plusMonths(1))).thenReturn(lessons);
+
+	List<Lesson> actual = lessonService.getLessonsForTeacherByMonth(teacher, LocalDate.of(2021, 01, 02));
+
+	List<Lesson> expected = createLessons();
+	assertEquals(expected, actual);
+    };
+
+    @Test
+    void givenStudentAndDate_whenGetTimetableForStudentByDate_thenGot() {
+	Student student = Student.builder().id(1).build();
+	List<Lesson> lessons = createLessons();
+	when(lessonDao.findByStudentAndDate(student, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
+
+	List<Lesson> actual = lessonService.getLessonsForStudentByDate(student, LocalDate.of(2021, 01, 02));
+
+	List<Lesson> expected = createLessons();
+	assertEquals(expected, actual);
+    };
+
+    @Test
+    void givenStudentAndDate_whenGetTimetableForStudentByMonth_thenGot() {
+	Student student = Student.builder().id(1).build();
+	List<Lesson> lessons = createLessons();
+	when(lessonDao.findByStudentBetweenDates(student, LocalDate.of(2021, 01, 02),
+		LocalDate.of(2021, 01, 02).plusMonths(1))).thenReturn(lessons);
+
+	List<Lesson> actual = lessonService.getLessonsForStudentByMonth(student, LocalDate.of(2021, 01, 02));
+
+	List<Lesson> expected = createLessons();
+	assertEquals(expected, actual);
+
+    };
 
     @Test
     void givenLessonWhithAllCorrectFields_whenCreate_thenCreated() {
@@ -363,13 +410,11 @@ class LessonServiceTest {
 	Subject subject1 = Subject.builder().id(1).name("subject1").build();
 	Teacher teacher1 = Teacher.builder().id(1).build();
 	teacher1.getSubjects().add(subject1);
-	LessonsTimeSchedule lessonsTimeSchedule = new LessonsTimeSchedule.LessonsTimescheduleBuilder().id(1).build();
 	Group group1 = Group.builder().id(1).name("group1").students(Arrays.asList(student1, student2)).build();
 	Group group2 = Group.builder().id(2).name("group2").students(Arrays.asList(student3, student4)).build();
 	LessonTime lessonTime1 = LessonTime.builder().id(1).orderNumber("order number 1").startTime(LocalTime.of(8, 45))
-		.endTime(LocalTime.of(9, 30)).lessonsTimeSchedule(lessonsTimeSchedule).build();
-	Audience audience = Audience.builder().id(1).number("number 1").building(Building.builder().id(1).build())
-		.capacity(5).description("description").build();
+		.endTime(LocalTime.of(9, 30)).build();
+	Audience audience = Audience.builder().id(1).number("number 1").capacity(5).description("description").build();
 	Lesson lesson = Lesson.builder().id(1).date(LocalDate.of(2021, 01, 01)).lessonTime(lessonTime1)
 		.subject(subject1).audience(audience).teacher(teacher1).groups(Arrays.asList(group1, group2)).build();
 	return lesson;
@@ -384,15 +429,13 @@ class LessonServiceTest {
 	Subject subject2 = Subject.builder().id(2).name("subject2").build();
 	Teacher teacher1 = Teacher.builder().id(1).build();
 	Teacher teacher2 = Teacher.builder().id(2).build();
-	LessonsTimeSchedule lessonsTimeSchedule = new LessonsTimeSchedule.LessonsTimescheduleBuilder().id(1).build();
 	Group group1 = Group.builder().id(1).name("group1").students(Arrays.asList(student1, student2)).build();
 	Group group2 = Group.builder().id(2).name("group2").students(Arrays.asList(student3, student4)).build();
 	LessonTime lessonTime1 = LessonTime.builder().id(1).orderNumber("order number 1").startTime(LocalTime.of(8, 45))
-		.endTime(LocalTime.of(9, 30)).lessonsTimeSchedule(lessonsTimeSchedule).build();
+		.endTime(LocalTime.of(9, 30)).build();
 	LessonTime lessonTime2 = LessonTime.builder().id(1).orderNumber("order number 2").startTime(LocalTime.of(9, 45))
-		.endTime(LocalTime.of(10, 30)).lessonsTimeSchedule(lessonsTimeSchedule).build();
-	Audience audience = Audience.builder().id(1).number("number 1").building(Building.builder().id(1).build())
-		.capacity(4).description("description").build();
+		.endTime(LocalTime.of(10, 30)).build();
+	Audience audience = Audience.builder().id(1).number("number 1").capacity(4).description("description").build();
 	Lesson lesson1 = Lesson.builder().id(1).date(LocalDate.of(2021, 01, 01)).lessonTime(lessonTime1)
 		.subject(subject1).audience(audience).teacher(teacher1).groups(Arrays.asList(group1, group2)).build();
 	Lesson lesson2 = Lesson.builder().id(2).date(LocalDate.of(2021, 01, 01)).lessonTime(lessonTime2)

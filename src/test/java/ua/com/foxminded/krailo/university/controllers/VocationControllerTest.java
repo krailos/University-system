@@ -39,25 +39,25 @@ class VocationControllerTest {
 
     @Test
     void WhenGetAllVocations_ThenAllVocationsReturned() throws Exception {
-	List<Vocation> expected = getVocationsForTest();
+	List<Vocation> expected = buildVocations();
 	when(vocationService.getAll()).thenReturn(expected);
 
-	mockMvc.perform(get("/vocations/all")).andExpect(view().name("vocations/vocationsAll"))
-		.andExpect(status().isOk()).andExpect(model().attribute("vocations", expected));
+	mockMvc.perform(get("/vocations")).andExpect(view().name("vocations/all")).andExpect(status().isOk())
+		.andExpect(model().attribute("vocations", expected));
 
     }
 
     @Test
     void givenVocationId_WhenGetVocation_ThenVocationGot() throws Exception {
-	Vocation expected = getVocationsForTest().get(0);
+	Vocation expected = buildVocations().get(0);
 	when(vocationService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/vocations/findVocationById/1")).andExpect(view().name("vocations/vocationView"))
-		.andExpect(status().isOk()).andExpect(model().attribute("vocation", expected));
+	mockMvc.perform(get("/vocations/1")).andExpect(view().name("vocations/vocation")).andExpect(status().isOk())
+		.andExpect(model().attribute("vocation", expected));
 
     }
 
-    private List<Vocation> getVocationsForTest() {
+    private List<Vocation> buildVocations() {
 	return Arrays.asList(Vocation.builder().id(1).kind(VocationKind.GENERAL).build(),
 		Vocation.builder().id(2).kind(VocationKind.PREFERENTIAL).build());
     }

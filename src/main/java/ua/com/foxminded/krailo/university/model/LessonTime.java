@@ -8,18 +8,16 @@ public class LessonTime {
     private String orderNumber;
     private LocalTime startTime;
     private LocalTime endTime;
-    private LessonsTimeSchedule lessonsTimeSchedule;
 
     public LessonTime() {
     }
 
-    public LessonTime(int id, String orderNumber, LocalTime startTime, LocalTime endTime,
-	    LessonsTimeSchedule lessonsTimeSchedule) {
+    public LessonTime(int id, String orderNumber, LocalTime startTime, LocalTime endTime) {
 	this.id = id;
 	this.orderNumber = orderNumber;
 	this.startTime = startTime;
 	this.endTime = endTime;
-	this.lessonsTimeSchedule = lessonsTimeSchedule;
+
     }
 
     public static LessonTimeBuilder builder() {
@@ -58,21 +56,12 @@ public class LessonTime {
 	this.endTime = endTime;
     }
 
-    public LessonsTimeSchedule getLessonsTimeSchedule() {
-	return lessonsTimeSchedule;
-    }
-
-    public void setLessonsTimeSchedule(LessonsTimeSchedule lessonsTimeSchedule) {
-	this.lessonsTimeSchedule = lessonsTimeSchedule;
-    }
-
     public static class LessonTimeBuilder {
 
 	private int id;
 	private String orderNumber;
 	private LocalTime startTime;
 	private LocalTime endTime;
-	private LessonsTimeSchedule lessonsTimeSchedule;
 
 	public LessonTimeBuilder id(int id) {
 	    this.id = id;
@@ -94,13 +83,8 @@ public class LessonTime {
 	    return this;
 	}
 
-	public LessonTimeBuilder lessonsTimeSchedule(LessonsTimeSchedule lessonsTimeSchedule) {
-	    this.lessonsTimeSchedule = lessonsTimeSchedule;
-	    return this;
-	}
-
 	public LessonTime build() {
-	    return new LessonTime(id, orderNumber, startTime, endTime, lessonsTimeSchedule);
+	    return new LessonTime(id, orderNumber, startTime, endTime);
 	}
 
     }

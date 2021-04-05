@@ -21,23 +21,19 @@ public class LessonTimeController {
 	this.lessonTimeService = lessonTimeService;
     }
 
-    @GetMapping()
-    public String getLessonTimeStartPage() {
-	return "lessonTimes/lessonTimes";
-    }
 
-    @GetMapping("/all")
+    @GetMapping()
     public String getAllLessonTime(Model model) {
 	List<LessonTime> lessonTimes = lessonTimeService.getAll();
 	model.addAttribute("lessonTimes", lessonTimes);
-	return "lessonTimes/lessonTimesAll";
+	return "lessonTimes/all";
     }
 
-    @GetMapping("/findLessonTimeById/{id}")
+    @GetMapping("/{id}")
     public String getViewLessonTime(@PathVariable("id") int id, Model model) {
 	LessonTime lessonTime = lessonTimeService.getById(id);
 	model.addAttribute("lessonTime", lessonTime);
-	return "lessonTimes/lessonTimeView";
+	return "lessonTimes/lessonTime";
     }
 
 }

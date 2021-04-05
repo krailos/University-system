@@ -17,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
-import ua.com.foxminded.krailo.university.model.Department;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Teacher;
 
@@ -82,16 +81,13 @@ class TeacherServiceTest {
     }
 
     private Teacher createTeacher() {
-	return Teacher.builder().id(1).firstName("first name").lastName("last name").gender(Gender.MALE)
-		.department(new Department.DepartmentBuilder().id(1).build()).build();
+	return Teacher.builder().id(1).firstName("first name").lastName("last name").gender(Gender.MALE).build();
     }
 
     private List<Teacher> createTeachers() {
 	return new ArrayList<>(Arrays.asList(
-		Teacher.builder().id(1).firstName("first name").lastName("last name").gender(Gender.MALE)
-			.department(new Department.DepartmentBuilder().id(1).build()).build(),
-		Teacher.builder().id(2).firstName("first name 2").lastName("last name 2").gender(Gender.MALE)
-			.department(new Department.DepartmentBuilder().id(1).build()).build()));
+		Teacher.builder().id(1).firstName("first name").lastName("last name").gender(Gender.MALE).build(),
+		Teacher.builder().id(2).firstName("first name 2").lastName("last name 2").gender(Gender.MALE).build()));
     }
 
 }

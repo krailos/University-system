@@ -29,10 +29,9 @@ public class TeacherDao {
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM teachers WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM teachers";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM teachers WHERE id = ?";
-    private static final String SQL_INSERT_TEACHER = "INSERT INTO teachers (teacher_id, first_name, last_name, birth_date, phone, address, email, degree, gender, department_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String SQL_UPDATE_BY_ID = "UPDATE teachers SET teacher_id = ?, first_name = ?, last_name = ?, birth_date = ?, phone = ?, address = ?, email = ?, degree = ?, gender = ?, department_id = ? WHERE id = ?";
-    private static final String SQL_SELECT_BY_SUBJECT_ID = "SELECT id, teachers.teacher_id, first_name, last_name, birth_date, phone, address, email, degree, gender, department_id  FROM teachers JOIN  teachers_subjects ON (teachers.id = teachers_subjects.teacher_id ) WHERE teachers_subjects.subject_id = ?";
-    private static final String SQL_SELECT_BY_DEPARTMENT_ID = "SELECT * FROM teachers WHERE department_id = ?";
+    private static final String SQL_INSERT_TEACHER = "INSERT INTO teachers (teacher_id, first_name, last_name, birth_date, phone, address, email, degree, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SQL_UPDATE_BY_ID = "UPDATE teachers SET teacher_id = ?, first_name = ?, last_name = ?, birth_date = ?, phone = ?, address = ?, email = ?, degree = ?, gender = ? WHERE id = ?";
+    private static final String SQL_SELECT_BY_SUBJECT_ID = "SELECT id, teachers.teacher_id, first_name, last_name, birth_date, phone, address, email, degree, gender  FROM teachers JOIN  teachers_subjects ON (teachers.id = teachers_subjects.teacher_id ) WHERE teachers_subjects.subject_id = ?";
     private static final String SQL_INSERT_TEACHERS_SUBJECTS = "INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES (?, ?)";
     private static final String SQL_DELETE_TEACHERS_SUBJECTS_BY_TEACHER_ID_SUBJECT_ID = "DELETE FROM teachers_subjects WHERE teacher_id = ? AND subject_id = ?";
 
@@ -59,7 +58,6 @@ public class TeacherDao {
 		ps.setString(7, teacher.getAddress());
 		ps.setString(8, teacher.getDegree());
 		ps.setString(9, teacher.getGender().toString());
-		ps.setInt(10, teacher.getDepartment().getId());
 		return ps;
 	    }, keyHolder);
 	    teacher.setId(keyHolder.getKey().intValue());
@@ -81,7 +79,7 @@ public class TeacherDao {
 	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, teacher.getTeacherId(), teacher.getFirstName(),
 		    teacher.getLastName(), Date.valueOf(teacher.getBirthDate()), teacher.getPhone(),
 		    teacher.getAddress(), teacher.getEmail(), teacher.getDegree(), teacher.getGender().toString(),
-		    teacher.getDepartment().getId(), teacher.getId());
+		    teacher.getId());
 	    List<Subject> subjectsOld = findById(teacher.getId()).get().getSubjects();
 	    subjectsOld.stream().filter(s -> !teacher.getSubjects().contains(s)).forEach(s -> jdbcTemplate
 		    .update(SQL_DELETE_TEACHERS_SUBJECTS_BY_TEACHER_ID_SUBJECT_ID, teacher.getId(), s.getId()));
@@ -141,15 +139,6 @@ public class TeacherDao {
 	    return jdbcTemplate.query(SQL_SELECT_BY_SUBJECT_ID, new Object[] { id }, teacherRowMapper);
 	} catch (DataAccessException e) {
 	    throw new DaoException("Unable to find teachers by subjectId=" + id, e);
-	}
-    }
-
-    public List<Teacher> findByDepartmentId(int id) {
-	log.debug("Delete teacher by departmentId={}", id);
-	try {
-	    return jdbcTemplate.query(SQL_SELECT_BY_DEPARTMENT_ID, new Object[] { id }, teacherRowMapper);
-	} catch (DataAccessException e) {
-	    throw new DaoException("Unable to find teachers by departmentId=" + id, e);
 	}
     }
 

@@ -16,7 +16,6 @@ import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.config.WebConfig;
 import ua.com.foxminded.krailo.university.exception.DaoConstraintViolationException;
 import ua.com.foxminded.krailo.university.model.Audience;
-import ua.com.foxminded.krailo.university.model.Building;
 
 @SpringJUnitWebConfig(classes = { WebConfig.class, ConfigTest.class })
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
@@ -29,45 +28,31 @@ class AudienceDaoTest {
 
     @Test
     void givenNewAudience_whenCreate_thenCreated() throws Exception {
-	Audience audience = Audience.builder().number("3")
-		.building(Building.builder().id(2).name("name").address("address").build()).capacity(120)
-		.description("description3").build();
+	Audience audience = Audience.builder().number("4").capacity(120).description("description3").build();
 
 	audienceDao.create(audience);
 
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "Audiences", "id =" + audience.getId());
 	assertEquals(1, actual);
     }
- 
+
     @Test
-    void givenAudienceWithExistingNumberAndBuildingId_whenCreate_thenDaoConstraintViolationExceptionThrown() {
-	Audience audience = Audience.builder().number("1")
-		.building(Building.builder().id(2).name("name").address("address").build()).capacity(120)
-		.description("description3").build();
-	
+    void givenAudienceWithExistingNumber_whenCreate_thenDaoConstraintViolationExceptionThrown() {
+	Audience audience = Audience.builder().number("1").capacity(120).description("description3").build();
+
 	String actual = assertThrows(DaoConstraintViolationException.class, () -> audienceDao.create(audience))
 		.getMessage();
-	
-	String expected = "Audiences not created, audience=0-1-2-name-address-120-description3";
+
+	String expected = "Audiences not created, audience: id=0; number=1; capacity=120; description=description3";
 	assertEquals(actual, expected);
     }
 
     @Test
-    void givenBuildingId_whenFindByBuildingId_thenFound() {
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "Audiences", "building_id = 1");
-
-	int actual = audienceDao.findByBuildingId(1).size();
-
-	assertEquals(expected, actual);
-    }
-
-    @Test
     void givenAudience_whenFindByNumber_thenFound() {
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "Audiences", "number = 1");
 
-	int actual = audienceDao.findByNumber("1").size();
+	Audience actual = audienceDao.findByNumber("1").get();
 
-	assertEquals(expected, actual);
+	assertEquals("1", actual.getNumber());
     }
 
     @Test
@@ -95,30 +80,26 @@ class AudienceDaoTest {
 	assertEquals(Optional.empty(), actual);
     }
 
-    @Test 
+    @Test
     void givenNewFieldsOfAudience_whenUpdate_thenUpdated() {
-	Audience audience = Audience.builder().id(1).number("new")
-		.building(Building.builder().id(1).name("new name").address("new address").build()).capacity(1)
-		.description("new").build();
+	Audience audience = Audience.builder().id(1).number("new").capacity(1).description("new").build();
 
 	audienceDao.update(audience);
 
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "audiences",
-		"number = 'new' AND building_id = 1 AND capacity = 1 AND description = 'new'");
+		"number = 'new'  AND capacity = 1 AND description = 'new'");
 	assertEquals(1, actual);
     }
-    
+
     @Test
-    void givenAudienceWithExistingNumberAndBuildingId_whenUpdate_thenDaoConstraintViolationExceptionThrown() {
-	Audience audience = Audience.builder().id(1).number("2")
-		.building(Building.builder().id(2).name("name").address("address").build()).capacity(120)
-		.description("description3").build();
-	
-	String actual = assertThrows(DaoConstraintViolationException.class, () -> audienceDao.update(audience))
-		.getMessage();
-	
-	String expected = "Audience not updated audience1-2-2-name-address-120-description3";
-	assertEquals(actual, expected);
+    void givenAudienceWithExistingNumber_whenUpdate_thenUpdated() {
+	Audience audience = Audience.builder().id(1).number("4").capacity(120).description("New").build();
+
+	audienceDao.update(audience);
+
+	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "audiences",
+		" number = '4' AND description = 'New'");
+	assertEquals(1, actual);
     }
 
     @Test
@@ -128,31 +109,6 @@ class AudienceDaoTest {
 
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "Audiences");
 	assertEquals(2, actual);
-    }
-
-    @Test
-    void givenAudience_whenFindByNumberAndBuildingId_thenFound() {
-
-	Audience actual = audienceDao.findByNumberAndBuildingId("1", 1).get();
-
-	assertEquals(1, actual.getId());
-	assertEquals(1, actual.getBuilding().getId());
-    }
-
-    @Test
-    void givenNotExistingAudienceNumber_whenFindByNumberAndBuildingId_thenEmptyOptional() {
-
-	Optional<Audience> actual = audienceDao.findByNumberAndBuildingId("10", 1);
-
-	assertEquals(Optional.empty(), actual);
-    }
-
-    @Test
-    void givenNotExistingBuildingId_whenFindByNumberAndBuildingId_thenEmptyOptional() {
-
-	Optional<Audience> actual = audienceDao.findByNumberAndBuildingId("1", 10);
-
-	assertEquals(Optional.empty(), actual);
     }
 
 }

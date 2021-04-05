@@ -4,17 +4,15 @@ public class Audience {
 
     private int id;
     private String number;
-    private Building building;
     private int capacity;
     private String description;
 
     public Audience() {
     }
 
-    public Audience(int id, String number, Building building, int capacity, String description) {
+    public Audience(int id, String number, int capacity, String description) {
 	this.id = id;
 	this.number = number;
-	this.building = building;
 	this.capacity = capacity;
 	this.description = description;
     }
@@ -55,18 +53,9 @@ public class Audience {
 	this.capacity = capacity;
     }
 
-    public Building getBuilding() {
-	return building;
-    }
-
-    public void setBuilding(Building building) {
-	this.building = building;
-    }
-
     public static class AudienceBuilder {
 	private int id;
 	private String number;
-	private Building building;
 	private int capacity;
 	private String description;
 
@@ -80,10 +69,6 @@ public class Audience {
 	    return this;
 	}
 
-	public AudienceBuilder building(Building building) {
-	    this.building = building;
-	    return this;
-	}
 
 	public AudienceBuilder capacity(int capacity) {
 	    this.capacity = capacity;
@@ -96,21 +81,20 @@ public class Audience {
 	}
 
 	public Audience build() {
-	    return new Audience(id, number, building, capacity, description);
+	    return new Audience(id, number, capacity, description);
 	}
 
     }
 
     @Override
     public String toString() {
-	return id + "-" + number + "-" + building + "-" + capacity + "-" + description;
+	return "id="+id + "; number=" + number +"; capacity=" + capacity + "; description=" + description;
     }
 
     @Override
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
-	result = prime * result + ((building == null) ? 0 : building.hashCode());
 	result = prime * result + capacity;
 	result = prime * result + ((description == null) ? 0 : description.hashCode());
 	result = prime * result + id;
@@ -127,11 +111,6 @@ public class Audience {
 	if (getClass() != obj.getClass())
 	    return false;
 	Audience other = (Audience) obj;
-	if (building == null) {
-	    if (other.building != null)
-		return false;
-	} else if (!building.equals(other.building))
-	    return false;
 	if (capacity != other.capacity)
 	    return false;
 	if (description == null) {

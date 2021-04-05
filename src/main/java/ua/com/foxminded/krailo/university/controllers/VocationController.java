@@ -22,22 +22,17 @@ public class VocationController {
     }
 
     @GetMapping()
-    public String getVocationStartPage() {
-	return "vocations/vocations";
-    }
-
-    @GetMapping("/all")
     public String getAllVocations(Model model) {
 	List<Vocation> vocations = vocationService.getAll();
 	model.addAttribute("vocations", vocations);
-	return "vocations/vocationsAll";
+	return "vocations/all";
     }
 
-    @GetMapping("/findVocationById/{id}")
+    @GetMapping("/{id}")
     public String getViewVocation(@PathVariable("id") int id, Model model) {
 	Vocation vocation = vocationService.getById(id);
 	model.addAttribute("vocation", vocation);
-	return "vocations/vocationView";
+	return "vocations/vocation";
     }
 
 }

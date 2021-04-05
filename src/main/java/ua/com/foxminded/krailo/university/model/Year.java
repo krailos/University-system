@@ -7,17 +7,15 @@ public class Year {
 
     private int id;
     private String name;
-    private Speciality speciality;
     private List<Subject> subjects = new ArrayList<>();
     private List<Group> groups = new ArrayList<>();
 
     public Year() {
     }
 
-    public Year(int id, String name, Speciality speciality, List<Subject> subjects, List<Group> groups) {
+    public Year(int id, String name, List<Subject> subjects, List<Group> groups) {
 	this.id = id;
 	this.name = name;
-	this.speciality = speciality;
 	this.subjects = subjects;
 	this.groups = groups;
     }
@@ -42,13 +40,6 @@ public class Year {
 	this.name = name;
     }
 
-    public Speciality getSpeciality() {
-	return speciality;
-    }
-
-    public void setSpeciality(Speciality speciality) {
-	this.speciality = speciality;
-    }
 
     public List<Subject> getSubjects() {
 	return subjects;
@@ -70,7 +61,6 @@ public class Year {
 
 	private int id;
 	private String name;
-	private Speciality speciality;
 	private List<Subject> subjects = new ArrayList<>();
 	private List<Group> groups = new ArrayList<>();
 
@@ -84,10 +74,6 @@ public class Year {
 	    return this;
 	}
 
-	public YearBuilder speciality(Speciality speciality) {
-	    this.speciality = speciality;
-	    return this;
-	}
 
 	public YearBuilder groups(List<Group> groups) {
 	    this.groups = groups;
@@ -100,7 +86,7 @@ public class Year {
 	}
 
 	public Year build() {
-	    return new Year(id, name, speciality, subjects, groups);
+	    return new Year(id, name, subjects, groups);
 	}
 
     }
@@ -112,7 +98,6 @@ public class Year {
 	result = prime * result + ((groups == null) ? 0 : groups.hashCode());
 	result = prime * result + id;
 	result = prime * result + ((name == null) ? 0 : name.hashCode());
-	result = prime * result + ((speciality == null) ? 0 : speciality.hashCode());
 	result = prime * result + ((subjects == null) ? 0 : subjects.hashCode());
 	return result;
     }
@@ -138,11 +123,6 @@ public class Year {
 		return false;
 	} else if (!name.equals(other.name))
 	    return false;
-	if (speciality == null) {
-	    if (other.speciality != null)
-		return false;
-	} else if (!speciality.equals(other.speciality))
-	    return false;
 	if (subjects == null) {
 	    if (other.subjects != null)
 		return false;
@@ -153,7 +133,7 @@ public class Year {
 
     @Override
     public String toString() {
-	return "Year [id=" + id + ", name=" + name + ", speciality=" + speciality + ", subjects=" + subjects
+	return "Year [id=" + id + ", name=" + name + ", subjects=" + subjects
 		+ ", groups=" + groups + "]";
     }
 

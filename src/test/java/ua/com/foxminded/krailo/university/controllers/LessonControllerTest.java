@@ -39,25 +39,25 @@ class LessonControllerTest {
 
     @Test
     void WhenGetAllLessons_ThenAllLessonsReturned() throws Exception {
-	List<Lesson> expected = getLessonsForTest();
+	List<Lesson> expected = buildLessons();
 	when(lessonService.getAll()).thenReturn(expected);
 
-	mockMvc.perform(get("/lessons/all")).andExpect(view().name("lessons/lessonsAll")).andExpect(status().isOk())
+	mockMvc.perform(get("/lessons")).andExpect(view().name("lessons/all")).andExpect(status().isOk())
 		.andExpect(model().attribute("lessons", expected));
 
     }
 
     @Test
     void givenLessonId_WhenGetLesson_ThenLessonGot() throws Exception {
-	Lesson expected = getLessonsForTest().get(0);
+	Lesson expected = buildLessons().get(0);
 	when(lessonService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/lessons/findLessonById/1")).andExpect(view().name("lessons/lessonView"))
+	mockMvc.perform(get("/lessons/1")).andExpect(view().name("lessons/lesson"))
 		.andExpect(status().isOk()).andExpect(model().attribute("lesson", expected));
 
     }
 
-    private List<Lesson> getLessonsForTest() {
+    private List<Lesson> buildLessons() {
 	return Arrays.asList(Lesson.builder().id(1).subject(Subject.builder().id(1).name("subject1").build()).build(),
 		Lesson.builder().id(2).subject(Subject.builder().id(2).name("subject2").build()).build());
     }

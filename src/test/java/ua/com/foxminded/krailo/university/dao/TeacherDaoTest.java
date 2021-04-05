@@ -16,7 +16,6 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.config.WebConfig;
-import ua.com.foxminded.krailo.university.model.Department;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
@@ -34,7 +33,7 @@ class TeacherDaoTest {
     void givenNewTeacher_whenCreate_thenCreated() {
 	Teacher teacher = Teacher.builder().teacherId("teacher id").firstName("first name").lastName("last name")
 		.birthDate(LocalDate.of(2000, 01, 01)).address("address").phone("phone").email("email").degree("degree")
-		.department(Department.builder().id(1).name("new pepartment").build()).gender(Gender.MALE).build();
+		.gender(Gender.MALE).build();
 
 	teacherDao.create(teacher);
 
@@ -46,7 +45,7 @@ class TeacherDaoTest {
     void givenNewTeacherWithSubjects_whenCreate_thenNewRowsInTableTeachersSubjectsCreated() {
 	Teacher teacher = Teacher.builder().id(3).teacherId("teacher id").firstName("first name").lastName("last name")
 		.birthDate(LocalDate.of(2000, 01, 01)).address("address").phone("phone").email("email").degree("degree")
-		.department(Department.builder().id(1).name("new pepartment").build()).gender(Gender.MALE).build();
+		.gender(Gender.MALE).build();
 	List<Subject> subjects = new ArrayList<>(Arrays.asList(Subject.builder().id(1).name("subject1").build(),
 		Subject.builder().id(2).name("subject2").build()));
 	teacher.setSubjects(subjects);
@@ -62,7 +61,7 @@ class TeacherDaoTest {
     void givenNewFieldsOfTeacher_whenUpdate_tnenUpdated() {
 	Teacher teacher = Teacher.builder().id(1).teacherId("teacher id").firstName("first name").lastName("last name")
 		.birthDate(LocalDate.of(2000, 01, 01)).address("address").phone("phone").email("email").degree("degree")
-		.department(Department.builder().id(1).name("new pepartment").build()).gender(Gender.MALE).build();
+		.gender(Gender.MALE).build();
 
 	teacherDao.update(teacher);
 
@@ -76,7 +75,7 @@ class TeacherDaoTest {
     void givenNewSubjectsOfTeacher_whenUpdate_thenUpdated() {
 	Teacher teacher = Teacher.builder().id(1).teacherId("teacher id").firstName("first name").lastName("last name")
 		.birthDate(LocalDate.of(2000, 01, 01)).address("address").phone("phone").email("email").degree("degree")
-		.department(Department.builder().id(1).name("new pepartment").build()).gender(Gender.MALE).build();
+		.gender(Gender.MALE).build();
 	List<Subject> subjects = new ArrayList<>(Arrays.asList(Subject.builder().id(1).name("subject1").build(),
 		Subject.builder().id(2).name("subject2").build()));
 	teacher.setSubjects(subjects);
@@ -90,7 +89,7 @@ class TeacherDaoTest {
 
     @Test
     void givenId_whenFindById_thenFound() {
-	
+
 	Teacher actual = teacherDao.findById(1).get();
 
 	assertEquals(1, actual.getId());
@@ -120,16 +119,6 @@ class TeacherDaoTest {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers", "id = 1 OR id = 2");
 
 	int actual = teacherDao.findBySubjectId(subject.getId()).size();
-
-	assertEquals(expected, actual);
-    }
-
-    @Test
-    void givenDepertmentId_whenFindByDepartmentId_thenFound() {
-	Department department = Department.builder().id(1).name("name department").build();
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers", "department_id = 1");
-
-	int actual = teacherDao.findByDepartmentId(department.getId()).size();
 
 	assertEquals(expected, actual);
     }

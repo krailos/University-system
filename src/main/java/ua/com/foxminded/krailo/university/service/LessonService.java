@@ -3,6 +3,7 @@ package ua.com.foxminded.krailo.university.service;
 import static java.lang.String.format;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,14 +20,16 @@ import ua.com.foxminded.krailo.university.dao.VocationDao;
 import ua.com.foxminded.krailo.university.exception.AudienceNotFreeException;
 import ua.com.foxminded.krailo.university.exception.AudienceOverflowException;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
+import ua.com.foxminded.krailo.university.exception.GroupNotFreeException;
 import ua.com.foxminded.krailo.university.exception.LessonDateOnHolidayException;
 import ua.com.foxminded.krailo.university.exception.LessonDateOnWeekendException;
-import ua.com.foxminded.krailo.university.exception.GroupNotFreeException;
 import ua.com.foxminded.krailo.university.exception.TeacherNotFreeException;
 import ua.com.foxminded.krailo.university.exception.TeacherNotTeachLessonException;
 import ua.com.foxminded.krailo.university.exception.TeacherOnVocationException;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
+import ua.com.foxminded.krailo.university.model.Student;
+import ua.com.foxminded.krailo.university.model.Teacher;
 
 @Service
 public class LessonService {
@@ -39,7 +42,7 @@ public class LessonService {
 
     public LessonService(LessonDao lessonDao, VocationDao vocationDao, HolidayDao holidayDao) {
 	this.lessonDao = lessonDao;
-	this.vocationDao = vocationDao; 
+	this.vocationDao = vocationDao;
 	this.holidayDao = holidayDao;
     }
 
@@ -85,6 +88,28 @@ public class LessonService {
     public void delete(Lesson lesson) {
 	log.debug("delete lesson={}", lesson);
 	lessonDao.deleteById(lesson.getId());
+    }
+
+    public List<Lesson> getLessonsForTeacherByDate(Teacher teacher, LocalDate date) {
+	log.debug("get lessons for teacher={} by date={}", teacher, date);
+	return lessonDao.findByTeacherAndDate(teacher, date);
+    }
+
+    public List<Lesson> getLessonsForTeacherByMonth(Teacher teacher, LocalDate date) {
+	log.debug("get timetable for teacher={} by month", teacher);
+	return lessonDao.findByTeacherBetweenDates(teacher, date, date.plusMonths(1));
+    }
+
+    public List<Lesson> getLessonsForStudentByDate(Student student, LocalDate date) {
+	log.debug("get timetable for student={} by date={}", student, date);
+	return lessonDao.findByStudentAndDate(student, date);
+
+    }
+
+    public List<Lesson> getLessonsForStudentByMonth(Student student, LocalDate date) {
+	log.debug("get timetable for student={} by month", student);
+	return lessonDao.findByStudentBetweenDates(student, date, date.plusMonths(1));
+
     }
 
     private void checkTeacherIsFree(Lesson lesson) {

@@ -29,10 +29,9 @@ public class YearDao {
 
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM years WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM years ";
-    private static final String SQL_SELECT_BY_SPECIALITY_ID = "SELECT * FROM years WHERE speciality_id = ? ";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM years WHERE id = ?";
-    private static final String SQL_INSERT_YEAR = "INSERT INTO years (name, speciality_id) VALUES (?, ?)";
-    private static final String SQL_UPDATE_BY_ID = "UPDATE years SET name = ?, speciality_id = ? where id = ?";
+    private static final String SQL_INSERT_YEAR = "INSERT INTO years (name) VALUES (?)";
+    private static final String SQL_UPDATE_BY_ID = "UPDATE years SET name = ? where id = ?";
     private static final String SQL_INSERT_INTO_YEARS_SUBJECTS = "INSERT INTO years_subjects (year_id, subject_id) VALUES (?, ?)";
     private static final String SQL_DELETE_YEARS_SUBJECTS = "DELETE FROM years_subjects WHERE year_id = ? AND subject_id = ?";
 
@@ -51,7 +50,6 @@ public class YearDao {
 	    jdbcTemplate.update(connection -> {
 		PreparedStatement ps = connection.prepareStatement(SQL_INSERT_YEAR, new String[] { "id" });
 		ps.setString(1, year.getName());
-		ps.setInt(2, year.getSpeciality().getId());
 		return ps;
 	    }, keyHolder);
 	    year.setId(keyHolder.getKey().intValue());
@@ -71,8 +69,7 @@ public class YearDao {
 	log.debug("Update year={}", year);
 	int rowsAffected = 0;
 	try {
-	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, year.getName(), year.getSpeciality().getId(),
-		    year.getId());
+	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, year.getName(), year.getId());
 	    log.debug("year={} was updated", year);
 	    log.debug("update years_subject table");
 	    List<Subject> subjectsOld = findById(year.getId()).get().getSubjects();
@@ -117,15 +114,6 @@ public class YearDao {
 	    return jdbcTemplate.query(SQL_SELECT_ALL, yearRowMapper);
 	} catch (DataAccessException e) {
 	    throw new DaoException("Unable to find all years", e);
-	}
-    }
-
-    public List<Year> findBySpecialityId(int specialityId) {
-	log.debug("Find year by specialityId={}", specialityId);
-	try {
-	    return jdbcTemplate.query(SQL_SELECT_BY_SPECIALITY_ID, yearRowMapper, specialityId);
-	} catch (DataAccessException e) {
-	    throw new DaoException("Unable to find years by specialityId=" + specialityId, e);
 	}
     }
 

@@ -38,25 +38,25 @@ class HolidayControllerTest {
 
     @Test
     void WhenGetAllHolidays_ThenAllHolidaysReturned() throws Exception {
-	List<Holiday> expected = getHolidaysForTest();
+	List<Holiday> expected = buildHolidays();
 	when(holidayService.getAll()).thenReturn(expected);
 
-	mockMvc.perform(get("/holidays/all")).andExpect(view().name("holidays/holidaysAll")).andExpect(status().isOk())
+	mockMvc.perform(get("/holidays")).andExpect(view().name("holidays/all")).andExpect(status().isOk())
 		.andExpect(model().attribute("holidays", expected));
 
     }
 
     @Test
     void givenHolidayId_WhenGetHoliday_ThenHolidayGot() throws Exception {
-	Holiday expected = getHolidaysForTest().get(0);
+	Holiday expected = buildHolidays().get(0);
 	when(holidayService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/holidays/findHolidayById/1")).andExpect(view().name("holidays/holidayView"))
+	mockMvc.perform(get("/holidays/1")).andExpect(view().name("holidays/holiday"))
 		.andExpect(status().isOk()).andExpect(model().attribute("holiday", expected));
 
     }
 
-    private List<Holiday> getHolidaysForTest() {
+    private List<Holiday> buildHolidays() {
 	return Arrays.asList(Holiday.builder().id(1).name("holiday1").build(),
 		Holiday.builder().id(2).name("holiday2").build());
     }

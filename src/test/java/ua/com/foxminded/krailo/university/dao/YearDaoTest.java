@@ -15,7 +15,6 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
 import ua.com.foxminded.krailo.university.config.WebConfig;
-import ua.com.foxminded.krailo.university.model.Speciality;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Year;
 
@@ -30,8 +29,7 @@ class YearDaoTest {
 
     @Test
     void givenNewYear_whenCreate_thenCreated() {
-	Year year = Year.builder().name("new name").speciality(Speciality.builder().id(1).name("new name").build())
-		.build();
+	Year year = Year.builder().name("new name").build();
 
 	yearDao.create(year);
 
@@ -41,8 +39,7 @@ class YearDaoTest {
 
     @Test
     void givenNewYearWithSubjects_whenCreate_thenNewRowsInYearsSubjectsCreated() {
-	Year year = Year.builder().name("new name").speciality(Speciality.builder().id(1).name("new name").build())
-		.build();
+	Year year = Year.builder().name("new name").build();
 	List<Subject> subjects = new ArrayList<>(Arrays.asList(Subject.builder().id(3).name("new subject").build(),
 		Subject.builder().id(4).name("new subject").build()));
 	year.setSubjects(subjects);
@@ -56,8 +53,7 @@ class YearDaoTest {
 
     @Test
     void givenNewFieldsOfYear_whenUpdate_tnenUpdated() {
-	Year year = Year.builder().id(1).name("new name")
-		.speciality(Speciality.builder().id(1).name("new name").build()).build();
+	Year year = Year.builder().id(1).name("new name").build();
 
 	yearDao.update(year);
 
@@ -67,8 +63,7 @@ class YearDaoTest {
 
     @Test
     void givenNewSubjectsOfYear_whenUpdate_thenNewRowsInYearsSubjectsUpdated() {
-	Year year = Year.builder().id(1).name("new name")
-		.speciality(Speciality.builder().id(1).name("new name").build()).build();
+	Year year = Year.builder().id(1).name("new name").build();
 	List<Subject> subjects = new ArrayList<>(Arrays.asList(Subject.builder().id(1).name("new subject").build(),
 		Subject.builder().id(2).name("new subject").build()));
 	year.setSubjects(subjects);
@@ -93,15 +88,6 @@ class YearDaoTest {
 	int expected = JdbcTestUtils.countRowsInTable(jdbcTemplate, "years");
 
 	int actual = yearDao.findAll().size();
-
-	assertEquals(expected, actual);
-    }
-
-    @Test
-    void givenSpecialityId_whenFindBySpecialityId_thenFound() {
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "years", "speciality_id = 1");
-
-	int actual = yearDao.findBySpecialityId(1).size();
 
 	assertEquals(expected, actual);
     }

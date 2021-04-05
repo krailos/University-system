@@ -42,27 +42,27 @@ class GroupControllerTest {
 
     @Test
     void WhenGetAllGroups_ThenAllGroupsReturned() throws Exception {
-	List<Group> expected = getGroupsForTest();
+	List<Group> expected = buildGroups();
 	when(groupService.getAll()).thenReturn(expected);
 
-	mockMvc.perform(get("/groups/all")).andExpect(view().name("groups/groupsAll")).andExpect(status().isOk())
+	mockMvc.perform(get("/groups")).andExpect(view().name("groups/all")).andExpect(status().isOk())
 		.andExpect(model().attribute("groups", expected));
 
     }
 
     @Test
     void givenGroupId_WhenGetGroup_ThenGroupGot() throws Exception {
-	Group expected = getGroupsForTest().get(0);
+	Group expected = buildGroups().get(0);
 	when(groupService.getById(1)).thenReturn(expected);
 	when(studentService.getByGroupId(1))
 		.thenReturn(Arrays.asList(Student.builder().id(1).firstName("Jon").build()));
 
-	mockMvc.perform(get("/groups/findGroupById/1")).andExpect(view().name("groups/groupView"))
+	mockMvc.perform(get("/groups/1")).andExpect(view().name("groups/group"))
 		.andExpect(status().isOk()).andExpect(model().attribute("group", expected));
 
     }
 
-    private List<Group> getGroupsForTest() {
+    private List<Group> buildGroups() {
 	return Arrays.asList(
 		Group.builder().id(1).name("group1")
 			.students(Arrays.asList(Student.builder().id(1).firstName("Jon").build())).build(),

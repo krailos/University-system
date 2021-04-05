@@ -21,23 +21,19 @@ public class HolidaysController {
 	this.holidayService = holidayService;
     }
 
-    @GetMapping()
-    public String getHolidaysStartPage() {
-	return "holidays/holidays";
-    }
 
-    @GetMapping("/all")
+    @GetMapping()
     public String getAllHolidays(Model model) {
 	List<Holiday> holidays = holidayService.getAll();
 	model.addAttribute("holidays", holidays);
-	return "holidays/holidaysAll";
+	return "holidays/all";
     }
 
-    @GetMapping("/findHolidayById/{id}")
-    public String getViewHolidays(@PathVariable("id") int id, Model model) {
+    @GetMapping("/{id}")
+    public String getViewHolidays(@PathVariable int id, Model model) {
 	Holiday holiday = holidayService.getById(id);
 	model.addAttribute("holiday", holiday);
-	return "holidays/holidayView";
+	return "holidays/holiday";
     }
 
 }

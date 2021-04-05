@@ -42,27 +42,27 @@ class SubjectControllerTest {
 
     @Test
     void WhenGetAllSubjects_ThenAllSubjectsReturned() throws Exception {
-	List<Subject> expected = getSubjectsForTest();
+	List<Subject> expected = buildSubjects();
 	when(subjectService.getAll()).thenReturn(expected);
 
-	mockMvc.perform(get("/subjects/all")).andExpect(view().name("subjects/subjectsAll")).andExpect(status().isOk())
+	mockMvc.perform(get("/subjects")).andExpect(view().name("subjects/all")).andExpect(status().isOk())
 		.andExpect(model().attribute("subjects", expected));
 
     }
 
     @Test
     void givenSubjecttId_WhenGetSubject_ThenSubjectGot() throws Exception {
-	Subject expected = getSubjectsForTest().get(0);
+	Subject expected = buildSubjects().get(0);
 	when(subjectService.getById(1)).thenReturn(expected);
 	when(teacherService.getBySubjectId(1))
 		.thenReturn(Arrays.asList(Teacher.builder().id(1).firstName("teacher1").build()));
 
-	mockMvc.perform(get("/subjects/findSubjectById/1")).andExpect(view().name("subjects/subjectView"))
+	mockMvc.perform(get("/subjects/1")).andExpect(view().name("subjects/subject"))
 		.andExpect(status().isOk()).andExpect(model().attribute("subject", expected));
 
     }
 
-    private List<Subject> getSubjectsForTest() {
+    private List<Subject> buildSubjects() {
 	return Arrays.asList(
 		Subject.builder().id(1).name("subject1")
 			.teachers(Arrays.asList(Teacher.builder().id(1).firstName("teacher1").build())).build(),

@@ -24,36 +24,17 @@ public class TeacherController {
     }
 
     @GetMapping()
-    public String getTeacherspage() {
-	return "teachers/teachers";
-    }
-
-    @GetMapping("/all")
     public String getAllTeachers(Model model) {
 	List<Teacher> teachers = teacherService.getAll();
 	model.addAttribute("teachers", teachers);
-	return "teachers/teachersAll";
+	return "teachers/all";
     }
 
-    @GetMapping("/findTeacherById/{id}")
-    public String getviewTeacherGet(@PathVariable("id") int id, Model model) {
+    @GetMapping("/{id}")
+    public String getviewTeacherGet(@PathVariable int id, Model model) {
 	Teacher teacher = teacherService.getById(id);
 	model.addAttribute("teacher", teacher);
-	return "teachers/teacherView";
-    }
-
-    @PostMapping("/findTeacherById/")
-    public String getviewTeacherPost(@RequestParam("id") int id, Model model) {
-	Teacher teacher = teacherService.getById(id);
-	model.addAttribute("teacher", teacher);
-	return "teachers/teacherView";
-    }
-
-    @GetMapping("/formFindTeacherById")
-    public String getFormViewTeacher(Model model) {
-	Teacher teacher = new Teacher();
-	model.addAttribute("teacher", teacher);
-	return "teachers/formFindTeacherById";
+	return "teachers/teacher";
     }
 
 }
