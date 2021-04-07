@@ -12,17 +12,16 @@ import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.config.WebConfig;
 import ua.com.foxminded.krailo.university.model.Holiday;
 
-@SpringJUnitWebConfig(classes = { WebConfig.class, ConfigTest.class })
+@SpringJUnitWebConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
 class HolidayDaoTest {
 
     @Autowired
     private HolidayDao holidayDao;
     @Autowired
-    private JdbcTemplate jdbcTemplate; 
+    private JdbcTemplate jdbcTemplate;
 
     @Test
     void givenNewHoliday_whenCreate_thenCreated() {

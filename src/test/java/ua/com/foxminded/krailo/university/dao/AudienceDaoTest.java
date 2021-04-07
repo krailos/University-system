@@ -13,11 +13,10 @@ import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.config.WebConfig;
 import ua.com.foxminded.krailo.university.exception.DaoConstraintViolationException;
 import ua.com.foxminded.krailo.university.model.Audience;
 
-@SpringJUnitWebConfig(classes = { WebConfig.class, ConfigTest.class })
+@SpringJUnitWebConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
 class AudienceDaoTest {
 
@@ -108,6 +107,22 @@ class AudienceDaoTest {
 	audienceDao.deleteById(1);
 
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "Audiences");
+	assertEquals(2, actual);
+    }
+
+    @Test
+    void givnAudiences_whenFindCount_thenFound() {
+
+	int actual = audienceDao.findCount();
+
+	assertEquals(3, actual);
+    }
+    
+    @Test
+    void givnAudiences_whenGetCount_thenGot() {
+
+	int actual = audienceDao.findWithLimit(2,1).size();
+
 	assertEquals(2, actual);
     }
 

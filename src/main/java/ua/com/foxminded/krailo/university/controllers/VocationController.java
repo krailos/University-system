@@ -21,7 +21,7 @@ public class VocationController {
 	this.vocationService = vocationService;
     }
 
-    @GetMapping()
+    @GetMapping
     public String getAllVocations(Model model) {
 	List<Vocation> vocations = vocationService.getAll();
 	model.addAttribute("vocations", vocations);
@@ -29,7 +29,7 @@ public class VocationController {
     }
 
     @GetMapping("/{id}")
-    public String getViewVocation(@PathVariable("id") int id, Model model) {
+    public String getVocation(@PathVariable("id") int id, Model model) {
 	Vocation vocation = vocationService.getById(id);
 	model.addAttribute("vocation", vocation);
 	return "vocations/vocation";

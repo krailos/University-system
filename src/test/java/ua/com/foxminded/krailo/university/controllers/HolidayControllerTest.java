@@ -18,6 +18,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Holiday;
 import ua.com.foxminded.krailo.university.service.HolidayService;
 
@@ -33,7 +35,7 @@ class HolidayControllerTest {
 
     @BeforeEach
     public void init() {
-	mockMvc = standaloneSetup(holidayController).build();
+	mockMvc = standaloneSetup(holidayController).setControllerAdvice(new ControllerExceptionHandler()).build();
     }
 
     @Test
@@ -51,9 +53,17 @@ class HolidayControllerTest {
 	Holiday expected = buildHolidays().get(0);
 	when(holidayService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/holidays/1")).andExpect(view().name("holidays/holiday"))
-		.andExpect(status().isOk()).andExpect(model().attribute("holiday", expected));
+	mockMvc.perform(get("/holidays/1")).andExpect(view().name("holidays/holiday")).andExpect(status().isOk())
+		.andExpect(model().attribute("holiday", expected));
 
+    }
+
+    @Test
+    void givenWrongAudienceId_whenGetAudience_thenEntityNotFoundExceptionThrown() throws Exception {
+	when(holidayService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
+
+	mockMvc.perform(get("/holidays/1")).andExpect(view().name("errors/error"))
+		.andExpect(model().attribute("message", "entity not exist"));
     }
 
     private List<Holiday> buildHolidays() {

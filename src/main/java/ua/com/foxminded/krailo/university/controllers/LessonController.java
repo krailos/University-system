@@ -22,7 +22,7 @@ public class LessonController {
     }
 
 
-    @GetMapping()
+    @GetMapping
     public String getAllLessons(Model model) {
 	List<Lesson> lessons = lessonService.getAll();
 	model.addAttribute("lessons", lessons);
@@ -30,7 +30,7 @@ public class LessonController {
     }
 
     @GetMapping("/{id}")
-    public String getViewLesson(@PathVariable int id, Model model) {
+    public String getLesson(@PathVariable int id, Model model) {
 	Lesson lesson = lessonService.getById(id);
 	model.addAttribute("lesson", lesson);
 	return "lessons/lesson";

@@ -22,7 +22,7 @@ public class LessonTimeController {
     }
 
 
-    @GetMapping()
+    @GetMapping
     public String getAllLessonTime(Model model) {
 	List<LessonTime> lessonTimes = lessonTimeService.getAll();
 	model.addAttribute("lessonTimes", lessonTimes);
@@ -30,7 +30,7 @@ public class LessonTimeController {
     }
 
     @GetMapping("/{id}")
-    public String getViewLessonTime(@PathVariable("id") int id, Model model) {
+    public String getLessonTime(@PathVariable("id") int id, Model model) {
 	LessonTime lessonTime = lessonTimeService.getById(id);
 	model.addAttribute("lessonTime", lessonTime);
 	return "lessonTimes/lessonTime";

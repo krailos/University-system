@@ -25,7 +25,7 @@ public class GroupController {
 	this.groupService = groupService;
     }
 
-    @GetMapping()
+    @GetMapping
     public String getAllGroups(Model model) {
 	List<Group> groups = groupService.getAll();
 	model.addAttribute("groups", groups);
@@ -33,7 +33,7 @@ public class GroupController {
     }
 
     @GetMapping("/{id}")
-    public String getViewGroup(@PathVariable int id, Model model) {
+    public String getGroup(@PathVariable int id, Model model) {
 	Group group = groupService.getById(id);
 	List<Student> students = studentService.getByGroupId(group.getId());
 	group.setStudents(students);

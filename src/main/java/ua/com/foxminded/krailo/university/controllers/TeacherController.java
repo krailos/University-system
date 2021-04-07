@@ -23,7 +23,7 @@ public class TeacherController {
 	this.teacherService = teacherService;
     }
 
-    @GetMapping()
+    @GetMapping
     public String getAllTeachers(Model model) {
 	List<Teacher> teachers = teacherService.getAll();
 	model.addAttribute("teachers", teachers);
@@ -31,7 +31,7 @@ public class TeacherController {
     }
 
     @GetMapping("/{id}")
-    public String getviewTeacherGet(@PathVariable int id, Model model) {
+    public String getTeacher(@PathVariable int id, Model model) {
 	Teacher teacher = teacherService.getById(id);
 	model.addAttribute("teacher", teacher);
 	return "teachers/teacher";

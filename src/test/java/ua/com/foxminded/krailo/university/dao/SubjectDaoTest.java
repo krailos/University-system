@@ -10,12 +10,11 @@ import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.config.WebConfig;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Year;
 
-@SpringJUnitWebConfig(classes = { WebConfig.class, ConfigTest.class })
+@SpringJUnitWebConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
 class SubjectDaoTest {
 
@@ -37,7 +36,6 @@ class SubjectDaoTest {
     @Test
     void givenNewFieldsOfSubject_whenUpdate_tnenUpdated() {
 	Subject subject = Subject.builder().id(1).name("new subject").build();
-
 
 	subjectDao.update(subject);
 
@@ -70,21 +68,21 @@ class SubjectDaoTest {
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "subjects");
 	assertEquals(3, actual);
     }
-    
+
     @Test
     void givenTeacherId_whenFindSubjectsByTeacherId_thenFound() {
 	Teacher teacher = Teacher.builder().id(1).build();
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "subjects", "id = 1 OR id = 2" );
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "subjects", "id = 1 OR id = 2");
 
 	int actual = subjectDao.findByTeacherId(teacher.getId()).size();
 
 	assertEquals(expected, actual);
     }
-    
+
     @Test
     void givenYearId_whenFindSubjectsByYearId_thenFound() {
 	Year year = Year.builder().id(1).name("new year").build();
-	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "subjects", "id = 1 OR id = 2" );
+	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "subjects", "id = 1 OR id = 2");
 
 	int actual = subjectDao.findByYearId(year.getId()).size();
 

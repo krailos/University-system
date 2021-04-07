@@ -30,7 +30,7 @@ public class AudienceService {
 	return audienceDao.findById(id)
 		.orElseThrow(() -> new EntityNotFoundException(format("Audience whith id=%s not exist", id)));
     }
-    
+
     public Audience getByNumber(String number) {
 	log.debug("get audience by number={}", number);
 	return audienceDao.findByNumber(number)
@@ -59,13 +59,19 @@ public class AudienceService {
 	log.debug("delete audience={}", audience);
 	audienceDao.deleteById(audience.getId());
     }
+    
+    public List<Audience> getAudiencesByPage(int limit, int offset) {
+	return audienceDao.findWithLimit(limit, offset);
+    }
 
     private void checkAudienceNumberBeUnique(Audience audience) {
 	Optional<Audience> existingAudience = audienceDao.findByNumber(audience.getNumber());
-	log.debug("exist aud={}",existingAudience);
+	log.debug("existing audience={}", existingAudience);
 	if (existingAudience.filter(a -> a.getId() != audience.getId()).isPresent()) {
 	    throw new NotUniqueNameException(format("audiences number=%s  not unique", audience.getNumber()));
 	}
     }
+
+
 
 }

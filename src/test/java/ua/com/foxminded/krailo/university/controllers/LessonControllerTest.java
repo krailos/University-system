@@ -18,6 +18,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.service.LessonService;
@@ -34,7 +36,7 @@ class LessonControllerTest {
 
     @BeforeEach
     public void init() {
-	mockMvc = standaloneSetup(lessonController).build();
+	mockMvc = standaloneSetup(lessonController).setControllerAdvice(new ControllerExceptionHandler()).build();
     }
 
     @Test
@@ -56,6 +58,15 @@ class LessonControllerTest {
 		.andExpect(status().isOk()).andExpect(model().attribute("lesson", expected));
 
     }
+    
+    @Test
+    void givenWrongAudienceId_whenGetAudience_thenEntityNotFoundExceptionThrown() throws Exception {
+	when(lessonService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
+
+	mockMvc.perform(get("/lessons/1")).andExpect(view().name("errors/error"))
+		.andExpect(model().attribute("message", "entity not exist"));
+    }
+
 
     private List<Lesson> buildLessons() {
 	return Arrays.asList(Lesson.builder().id(1).subject(Subject.builder().id(1).name("subject1").build()).build(),

@@ -18,6 +18,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Year;
 import ua.com.foxminded.krailo.university.service.GroupService;
@@ -37,7 +39,7 @@ class YearControllerTest {
 
     @BeforeEach
     public void init() {
-	mockMvc = standaloneSetup(yearController).build();
+	mockMvc = standaloneSetup(yearController).setControllerAdvice(new ControllerExceptionHandler()).build();
     }
 
     @Test
@@ -51,13 +53,21 @@ class YearControllerTest {
     }
 
     @Test
+    void givenWrongAudienceId_whenGetAudience_thenEntityNotFoundExceptionThrown() throws Exception {
+	when(yearService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
+
+	mockMvc.perform(get("/years/1")).andExpect(view().name("errors/error"))
+		.andExpect(model().attribute("message", "entity not exist"));
+    }
+
+    @Test
     void givenYearId_WhenGetYear_ThenYearGot() throws Exception {
 	Year expected = buildYaers().get(0);
 	when(yearService.getById(1)).thenReturn(expected);
 	when(groupService.getByYearId(1)).thenReturn(Arrays.asList(Group.builder().id(1).name("group1").build()));
 
-	mockMvc.perform(get("/years/1")).andExpect(view().name("years/year"))
-		.andExpect(status().isOk()).andExpect(model().attribute("year", expected));
+	mockMvc.perform(get("/years/1")).andExpect(view().name("years/year")).andExpect(status().isOk())
+		.andExpect(model().attribute("year", expected));
 
     }
 

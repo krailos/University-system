@@ -18,6 +18,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.service.SubjectService;
@@ -37,7 +39,7 @@ class SubjectControllerTest {
 
     @BeforeEach
     public void init() {
-	mockMvc = standaloneSetup(subjectController).build();
+	mockMvc = standaloneSetup(subjectController).setControllerAdvice(new ControllerExceptionHandler()).build();
     }
 
     @Test
@@ -57,9 +59,17 @@ class SubjectControllerTest {
 	when(teacherService.getBySubjectId(1))
 		.thenReturn(Arrays.asList(Teacher.builder().id(1).firstName("teacher1").build()));
 
-	mockMvc.perform(get("/subjects/1")).andExpect(view().name("subjects/subject"))
-		.andExpect(status().isOk()).andExpect(model().attribute("subject", expected));
+	mockMvc.perform(get("/subjects/1")).andExpect(view().name("subjects/subject")).andExpect(status().isOk())
+		.andExpect(model().attribute("subject", expected));
 
+    }
+
+    @Test
+    void givenWrongAudienceId_whenGetAudience_thenEntityNotFoundExceptionThrown() throws Exception {
+	when(subjectService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
+
+	mockMvc.perform(get("/subjects/1")).andExpect(view().name("errors/error"))
+		.andExpect(model().attribute("message", "entity not exist"));
     }
 
     private List<Subject> buildSubjects() {

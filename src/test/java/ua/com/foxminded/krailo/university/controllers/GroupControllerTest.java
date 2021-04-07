@@ -18,6 +18,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.service.GroupService;
@@ -37,7 +39,7 @@ class GroupControllerTest {
 
     @BeforeEach
     public void init() {
-	mockMvc = standaloneSetup(groupController).build();
+	mockMvc = standaloneSetup(groupController).setControllerAdvice(new ControllerExceptionHandler()).build();
     }
 
     @Test
@@ -57,9 +59,17 @@ class GroupControllerTest {
 	when(studentService.getByGroupId(1))
 		.thenReturn(Arrays.asList(Student.builder().id(1).firstName("Jon").build()));
 
-	mockMvc.perform(get("/groups/1")).andExpect(view().name("groups/group"))
-		.andExpect(status().isOk()).andExpect(model().attribute("group", expected));
+	mockMvc.perform(get("/groups/1")).andExpect(view().name("groups/group")).andExpect(status().isOk())
+		.andExpect(model().attribute("group", expected));
 
+    }
+
+    @Test
+    void givenWrongAudienceId_whenGetAudience_thenEntityNotFoundExceptionThrown() throws Exception {
+	when(groupService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
+
+	mockMvc.perform(get("/groups/1")).andExpect(view().name("errors/error"))
+		.andExpect(model().attribute("message", "entity not exist"));
     }
 
     private List<Group> buildGroups() {

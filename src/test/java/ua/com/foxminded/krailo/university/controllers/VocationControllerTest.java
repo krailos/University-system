@@ -18,6 +18,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
+import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Vocation;
 import ua.com.foxminded.krailo.university.model.VocationKind;
 import ua.com.foxminded.krailo.university.service.VocationService;
@@ -34,7 +36,7 @@ class VocationControllerTest {
 
     @BeforeEach
     public void init() {
-	mockMvc = standaloneSetup(vocationController).build();
+	mockMvc = standaloneSetup(vocationController).setControllerAdvice(new ControllerExceptionHandler()).build();
     }
 
     @Test
@@ -55,6 +57,14 @@ class VocationControllerTest {
 	mockMvc.perform(get("/vocations/1")).andExpect(view().name("vocations/vocation")).andExpect(status().isOk())
 		.andExpect(model().attribute("vocation", expected));
 
+    }
+
+    @Test
+    void givenWrongAudienceId_whenGetAudience_thenEntityNotFoundExceptionThrown() throws Exception {
+	when(vocationService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
+
+	mockMvc.perform(get("/vocations/1")).andExpect(view().name("errors/error"))
+		.andExpect(model().attribute("message", "entity not exist"));
     }
 
     private List<Vocation> buildVocations() {

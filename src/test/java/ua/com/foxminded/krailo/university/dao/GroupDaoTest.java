@@ -12,7 +12,6 @@ import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.config.WebConfig;
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
@@ -21,7 +20,7 @@ import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Year;
 
-@SpringJUnitWebConfig(classes = { WebConfig.class, ConfigTest.class })
+@SpringJUnitWebConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
 class GroupDaoTest {
 
@@ -32,8 +31,7 @@ class GroupDaoTest {
 
     @Test
     void givenNewGroup_whenCreate_thenCreated() {
-	Group group = Group.builder().name("new name")
-		.year(Year.builder().id(1).name("new name").build()).build();
+	Group group = Group.builder().name("new name").year(Year.builder().id(1).name("new name").build()).build();
 
 	groupDao.create(group);
 
@@ -43,9 +41,8 @@ class GroupDaoTest {
 
     @Test
     void givenNewFieldsOfGroup_whenUpdate_tnenUpdated() {
-	Group group = Group.builder().id(1).name("new name")
-		.year(Year.builder().id(1).name("new name").build()).build();
-
+	Group group = Group.builder().id(1).name("new name").year(Year.builder().id(1).name("new name").build())
+		.build();
 
 	groupDao.update(group);
 
@@ -83,8 +80,7 @@ class GroupDaoTest {
     void givenLessonId_whenFindGroupsByLessonId_thenFound() {
 	Lesson lesson = Lesson.builder().id(1).date(LocalDate.of(2000, 01, 01))
 		.lessonTime(LessonTime.builder().id(1).build())
-		.subject(Subject.builder().id(1).name("new name").build())
-		.audience(Audience.builder().id(1).build())
+		.subject(Subject.builder().id(1).name("new name").build()).audience(Audience.builder().id(1).build())
 		.teacher(Teacher.builder().id(1).build()).build();
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lessons_groups", "lesson_id = 1");
 
@@ -102,10 +98,10 @@ class GroupDaoTest {
 
 	assertEquals(expected, actual);
     }
-    
+
     @Test
     void givenGroupName_whenFindByName_thenFound() {
-	
+
 	Group actual = groupDao.findByNameAndYearId("group 1", 1).get();
 
 	assertEquals("group 1", actual.getName());

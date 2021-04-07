@@ -26,7 +26,7 @@ public class YearController {
 	this.groupService = groupService;
     }
 
-    @GetMapping()
+    @GetMapping
     public String getAllYears(Model model) {
 	List<Year> years = yearService.getAll();
 	model.addAttribute("years", years);
@@ -34,7 +34,7 @@ public class YearController {
     }
 
     @GetMapping("/{id}")
-    public String getViewYear(@PathVariable("id") int id, Model model) {
+    public String getYear(@PathVariable("id") int id, Model model) {
 	Year year = yearService.getById(id);
 	List<Group> groups = groupService.getByYearId(year.getId());
 	year.setGroups(groups);

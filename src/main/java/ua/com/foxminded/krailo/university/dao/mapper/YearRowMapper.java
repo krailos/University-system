@@ -15,7 +15,6 @@ public class YearRowMapper implements RowMapper<Year> {
     private SubjectDao subjectDao;
 
     public YearRowMapper(SubjectDao subjectDao) {
-
 	this.subjectDao = subjectDao;
     }
 

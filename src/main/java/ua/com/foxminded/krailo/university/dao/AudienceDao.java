@@ -27,9 +27,11 @@ public class AudienceDao {
     private static final String SQL_SELECT_AUDIENCE_BY_ID = "SELECT * FROM audiences  WHERE id = ?";
     private static final String SQL_SELECT_AUDIENCE_BY_NUMBER = "SELECT * FROM audiences  WHERE number = ?";
     private static final String SQL_SELECT_ALL_AUDIENCES = "SELECT * FROM audiences";
+    private static final String SQL_SELECT_WITH_LIMIT = "SELECT * FROM audiences ORDER BY number LIMIT ? OFFSET ?";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM audiences WHERE id = ?";
     private static final String SQL_INSERT_AUDIENCE = "INSERT INTO audiences (number, capacity, description) VALUES (?, ?, ?)";
     private static final String SQL_UPDATE_BY_ID = "UPDATE audiences SET number = ?, capacity = ?, description = ? where id = ?";
+    private static final String SQL_AUDIENCE_COUNT = "SELECT COUNT (*) AS count FROM audiences";
 
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Audience> audienceRowMapper;
@@ -80,7 +82,7 @@ public class AudienceDao {
 	try {
 	    KeyHolder keyHolder = new GeneratedKeyHolder();
 	    jdbcTemplate.update(connection -> {
-		PreparedStatement ps = connection.prepareStatement(SQL_INSERT_AUDIENCE, new String[] { "id" });
+		PreparedStatement ps = connection.prepareStatement(SQL_INSERT_AUDIENCE,  new String[]{"id"});
 		ps.setString(1, audience.getNumber());
 		ps.setInt(2, audience.getCapacity());
 		ps.setString(3, audience.getDescription());
@@ -126,6 +128,24 @@ public class AudienceDao {
 	} else {
 	    log.debug("audience not deleted, audience with id={} not exist", id);
 	}
+    }
+
+    public List<Audience> findWithLimit(int limit, int offset) {
+	log.debug("find audiences by page");
+	try {
+	    return jdbcTemplate.query(SQL_SELECT_WITH_LIMIT, audienceRowMapper, limit, offset);
+	} catch (DataAccessException e) {
+	    throw new DaoException("Unable to find audiences by page", e);
+	}	
+    }
+    
+    public int findCount() {
+	log.debug("find audiences count");
+	try {
+	return jdbcTemplate.queryForObject(SQL_AUDIENCE_COUNT, Integer.class);
+	} catch (DataAccessException e) {
+	    throw new DaoException("Unable to find audiences count", e);
+	}	
     }
 
 }

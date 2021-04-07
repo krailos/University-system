@@ -12,12 +12,11 @@ import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.config.WebConfig;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Student;
 
-@SpringJUnitWebConfig(classes = { WebConfig.class, ConfigTest.class })
+@SpringJUnitWebConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
 class StudentDaoTest {
 
@@ -28,18 +27,9 @@ class StudentDaoTest {
 
     @Test
     void givenNewStudent_whenCreate_thenCreated() {
-	Student student = Student.builder().
-		studentId("student id").
-		firstName("first name").
-		lastName("last name").
-		birthDate(LocalDate.of(2000, 01, 01)).
-		address("address").
-		phone("phone").
-		email("email").
-		rank("rank").
-		gender(Gender.MALE).
-		group(Group.builder().id(1).name("group name").build()).
-		build();
+	Student student = Student.builder().studentId("student id").firstName("first name").lastName("last name")
+		.birthDate(LocalDate.of(2000, 01, 01)).address("address").phone("phone").email("email").rank("rank")
+		.gender(Gender.MALE).group(Group.builder().id(1).name("group name").build()).build();
 
 	studentDao.create(student);
 
@@ -49,25 +39,15 @@ class StudentDaoTest {
 
     @Test
     void givenNewFieldsOfStudents_whenUpdate_tnenUpdated() {
-	Student student = Student.builder().
-		id(1).
-		studentId("student id").
-		firstName("first name").
-		lastName("last name").
-		birthDate(LocalDate.of(2000, 01, 01)).
-		address("address").
-		phone("phone").
-		email("email").
-		rank("rank").
-		gender(Gender.MALE).
-		group(Group.builder().id(1).name("group name").build()).
-		build();
+	Student student = Student.builder().id(1).studentId("student id").firstName("first name").lastName("last name")
+		.birthDate(LocalDate.of(2000, 01, 01)).address("address").phone("phone").email("email").rank("rank")
+		.gender(Gender.MALE).group(Group.builder().id(1).name("group name").build()).build();
 
 	studentDao.update(student);
 
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "students",
 		"student_id = 'student id' AND first_name  = 'first name' AND last_name = 'last name' AND birth_date = '2000-01-01'"
-		+ " AND phone = 'phone' AND address = 'address' AND email = 'email' AND gender = 'MALE' AND id = 1");
+			+ " AND phone = 'phone' AND address = 'address' AND email = 'email' AND gender = 'MALE' AND id = 1");
 	assertEquals(1, actual);
     }
 
@@ -87,7 +67,7 @@ class StudentDaoTest {
 
 	assertEquals(expected, actual);
     }
-    
+
     @Test
     void givenGroupId_whenFindByGroupId_thenFound() {
 	int expected = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "students", "group_id = 1");

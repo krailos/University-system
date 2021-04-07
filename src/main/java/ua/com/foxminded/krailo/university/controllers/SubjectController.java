@@ -28,7 +28,7 @@ public class SubjectController {
 	this.teacherService = teacherService;
     }
 
-    @GetMapping()
+    @GetMapping
     public String getAllSubjects(Model model) {
 	List<Subject> subjects = subjectService.getAll();
 	model.addAttribute("subjects", subjects);
@@ -36,7 +36,7 @@ public class SubjectController {
     }
 
     @GetMapping("/{id}")
-    public String getViewSubjectGet(@PathVariable int id, Model model) {
+    public String getSubject(@PathVariable int id, Model model) {
 	Subject subject = subjectService.getById(id);
 	List<Teacher> teachers = teacherService.getBySubjectId(id);
 	subject.setTeachers(teachers);

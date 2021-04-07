@@ -22,7 +22,7 @@ public class HolidaysController {
     }
 
 
-    @GetMapping()
+    @GetMapping
     public String getAllHolidays(Model model) {
 	List<Holiday> holidays = holidayService.getAll();
 	model.addAttribute("holidays", holidays);
@@ -30,7 +30,7 @@ public class HolidaysController {
     }
 
     @GetMapping("/{id}")
-    public String getViewHolidays(@PathVariable int id, Model model) {
+    public String getHoliday(@PathVariable int id, Model model) {
 	Holiday holiday = holidayService.getById(id);
 	model.addAttribute("holiday", holiday);
 	return "holidays/holiday";

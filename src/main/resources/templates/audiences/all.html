@@ -53,7 +53,9 @@
 
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item active"><a class="nav-link" th:href="@{/}">Home/University</a></li>
+					<li class="nav-item active">
+						<a class="nav-link" th:href="@{/}">Home/University</a>
+					</li>
 				</ul>
 			</div>
 
@@ -63,19 +65,23 @@
 
 	<div class="container-fluid ">
 		<div class="row">
-			<div class="col-md-2 bg-info " style="  height: 100vh;">
-			<ul class="list-group list-group-flush">
-					<li class="list-group-item"><a th:href="@{/audiences}"
-						class="text-info"> <i class="fa fa-cog mr-2"
-							aria-hidden="true"></i>All audiences</a></li>
-					<li class="list-group-item"><a
-						href="#" class="text-info"> <i
-							class="fa fa-cog mr-2" aria-hidden="true"></i>Add student
-					</a></li>
-					<li class="list-group-item"><a
-						href="#" class="text-info"> <i
-							class="fa fa-cog mr-2" aria-hidden="true"></i>Find student
-					</a></li>
+			<div class="col-md-2 bg-info " style="height: 100vh;">
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item">
+						<a th:href="@{/audiences}" class="text-info"> <i
+							class="fa fa-cog mr-2" aria-hidden="true"></i>All audiences
+						</a>
+					</li>
+					<li class="list-group-item">
+						<a href="#" class="text-info"> <i class="fa fa-cog mr-2"
+							aria-hidden="true"></i>Add student
+						</a>
+					</li>
+					<li class="list-group-item">
+						<a href="#" class="text-info"> <i class="fa fa-cog mr-2"
+							aria-hidden="true"></i>Find student
+						</a>
+					</li>
 				</ul>
 			</div>
 			<div class="
@@ -113,6 +119,20 @@
 						</table>
 					</div>
 				</div>
+				
+				
+				<div class="col-10 offset-1 mt-2">
+					<a title="view" th:href="@{/audiences/page/{pageId}(pageId=1)}"
+						class="btn btn-outline-success btn-sm" role="button"
+						aria-pressed="true">1</a> <a title="view" th:href="@{/audiences/page/{pageId}(pageId=2)}"
+						class="btn btn-outline-success btn-sm" role="button"
+						aria-pressed="true">2
+					</a> <a title="view" th:href="@{/audiences/page/{pageId}(pageId=3)}"
+						class="btn btn-outline-success btn-sm" role="button"
+						aria-pressed="true"> 3
+					</a>
+				</div>
+				
 
 			</div>
 		</div>
