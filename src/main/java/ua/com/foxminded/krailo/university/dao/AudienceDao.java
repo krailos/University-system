@@ -139,7 +139,7 @@ public class AudienceDao {
 	}	
     }
     
-    public int findCount() {
+    public int findQuantity() {
 	log.debug("find audiences count");
 	try {
 	return jdbcTemplate.queryForObject(SQL_AUDIENCE_COUNT, Integer.class);

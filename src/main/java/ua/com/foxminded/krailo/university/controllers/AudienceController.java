@@ -23,8 +23,13 @@ public class AudienceController {
 
     @GetMapping
     public String getAllAudiences(Model model) {
-	List<Audience> audiences = audienceService.getAudiencesByPage(2,0);
+	int limit = 2;
+	int offset = 0;
+	int audienceQuantity = audienceService.getQuantity();
+	int pageQuantity = audienceQuantity % limit == 0 ? audienceQuantity / limit : audienceQuantity / limit + 1;
+	List<Audience> audiences = audienceService.getAudiencesByPage(limit, offset);
 	model.addAttribute("audiences", audiences);
+	model.addAttribute("pageQuantity", pageQuantity);
 	return "audiences/all";
     }
 
@@ -38,15 +43,17 @@ public class AudienceController {
     @GetMapping("page/{pageId}")
     public String getAllAudiencesPagination(@PathVariable int pageId, Model model) {
 	int limit = 2;
-	int offset = 1;
+	int offset = 0;
+	int audienceQuantity = audienceService.getQuantity();
+	int pageQuantity = audienceQuantity % limit == 0 ? audienceQuantity / limit : audienceQuantity / limit + 1;
 	if (pageId == 1) {
-	    offset--;
 	} else {
-	    offset = (pageId) * offset;
+	    offset = (--pageId) * limit;
 	}
 	System.out.println(pageId);
 	List<Audience> list = audienceService.getAudiencesByPage(limit, offset);
 	model.addAttribute("audiences", list);
+	model.addAttribute("pageQuantity", pageQuantity);
 	return "audiences/page";
     }
 

@@ -40,10 +40,20 @@ class AudienceControllerTest {
     @Test
     void whenGetAllAudiences_thenAllAudiencesReturned() throws Exception {
 	List<Audience> expected = buildAudiences();
-	when(audienceService.getAudiencesByPage(2,0)).thenReturn(expected);
+	when(audienceService.getAudiencesByPage(2, 0)).thenReturn(expected);
 
 	mockMvc.perform(get("/audiences")).andExpect(view().name("audiences/all")).andExpect(status().isOk())
 		.andExpect(model().attribute("audiences", expected));
+    }
+
+    @Test
+    void whenGetAllAudiences2_thenAllAudiencesReturned() throws Exception {
+	List<Audience> expected = buildAudiences();
+	when(audienceService.getAudiencesByPage(2, 2)).thenReturn(expected);
+	when(audienceService.getQuantity()).thenReturn(4);
+
+	mockMvc.perform(get("/audiences/page/2")).andExpect(view().name("audiences/page")).andExpect(status().isOk())
+		.andExpect(model().attribute("audiences", expected)).andExpect(model().attribute("pageQuantity", 2));
     }
 
     @Test

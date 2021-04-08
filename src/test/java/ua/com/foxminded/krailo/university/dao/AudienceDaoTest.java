@@ -113,7 +113,7 @@ class AudienceDaoTest {
     @Test
     void givnAudiences_whenFindCount_thenFound() {
 
-	int actual = audienceDao.findCount();
+	int actual = audienceDao.findQuantity();
 
 	assertEquals(3, actual);
     }

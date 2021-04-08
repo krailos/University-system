@@ -61,8 +61,15 @@ public class AudienceService {
     }
     
     public List<Audience> getAudiencesByPage(int limit, int offset) {
+	log.debug("get audiences by page");
 	return audienceDao.findWithLimit(limit, offset);
     }
+    
+    public int getQuantity() {
+	log.debug("get audience quantity");
+	return audienceDao.findQuantity();
+    }
+
 
     private void checkAudienceNumberBeUnique(Audience audience) {
 	Optional<Audience> existingAudience = audienceDao.findByNumber(audience.getNumber());
@@ -71,6 +78,7 @@ public class AudienceService {
 	    throw new NotUniqueNameException(format("audiences number=%s  not unique", audience.getNumber()));
 	}
     }
+
 
 
 
