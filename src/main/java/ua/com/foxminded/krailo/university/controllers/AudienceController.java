@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.service.AudienceService;
@@ -22,14 +23,14 @@ public class AudienceController {
     }
 
     @GetMapping
-    public String getAllAudiences(Model model) {
-	int limit = 2;
-	int offset = 0;
+    public String getAllAudiences(@RequestParam(value = "pageSize", defaultValue = "2", required = false) int pageSize,
+	    @RequestParam(value = "pageId", defaultValue = "1", required = false) int pageId, Model model) {
 	int audienceQuantity = audienceService.getQuantity();
-	int pageQuantity = audienceQuantity % limit == 0 ? audienceQuantity / limit : audienceQuantity / limit + 1;
-	List<Audience> audiences = audienceService.getAudiencesByPage(limit, offset);
-	model.addAttribute("audiences", audiences);
+	int pageQuantity = audienceQuantity % pageSize == 0 ? audienceQuantity / pageSize
+		: audienceQuantity / pageSize + 1;
+	List<Audience> audienceByLimit = audienceService.getByPage(pageSize, pageSize * (pageId - 1));
 	model.addAttribute("pageQuantity", pageQuantity);
+	model.addAttribute("audiences", audienceByLimit);
 	return "audiences/all";
     }
 
@@ -40,21 +41,5 @@ public class AudienceController {
 	return "audiences/audience";
     }
 
-    @GetMapping("page/{pageId}")
-    public String getAllAudiencesPagination(@PathVariable int pageId, Model model) {
-	int limit = 2;
-	int offset = 0;
-	int audienceQuantity = audienceService.getQuantity();
-	int pageQuantity = audienceQuantity % limit == 0 ? audienceQuantity / limit : audienceQuantity / limit + 1;
-	if (pageId == 1) {
-	} else {
-	    offset = (--pageId) * limit;
-	}
-	System.out.println(pageId);
-	List<Audience> list = audienceService.getAudiencesByPage(limit, offset);
-	model.addAttribute("audiences", list);
-	model.addAttribute("pageQuantity", pageQuantity);
-	return "audiences/page";
-    }
 
 }

@@ -21,7 +21,6 @@ public class LessonTimeController {
 	this.lessonTimeService = lessonTimeService;
     }
 
-
     @GetMapping
     public String getAllLessonTime(Model model) {
 	List<LessonTime> lessonTimes = lessonTimeService.getAll();

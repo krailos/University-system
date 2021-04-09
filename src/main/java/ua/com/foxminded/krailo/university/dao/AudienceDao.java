@@ -82,7 +82,7 @@ public class AudienceDao {
 	try {
 	    KeyHolder keyHolder = new GeneratedKeyHolder();
 	    jdbcTemplate.update(connection -> {
-		PreparedStatement ps = connection.prepareStatement(SQL_INSERT_AUDIENCE,  new String[]{"id"});
+		PreparedStatement ps = connection.prepareStatement(SQL_INSERT_AUDIENCE, new String[] { "id" });
 		ps.setString(1, audience.getNumber());
 		ps.setInt(2, audience.getCapacity());
 		ps.setString(3, audience.getDescription());
@@ -136,16 +136,16 @@ public class AudienceDao {
 	    return jdbcTemplate.query(SQL_SELECT_WITH_LIMIT, audienceRowMapper, limit, offset);
 	} catch (DataAccessException e) {
 	    throw new DaoException("Unable to find audiences by page", e);
-	}	
+	}
     }
-    
+
     public int findQuantity() {
 	log.debug("find audiences count");
 	try {
-	return jdbcTemplate.queryForObject(SQL_AUDIENCE_COUNT, Integer.class);
+	    return jdbcTemplate.queryForObject(SQL_AUDIENCE_COUNT, Integer.class);
 	} catch (DataAccessException e) {
 	    throw new DaoException("Unable to find audiences count", e);
-	}	
+	}
     }
 
 }

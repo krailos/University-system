@@ -112,18 +112,7 @@
 									<input type="text" class="form-control" id="colFormLabel"
 										th:field="*{year.name}">
 								</div>
-							</div>
-							<div class="form-group row">
-								<label for="colFormLabel"
-									class="col-sm-3 col-form-label text-right">Students</label>
-								<div class="col-sm-6 text-left">
-									<ul class="list-group" th:each="student, index: ${group.students}">
-										<li class="list-group-item" th:text="${student.firstName}+' '+${student.lastName}"></li>
-									</ul>
-								</div>
-							</div>
-
-							
+							</div>							
 
 							<div class=" row">
 								<div class="col-md-6 offset-3 text-right">

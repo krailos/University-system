@@ -60,7 +60,7 @@ public class AudienceService {
 	audienceDao.deleteById(audience.getId());
     }
     
-    public List<Audience> getAudiencesByPage(int limit, int offset) {
+    public List<Audience> getByPage(int limit, int offset) {
 	log.debug("get audiences by page");
 	return audienceDao.findWithLimit(limit, offset);
     }

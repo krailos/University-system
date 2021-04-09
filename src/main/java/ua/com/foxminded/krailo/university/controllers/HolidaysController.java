@@ -16,11 +16,10 @@ import ua.com.foxminded.krailo.university.service.HolidayService;
 public class HolidaysController {
 
     private HolidayService holidayService;
-    
+
     public HolidaysController(HolidayService holidayService) {
 	this.holidayService = holidayService;
     }
-
 
     @GetMapping
     public String getAllHolidays(Model model) {

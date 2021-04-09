@@ -216,4 +216,20 @@ class LessonDaoTest {
 	assertEquals(lesson.getGroups().get(0).getId(), actual.getGroups().get(0).getId());
     }
 
+    @Test
+    void givenLessons_whenFindCount_thenFound() {
+
+	int actual = lessonDao.findQuantity();
+
+	assertEquals(6, actual);
+    }
+
+    @Test
+    void givnLessons_whenFindWithLimit_thenGot() {
+
+	int actual = lessonDao.findWithLimit(2, 1).size();
+
+	assertEquals(2, actual);
+    }
+
 }

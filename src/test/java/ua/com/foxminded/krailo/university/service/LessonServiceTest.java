@@ -402,6 +402,26 @@ class LessonServiceTest {
 	assertEquals(expectedMessage, actualMessage);
     }
 
+    @Test
+    void whenGetQuantity_thenGot() {
+	when(lessonDao.findQuantity()).thenReturn(10);
+
+	int actual = lessonService.getQuantity();
+
+	assertEquals(10, actual);
+    }
+
+    @Test
+    void givenAudiences_whenGetAudiencesByPage_thenGot() {
+	List<Lesson> lessons = createLessons();
+	when(lessonDao.findWithLimit(4, 4)).thenReturn(lessons);
+
+	List<Lesson> actual = lessonService.getByPage(4, 4);
+
+	List<Lesson> expected = createLessons();
+	assertEquals(expected, actual);
+    }
+
     private Lesson createLesson() {
 	Student student1 = Student.builder().id(1).build();
 	Student student2 = Student.builder().id(2).build();

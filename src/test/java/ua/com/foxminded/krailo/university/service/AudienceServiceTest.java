@@ -63,8 +63,7 @@ class AudienceServiceTest {
     @Test
     void givenAudienceWithExistingNumberAndDiffrentId_whenUpdate_thenNotUniqueNameExceptionThrown() {
 	Audience audience = createAudience();
-	when(audienceDao.findByNumber(audience.getNumber()))
-		.thenReturn(Optional.of(Audience.builder().id(9).build()));
+	when(audienceDao.findByNumber(audience.getNumber())).thenReturn(Optional.of(Audience.builder().id(9).build()));
 
 	Exception exception = assertThrows(NotUniqueNameException.class, () -> audienceService.update(audience));
 
@@ -106,7 +105,6 @@ class AudienceServiceTest {
 	assertEquals(expected, actual);
     }
 
-
     @Test
     void givenAudiences_whenGetAll_thenGot() {
 	List<Audience> audiences = createAudiences();
@@ -118,7 +116,6 @@ class AudienceServiceTest {
 	assertEquals(expected, actual);
     }
 
-
     @Test
     void givenAudience_whenDelete_thenDeleted() {
 	Audience audience = createAudience();
@@ -126,6 +123,26 @@ class AudienceServiceTest {
 	audienceService.delete(audience);
 
 	verify(audienceDao).deleteById(1);
+    }
+
+    @Test
+    void whenGetQuantity_thenGot() {
+	when(audienceDao.findQuantity()).thenReturn(10);
+	
+	int actual = audienceService.getQuantity();
+
+	assertEquals(10, actual);
+    }
+
+    @Test
+    void givenAudiences_whenGetAudiencesByPage_thenGot() {
+	List<Audience> audiences = createAudiences();
+	when(audienceDao.findWithLimit(4, 4)).thenReturn(audiences);
+
+	List<Audience> actual = audienceService.getByPage(4, 4);
+
+	List<Audience> expected = createAudiences();
+	assertEquals(expected, actual);
     }
 
     private Audience createAudience() {

@@ -21,17 +21,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Group;
-import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.service.GroupService;
-import ua.com.foxminded.krailo.university.service.StudentService;
 
 @ExtendWith(MockitoExtension.class)
 class GroupControllerTest {
 
     @Mock
     private GroupService groupService;
-    @Mock
-    private StudentService studentService;
     @InjectMocks
     private GroupController groupController;
 
@@ -49,19 +45,15 @@ class GroupControllerTest {
 
 	mockMvc.perform(get("/groups")).andExpect(view().name("groups/all")).andExpect(status().isOk())
 		.andExpect(model().attribute("groups", expected));
-
     }
 
     @Test
     void givenGroupId_WhenGetGroup_ThenGroupGot() throws Exception {
 	Group expected = buildGroups().get(0);
 	when(groupService.getById(1)).thenReturn(expected);
-	when(studentService.getByGroupId(1))
-		.thenReturn(Arrays.asList(Student.builder().id(1).firstName("Jon").build()));
 
 	mockMvc.perform(get("/groups/1")).andExpect(view().name("groups/group")).andExpect(status().isOk())
 		.andExpect(model().attribute("group", expected));
-
     }
 
     @Test
@@ -73,11 +65,8 @@ class GroupControllerTest {
     }
 
     private List<Group> buildGroups() {
-	return Arrays.asList(
-		Group.builder().id(1).name("group1")
-			.students(Arrays.asList(Student.builder().id(1).firstName("Jon").build())).build(),
-		Group.builder().id(2).name("group2")
-			.students(Arrays.asList(Student.builder().id(2).firstName("Tom").build())).build());
+	return Arrays.asList(Group.builder().id(1).name("group1").build(),
+		Group.builder().id(2).name("group2").build());
     }
 
 }

@@ -105,18 +105,6 @@
 								</div>
 							</div>
 
-							<div class="form-group row">
-								<label for="colFormLabel"
-									class="col-sm-3 col-form-label text-right">Teachers</label>
-								<div class="col-sm-6 text-left">
-									<ul class="list-group"
-										th:each="teacher, index: ${subject.teachers}">
-										<li class="list-group-item"
-											th:text="${teacher.firstName} + ' ' + ${teacher.lastName}"></li>
-									</ul>
-								</div>
-							</div>
-
 							<div class=" row">
 								<div class="col-md-6 offset-3 text-right">
 									<a class="btn btn-success mr-3" th:href="@{/subjects}"

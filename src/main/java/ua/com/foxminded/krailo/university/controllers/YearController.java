@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Year;
-import ua.com.foxminded.krailo.university.service.GroupService;
 import ua.com.foxminded.krailo.university.service.YearService;
 
 @Controller
@@ -19,11 +17,8 @@ public class YearController {
 
     private YearService yearService;
 
-    private GroupService groupService;
-
-    public YearController(YearService yearService, GroupService groupService) {
+    public YearController(YearService yearService) {
 	this.yearService = yearService;
-	this.groupService = groupService;
     }
 
     @GetMapping
@@ -36,8 +31,6 @@ public class YearController {
     @GetMapping("/{id}")
     public String getYear(@PathVariable("id") int id, Model model) {
 	Year year = yearService.getById(id);
-	List<Group> groups = groupService.getByYearId(year.getId());
-	year.setGroups(groups);
 	model.addAttribute("year", year);
 	return "years/year";
     }

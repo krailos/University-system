@@ -49,7 +49,9 @@ public class LessonDao {
     private static final String SQL_SELECT_BY_DATE_AND_TEACHER_AND_LESSON_TIME = "SELECT * FROM lessons WHERE date = ? AND teacher_id = ? AND lesson_time_id = ?";
     private static final String SQL_SELECT_BY_DATE_AND_AUDIENCE_AND_LESSON_TIME = "SELECT * FROM lessons WHERE date = ? AND audience_id = ? AND lesson_time_id = ?";
     private static final String SQL_SELECT_BY_DATE_AND_LESSON_TIME_ID_AND_GROUP_ID = "SELECT * FROM lessons JOIN lessons_groups ON (lessons.id = lessons_groups.lesson_id) WHERE date = ? AND lesson_time_id = ? AND group_id = ?";
- 
+    private static final String SQL_LESSONS_COUNT = "SELECT COUNT (*) AS count FROM lessons";
+    private static final String SQL_SELECT_WITH_LIMIT = "SELECT * FROM lessons ORDER BY date LIMIT ? OFFSET ?";
+
     private JdbcTemplate jdbcTemplate;
     private LessonRowMapper lessonRowMapper;
 
@@ -243,6 +245,24 @@ public class LessonDao {
 	} catch (DataAccessException e) {
 	    throw new DaoException(format("Unable to find Lesson by date=%s and lessonTimeId=%s  and groupId=%s", date,
 		    lessonTimeId, groupId), e);
+	}
+    }
+
+    public int findQuantity() {
+	log.debug("find lessons count");
+	try {
+	    return jdbcTemplate.queryForObject(SQL_LESSONS_COUNT, Integer.class);
+	} catch (DataAccessException e) {
+	    throw new DaoException("Unable to find lessons count", e);
+	}
+    }
+
+    public List<Lesson> findWithLimit(int limit, int offset) {
+	log.debug("find lessons by limit");
+	try {
+	    return jdbcTemplate.query(SQL_SELECT_WITH_LIMIT, lessonRowMapper, limit, offset);
+	} catch (DataAccessException e) {
+	    throw new DaoException("Unable to find lessons by limit", e);
 	}
     }
 

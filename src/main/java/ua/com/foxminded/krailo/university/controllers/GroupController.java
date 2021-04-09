@@ -9,19 +9,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import ua.com.foxminded.krailo.university.model.Group;
-import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.service.GroupService;
-import ua.com.foxminded.krailo.university.service.StudentService;
 
 @Controller
 @RequestMapping("/groups")
 public class GroupController {
 
-    private StudentService studentService;
     private GroupService groupService;
 
-    public GroupController(StudentService studentService, GroupService groupService) {
-	this.studentService = studentService;
+    public GroupController(GroupService groupService) {
 	this.groupService = groupService;
     }
 
@@ -35,8 +31,6 @@ public class GroupController {
     @GetMapping("/{id}")
     public String getGroup(@PathVariable int id, Model model) {
 	Group group = groupService.getById(id);
-	List<Student> students = studentService.getByGroupId(group.getId());
-	group.setStudents(students);
 	model.addAttribute("group", group);
 	return "groups/group";
     }

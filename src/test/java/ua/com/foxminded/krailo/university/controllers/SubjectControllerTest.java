@@ -21,17 +21,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Subject;
-import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.service.SubjectService;
-import ua.com.foxminded.krailo.university.service.TeacherService;
 
 @ExtendWith(MockitoExtension.class)
 class SubjectControllerTest {
 
     @Mock
     private SubjectService subjectService;
-    @Mock
-    private TeacherService teacherService;
     @InjectMocks
     private SubjectController subjectController;
 
@@ -49,19 +45,15 @@ class SubjectControllerTest {
 
 	mockMvc.perform(get("/subjects")).andExpect(view().name("subjects/all")).andExpect(status().isOk())
 		.andExpect(model().attribute("subjects", expected));
-
     }
 
     @Test
     void givenSubjecttId_WhenGetSubject_ThenSubjectGot() throws Exception {
 	Subject expected = buildSubjects().get(0);
 	when(subjectService.getById(1)).thenReturn(expected);
-	when(teacherService.getBySubjectId(1))
-		.thenReturn(Arrays.asList(Teacher.builder().id(1).firstName("teacher1").build()));
 
 	mockMvc.perform(get("/subjects/1")).andExpect(view().name("subjects/subject")).andExpect(status().isOk())
 		.andExpect(model().attribute("subject", expected));
-
     }
 
     @Test
@@ -73,11 +65,8 @@ class SubjectControllerTest {
     }
 
     private List<Subject> buildSubjects() {
-	return Arrays.asList(
-		Subject.builder().id(1).name("subject1")
-			.teachers(Arrays.asList(Teacher.builder().id(1).firstName("teacher1").build())).build(),
-		Subject.builder().id(2).name("subject2")
-			.teachers(Arrays.asList(Teacher.builder().id(1).firstName("teacher1").build())).build());
+	return Arrays.asList(Subject.builder().id(1).name("subject1").build(),
+		Subject.builder().id(2).name("subject2").build());
     }
 
 }

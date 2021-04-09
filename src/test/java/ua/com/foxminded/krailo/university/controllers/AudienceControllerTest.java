@@ -38,22 +38,23 @@ class AudienceControllerTest {
     }
 
     @Test
-    void whenGetAllAudiences_thenAllAudiencesReturned() throws Exception {
+    void whenGetAllAudiences_thenFirstPageWithAudiencesReturned() throws Exception {
 	List<Audience> expected = buildAudiences();
-	when(audienceService.getAudiencesByPage(2, 0)).thenReturn(expected);
+	when(audienceService.getByPage(2, 0)).thenReturn(expected);
 
 	mockMvc.perform(get("/audiences")).andExpect(view().name("audiences/all")).andExpect(status().isOk())
 		.andExpect(model().attribute("audiences", expected));
     }
 
     @Test
-    void whenGetAllAudiences2_thenAllAudiencesReturned() throws Exception {
+    void whenGetAllAudiencesWithParameters_thenRightPageWithAudiencesReturned() throws Exception {
 	List<Audience> expected = buildAudiences();
-	when(audienceService.getAudiencesByPage(2, 2)).thenReturn(expected);
-	when(audienceService.getQuantity()).thenReturn(4);
+	when(audienceService.getByPage(2, 4)).thenReturn(expected);
+	when(audienceService.getQuantity()).thenReturn(6);
 
-	mockMvc.perform(get("/audiences/page/2")).andExpect(view().name("audiences/page")).andExpect(status().isOk())
-		.andExpect(model().attribute("audiences", expected)).andExpect(model().attribute("pageQuantity", 2));
+	mockMvc.perform(get("/audiences?pageSize=2&pageId=3")).andExpect(view().name("audiences/all"))
+		.andExpect(status().isOk()).andExpect(model().attribute("audiences", expected))
+		.andExpect(model().attribute("pageQuantity", 3));
     }
 
     @Test

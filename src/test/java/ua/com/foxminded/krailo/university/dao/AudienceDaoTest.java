@@ -111,7 +111,7 @@ class AudienceDaoTest {
     }
 
     @Test
-    void givnAudiences_whenFindCount_thenFound() {
+    void givenAudiences_whenFindCount_thenFound() {
 
 	int actual = audienceDao.findQuantity();
 
@@ -119,7 +119,7 @@ class AudienceDaoTest {
     }
     
     @Test
-    void givnAudiences_whenGetCount_thenGot() {
+    void givnAudiences_whenFindWithLimit_thenGot() {
 
 	int actual = audienceDao.findWithLimit(2,1).size();
 

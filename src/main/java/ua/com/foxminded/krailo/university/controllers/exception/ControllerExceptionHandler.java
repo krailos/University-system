@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-@ControllerAdvice()
+@ControllerAdvice
 public class ControllerExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(ControllerExceptionHandler.class);

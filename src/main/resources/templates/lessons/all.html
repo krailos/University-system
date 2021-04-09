@@ -53,7 +53,9 @@
 
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item active"><a class="nav-link" th:href="@{/}">Home/University</a></li>
+					<li class="nav-item active">
+						<a class="nav-link" th:href="@{/}">Home/University</a>
+					</li>
 				</ul>
 			</div>
 
@@ -63,19 +65,23 @@
 
 	<div class="container-fluid ">
 		<div class="row">
-			<div class="col-md-2 bg-info " style="  height: 100vh;">
-			<ul class="list-group list-group-flush">
-					<li class="list-group-item"><a th:href="@{/lessons}"
-						class="text-info"> <i class="fa fa-cog mr-2"
-							aria-hidden="true"></i>All lessons</a></li>
-					<li class="list-group-item"><a
-						href="#" class="text-info"> <i
-							class="fa fa-cog mr-2" aria-hidden="true"></i>Add lesson
-					</a></li>
-					<li class="list-group-item"><a
-						href="#" class="text-info"> <i
-							class="fa fa-cog mr-2" aria-hidden="true"></i>Find lesson
-					</a></li>
+			<div class="col-md-2 bg-info " style="height: 100vh;">
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item">
+						<a th:href="@{/lessons}" class="text-info"> <i
+							class="fa fa-cog mr-2" aria-hidden="true"></i>All lessons
+						</a>
+					</li>
+					<li class="list-group-item">
+						<a href="#" class="text-info"> <i class="fa fa-cog mr-2"
+							aria-hidden="true"></i>Add lesson
+						</a>
+					</li>
+					<li class="list-group-item">
+						<a href="#" class="text-info"> <i class="fa fa-cog mr-2"
+							aria-hidden="true"></i>Find lesson
+						</a>
+					</li>
 				</ul>
 			</div>
 			<div class="
@@ -93,7 +99,7 @@
 									<th>Date</th>
 									<th>Time</th>
 									<th>Subject</th>
-									<th>Audience</th>			
+									<th>Audience</th>
 									<th>Teacher</th>
 									<th class="text-center">Action</th>
 								</tr>
@@ -120,6 +126,14 @@
 							</tr>
 						</table>
 					</div>
+				</div>
+
+
+				<div class="col-10 offset-1 mt-2">
+					<a title="view" th:each="i: ${#numbers.sequence(1, pageQuantity)}"
+						th:href="@{/lessons?pageId={number}(number=${i})}"
+						class="btn btn-outline-info btn-sm" role="button"
+						aria-pressed="true" th:text="${i}">page</a>
 				</div>
 
 			</div>

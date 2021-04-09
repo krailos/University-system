@@ -20,16 +20,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
-import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Year;
-import ua.com.foxminded.krailo.university.service.GroupService;
 import ua.com.foxminded.krailo.university.service.YearService;
 
 @ExtendWith(MockitoExtension.class)
 class YearControllerTest {
 
-    @Mock
-    private GroupService groupService;
     @Mock
     private YearService yearService;
     @InjectMocks
@@ -64,7 +60,6 @@ class YearControllerTest {
     void givenYearId_WhenGetYear_ThenYearGot() throws Exception {
 	Year expected = buildYaers().get(0);
 	when(yearService.getById(1)).thenReturn(expected);
-	when(groupService.getByYearId(1)).thenReturn(Arrays.asList(Group.builder().id(1).name("group1").build()));
 
 	mockMvc.perform(get("/years/1")).andExpect(view().name("years/year")).andExpect(status().isOk())
 		.andExpect(model().attribute("year", expected));
@@ -72,11 +67,7 @@ class YearControllerTest {
     }
 
     private List<Year> buildYaers() {
-	return Arrays.asList(
-		Year.builder().id(1).name("year1").groups(Arrays.asList(Group.builder().id(1).name("group1").build()))
-			.build(),
-		Year.builder().id(2).name("year2").groups(Arrays.asList(Group.builder().id(2).name("group2").build()))
-			.build());
+	return Arrays.asList(Year.builder().id(1).name("year1").build(), Year.builder().id(2).name("year2").build());
     }
 
 }

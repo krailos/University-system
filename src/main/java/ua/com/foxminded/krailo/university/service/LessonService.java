@@ -90,6 +90,16 @@ public class LessonService {
 	lessonDao.deleteById(lesson.getId());
     }
 
+    public int getQuantity() {
+	log.debug("get lessons quantity");
+	return lessonDao.findQuantity();
+    }
+
+    public List<Lesson> getByPage(int limit, int offset) {
+	log.debug("get lessons by page");
+	return lessonDao.findWithLimit(limit, offset);
+    }
+
     public List<Lesson> getLessonsForTeacherByDate(Teacher teacher, LocalDate date) {
 	log.debug("get lessons for teacher={} by date={}", teacher, date);
 	return lessonDao.findByTeacherAndDate(teacher, date);
