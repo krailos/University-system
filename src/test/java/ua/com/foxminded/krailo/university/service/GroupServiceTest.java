@@ -111,6 +111,26 @@ class GroupServiceTest {
 	verify(groupDao).deleteById(1);
     }
 
+    @Test
+    void whenGetQuantity_thenGot() {
+	when(groupDao.findQuantity()).thenReturn(10);
+
+	int actual = groupService.getQuantity();
+
+	assertEquals(10, actual);
+    }
+
+    @Test
+    void givenGroups_whenGetGroupsByPage_thenGot() {
+	List<Group> audiences = createGroups();
+	when(groupDao.findWithLimit(4, 4)).thenReturn(audiences);
+
+	List<Group> actual = groupService.getByPage(4, 4);
+
+	List<Group> expected = createGroups();
+	assertEquals(expected, actual);
+    }
+
     private Group createGroup() {
 	return Group.builder().id(1).name("name").year(Year.builder().id(1).build()).build();
     }

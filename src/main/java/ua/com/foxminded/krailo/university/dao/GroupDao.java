@@ -25,7 +25,7 @@ import ua.com.foxminded.krailo.university.model.Group;
 public class GroupDao {
 
     private static final Logger log = LoggerFactory.getLogger(GroupDao.class);
-    
+
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM groups WHERE id = ?";
     private static final String SQL_SELECT_BY_NAME_YEAR_ID = "SELECT * FROM groups WHERE name = ? AND year_id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM groups ";
@@ -34,6 +34,8 @@ public class GroupDao {
     private static final String SQL_UPDATE_BY_ID = "UPDATE groups SET name = ?, year_id = ? where id = ?";
     private static final String SQL_SELECT_GROUPS_BY_LESSON_ID = "SELECT id, name, year_id FROM groups JOIN lessons_groups ON (groups.id = lessons_groups.group_id ) WHERE lessons_groups.lesson_id = ?";
     private static final String SQL_SELECT_GROUPS_BY_YEAR_ID = "SELECT * FROM groups WHERE year_id = ?";
+    private static final String SQL_GRPOUPS_COUNT = "SELECT COUNT (*) AS count FROM groups";
+    private static final String SQL_SELECT_WITH_LIMIT = "SELECT * FROM groups ORDER BY name LIMIT ? OFFSET ?";
 
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Group> groupRowMapper;
@@ -42,7 +44,7 @@ public class GroupDao {
 	this.jdbcTemplate = jdbcTemplate;
 	this.groupRowMapper = groupRowMapper;
     }
- 
+
     public void create(Group group) {
 	log.debug("Create group={}", group);
 	try {
@@ -144,6 +146,24 @@ public class GroupDao {
 	    return Optional.empty();
 	} catch (DataAccessException e) {
 	    throw new DaoException(format("Unable to find group by name=%s and yearId=%s", name, yearId), e);
+	}
+    }
+
+    public int findQuantity() {
+	log.debug("find groups count");
+	try {
+	    return jdbcTemplate.queryForObject(SQL_GRPOUPS_COUNT, Integer.class);
+	} catch (DataAccessException e) {
+	    throw new DaoException("Unable to find groups count", e);
+	}
+    }
+
+    public List<Group> findWithLimit(int limit, int offset) {
+	log.debug("find groups by page");
+	try {
+	    return jdbcTemplate.query(SQL_SELECT_WITH_LIMIT, groupRowMapper, limit, offset);
+	} catch (DataAccessException e) {
+	    throw new DaoException("Unable to find groups by page", e);
 	}
     }
 

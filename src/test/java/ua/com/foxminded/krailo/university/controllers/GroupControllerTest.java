@@ -39,12 +39,23 @@ class GroupControllerTest {
     }
 
     @Test
-    void WhenGetAllGroups_ThenAllGroupsReturned() throws Exception {
+    void WhenGetAllGroups_ThenFirstPageGroupsReturned() throws Exception {
 	List<Group> expected = buildGroups();
-	when(groupService.getAll()).thenReturn(expected);
+	when(groupService.getByPage(2, 0)).thenReturn(expected);
 
 	mockMvc.perform(get("/groups")).andExpect(view().name("groups/all")).andExpect(status().isOk())
 		.andExpect(model().attribute("groups", expected));
+    }
+
+    @Test
+    void whenGetAllroupsWithParameters_thenRightPageWithGroupsReturned() throws Exception {
+	List<Group> expected = buildGroups();
+	when(groupService.getByPage(2, 4)).thenReturn(expected);
+	when(groupService.getQuantity()).thenReturn(6);
+
+	mockMvc.perform(get("/groups?pageSize=2&pageId=3")).andExpect(view().name("groups/all"))
+		.andExpect(status().isOk()).andExpect(model().attribute("groups", expected))
+		.andExpect(model().attribute("pageQuantity", 3));
     }
 
     @Test

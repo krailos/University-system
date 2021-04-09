@@ -107,4 +107,20 @@ class GroupDaoTest {
 	assertEquals("group 1", actual.getName());
     }
 
+    @Test
+    void givenGroups_whenFindCount_thenFound() {
+
+	int actual = groupDao.findQuantity();
+
+	assertEquals(2, actual);
+    }
+
+    @Test
+    void givnGroups_whenFindWithLimit_thenGot() {
+
+	int actual = groupDao.findWithLimit(2, 1).size();
+
+	assertEquals(1, actual);
+    }
+
 }

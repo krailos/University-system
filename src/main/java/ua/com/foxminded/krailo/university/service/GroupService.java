@@ -66,4 +66,14 @@ public class GroupService {
 	}
     }
 
+    public int getQuantity() {
+	log.debug("get group quantity");
+	return groupDao.findQuantity();
+    }
+
+    public List<Group> getByPage(int limit, int offset) {
+	log.debug("get groups by limit");
+	return groupDao.findWithLimit(limit, offset);
+    }
+
 }
