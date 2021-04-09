@@ -47,7 +47,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void whenGetAllLessonsWithParameters_thenRightPageWithLessonsReturned() throws Exception {
+    void whenGetAllStudentsWithParameters_thenRightPageWithStudentsReturned() throws Exception {
 	List<Student> expected = buildStudents();
 	when(studentService.getByPage(2, 4)).thenReturn(expected);
 	when(studentService.getQuantity()).thenReturn(6);
@@ -67,7 +67,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void givenWrongAudienceId_whenGetAudience_thenEntityNotFoundExceptionThrown() throws Exception {
+    void givenWrongStudentId_whenGetStudent_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(studentService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/students/1")).andExpect(view().name("errors/error"))

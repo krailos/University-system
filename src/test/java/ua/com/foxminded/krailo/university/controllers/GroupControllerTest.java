@@ -57,7 +57,7 @@ class GroupControllerTest {
     }
 
     @Test
-    void givenWrongAudienceId_whenGetAudience_thenEntityNotFoundExceptionThrown() throws Exception {
+    void givenWrongGroupId_whenGetGroup_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(groupService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/groups/1")).andExpect(view().name("errors/error"))

@@ -59,7 +59,7 @@ class HolidayControllerTest {
     }
 
     @Test
-    void givenWrongAudienceId_whenGetAudience_thenEntityNotFoundExceptionThrown() throws Exception {
+    void givenWrongHolidayId_whenGetHoliday_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(holidayService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/holidays/1")).andExpect(view().name("errors/error"))

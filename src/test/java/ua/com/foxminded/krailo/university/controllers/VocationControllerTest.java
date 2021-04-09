@@ -60,7 +60,7 @@ class VocationControllerTest {
     }
 
     @Test
-    void givenWrongAudienceId_whenGetAudience_thenEntityNotFoundExceptionThrown() throws Exception {
+    void givenWrongVocatioId_whenGetVocation_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(vocationService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/vocations/1")).andExpect(view().name("errors/error"))

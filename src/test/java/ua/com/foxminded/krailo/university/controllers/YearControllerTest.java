@@ -48,7 +48,7 @@ class YearControllerTest {
     }
 
     @Test
-    void givenWrongAudienceId_whenGetAudience_thenEntityNotFoundExceptionThrown() throws Exception {
+    void givenWrongYearId_whenGetYears_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(yearService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/years/1")).andExpect(view().name("errors/error"))

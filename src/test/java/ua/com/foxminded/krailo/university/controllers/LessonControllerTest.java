@@ -69,7 +69,7 @@ class LessonControllerTest {
     }
 
     @Test
-    void givenWrongAudienceId_whenGetAudience_thenEntityNotFoundExceptionThrown() throws Exception {
+    void givenWrongLessonId_whenGetLesson_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(lessonService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/lessons/1")).andExpect(view().name("errors/error"))

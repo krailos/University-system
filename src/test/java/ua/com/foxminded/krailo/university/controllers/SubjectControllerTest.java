@@ -56,7 +56,7 @@ class SubjectControllerTest {
     }
 
     @Test
-    void givenWrongAudienceId_whenGetAudience_thenEntityNotFoundExceptionThrown() throws Exception {
+    void givenWrongSubjectId_whenGetSubject_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(subjectService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/subjects/1")).andExpect(view().name("errors/error"))
