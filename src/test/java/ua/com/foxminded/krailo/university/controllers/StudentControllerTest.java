@@ -30,7 +30,6 @@ class StudentControllerTest {
     private StudentService studentService;
     @InjectMocks
     private StudentController studentController;
-
     private MockMvc mockMvc;
 
     @BeforeEach
@@ -41,11 +40,21 @@ class StudentControllerTest {
     @Test
     void WhenGetAllStudents_ThenAllStudentsReturned() throws Exception {
 	List<Student> expected = buildStudents();
-	when(studentService.getAll()).thenReturn(expected);
+	when(studentService.getByPage(2, 0)).thenReturn(expected);
 
 	mockMvc.perform(get("/students")).andExpect(view().name("students/all")).andExpect(status().isOk())
 		.andExpect(model().attribute("students", expected));
+    }
 
+    @Test
+    void whenGetAllLessonsWithParameters_thenRightPageWithLessonsReturned() throws Exception {
+	List<Student> expected = buildStudents();
+	when(studentService.getByPage(2, 4)).thenReturn(expected);
+	when(studentService.getQuantity()).thenReturn(6);
+
+	mockMvc.perform(get("/students?pageSize=2&pageId=3")).andExpect(view().name("students/all"))
+		.andExpect(status().isOk()).andExpect(model().attribute("students", expected))
+		.andExpect(model().attribute("pageQuantity", 3));
     }
 
     @Test
@@ -55,7 +64,6 @@ class StudentControllerTest {
 
 	mockMvc.perform(get("/students/1")).andExpect(view().name("students/student")).andExpect(status().isOk())
 		.andExpect(model().attribute("student", expected));
-
     }
 
     @Test

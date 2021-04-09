@@ -132,7 +132,7 @@
 				<div class="col-10 offset-1 mt-2">
 					<a title="view" th:each="i: ${#numbers.sequence(1, pageQuantity)}"
 						th:href="@{/lessons?pageId={number}(number=${i})}"
-						class="btn btn-outline-info btn-sm" role="button"
+						class="btn btn-outline-info btn-sm ml-1" role="button"
 						aria-pressed="true" th:text="${i}">page</a>
 				</div>
 

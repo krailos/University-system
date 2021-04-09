@@ -53,7 +53,9 @@
 
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item active"><a class="nav-link" th:href="@{/}">Home/University</a></li>
+					<li class="nav-item active">
+						<a class="nav-link" th:href="@{/}">Home/University</a>
+					</li>
 				</ul>
 			</div>
 
@@ -63,23 +65,26 @@
 
 	<div class="container-fluid ">
 		<div class="row">
-			<div class="col-md-2 bg-info" style="  height: 100vh; ">
+			<div class="col-md-2 bg-info" style="height: 100vh;">
 				<ul class="list-group list-group-flush">
-					<li class="list-group-item"><a th:href="@{/students}"
-						class="text-info"> <i class="fa fa-cog mr-2"
-							aria-hidden="true"></i>All students
-					</a></li>
-					<li class="list-group-item"><a
-						href="#" class="text-info"> <i
-							class="fa fa-cog mr-2" aria-hidden="true"></i>Add student
-					</a></li>
-					<li class="list-group-item"><a
-						href="#" class="text-info"> <i
-							class="fa fa-cog mr-2" aria-hidden="true"></i>Find student
-					</a></li>
+					<li class="list-group-item">
+						<a th:href="@{/students}" class="text-info"> <i
+							class="fa fa-cog mr-2" aria-hidden="true"></i>All students
+						</a>
+					</li>
+					<li class="list-group-item">
+						<a href="#" class="text-info"> <i class="fa fa-cog mr-2"
+							aria-hidden="true"></i>Add student
+						</a>
+					</li>
+					<li class="list-group-item">
+						<a href="#" class="text-info"> <i class="fa fa-cog mr-2"
+							aria-hidden="true"></i>Find student
+						</a>
+					</li>
 				</ul>
 			</div>
-			<div class="col-md-10" style="  height: 100vh; ">
+			<div class="col-md-10" style="height: 100vh;">
 				<div class="row">
 					<div class="col-12 text-center mt-3">
 						<p class="h4  text-center text-info">All students</p>
@@ -91,8 +96,8 @@
 									<th>Order</th>
 									<th>ID</th>
 									<th>Student id</th>
-									<th>First name</th>
 									<th>Last name</th>
+									<th>First name</th>
 									<th>Group</th>
 									<th class="text-center">Action</th>
 								</tr>
@@ -101,21 +106,17 @@
 								<td th:text="${index.count}" class="font-weight-bold"></td>
 								<td th:text="${student.id}"></td>
 								<td th:text="${student.studentId}"></td>
-								<td th:text="${student.firstName}"></td>
 								<td th:text="${student.lastName}"></td>
+								<td th:text="${student.firstName}"></td>
 								<td th:text="${student.group.name}"></td>
-								<td class="text-center">
-								<a title="view"
+								<td class="text-center"><a title="view"
 									th:href="@{/students/{id}(id=${student.id})}"
 									class="btn btn-outline-success btn-sm" role="button"
 									aria-pressed="true"> <i class="fa fa-eye"></i>
-								</a> 
-								<a title="update"
-									href="#"
+								</a> <a title="update" href="#"
 									class="btn btn-outline-success btn-sm" role="button"
 									aria-pressed="true"> <i class="bi bi-pencil-square"></i>
-								</a> <a title="delete"
-									href="#"
+								</a> <a title="delete" href="#"
 									class="btn btn-outline-danger btn-sm" role="button"
 									aria-pressed="true"> <i class="bi bi-x-circle"></i>
 								</a></td>
@@ -124,9 +125,16 @@
 					</div>
 				</div>
 
+				<div class="col-10 offset-1 mt-2">
+					<a th:each="i: ${#numbers.sequence(1, pageQuantity)}"
+						th:href="@{/students?pageId={number}(number=${i})}"
+						class="btn btn-outline-info btn-sm ml-1" role="button"
+						aria-pressed="true" th:text="${i}">page</a>
+						
+				</div>
+
 			</div>
 		</div>
-
 	</div>
 
 

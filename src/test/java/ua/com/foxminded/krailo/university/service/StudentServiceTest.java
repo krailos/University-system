@@ -130,6 +130,26 @@ class StudentServiceTest {
 	verify(studentDao).deleteById(1);
     }
 
+    @Test
+    void whenGetQuantity_thenGot() {
+	when(studentDao.findQuantity()).thenReturn(10);
+
+	int actual = studentService.getQuantity();
+
+	assertEquals(10, actual);
+    }
+
+    @Test
+    void givenStudents_whenGetStudentsByPage_thenGot() {
+	List<Student> audiences = createStudents();
+	when(studentDao.findWithLimit(4, 4)).thenReturn(audiences);
+
+	List<Student> actual = studentService.getByPage(4, 4);
+
+	List<Student> expected = createStudents();
+	assertEquals(expected, actual);
+    }
+
     private Student createStudent() {
 	return Student.builder().id(1).firstName("first name").lastName("last name").gender(Gender.MALE)
 		.group(new Group.GroupBuilder().id(1).build()).build();

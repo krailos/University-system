@@ -74,4 +74,13 @@ public class StudentService {
 	    throw new GroupOverflowException("group capacity more then groupMaxSize=" + groupMaxSize);
 	}
     }
+
+    public int getQuantity() {
+	return studentDao.findQuantity();
+
+    }
+
+    public List<Student> getByPage(int limit, int offset) {
+	return studentDao.findWithLimit(limit, offset);
+    }
 }

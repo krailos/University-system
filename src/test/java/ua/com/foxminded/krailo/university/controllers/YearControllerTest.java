@@ -30,7 +30,6 @@ class YearControllerTest {
     private YearService yearService;
     @InjectMocks
     private YearController yearController;
-
     private MockMvc mockMvc;
 
     @BeforeEach

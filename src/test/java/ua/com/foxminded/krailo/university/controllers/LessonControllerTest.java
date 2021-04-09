@@ -31,7 +31,6 @@ class LessonControllerTest {
     private LessonService lessonService;
     @InjectMocks
     private LessonController lessonController;
-
     private MockMvc mockMvc;
 
     @BeforeEach
@@ -40,13 +39,23 @@ class LessonControllerTest {
     }
 
     @Test
-    void WhenGetAllLessons_ThenAllLessonsReturned() throws Exception {
+    void WhenGetAllLessons_ThenFirstPageLessonsReturned() throws Exception {
 	List<Lesson> expected = buildLessons();
-	when(lessonService.getAll()).thenReturn(expected);
+	when(lessonService.getByPage(2, 0)).thenReturn(expected);
 
 	mockMvc.perform(get("/lessons")).andExpect(view().name("lessons/all")).andExpect(status().isOk())
 		.andExpect(model().attribute("lessons", expected));
+    }
 
+    @Test
+    void whenGetAllLessonsWithParameters_thenRightPageWithLessonsReturned() throws Exception {
+	List<Lesson> expected = buildLessons();
+	when(lessonService.getByPage(2, 4)).thenReturn(expected);
+	when(lessonService.getQuantity()).thenReturn(6);
+
+	mockMvc.perform(get("/lessons?pageSize=2&pageId=3")).andExpect(view().name("lessons/all"))
+		.andExpect(status().isOk()).andExpect(model().attribute("lessons", expected))
+		.andExpect(model().attribute("pageQuantity", 3));
     }
 
     @Test
@@ -54,11 +63,11 @@ class LessonControllerTest {
 	Lesson expected = buildLessons().get(0);
 	when(lessonService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/lessons/1")).andExpect(view().name("lessons/lesson"))
-		.andExpect(status().isOk()).andExpect(model().attribute("lesson", expected));
+	mockMvc.perform(get("/lessons/1")).andExpect(view().name("lessons/lesson")).andExpect(status().isOk())
+		.andExpect(model().attribute("lesson", expected));
 
     }
-    
+
     @Test
     void givenWrongAudienceId_whenGetAudience_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(lessonService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
@@ -66,7 +75,6 @@ class LessonControllerTest {
 	mockMvc.perform(get("/lessons/1")).andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
-
 
     private List<Lesson> buildLessons() {
 	return Arrays.asList(Lesson.builder().id(1).subject(Subject.builder().id(1).name("subject1").build()).build(),

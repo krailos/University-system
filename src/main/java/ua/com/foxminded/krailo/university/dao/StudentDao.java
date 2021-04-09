@@ -24,13 +24,17 @@ import ua.com.foxminded.krailo.university.model.Student;
 public class StudentDao {
 
     private static final Logger log = LoggerFactory.getLogger(StudentDao.class);
-    
+
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM students WHERE id = ?";
     private static final String SQL_SELECT_BY_GROUO_ID = "SELECT * FROM students WHERE group_id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM students";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM students WHERE id = ?";
     private static final String SQL_INSERT_STUDENT = "INSERT INTO students (student_id, first_name, last_name, birth_date, phone, address, email, rank, gender, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE_BY_ID = "UPDATE students SET student_id = ?, first_name = ?, last_name = ?, birth_date = ?, phone = ?, address = ?, email = ?, rank = ?, gender = ?, group_id = ? WHERE id = ?";
+
+    private static final String SQL_STUDENTS_COUNT = "SELECT COUNT (*) AS count FROM students";
+
+    private static final String SQL_SELECT_WITH_LIMIT = "SELECT * FROM students ORDER BY last_name, first_name LIMIT ? OFFSET ?";
 
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Student> studentRowMapper;
@@ -39,7 +43,7 @@ public class StudentDao {
 	this.jdbcTemplate = jdbcTemplate;
 	this.studentRowMapper = studentRowMapper;
     }
- 
+
     public void create(Student student) {
 	log.debug("Create student={}", student);
 	try {
@@ -129,6 +133,24 @@ public class StudentDao {
 	    log.info("Deleted student  by id={}", studentId);
 	} else {
 	    log.debug("Not deleted student by id={}", studentId);
+	}
+    }
+
+    public int findQuantity() {
+	log.debug("find students count");
+	try {
+	    return jdbcTemplate.queryForObject(SQL_STUDENTS_COUNT, Integer.class);
+	} catch (DataAccessException e) {
+	    throw new DaoException("Unable to find students count", e);
+	}
+    }
+
+    public List<Student> findWithLimit(int limit, int offset) {
+	log.debug("find students by page");
+	try {
+	    return jdbcTemplate.query(SQL_SELECT_WITH_LIMIT, studentRowMapper, limit, offset);
+	} catch (DataAccessException e) {
+	    throw new DaoException("Unable to find students by page", e);
 	}
     }
 

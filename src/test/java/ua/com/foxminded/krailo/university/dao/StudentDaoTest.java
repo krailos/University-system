@@ -86,4 +86,20 @@ class StudentDaoTest {
 	assertEquals(1, actual);
     }
 
+    @Test
+    void givenStudents_whenFindCount_thenFound() {
+
+	int actual = studentDao.findQuantity();
+
+	assertEquals(2, actual);
+    }
+
+    @Test
+    void givnStudents_whenFindWithLimit_thenGot() {
+
+	int actual = studentDao.findWithLimit(2, 1).size();
+
+	assertEquals(1, actual);
+    }
+
 }
