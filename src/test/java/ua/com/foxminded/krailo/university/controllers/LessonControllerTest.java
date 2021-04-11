@@ -23,6 +23,7 @@ import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.service.LessonService;
+import ua.com.foxminded.krailo.university.util.Paging;
 
 @ExtendWith(MockitoExtension.class)
 class LessonControllerTest {
@@ -41,19 +42,22 @@ class LessonControllerTest {
     @Test
     void WhenGetAllLessons_ThenFirstPageLessonsReturned() throws Exception {
 	List<Lesson> expected = buildLessons();
-	when(lessonService.getByPage(2, 0)).thenReturn(expected);
+	Paging paging = new Paging(2, 1, 4);
+	when(lessonService.getQuantity()).thenReturn(4);
+	when(lessonService.getByPage(paging)).thenReturn(expected);
 
-	mockMvc.perform(get("/lessons")).andExpect(view().name("lessons/all")).andExpect(status().isOk())
-		.andExpect(model().attribute("lessons", expected));
+	mockMvc.perform(get("/lessons").param("pageSize", "2")).andExpect(view().name("lessons/all"))
+		.andExpect(status().isOk()).andExpect(model().attribute("lessons", expected));
     }
 
     @Test
     void whenGetAllLessonsWithParameters_thenRightPageWithLessonsReturned() throws Exception {
 	List<Lesson> expected = buildLessons();
-	when(lessonService.getByPage(2, 4)).thenReturn(expected);
+	Paging paging = new Paging(2, 3, 6);
+	when(lessonService.getByPage(paging)).thenReturn(expected);
 	when(lessonService.getQuantity()).thenReturn(6);
 
-	mockMvc.perform(get("/lessons?pageSize=2&pageId=3")).andExpect(view().name("lessons/all"))
+	mockMvc.perform(get("/lessons?pageSize=2&pageNumber=3")).andExpect(view().name("lessons/all"))
 		.andExpect(status().isOk()).andExpect(model().attribute("lessons", expected))
 		.andExpect(model().attribute("pageQuantity", 3));
     }
@@ -63,8 +67,8 @@ class LessonControllerTest {
 	Lesson expected = buildLessons().get(0);
 	when(lessonService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/lessons/1")).andExpect(view().name("lessons/lesson")).andExpect(status().isOk())
-		.andExpect(model().attribute("lesson", expected));
+	mockMvc.perform(get("/lessons/1").param("pageSize", "2")).andExpect(view().name("lessons/lesson"))
+		.andExpect(status().isOk()).andExpect(model().attribute("lesson", expected));
 
     }
 

@@ -22,6 +22,7 @@ import ua.com.foxminded.krailo.university.dao.StudentDao;
 import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Year;
+import ua.com.foxminded.krailo.university.util.Paging;
 
 @ExtendWith(MockitoExtension.class)
 class GroupServiceTest {
@@ -123,9 +124,10 @@ class GroupServiceTest {
     @Test
     void givenGroups_whenGetGroupsByPage_thenGot() {
 	List<Group> audiences = createGroups();
+	Paging paging = new Paging (4, 2, 16);
 	when(groupDao.findWithLimit(4, 4)).thenReturn(audiences);
 
-	List<Group> actual = groupService.getByPage(4, 4);
+	List<Group> actual = groupService.getByPage(paging);
 
 	List<Group> expected = createGroups();
 	assertEquals(expected, actual);

@@ -41,6 +41,7 @@ import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Vocation;
+import ua.com.foxminded.krailo.university.util.Paging;
 
 @ExtendWith(MockitoExtension.class)
 class LessonServiceTest {
@@ -414,9 +415,10 @@ class LessonServiceTest {
     @Test
     void givenAudiences_whenGetAudiencesByPage_thenGot() {
 	List<Lesson> lessons = createLessons();
+	Paging paging = new Paging (4, 2, 16);
 	when(lessonDao.findWithLimit(4, 4)).thenReturn(lessons);
 
-	List<Lesson> actual = lessonService.getByPage(4, 4);
+	List<Lesson> actual = lessonService.getByPage(paging);
 
 	List<Lesson> expected = createLessons();
 	assertEquals(expected, actual);

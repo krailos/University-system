@@ -16,6 +16,7 @@ import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.GroupOverflowException;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Student;
+import ua.com.foxminded.krailo.university.util.Paging;
 
 @Service
 @PropertySource("classpath:config.properties")
@@ -80,7 +81,7 @@ public class StudentService {
 
     }
 
-    public List<Student> getByPage(int limit, int offset) {
-	return studentDao.findWithLimit(limit, offset);
+    public List<Student> getByPage(Paging paging) {
+	return studentDao.findWithLimit(paging.getPageSize(), paging.getOffset());
     }
 }

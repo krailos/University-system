@@ -22,6 +22,7 @@ import ua.com.foxminded.krailo.university.controllers.exception.ControllerExcept
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.service.GroupService;
+import ua.com.foxminded.krailo.university.util.Paging;
 
 @ExtendWith(MockitoExtension.class)
 class GroupControllerTest {
@@ -41,19 +42,22 @@ class GroupControllerTest {
     @Test
     void WhenGetAllGroups_ThenFirstPageGroupsReturned() throws Exception {
 	List<Group> expected = buildGroups();
-	when(groupService.getByPage(2, 0)).thenReturn(expected);
+	Paging paging = new Paging(2, 1, 4);
+	when(groupService.getQuantity()).thenReturn(4);
+	when(groupService.getByPage(paging)).thenReturn(expected);
 
-	mockMvc.perform(get("/groups")).andExpect(view().name("groups/all")).andExpect(status().isOk())
-		.andExpect(model().attribute("groups", expected));
+	mockMvc.perform(get("/groups").param("pageSize", "2")).andExpect(view().name("groups/all"))
+		.andExpect(status().isOk()).andExpect(model().attribute("groups", expected));
     }
 
     @Test
     void whenGetAllroupsWithParameters_thenRightPageWithGroupsReturned() throws Exception {
 	List<Group> expected = buildGroups();
-	when(groupService.getByPage(2, 4)).thenReturn(expected);
+	Paging paging = new Paging(2, 3, 6);
+	when(groupService.getByPage(paging)).thenReturn(expected);
 	when(groupService.getQuantity()).thenReturn(6);
 
-	mockMvc.perform(get("/groups?pageSize=2&pageId=3")).andExpect(view().name("groups/all"))
+	mockMvc.perform(get("/groups?pageSize=2&pageNumber=3")).andExpect(view().name("groups/all"))
 		.andExpect(status().isOk()).andExpect(model().attribute("groups", expected))
 		.andExpect(model().attribute("pageQuantity", 3));
     }

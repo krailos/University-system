@@ -22,6 +22,7 @@ import ua.com.foxminded.krailo.university.controllers.exception.ControllerExcept
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.service.AudienceService;
+import ua.com.foxminded.krailo.university.util.Paging;
 
 @ExtendWith(MockitoExtension.class)
 class AudienceControllerTest {
@@ -40,19 +41,22 @@ class AudienceControllerTest {
     @Test
     void whenGetAllAudiences_thenFirstPageWithAudiencesReturned() throws Exception {
 	List<Audience> expected = buildAudiences();
-	when(audienceService.getByPage(2, 0)).thenReturn(expected);
+	Paging paging = new Paging(2, 1, 4);
+	when(audienceService.getQuantity()).thenReturn(4);
+	when(audienceService.getByPage(paging)).thenReturn(expected);
 
-	mockMvc.perform(get("/audiences")).andExpect(view().name("audiences/all")).andExpect(status().isOk())
-		.andExpect(model().attribute("audiences", expected));
+	mockMvc.perform(get("/audiences").param("pageSize", "2")).andExpect(view().name("audiences/all"))
+		.andExpect(status().isOk()).andExpect(model().attribute("audiences", expected));
     }
 
     @Test
     void whenGetAllAudiencesWithParameters_thenRightPageWithAudiencesReturned() throws Exception {
 	List<Audience> expected = buildAudiences();
-	when(audienceService.getByPage(2, 4)).thenReturn(expected);
+	Paging paging = new Paging(2, 3, 6);
+	when(audienceService.getByPage(paging)).thenReturn(expected);
 	when(audienceService.getQuantity()).thenReturn(6);
 
-	mockMvc.perform(get("/audiences?pageSize=2&pageId=3")).andExpect(view().name("audiences/all"))
+	mockMvc.perform(get("/audiences?pageSize=2&pageNumber=3")).andExpect(view().name("audiences/all"))
 		.andExpect(status().isOk()).andExpect(model().attribute("audiences", expected))
 		.andExpect(model().attribute("pageQuantity", 3));
     }

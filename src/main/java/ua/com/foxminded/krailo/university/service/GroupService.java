@@ -13,6 +13,7 @@ import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
 import ua.com.foxminded.krailo.university.model.Group;
+import ua.com.foxminded.krailo.university.util.Paging;
 
 @Service
 public class GroupService {
@@ -71,9 +72,9 @@ public class GroupService {
 	return groupDao.findQuantity();
     }
 
-    public List<Group> getByPage(int limit, int offset) {
+    public List<Group> getByPage(Paging paging) {
 	log.debug("get groups by limit");
-	return groupDao.findWithLimit(limit, offset);
+	return groupDao.findWithLimit(paging.getPageSize(), paging.getOffset());
     }
 
 }

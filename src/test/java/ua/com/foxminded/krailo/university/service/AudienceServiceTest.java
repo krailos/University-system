@@ -19,6 +19,7 @@ import ua.com.foxminded.krailo.university.dao.AudienceDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
 import ua.com.foxminded.krailo.university.model.Audience;
+import ua.com.foxminded.krailo.university.util.Paging;
 
 @ExtendWith(MockitoExtension.class)
 class AudienceServiceTest {
@@ -137,9 +138,10 @@ class AudienceServiceTest {
     @Test
     void givenAudiences_whenGetAudiencesByPage_thenGot() {
 	List<Audience> audiences = createAudiences();
+	Paging paging = new Paging (4, 2, 16);
 	when(audienceDao.findWithLimit(4, 4)).thenReturn(audiences);
 
-	List<Audience> actual = audienceService.getByPage(4, 4);
+	List<Audience> actual = audienceService.getByPage(paging);
 
 	List<Audience> expected = createAudiences();
 	assertEquals(expected, actual);

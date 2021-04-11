@@ -13,6 +13,7 @@ import ua.com.foxminded.krailo.university.dao.AudienceDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
 import ua.com.foxminded.krailo.university.model.Audience;
+import ua.com.foxminded.krailo.university.util.Paging;
 
 @Service
 public class AudienceService {
@@ -59,17 +60,16 @@ public class AudienceService {
 	log.debug("delete audience={}", audience);
 	audienceDao.deleteById(audience.getId());
     }
-    
-    public List<Audience> getByPage(int limit, int offset) {
+
+    public List<Audience> getByPage(Paging paging) {
 	log.debug("get audiences by page");
-	return audienceDao.findWithLimit(limit, offset);
+	return audienceDao.findWithLimit(paging.getPageSize(), paging.getOffset());
     }
-    
+
     public int getQuantity() {
 	log.debug("get audience quantity");
 	return audienceDao.findQuantity();
     }
-
 
     private void checkAudienceNumberBeUnique(Audience audience) {
 	Optional<Audience> existingAudience = audienceDao.findByNumber(audience.getNumber());
@@ -78,8 +78,5 @@ public class AudienceService {
 	    throw new NotUniqueNameException(format("audiences number=%s  not unique", audience.getNumber()));
 	}
     }
-
-
-
 
 }

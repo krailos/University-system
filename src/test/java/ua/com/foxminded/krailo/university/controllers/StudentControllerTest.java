@@ -22,6 +22,7 @@ import ua.com.foxminded.krailo.university.controllers.exception.ControllerExcept
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.service.StudentService;
+import ua.com.foxminded.krailo.university.util.Paging;
 
 @ExtendWith(MockitoExtension.class)
 class StudentControllerTest {
@@ -40,19 +41,22 @@ class StudentControllerTest {
     @Test
     void WhenGetAllStudents_ThenAllStudentsReturned() throws Exception {
 	List<Student> expected = buildStudents();
-	when(studentService.getByPage(2, 0)).thenReturn(expected);
+	Paging paging = new Paging(2, 1, 4);
+	when(studentService.getQuantity()).thenReturn(4);
+	when(studentService.getByPage(paging)).thenReturn(expected);
 
-	mockMvc.perform(get("/students")).andExpect(view().name("students/all")).andExpect(status().isOk())
+	mockMvc.perform(get("/students").param("pageSize", "2")).andExpect(view().name("students/all")).andExpect(status().isOk())
 		.andExpect(model().attribute("students", expected));
     }
 
     @Test
     void whenGetAllStudentsWithParameters_thenRightPageWithStudentsReturned() throws Exception {
 	List<Student> expected = buildStudents();
-	when(studentService.getByPage(2, 4)).thenReturn(expected);
+	Paging paging = new Paging(2, 3, 6);
+	when(studentService.getByPage(paging)).thenReturn(expected);
 	when(studentService.getQuantity()).thenReturn(6);
 
-	mockMvc.perform(get("/students?pageSize=2&pageId=3")).andExpect(view().name("students/all"))
+	mockMvc.perform(get("/students?pageSize=2&pageNumber=3")).andExpect(view().name("students/all"))
 		.andExpect(status().isOk()).andExpect(model().attribute("students", expected))
 		.andExpect(model().attribute("pageQuantity", 3));
     }

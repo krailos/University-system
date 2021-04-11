@@ -30,6 +30,7 @@ import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.model.Teacher;
+import ua.com.foxminded.krailo.university.util.Paging;
 
 @Service
 public class LessonService {
@@ -95,9 +96,9 @@ public class LessonService {
 	return lessonDao.findQuantity();
     }
 
-    public List<Lesson> getByPage(int limit, int offset) {
+    public List<Lesson> getByPage(Paging paging) {
 	log.debug("get lessons by page");
-	return lessonDao.findWithLimit(limit, offset);
+	return lessonDao.findWithLimit(paging.getPageSize(), paging.getOffset());
     }
 
     public List<Lesson> getLessonsForTeacherByDate(Teacher teacher, LocalDate date) {

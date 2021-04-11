@@ -24,6 +24,7 @@ import ua.com.foxminded.krailo.university.exception.ServiceException;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Student;
+import ua.com.foxminded.krailo.university.util.Paging;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
@@ -142,9 +143,10 @@ class StudentServiceTest {
     @Test
     void givenStudents_whenGetStudentsByPage_thenGot() {
 	List<Student> audiences = createStudents();
+	Paging paging = new Paging(4, 2, 16);
 	when(studentDao.findWithLimit(4, 4)).thenReturn(audiences);
 
-	List<Student> actual = studentService.getByPage(4, 4);
+	List<Student> actual = studentService.getByPage(paging);
 
 	List<Student> expected = createStudents();
 	assertEquals(expected, actual);
