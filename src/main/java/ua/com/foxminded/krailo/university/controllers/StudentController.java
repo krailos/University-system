@@ -1,5 +1,8 @@
 package ua.com.foxminded.krailo.university.controllers;
 
+import java.time.LocalDate;
+
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.service.GroupService;
+import ua.com.foxminded.krailo.university.service.LessonService;
 import ua.com.foxminded.krailo.university.service.StudentService;
 import ua.com.foxminded.krailo.university.util.Paging;
 
@@ -20,10 +24,12 @@ public class StudentController {
 
     private StudentService studentService;
     private GroupService groupService;
+    private LessonService lessonService;
 
-    public StudentController(StudentService studentService, GroupService groupService) {
+    public StudentController(StudentService studentService, GroupService groupService, LessonService lessonService) {
 	this.studentService = studentService;
 	this.groupService = groupService;
+	this.lessonService = lessonService;
     }
 
     @GetMapping
@@ -65,11 +71,23 @@ public class StudentController {
 	model.addAttribute("groups", groupService.getAll());
 	return "students/edit";
     }
-    
+
     @GetMapping("/delete/{id}")
     public String deleteStudent(@PathVariable int id, Model model) {
-        studentService.delete(studentService.getById(id));
-        return "redirect:/students";
+	studentService.delete(studentService.getById(id));
+	return "redirect:/students";
+    }
+
+    @GetMapping("/schedule/{id}")
+    public String getSchedule(Model model, @PathVariable("id") int studentId,
+	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finishDate) {
+	Student student = studentService.getById(studentId);
+	model.addAttribute("student", student);
+	model.addAttribute("lessons", lessonService.getLessonsForStudentByPeriod(student, startDate, finishDate));
+	model.addAttribute("startDate", startDate);
+	model.addAttribute("finishDate", finishDate);
+	return "students/schedule";
     }
 
 }

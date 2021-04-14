@@ -31,7 +31,15 @@
 	th:href="@{/webfonts/font-awesome-4/font-awesome-4.7.0/css/font-awesome.min.css}">
 <title>ViewStudent</title>
 </head>
+
+
 <body>
+	<!-- Bootstrap CSS -->
+	<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+	<!-- Jquery CSS -->
+	<script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
+
+
 	<header>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-info">
 			<div class="font-weight-bolder">
@@ -58,18 +66,21 @@
 			<div class="col-md-2 bg-info" style="height: 100vh;">
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item">
-						<a th:href="@{/students}" class="text-info"> <i
-							class="fa fa-cog mr-2" aria-hidden="true"></i>All students
+						<a th:href="@{/students}" class="text-info">
+							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
+							All students
 						</a>
 					</li>
 					<li class="list-group-item">
-						<a href="#" class="text-info"> <i class="fa fa-cog mr-2"
-							aria-hidden="true"></i>Add student
+						<a href="#" class="text-info">
+							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
+							Add student
 						</a>
 					</li>
 					<li class="list-group-item">
-						<a href="#" class="text-info"> <i class="fa fa-cog mr-2"
-							aria-hidden="true"></i>Find student
+						<a href="#" class="text-info">
+							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
+							Find student
 						</a>
 					</li>
 				</ul>
@@ -81,11 +92,45 @@
 						<span th:text="${student.firstName} + '  ' +  ${student.lastName}">
 						</span>
 
-						<a title="update" href="#" class="btn btn-outline-success"
-							role="button" aria-pressed="true"><i
-							class="bi bi-pencil-square"></i></a> <a title="delete" href="#"
-							class="btn btn-outline-danger" role="button" aria-pressed="true"><i
-							class="bi bi-x-circle"></i></a>
+						<a title="update"
+							th:href="@{/students/edit/{id}(id=${student.id})}"
+							class="btn btn-outline-success" role="button" aria-pressed="true">
+							<i class="bi bi-pencil-square"></i>
+						</a>
+
+
+						<button type="button" class="btn btn-outline-danger"
+							data-toggle="modal" data-target="#deleteModal">
+							<i class="bi bi-x-circle"></i>
+						</button>
+						<!-- Modal -->
+						<div class="modal fade" id="deleteModal" tabindex="-1"
+							aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel">Delete
+											student?</h5>
+										<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<!-- div class="modal-body">Are you sure?</div-->
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-dismiss="modal">No</button>
+										<a title="edit"
+											th:href="@{/students/delete/{id}(id=${student.id})}"
+											class="btn btn-danger" role="button" aria-pressed="true">
+											Yes </a>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+
 
 					</div>
 				</div>
@@ -97,8 +142,8 @@
 								<label for="colFormLabel"
 									class="col-sm-3 col-form-label text-right">ID</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control" id="colFormLabel"
-										th:field="*{id}">
+									<input readonly type="text" class="form-control"
+										id="colFormLabel" th:field="*{id}">
 								</div>
 							</div>
 
@@ -106,24 +151,25 @@
 								<label for="colFormLabel"
 									class="col-sm-3 col-form-label text-right">Student ID</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control" id="colFormLabel"
-										th:field="*{studentId}">
+									<input readonly type="text" class="form-control"
+										id="colFormLabel" th:field="*{studentId}">
 								</div>
 							</div>
 							<div class="form-group row">
 								<label for="colFormLabel"
 									class="col-sm-3 col-form-label text-right">First name</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control" id="colFormLabel"
-										th:value="*{firstName}" th:field="*{firstName}">
+									<input readonly type="text" class="form-control"
+										id="colFormLabel" th:value="*{firstName}"
+										th:field="*{firstName}">
 								</div>
 							</div>
 							<div class="form-group row">
 								<label for="colFormLabel"
 									class="col-sm-3 col-form-label text-right">Last name</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control" id="colFormLabel"
-										th:field="*{lastName}">
+									<input readonly type="text" class="form-control"
+										id="colFormLabel" th:field="*{lastName}">
 								</div>
 							</div>
 
@@ -131,7 +177,7 @@
 								<label for="dateId" class="col-sm-3 col-form-label text-right">Birth
 									date</label>
 								<div class="col-sm-6">
-									<input type="date" class="form-control" id="dateId"
+									<input readonly type="date" class="form-control" id="dateId"
 										th:value="*{birthDate}" th:field="*{birthDate}">
 								</div>
 							</div>
@@ -140,8 +186,8 @@
 								<label for="colFormLabel"
 									class="col-sm-3 col-form-label text-right">Phone</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control" id="colFormLabel"
-										th:field="*{phone}">
+									<input readonly type="text" class="form-control"
+										id="colFormLabel" th:field="*{phone}">
 								</div>
 							</div>
 
@@ -149,15 +195,15 @@
 								<label for="colFormLabel"
 									class="col-sm-3 col-form-label text-right">Address</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control" id="colFormLabel"
-										th:field="*{address}">
+									<input readonly type="text" class="form-control"
+										id="colFormLabel" th:field="*{address}">
 								</div>
 							</div>
 
 							<div class="form-group row">
 								<label for="email" class="col-sm-3 col-form-label text-right">Email</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control" id="email"
+									<input readonly type="text" class="form-control" id="email"
 										th:field="*{email}">
 								</div>
 							</div>
@@ -166,8 +212,8 @@
 								<label for="colFormLabel"
 									class="col-sm-3 col-form-label text-right">Rank</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control" id="colFormLabel"
-										th:field="*{rank}">
+									<input readonly type="text" class="form-control"
+										id="colFormLabel" th:field="*{rank}">
 								</div>
 							</div>
 
@@ -175,7 +221,8 @@
 								<label for="colFormLabel"
 									class="col-sm-3 col-form-label text-right">Gender</label>
 								<div class="col-sm-6">
-									<select name="gender" th:field="*{gender}" class="form-control">
+									<select readonly name="gender" th:field="*{gender}"
+										class="form-control">
 										<option
 											th:each="gender : ${T(ua.com.foxminded.krailo.university.model.Gender).values()}"
 											th:value="${gender}" th:text="${gender}"></option>
@@ -187,20 +234,20 @@
 								<label for="colFormLabel"
 									class="col-sm-3 col-form-label text-right">Group</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control" id="colFormLabel"
-										th:field="*{group.name}">
+									<input readonly type="text" class="form-control"
+										id="colFormLabel" th:field="*{group.name}">
 								</div>
 							</div>
-							
+
 							<div class="form-group row">
 								<label for="colFormLabel"
 									class="col-sm-3 col-form-label text-right">Year</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control" id="colFormLabel"
-										th:field="*{group.year.name}">
+									<input readonly type="text" class="form-control"
+										id="colFormLabel" th:field="*{group.year.name}">
 								</div>
 							</div>
-							
+
 							<div class=" row">
 								<div class="col-md-6 offset-3 text-right">
 									<a class="btn btn-success mr-3" th:href="@{/students}"

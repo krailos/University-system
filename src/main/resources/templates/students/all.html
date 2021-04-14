@@ -33,8 +33,6 @@
 <link rel="stylesheet"
 	th:href="@{/webfonts/font-awesome-4/font-awesome-4.7.0/css/font-awesome.min.css}">
 
-
-
 <title>All</title>
 </head>
 
@@ -73,18 +71,21 @@
 				th:fragment="side-menu">
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item">
-						<a th:href="@{/students}" class="text-info"> <i
-							class="fa fa-cog mr-2" aria-hidden="true"></i>All students
+						<a th:href="@{/students}" class="text-info">
+							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
+							All students
 						</a>
 					</li>
 					<li class="list-group-item">
-						<a th:href="@{/students/create}" class="text-info"> <i
-							class="fa fa-cog mr-2" aria-hidden="true"></i>Create student
+						<a th:href="@{/students/create}" class="text-info">
+							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
+							Create student
 						</a>
 					</li>
 					<li class="list-group-item">
-						<a href="#" class="text-info"> <i class="fa fa-cog mr-2"
-							aria-hidden="true"></i>Find student
+						<a href="#" class="text-info">
+							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
+							Find student
 						</a>
 					</li>
 				</ul>
@@ -98,7 +99,7 @@
 						<table class="table table-hover table-sm">
 							<thead class="thead-light">
 								<tr>
-									<th>Order</th>
+									<th>#</th>
 									<th>ID</th>
 									<th>Student id</th>
 									<th>Last name</th>
@@ -114,21 +115,33 @@
 								<td th:text="${student.lastName}"></td>
 								<td th:text="${student.firstName}"></td>
 								<td th:text="${student.group.name}"></td>
-								<td class="text-center"><a title="view"
-									th:href="@{/students/{id}(id=${student.id})}"
-									class="btn btn-outline-success btn-sm" role="button"
-									aria-pressed="true"> <i class="fa fa-eye"></i>
-								</a> <a title="edit"
-									th:href="@{/students/edit/{id}(id=${student.id})}"
-									class="btn btn-outline-success btn-sm" role="button"
-									aria-pressed="true"> <i class="bi bi-pencil-square"></i>
-								</a>
+								<td class="text-center">
+									<a title="schedule"
+										th:href="@{/students/schedule/{id}(id=${student.id}, 
+										startDate=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')},
+										finishDate=${#temporals.format(#temporals.createNow().plusMonths(1), 'yyyy-MM-dd')} )}"
+										class="btn btn-outline-success btn-sm" role="button"
+										aria-pressed="true">
+										<i class="fas fa-calendar-alt"></i>
+									</a>
+									<a title="view" th:href="@{/students/{id}(id=${student.id})}"
+										class="btn btn-outline-success btn-sm" role="button"
+										aria-pressed="true">
+										<i class="fa fa-eye"></i>
+									</a>
+									<a title="edit"
+										th:href="@{/students/edit/{id}(id=${student.id})}"
+										class="btn btn-outline-success btn-sm" role="button"
+										aria-pressed="true">
+										<i class="bi bi-pencil-square"></i>
+									</a>
 
 									<button type="button" class="btn btn-outline-danger btn-sm"
 										data-toggle="modal" data-target="#deleteModal"
 										th:attrappend="data-target=${student.id}">
 										<i class="bi bi-x-circle"></i>
-									</button> <!-- Modal -->
+									</button>
+									<!-- Modal -->
 									<div class="modal fade" id="deleteModal" tabindex="-1"
 										aria-labelledby="exampleModalLabel" aria-hidden="true"
 										th:attrappend="id=${student.id}">
@@ -146,9 +159,6 @@
 												<div class="modal-footer">
 													<button type="button" class="btn btn-secondary"
 														data-dismiss="modal">No</button>
-													<!-- button type="button" class="btn btn-danger"
-							                          th:onclick="'window.location.href = \'' + @{/students/delete/{id}(id=${student.id})} + '\''">
-							                          Yes </button-->
 													<a title="edit"
 														th:href="@{/students/delete/{id}(id=${student.id})}"
 														class="btn btn-danger" role="button" aria-pressed="true">
@@ -156,7 +166,10 @@
 												</div>
 											</div>
 										</div>
-									</div></td>
+									</div>
+
+
+								</td>
 							</tr>
 						</table>
 					</div>
@@ -173,13 +186,6 @@
 			</div>
 		</div>
 	</div>
-
-
-
-
-
-
-
 
 </body>
 

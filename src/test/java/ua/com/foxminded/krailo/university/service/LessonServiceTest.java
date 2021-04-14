@@ -130,9 +130,9 @@ class LessonServiceTest {
 	Student student = Student.builder().id(1).build();
 	List<Lesson> lessons = createLessons();
 	when(lessonDao.findByStudentBetweenDates(student, LocalDate.of(2021, 01, 02),
-		LocalDate.of(2021, 01, 02).plusMonths(1))).thenReturn(lessons);
+		LocalDate.of(2021, 01, 03))).thenReturn(lessons);
 
-	List<Lesson> actual = lessonService.getLessonsForStudentByMonth(student, LocalDate.of(2021, 01, 02));
+	List<Lesson> actual = lessonService.getLessonsForStudentByPeriod(student, LocalDate.of(2021, 01, 02), LocalDate.of(2021, 01, 03));
 
 	List<Lesson> expected = createLessons();
 	assertEquals(expected, actual);

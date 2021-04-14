@@ -117,9 +117,9 @@ public class LessonService {
 
     }
 
-    public List<Lesson> getLessonsForStudentByMonth(Student student, LocalDate date) {
+    public List<Lesson> getLessonsForStudentByPeriod(Student student, LocalDate startDate, LocalDate finishDate) {
 	log.debug("get timetable for student={} by month", student);
-	return lessonDao.findByStudentBetweenDates(student, date, date.plusMonths(1));
+	return lessonDao.findByStudentBetweenDates(student, startDate, finishDate);
 
     }
 

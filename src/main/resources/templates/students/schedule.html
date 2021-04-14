@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+	xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" type="text/css"
+	th:href="@{/bootstrap/css/bootstrap.min.css}">
+<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+
+<!-- Jquery CSS -->
+<script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
+
+<!-- Custom css -->
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+
+<!-- Web font awesome 5 local -->
+<link rel="stylesheet"
+	th:href="@{/webfonts/fontawesome/css/all.min.css}">
+
+<!-- Web font bootstrap 4 local -->
+<link rel="stylesheet"
+	th:href="@{/webfonts/bootstrap-icon/bootstrap-icons.css}">
+
+<!-- Web font awesome 4 local -->
+<link rel="stylesheet"
+	th:href="@{/webfonts/font-awesome-4/font-awesome-4.7.0/css/font-awesome.min.css}">
+
+
+
+<title>Schedule</title>
+</head>
+
+<body>
+	<header th:replace="~{students/all::header}"> </header>
+	<div class="container-fluid ">
+		<div class="row">
+			<div th:replace="~{students/all::side-menu}"></div>
+			<div class="col-md-10" style="height: 100vh;">
+				<div class="row">
+					<div class="col-12 text-center mt-3">
+						<p class="h4  text-center text-info">Schedule</p>
+					</div>
+
+					<div class="col-10 offset-1">
+
+						<form th:method="GET"
+							th:action="@{/students/schedule/{id}(id=${student.getId()})}">
+							<div class="form-group row">
+								<label for="colFormLabel"
+									class="col-sm-3 col-form-label text-right">ID</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="colFormLabel"
+										th:value="${student.getId()}" readonly="">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="dateId"
+									class="col-sm-3 col-form-label text-right">Start date</label>
+								<div class="col-sm-6">
+									<input type="date" class="form-control" id="dateId"
+										th:value="${startDate}" th:name="startDate">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="colFormLabel"
+									class="col-sm-3 col-form-label text-right">Finish date</label>
+								<div class="col-sm-6">
+									<input type="date" class="form-control" id="colFormLabel"
+										th:value="${finishDate}" th:name="finishDate">
+								</div>
+							</div>
+
+
+							<div class=" row">
+
+								<div class="col-md-6 offset-3 text-right">
+									<a class="btn btn-secondary mr-3" th:href="@{/students}"
+										role="button">Decline</a>
+									<button type="submit" class="btn btn btn-success">Update</button>
+								</div>
+							</div>
+						</form>
+
+
+
+						<div class="col-10 offset-1 mt-2">
+							<table class="table table-hover table-sm">
+								<thead class="thead-light">
+									<tr>
+										<th>#</th>
+										<th>ID</th>
+										<th>Subject</th>
+										<th>Audience</th>
+
+									</tr>
+								</thead>
+								<tr th:each="lesson, index : ${lessons}">
+									<td th:text="${index.count}" class="font-weight-bold"></td>
+									<td th:text="${lesson.id}"></td>
+									<td th:text="${lesson.subject}"></td>
+									<td th:text="${lesson.audience}"></td>
+								</tr>
+							</table>
+						</div>
+
+
+
+
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+</body>
+
+</html>
