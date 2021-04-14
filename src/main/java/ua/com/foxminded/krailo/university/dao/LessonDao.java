@@ -50,7 +50,7 @@ public class LessonDao {
     private static final String SQL_SELECT_BY_DATE_AND_AUDIENCE_AND_LESSON_TIME = "SELECT * FROM lessons WHERE date = ? AND audience_id = ? AND lesson_time_id = ?";
     private static final String SQL_SELECT_BY_DATE_AND_LESSON_TIME_ID_AND_GROUP_ID = "SELECT * FROM lessons JOIN lessons_groups ON (lessons.id = lessons_groups.lesson_id) WHERE date = ? AND lesson_time_id = ? AND group_id = ?";
     private static final String SQL_LESSONS_COUNT = "SELECT COUNT (*) AS count FROM lessons";
-    private static final String SQL_SELECT_WITH_LIMIT = "SELECT * FROM lessons ORDER BY date LIMIT ? OFFSET ?";
+    private static final String SQL_SELECT_WITH_LIMIT = "SELECT * FROM lessons ORDER BY  date DESC LIMIT ? OFFSET ?";
 
     private JdbcTemplate jdbcTemplate;
     private LessonRowMapper lessonRowMapper;

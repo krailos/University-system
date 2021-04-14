@@ -4,14 +4,17 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class Lesson {
 
     private int id;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate date;
-    private LessonTime lessonTime;
-    private Subject subject;
-    private Audience audience;
-    private Teacher teacher;
+    private LessonTime lessonTime = new LessonTime();
+    private Subject subject = new Subject();
+    private Audience audience = new Audience();
+    private Teacher teacher = new Teacher();
     private List<Group> groups = new ArrayList<>();
 
     public Lesson() {

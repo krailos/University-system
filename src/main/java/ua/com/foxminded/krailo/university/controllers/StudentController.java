@@ -60,7 +60,7 @@ public class StudentController {
 	if (student.getId() == 0) {
 	    studentService.create(student);
 	} else {
-	    studentService.update(student);
+	    studentService.update(student);	
 	}
 	return "redirect:/students";
     }

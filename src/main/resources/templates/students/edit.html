@@ -151,8 +151,7 @@
 									<select class="form-control" th:field="*{group.id}" required>
 										<option th:each="group : ${groups}"
 											th:value="${group.getId()}"
-											th:text="${group.getName()} + ' (' + ${group.getYear().getName()+ ' - year)'}"
-											th:selected="${student.getGroup() != null} and ${student.getGroup().getId()} == ${group.getId()}">
+											th:text="${group.getName()} + ' - (' + ${group.getYear().getName()+ ' - year)'}">
 										</option>
 									</select>
 								</div>

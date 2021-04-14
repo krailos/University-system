@@ -7,7 +7,7 @@ public class Group {
 
     private int id;
     private String name;
-    private Year year;
+    private Year year = new Year();
     private List<Student> students = new ArrayList<>();
 
     public Group() {

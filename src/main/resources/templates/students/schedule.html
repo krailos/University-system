@@ -43,7 +43,8 @@
 			<div class="col-md-10" style="height: 100vh;">
 				<div class="row">
 					<div class="col-12 text-center mt-3">
-						<p class="h4  text-center text-info">Schedule</p>
+						<p class="h5  text-center text-info">Schedule</p>
+						<p class="h4  text-center text-info" th:text="${student.getLastName() + ' ' + student.getFirstName()}" >name</p>
 					</div>
 
 					<div class="col-10 offset-1">
@@ -82,8 +83,8 @@
 
 								<div class="col-md-6 offset-3 text-right">
 									<a class="btn btn-secondary mr-3" th:href="@{/students}"
-										role="button">Decline</a>
-									<button type="submit" class="btn btn btn-success">Update</button>
+										role="button">Back to students</a>
+									<button type="submit" class="btn btn btn-success">Show schedule</button>
 								</div>
 							</div>
 						</form>
@@ -96,16 +97,21 @@
 									<tr>
 										<th>#</th>
 										<th>ID</th>
+										<th>Date</th>
 										<th>Subject</th>
 										<th>Audience</th>
-
+										<th>Start time</th>
+										<th>End time</th>
 									</tr>
 								</thead>
 								<tr th:each="lesson, index : ${lessons}">
 									<td th:text="${index.count}" class="font-weight-bold"></td>
 									<td th:text="${lesson.id}"></td>
-									<td th:text="${lesson.subject}"></td>
-									<td th:text="${lesson.audience}"></td>
+									<td th:text="${lesson.date}"></td>
+									<td th:text="${lesson.subject.name}"></td>
+									<td th:text="${lesson.audience.number}"></td>
+									<td th:text="${lesson.lessonTime.startTime}"></td>
+									<td th:text="${lesson.lessonTime.endTime}"></td>
 								</tr>
 							</table>
 						</div>

@@ -14,7 +14,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
-import ua.com.foxminded.krailo.university.formatter.GroupFormatter;
+import ua.com.foxminded.krailo.university.formatters.GroupFormatter;
 
 @Configuration
 @ComponentScan("ua.com.foxminded.krailo.university")

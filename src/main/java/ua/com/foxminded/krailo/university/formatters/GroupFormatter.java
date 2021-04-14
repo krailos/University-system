@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.university.formatter;
+package ua.com.foxminded.krailo.university.formatters;
 
 import java.text.ParseException;
 import java.util.Locale;
