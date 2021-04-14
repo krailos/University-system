@@ -46,6 +46,7 @@ public class StudentDao {
 
     public void create(Student student) {
 	log.debug("Create student={}", student);
+	Integer groupId = student.getGroup() == null ? null : student.getGroup().getId();
 	try {
 	    KeyHolder keyHolder = new GeneratedKeyHolder();
 	    jdbcTemplate.update(connection -> {
@@ -59,7 +60,7 @@ public class StudentDao {
 		ps.setString(7, student.getAddress());
 		ps.setString(8, student.getRank());
 		ps.setString(9, student.getGender().toString());
-		ps.setInt(10, student.getGroup().getId());
+		ps.setObject(10, groupId);
 		return ps;
 	    }, keyHolder);
 	    student.setId(keyHolder.getKey().intValue());

@@ -2,12 +2,15 @@ package ua.com.foxminded.krailo.university.model;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class Student {
 
     private int id;
     private String studentId;
     private String firstName;
     private String lastName;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate birthDate;
     private String phone;
     private String address;
@@ -283,9 +286,10 @@ public class Student {
 
     @Override
     public String toString() {
-	return "Student [id=" + studentId + ", firstName=" + firstName + ", lastName=" + lastName + ", birthDate="
-		+ birthDate + ", group=" + group + ", phone=" + phone + ", address=" + address + ", email=" + email
-		+ ", gender=" + gender + ", rank=" + rank + "]";
+	return String.format(
+		"Student: studentId=%s  firstName=%s  lastName=%s  birthDate=%s  phone=%s  address=%s  email=%s  gender=%s  rank=%s  group=%s ",
+		studentId, firstName, lastName, birthDate, phone, address, email, gender, rank,
+		this.group != null ? this.group.getName() : "null");
     }
 
 }

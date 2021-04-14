@@ -3,11 +3,14 @@ package ua.com.foxminded.krailo.university.controllers;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ua.com.foxminded.krailo.university.model.Student;
+import ua.com.foxminded.krailo.university.service.GroupService;
 import ua.com.foxminded.krailo.university.service.StudentService;
 import ua.com.foxminded.krailo.university.util.Paging;
 
@@ -16,9 +19,11 @@ import ua.com.foxminded.krailo.university.util.Paging;
 public class StudentController {
 
     private StudentService studentService;
+    private GroupService groupService;
 
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, GroupService groupService) {
 	this.studentService = studentService;
+	this.groupService = groupService;
     }
 
     @GetMapping
@@ -33,9 +38,38 @@ public class StudentController {
 
     @GetMapping("/{id}")
     public String getStudent(@PathVariable int id, Model model) {
-	Student student = studentService.getById(id);
-	model.addAttribute("student", student);
+	model.addAttribute("student", studentService.getById(id));
 	return "students/student";
+    }
+
+    @GetMapping("/create")
+    public String createStudent(Model model) {
+	model.addAttribute("student", new Student());
+	model.addAttribute("groups", groupService.getAll());
+	return "students/edit";
+    }
+
+    @PostMapping("/save")
+    public String deleteStudent(@ModelAttribute("student") Student student) {
+	if (student.getId() == 0) {
+	    studentService.create(student);
+	} else {
+	    studentService.update(student);
+	}
+	return "redirect:/students";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editStudent(@PathVariable int id, Model model) {
+	model.addAttribute("student", studentService.getById(id));
+	model.addAttribute("groups", groupService.getAll());
+	return "students/edit";
+    }
+    
+    @GetMapping("/delete/{id}")
+    public String deleteStudent(@PathVariable int id, Model model) {
+        studentService.delete(studentService.getById(id));
+        return "redirect:/students";
     }
 
 }

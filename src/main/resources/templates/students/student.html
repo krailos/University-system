@@ -182,6 +182,25 @@
 									</select>
 								</div>
 							</div>
+
+							<div class="form-group row">
+								<label for="colFormLabel"
+									class="col-sm-3 col-form-label text-right">Group</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="colFormLabel"
+										th:field="*{group.name}">
+								</div>
+							</div>
+							
+							<div class="form-group row">
+								<label for="colFormLabel"
+									class="col-sm-3 col-form-label text-right">Year</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="colFormLabel"
+										th:field="*{group.year.name}">
+								</div>
+							</div>
+							
 							<div class=" row">
 								<div class="col-md-6 offset-3 text-right">
 									<a class="btn btn-success mr-3" th:href="@{/students}"

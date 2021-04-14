@@ -4,13 +4,17 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+
+import ua.com.foxminded.krailo.university.formatter.GroupFormatter;
 
 @Configuration
 @ComponentScan("ua.com.foxminded.krailo.university")
@@ -39,6 +43,7 @@ public class WebConfig implements WebMvcConfigurer {
     public ViewResolver viewResolver(SpringTemplateEngine templateEngine) {
 	ThymeleafViewResolver resolver = new ThymeleafViewResolver();
 	resolver.setTemplateEngine(templateEngine);
+	templateEngine.addDialect(new Java8TimeDialect());
 	resolver.setCharacterEncoding("UTF-8");
 	return resolver;
     }
@@ -46,6 +51,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 	registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+	registry.addFormatter(new GroupFormatter());
     }
 
 }
