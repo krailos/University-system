@@ -25,7 +25,7 @@ class SubjectDaoTest {
 
     @Test
     void givenNewSubject_whenCreate_thenCreated() {
-	Subject subject = Subject.builder().name("new subject").build();
+	Subject subject = Subject.builder().name("new subject").description("about subject").build();
 
 	subjectDao.create(subject);
 

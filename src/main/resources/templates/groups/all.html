@@ -36,6 +36,10 @@
 </head>
 
 <body>
+
+	<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+	<script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
+
 	<header>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-info">
 
@@ -68,18 +72,21 @@
 			<div class="col-md-2 bg-info " style="height: 100vh;">
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item">
-						<a th:href="@{/groups}" class="text-info"> <i
-							class="fa fa-cog mr-2" aria-hidden="true"></i>All groups
+						<a th:href="@{/groups}" class="text-info">
+							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
+							All groups
 						</a>
 					</li>
 					<li class="list-group-item">
-						<a href="#" class="text-info"> <i class="fa fa-cog mr-2"
-							aria-hidden="true"></i>Add group
+						<a th:href="@{groups/create}" class="text-info">
+							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
+							Create group
 						</a>
 					</li>
 					<li class="list-group-item">
-						<a href="#" class="text-info"> <i class="fa fa-cog mr-2"
-							aria-hidden="true"></i>Find group
+						<a href="#" class="text-info">
+							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
+							Find group
 						</a>
 					</li>
 				</ul>
@@ -105,17 +112,52 @@
 								<td th:text="${group.id}"></td>
 								<td th:text="${group.name}"></td>
 								<td th:text="${group.year.name}"></td>
-								<td class="text-center"><a title="view"
-									th:href="@{/groups/{id}(id=${group.id})}"
-									class="btn btn-outline-success btn-sm" role="button"
-									aria-pressed="true"> <i class="fa fa-eye"></i>
-								</a> <a title="update" href="#"
-									class="btn btn-outline-success btn-sm" role="button"
-									aria-pressed="true"> <i class="bi bi-pencil-square"></i>
-								</a> <a title="delete" href="#"
-									class="btn btn-outline-danger btn-sm" role="button"
-									aria-pressed="true"> <i class="bi bi-x-circle"></i>
-								</a></td>
+								<td class="text-center">
+									<a title="view" th:href="@{/groups/{id}(id=${group.id})}"
+										class="btn btn-outline-success btn-sm" role="button"
+										aria-pressed="true">
+										<i class="fa fa-eye"></i>
+									</a>
+									<a title="update" th:href="@{groups/edit/{id}(id=${group.id})}"
+										class="btn btn-outline-success btn-sm" role="button"
+										aria-pressed="true">
+										<i class="bi bi-pencil-square"></i>
+									</a>
+
+
+									<button type="button" class="btn btn-outline-danger btn-sm"
+										data-toggle="modal" data-target="#deleteModal"
+										th:attrappend="data-target=${group.id}">
+										<i class="bi bi-x-circle"></i>
+									</button>
+									<!-- Modal -->
+									<div class="modal fade" id="deleteModal" tabindex="-1"
+										aria-labelledby="exampleModalLabel" aria-hidden="true"
+										th:attrappend="id=${group.id}">
+										<div class="modal-dialog modal-dialog-centered">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="exampleModalLabel">Delete
+														group?</h5>
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<!-- div class="modal-body">Are you sure?</div-->
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary"
+														data-dismiss="modal">No</button>
+													<a title="edit"
+														th:href="@{/groups/delete/{id}(id=${group.id})}"
+														class="btn btn-danger" role="button" aria-pressed="true">
+														Yes </a>
+												</div>
+											</div>
+										</div>
+									</div>
+
+								</td>
 							</tr>
 						</table>
 					</div>

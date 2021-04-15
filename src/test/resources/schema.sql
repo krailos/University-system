@@ -76,6 +76,7 @@ CREATE TABLE students (
 CREATE TABLE subjects (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
+	description character varying (50),
 	CONSTRAINT subjects__pkey PRIMARY KEY (id)
 );
 

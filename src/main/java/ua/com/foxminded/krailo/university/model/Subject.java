@@ -7,14 +7,16 @@ public class Subject {
 
     private int id;
     private String name;
+    private String description;
     private List<Teacher> teachers = new ArrayList<>();
 
     public Subject() {
     }
 
-    public Subject(int id, String name, List<Teacher> teachers) {
+    public Subject(int id, String name, String description, List<Teacher> teachers) {
 	this.id = id;
 	this.name = name;
+	this.description = description;
 	this.teachers = teachers;
     }
 
@@ -38,6 +40,14 @@ public class Subject {
 	this.name = name;
     }
 
+    public String getDescription() {
+	return description;
+    }
+
+    public void setDescription(String description) {
+	this.description = description;
+    }
+
     public List<Teacher> getTeachers() {
 	return teachers;
     }
@@ -50,6 +60,7 @@ public class Subject {
 
 	private int id;
 	private String name;
+	private String description;
 	private List<Teacher> teachers = new ArrayList<>();
 
 	public SubjectBuilder id(int id) {
@@ -62,13 +73,18 @@ public class Subject {
 	    return this;
 	}
 
+	public SubjectBuilder description(String description) {
+	    this.description = description;
+	    return this;
+	}
+
 	public SubjectBuilder teachers(List<Teacher> teachers) {
 	    this.teachers = teachers;
 	    return this;
 	}
 
 	public Subject build() {
-	    return new Subject(id, name, teachers);
+	    return new Subject(id, name, description, teachers);
 	}
 
     }

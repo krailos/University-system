@@ -27,10 +27,10 @@ public class SubjectDao {
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM subjects WHERE id = ?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM subjects";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM subjects WHERE id = ?";
-    private static final String SQL_INSERT_DEPARTMENT = "INSERT INTO subjects (name) VALUES (?)";
-    private static final String SQL_UPDATE_BY_ID = "UPDATE subjects  SET name = ? where id = ?";
-    private static final String SQL_SELECT_SUBJECTS_BY_TEACHER_ID = "SELECT id, name FROM subjects JOIN teachers_subjects  ON (teachers_subjects.subject_id = subjects.id) WHERE teachers_subjects.teacher_id = ?";
-    private static final String SQL_SELECT_SUBJECTS_BY_YEAR_ID = "SELECT id, name FROM subjects JOIN years_subjects ON (years_subjects.subject_id = subjects.id) WHERE years_subjects.year_id = ?";
+    private static final String SQL_INSERT_SUBJECT = "INSERT INTO subjects (name, description) VALUES (?, ?)";
+    private static final String SQL_UPDATE_BY_ID = "UPDATE subjects  SET name = ?, description = ? where id = ?";
+    private static final String SQL_SELECT_SUBJECTS_BY_TEACHER_ID = "SELECT id, name, description FROM subjects JOIN teachers_subjects  ON (teachers_subjects.subject_id = subjects.id) WHERE teachers_subjects.teacher_id = ?";
+    private static final String SQL_SELECT_SUBJECTS_BY_YEAR_ID = "SELECT id, name, description FROM subjects JOIN years_subjects ON (years_subjects.subject_id = subjects.id) WHERE years_subjects.year_id = ?";
 
     private JdbcTemplate jdbcTemplate;
     private RowMapper<Subject> subjectRowMapper;
@@ -45,8 +45,9 @@ public class SubjectDao {
 	try {
 	    KeyHolder keyHolder = new GeneratedKeyHolder();
 	    jdbcTemplate.update(connection -> {
-		PreparedStatement ps = connection.prepareStatement(SQL_INSERT_DEPARTMENT, new String[] { "id" });
+		PreparedStatement ps = connection.prepareStatement(SQL_INSERT_SUBJECT, new String[] { "id" });
 		ps.setString(1, subject.getName());
+		ps.setString(2, subject.getDescription());
 		return ps;
 	    }, keyHolder);
 	    subject.setId(keyHolder.getKey().intValue());
@@ -62,7 +63,7 @@ public class SubjectDao {
 	log.debug("Update subject={}", subject);
 	int rowsAffected = 0;
 	try {
-	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, subject.getName(), subject.getId());
+	    rowsAffected = jdbcTemplate.update(SQL_UPDATE_BY_ID, subject.getName(), subject.getDescription(),  subject.getId());
 	} catch (DataIntegrityViolationException e) {
 	    throw new DaoConstraintViolationException("Not updated, subject=" + subject, e);
 	} catch (DataAccessException e) {

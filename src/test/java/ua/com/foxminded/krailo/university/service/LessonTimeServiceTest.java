@@ -43,7 +43,7 @@ class LessonTimeServiceTest {
     void givenExistingLessonTime_whenCereate_thanLessonTimeNotFreeExceptionThrown() {
 	LessonTime lessonTime = createLessonTime();
 	when(lessonTimeDao.findByStartOrEndLessonTime(lessonTime))
-		.thenReturn(Optional.of(LessonTime.builder().id(1).build()));
+		.thenReturn(Optional.of(LessonTime.builder().id(2).build()));
 
 	Exception exception = assertThrows(LessonTimeNotFreeException.class,
 		() -> lessonTimeService.create(lessonTime));
@@ -57,7 +57,7 @@ class LessonTimeServiceTest {
     void givenExistingLessonTime_whenUpdate_thanLessonTimeNotFreeExceptionThrown() {
 	LessonTime lessonTime = createLessonTime();
 	when(lessonTimeDao.findByStartOrEndLessonTime(lessonTime))
-		.thenReturn(Optional.of(LessonTime.builder().id(1).build()));
+		.thenReturn(Optional.of(LessonTime.builder().id(2).build()));
 
 	Exception exception = assertThrows(LessonTimeNotFreeException.class,
 		() -> lessonTimeService.update(lessonTime));

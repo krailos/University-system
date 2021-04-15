@@ -66,9 +66,9 @@
 			<div class="col-md-2 bg-info " style="height: 100vh;">
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item">
-						<a th:href="@{/lessons}" class="text-info">
+						<a th:href="@{/subjects}" class="text-info">
 							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
-							Lessons
+							All subjects
 						</a>
 					</li>
 
@@ -76,17 +76,20 @@
 			</div>
 			<div class="col-md-10" style="height: 100vh;">
 				<div class="row text-center mt-2">
-					<div th:if="${lesson.getId() == 0}" class="col-12 text-center mt-3">
-						<p class="h4  text-center text-info">Create new lesson</p>
-					</div>
-					<div th:unless="${lesson.getId() == 0}"
+					<div th:if="${subject.getId() == 0}"
 						class="col-12 text-center mt-3">
-						<p class="h4  text-center text-info">Edit lesson</p>
+						<p class="h4  text-center text-info">Create new subject</p>
+					</div>
+					<div th:unless="${subject.getId() == 0}"
+						class="col-12 text-center mt-3">
+						<p class="h4  text-center text-info">Edit subject</p>
 					</div>
 
 					<div class="col-md-10 offset-1">
-						<form th:method="POST" th:action="@{/lessons/save}"
-							th:object=${lesson}>
+
+						<form th:method="POST" th:action="@{/subjects/save}"
+							th:object=${subject}>
+
 							<div class="form-group row">
 								<label for="colFormLabel"
 									class="col-sm-3 col-form-label text-right">ID</label>
@@ -95,86 +98,35 @@
 										th:field="*{id}" readonly>
 								</div>
 							</div>
-							<div class="form-group row">
-								<label for="colFormLabel"
-									class="col-sm-3 col-form-label text-right">Date</label>
-								<div class="col-sm-6">
-									<input type="date" class="form-control" id="colFormLabel"
-										th:field="*{date}" th:value=*{date}>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="colFormLabel"
-									class="col-sm-3 col-form-label text-right">Time</label>
-								<div class="col-sm-6">
-									<select class="form-control" th:field="*{lessonTime.id}"
-										required>
-										<option th:each="lessonTime : ${lessonTimes}"
-											th:value="${lessonTime.getId()}"
-											th:text="${lessonTime.getOrderNumber()}"></option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="colFormLabel"
-									class="col-sm-3 col-form-label text-right">Subject</label>
-								<div class="col-sm-6">
-									<select class="form-control" th:field="*{subject.id}" required>
-										<option th:each="subject : ${subjects}"
-											th:value="${subject.getId()}" th:text="${subject.name}">
-										</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="colFormLabel"
-									class="col-sm-3 col-form-label text-right">Audience</label>
-								<div class="col-sm-6">
-									<select class="form-control" th:field="*{audience.id}" required>
-										<option th:each="audience : ${audiences}"
-											th:value="${audience.id}" th:text="${audience.number}">
-										</option>
-									</select>
-								</div>
-							</div>
 
 							<div class="form-group row">
 								<label for="colFormLabel"
-									class="col-sm-3 col-form-label text-right">Teacher</label>
+									class="col-sm-3 col-form-label text-right">Name</label>
 								<div class="col-sm-6">
-									<select class="form-control" th:field="*{teacher.id}" required>
-										<option th:each="teacher : ${teachers}"
-											th:value="${teacher.id}"
-											th:text="${teacher.lastName} + ' ' + ${teacher.firstName} ">
-										</option>
-									</select>
+									<input type="text" class="form-control" id="colFormLabel"
+										th:field="*{name}">
 								</div>
 							</div>
 							
 							<div class="form-group row">
 								<label for="colFormLabel"
-									class="col-sm-3 col-form-label text-right">Groups</label>
-								<div class="col-sm-6 text-left">
-									<select class="form-control" id="groups" name="groups"
-										size="5" multiple="multiple" required>
-										<option th:each="group : ${groups}" th:value="${group.id}"
-											th:text="${group.name} + ' ' + ${group.year.name}"
-											 th:selected="${lesson.groups.contains(group)}"
-											></option>
-									</select>
+									class="col-sm-3 col-form-label text-right">Description</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="colFormLabel"
+										th:field="*{description}">
 								</div>
 							</div>
 
 							<div class=" row">
-								<div th:if="${lesson.getId() == 0}"
+								<div th:if="${subject.getId() == 0}"
 									class="col-md-6 offset-3 text-right">
-									<a class="btn btn-secondary mr-3" th:href="@{/lessons}"
+									<a class="btn btn-secondary mr-3" th:href="@{/subjects}"
 										role="button">Decline</a>
 									<button type="submit" class="btn btn btn-success">Create</button>
 								</div>
-								<div th:unless="${lesson.getId() == 0}"
+								<div th:unless="${subject.getId() == 0}"
 									class="col-md-6 offset-3 text-right">
-									<a class="btn btn-secondary mr-3" th:href="@{/lessons}"
+									<a class="btn btn-secondary mr-3" th:href="@{/subjects}"
 										role="button">Decline</a>
 									<button type="submit" class="btn btn btn-success">Update</button>
 								</div>

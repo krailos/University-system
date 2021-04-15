@@ -36,6 +36,12 @@
 </head>
 
 <body>
+
+
+	<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+	<script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
+	
+	
 	<header>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-info">
 
@@ -71,8 +77,8 @@
 							aria-hidden="true"></i>All years
 					</a></li>
 					<li class="list-group-item"><a
-						href="#" class="text-info"> <i
-							class="fa fa-cog mr-2" aria-hidden="true"></i>Add year
+						th:href="@{/years/create}" class="text-info"> <i
+							class="fa fa-cog mr-2" aria-hidden="true"></i>Create year
 					</a></li>
 					<li class="list-group-item"><a
 						href="#" class="text-info"> <i
@@ -91,25 +97,60 @@
 								<tr>
 									<th>Order</th>
 									<th>ID</th>
-									<th>Name</th>									
+									<th>Name</th>							
 									<th class="text-center">Action</th>
 								</tr>
 							</thead>
 							<tr th:each="year, index : ${years}">
 								<td th:text="${index.count}" class="font-weight-bold"></td>
 								<td th:text="${year.id}"></td>
-								<td th:text="${year.name}"></td>								
+								<td th:text="${year.name}"></td>			
 								<td class="text-center"><a title="view"
 									th:href="@{/years/{id}(id=${year.id})}"
 									class="btn btn-outline-success btn-sm" role="button"
 									aria-pressed="true"> <i class="fa fa-eye"></i>
-								</a> <a title="update" href="#"
+								</a> <a title="update" th:href="@{/years/edit/{id}(id=${year.id})}"
 									class="btn btn-outline-success btn-sm" role="button"
 									aria-pressed="true"> <i class="bi bi-pencil-square"></i>
-								</a> <a title="delete" href="#"
-									class="btn btn-outline-danger btn-sm" role="button"
-									aria-pressed="true"> <i class="bi bi-x-circle"></i>
-								</a></td>
+								</a> 
+								
+								
+							<button type="button" class="btn btn-outline-danger btn-sm"
+										data-toggle="modal" data-target="#deleteModal"
+										th:attrappend="data-target=${year.id}">
+										<i class="bi bi-x-circle"></i>
+									</button>
+									<!-- Modal -->
+									<div class="modal fade" id="deleteModal" tabindex="-1"
+										aria-labelledby="exampleModalLabel" aria-hidden="true"
+										th:attrappend="id=${year.id}">
+										<div class="modal-dialog modal-dialog-centered">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="exampleModalLabel">Delete
+														audience?</h5>
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<!-- div class="modal-body">Are you sure?</div-->
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary"
+														data-dismiss="modal">No</button>
+													<a title="delete"
+														th:href="@{/years/delete/{id}(id=${year.id})}"
+														class="btn btn-danger" role="button" aria-pressed="true">
+														Yes </a>
+												</div>
+											</div>
+										</div>
+									</div>
+
+								
+								
+								
+								</td>
 							</tr>
 						</table>
 					</div>

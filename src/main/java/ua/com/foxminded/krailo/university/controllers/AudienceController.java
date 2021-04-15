@@ -3,7 +3,9 @@ package ua.com.foxminded.krailo.university.controllers;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -36,6 +38,34 @@ public class AudienceController {
 	Audience audience = audienceService.getById(id);
 	model.addAttribute("audience", audience);
 	return "audiences/audience";
+    }
+
+    @GetMapping("/create")
+    public String createAudience(Model model) {
+	model.addAttribute("audience", new Audience());
+	return "audiences/edit";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editAudience(@PathVariable int id, Model model) {
+	model.addAttribute("audience", audienceService.getById(id));
+	return "audiences/edit";
+    }
+
+    @PostMapping("/save")
+    public String saveAudeince(@ModelAttribute("teacher") Audience audience) {
+	if (audience.getId() == 0) {
+	    audienceService.create(audience);
+	} else {
+	    audienceService.update(audience);
+	}
+	return "redirect:/audiences";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteAudience(@PathVariable int id) {
+	audienceService.delete(audienceService.getById(id));
+	return "redirect:/audiences";
     }
 
 }
