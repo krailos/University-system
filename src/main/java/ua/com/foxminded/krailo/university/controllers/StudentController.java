@@ -56,7 +56,7 @@ public class StudentController {
     }
 
     @PostMapping("/save")
-    public String deleteStudent(@ModelAttribute("student") Student student) {
+    public String saveStudent(@ModelAttribute("student") Student student) {
 	if (student.getId() == 0) {
 	    studentService.create(student);
 	} else {

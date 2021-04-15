@@ -15,6 +15,7 @@ import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 import ua.com.foxminded.krailo.university.formatters.GroupFormatter;
+import ua.com.foxminded.krailo.university.formatters.SubjectFormatter;
 
 @Configuration
 @ComponentScan("ua.com.foxminded.krailo.university")
@@ -56,6 +57,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
 	registry.addFormatter(new GroupFormatter());
+	registry.addFormatter(new SubjectFormatter());
     }
 
 }

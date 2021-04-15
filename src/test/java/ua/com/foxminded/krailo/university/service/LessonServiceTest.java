@@ -101,13 +101,14 @@ class LessonServiceTest {
     }
 
     @Test
-    void givenTeacherAndDate_whenGetTimetableForTeacherByMonth_thenGot() {
+    void givenTeacherAndStartFinishDate_whenGetTimetableForTeacherByPeriod_thenGot() {
 	Teacher teacher = Teacher.builder().id(1).build();
 	List<Lesson> lessons = createLessons();
-	when(lessonDao.findByTeacherBetweenDates(teacher, LocalDate.of(2021, 01, 02),
-		LocalDate.of(2021, 01, 02).plusMonths(1))).thenReturn(lessons);
+	when(lessonDao.findByTeacherBetweenDates(teacher, LocalDate.of(2021, 01, 02), LocalDate.of(2021, 02, 02)))
+		.thenReturn(lessons);
 
-	List<Lesson> actual = lessonService.getLessonsForTeacherByMonth(teacher, LocalDate.of(2021, 01, 02));
+	List<Lesson> actual = lessonService.getLessonsForTeacherByPeriod(teacher, LocalDate.of(2021, 01, 02),
+		LocalDate.of(2021, 02, 02));
 
 	List<Lesson> expected = createLessons();
 	assertEquals(expected, actual);
@@ -129,10 +130,11 @@ class LessonServiceTest {
     void givenStudentAndDate_whenGetTimetableForStudentByMonth_thenGot() {
 	Student student = Student.builder().id(1).build();
 	List<Lesson> lessons = createLessons();
-	when(lessonDao.findByStudentBetweenDates(student, LocalDate.of(2021, 01, 02),
-		LocalDate.of(2021, 01, 03))).thenReturn(lessons);
+	when(lessonDao.findByStudentBetweenDates(student, LocalDate.of(2021, 01, 02), LocalDate.of(2021, 01, 03)))
+		.thenReturn(lessons);
 
-	List<Lesson> actual = lessonService.getLessonsForStudentByPeriod(student, LocalDate.of(2021, 01, 02), LocalDate.of(2021, 01, 03));
+	List<Lesson> actual = lessonService.getLessonsForStudentByPeriod(student, LocalDate.of(2021, 01, 02),
+		LocalDate.of(2021, 01, 03));
 
 	List<Lesson> expected = createLessons();
 	assertEquals(expected, actual);
@@ -415,7 +417,7 @@ class LessonServiceTest {
     @Test
     void givenAudiences_whenGetAudiencesByPage_thenGot() {
 	List<Lesson> lessons = createLessons();
-	Paging paging = new Paging (4, 2, 16);
+	Paging paging = new Paging(4, 2, 16);
 	when(lessonDao.findWithLimit(4, 4)).thenReturn(lessons);
 
 	List<Lesson> actual = lessonService.getByPage(paging);

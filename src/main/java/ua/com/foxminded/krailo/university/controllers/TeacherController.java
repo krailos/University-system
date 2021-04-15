@@ -1,14 +1,21 @@
 package ua.com.foxminded.krailo.university.controllers;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ua.com.foxminded.krailo.university.model.Teacher;
+import ua.com.foxminded.krailo.university.service.LessonService;
+import ua.com.foxminded.krailo.university.service.SubjectService;
 import ua.com.foxminded.krailo.university.service.TeacherService;
 
 @Controller
@@ -16,9 +23,14 @@ import ua.com.foxminded.krailo.university.service.TeacherService;
 public class TeacherController {
 
     private TeacherService teacherService;
+    private SubjectService subjectService;
+    private LessonService lessonService;
 
-    public TeacherController(TeacherService teacherService) {
+    public TeacherController(TeacherService teacherService, SubjectService subjectService,
+	    LessonService lessonService) {
 	this.teacherService = teacherService;
+	this.subjectService = subjectService;
+	this.lessonService = lessonService;
     }
 
     @GetMapping
@@ -33,6 +45,48 @@ public class TeacherController {
 	Teacher teacher = teacherService.getById(id);
 	model.addAttribute("teacher", teacher);
 	return "teachers/teacher";
+    }
+
+    @GetMapping("/create")
+    public String createTeacher(Model model) {
+	model.addAttribute("teacher", new Teacher());
+	model.addAttribute("subjects", subjectService.getAll());
+	return "teachers/edit";
+    }
+
+    @PostMapping("/save")
+    public String saveTeacher(@ModelAttribute("teacher") Teacher teacher) {
+	if (teacher.getId() == 0) {
+	    teacherService.create(teacher);
+	} else {
+	    teacherService.update(teacher);
+	}
+	return "redirect:/teachers";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editTeacher(@PathVariable int id, Model model) {
+	model.addAttribute("teacher", teacherService.getById(id));
+	model.addAttribute("subjects", subjectService.getAll());
+	return "teachers/edit";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteTeacher(@PathVariable int id, Model model) {
+	teacherService.delete(teacherService.getById(id));
+	return "redirect:/teachers";
+    }
+
+    @GetMapping("/schedule/{id}")
+    public String getSchedule(Model model, @PathVariable("id") int teacherId,
+	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finishDate) {
+	Teacher teacher = teacherService.getById(teacherId);
+	model.addAttribute("teacher", teacher);
+	model.addAttribute("lessons", lessonService.getLessonsForTeacherByPeriod(teacher, startDate, finishDate));
+	model.addAttribute("startDate", startDate);
+	model.addAttribute("finishDate", finishDate);
+	return "teachers/schedule";
     }
 
 }

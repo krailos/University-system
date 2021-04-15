@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+	xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" type="text/css"
+	th:href="@{/bootstrap/css/bootstrap.min.css}">
+<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+
+<!-- Jquery CSS -->
+<script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
+
+<!-- Custom css -->
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+
+<!-- Web font awesome 5 local -->
+<link rel="stylesheet"
+	th:href="@{/webfonts/fontawesome/css/all.min.css}">
+
+<!-- Web font bootstrap 4 local -->
+<link rel="stylesheet"
+	th:href="@{/webfonts/bootstrap-icon/bootstrap-icons.css}">
+
+<!-- Web font awesome 4 local -->
+<link rel="stylesheet"
+	th:href="@{/webfonts/font-awesome-4/font-awesome-4.7.0/css/font-awesome.min.css}">
+
+
+
+<title>Schedule</title>
+</head>
+
+<body>
+	<header>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-info">
+
+			<div class="font-weight-bolder">
+				<a class="navbar-brand" th:href="@{/admin}">University/Admin</a>
+			</div>
+
+
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav ml-auto">
+
+					<li class="nav-item active">
+						<a class="nav-link" th:href="@{/}">Home/University</a>
+					</li>
+				</ul>
+			</div>
+
+
+		</nav>
+	</header>
+	<div class="container-fluid ">
+		<div class="row">
+			<div class="col-md-2 bg-info" style="height: 100vh;">
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item">
+						<a th:href="@{/teachers}" class="text-info">
+							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
+							All teachers
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="col-md-10" style="height: 100vh;">
+				<div class="row">
+					<div class="col-12 text-center mt-3">
+						<p class="h5  text-center text-info">Schedule</p>
+						<p class="h4  text-center text-info"
+							th:text="${teacher.getLastName() + ' ' + teacher.getFirstName()}">name</p>
+					</div>
+
+					<div class="col-10 offset-1">
+
+						<form th:method="GET"
+							th:action="@{/teachers/schedule/{id}(id=${teacher.getId()})}">
+							<div class="form-group row">
+								<label for="colFormLabel"
+									class="col-sm-3 col-form-label text-right">ID</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="colFormLabel"
+										th:value="${teacher.getId()}" readonly="">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="dateId" class="col-sm-3 col-form-label text-right">Start
+									date</label>
+								<div class="col-sm-6">
+									<input type="date" class="form-control" id="dateId"
+										th:value="${startDate}" th:name="startDate">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="colFormLabel"
+									class="col-sm-3 col-form-label text-right">Finish date</label>
+								<div class="col-sm-6">
+									<input type="date" class="form-control" id="colFormLabel"
+										th:value="${finishDate}" th:name="finishDate">
+								</div>
+							</div>
+
+
+							<div class=" row">
+
+								<div class="col-md-6 offset-3 text-right">
+									<a class="btn btn-secondary mr-3" th:href="@{/students}"
+										role="button">Back to teachers</a>
+									<button type="submit" class="btn btn btn-success">Show
+										schedule</button>
+								</div>
+							</div>
+						</form>
+
+
+
+						<div class="col-10 offset-1 mt-2">
+							<table class="table table-hover table-sm">
+								<thead class="thead-light">
+									<tr>
+										<th>#</th>
+										<th>ID</th>
+										<th>Date</th>
+										<th>Subject</th>
+										<th>Audience</th>
+										<th>Start time</th>
+										<th>End time</th>
+									</tr>
+								</thead>
+								<tr th:each="lesson, index : ${lessons}">
+									<td th:text="${index.count}" class="font-weight-bold"></td>
+									<td th:text="${lesson.id}"></td>
+									<td th:text="${lesson.date}"></td>
+									<td th:text="${lesson.subject.name}"></td>
+									<td th:text="${lesson.audience.number}"></td>
+									<td th:text="${lesson.lessonTime.startTime}"></td>
+									<td th:text="${lesson.lessonTime.endTime}"></td>
+								</tr>
+							</table>
+						</div>
+
+
+
+
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+</body>
+
+</html>

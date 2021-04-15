@@ -36,6 +36,12 @@
 </head>
 
 <body>
+
+	<!-- Bootstrap CSS -->
+	<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+	<!-- Jquery CSS -->
+	<script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
+
 	<header>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-info">
 
@@ -53,7 +59,7 @@
 
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav ml-auto">
-					
+
 					<li class="nav-item active">
 						<a class="nav-link" th:href="@{/}">Home/University</a>
 					</li>
@@ -69,18 +75,21 @@
 			<div class="col-md-2 bg-info" style="height: 100vh;">
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item">
-						<a th:href="@{/teachers}" class="text-info"> <i
-							class="fa fa-cog mr-2" aria-hidden="true"></i>All teachers
+						<a th:href="@{/teachers}" class="text-info">
+							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
+							All teachers
 						</a>
 					</li>
 					<li class="list-group-item">
-						<a th:href="@{/teachers/formAddTeachers}" class="text-info"> <i
-							class="fa fa-cog mr-2" aria-hidden="true"></i>Add teacher
+						<a th:href="@{/teachers/create}" class="text-info">
+							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
+							Create teacher
 						</a>
 					</li>
 					<li class="list-group-item">
-						<a th:href="@{/teachers/formFindTeacherById}" class="text-info"> <i
-							class="fa fa-cog mr-2" aria-hidden="true"></i>Find teacher
+						<a th:href="@{/teachers/formFindTeacherById}" class="text-info">
+							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
+							Find teacher
 						</a>
 					</li>
 				</ul>
@@ -98,7 +107,7 @@
 									<th>ID</th>
 									<th>Teacher ID</th>
 									<th>First name</th>
-									<th>Last name</th>									
+									<th>Last name</th>
 									<th class="text-center">Action</th>
 								</tr>
 							</thead>
@@ -107,20 +116,68 @@
 								<td th:text="${teacher.id}"></td>
 								<td th:text="${teacher.teacherId}"></td>
 								<td th:text="${teacher.firstName}"></td>
-								<td th:text="${teacher.lastName}"></td>								
-								<td class="text-center"><a title="view"
-									th:href="@{/teachers/{id}(id=${teacher.id})}"
-									class="btn btn-outline-success btn-sm" role="button"
-									aria-pressed="true"> <i class="fa fa-eye"></i>
-								</a> <a title="update"
-									href="#"
-									class="btn btn-outline-success btn-sm" role="button"
-									aria-pressed="true"> <i class="bi bi-pencil-square"></i>
-								</a> <a title="delete"
-									href="#"
-									class="btn btn-outline-danger btn-sm" role="button"
-									aria-pressed="true"> <i class="bi bi-x-circle"></i>
-								</a></td>
+								<td th:text="${teacher.lastName}"></td>
+								<td class="text-center">
+
+
+									<a title="schedule"
+										th:href="@{/teachers/schedule/{id}(id=${teacher.id}, 
+										startDate=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')},
+										finishDate=${#temporals.format(#temporals.createNow().plusMonths(1), 'yyyy-MM-dd')} )}"
+										class="btn btn-outline-success btn-sm" role="bu	tton"
+										aria-pressed="true">
+										<i class="fas fa-calendar-alt"></i>
+									</a>
+
+
+									<a title="view" th:href="@{/teachers/{id}(id=${teacher.id})}"
+										class="btn btn-outline-success btn-sm" role="button"
+										aria-pressed="true">
+										<i class="fa fa-eye"></i>
+									</a>
+									<a title="update"
+										th:href="@{/teachers/edit/{id}(id=${teacher.id})}"
+										class="btn btn-outline-success btn-sm" role="button"
+										aria-pressed="true">
+										<i class="bi bi-pencil-square"></i>
+									</a>
+
+
+									<button type="button" class="btn btn-outline-danger btn-sm"
+										data-toggle="modal" data-target="#deleteModal"
+										th:attrappend="data-target=${teacher.id}">
+										<i class="bi bi-x-circle"></i>
+									</button>
+									<!-- Modal -->
+									<div class="modal fade" id="deleteModal" tabindex="-1"
+										aria-labelledby="exampleModalLabel" aria-hidden="true"
+										th:attrappend="id=${teacher.id}">
+										<div class="modal-dialog modal-dialog-centered">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="exampleModalLabel">Delete
+														teacher?</h5>
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<!-- div class="modal-body">Are you sure?</div-->
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary"
+														data-dismiss="modal">No</button>
+													<a title="edit"
+														th:href="@{/teachers/delete/{id}(id=${teacher.id})}"
+														class="btn btn-danger" role="button" aria-pressed="true">
+														Yes </a>
+												</div>
+											</div>
+										</div>
+									</div>
+
+
+
+								</td>
 							</tr>
 						</table>
 					</div>

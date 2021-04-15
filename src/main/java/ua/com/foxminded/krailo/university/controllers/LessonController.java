@@ -70,7 +70,7 @@ public class LessonController {
     }
 
     @PostMapping("/save")
-    public String saveStudent(@ModelAttribute("lesson") Lesson lesson) {
+    public String saveLesson(@ModelAttribute("lesson") Lesson lesson) {
 	lesson.setLessonTime(lessonTimeService.getById(lesson.getLessonTime().getId()));
 	lesson.setSubject(subjectService.getById(lesson.getSubject().getId()));
 	lesson.setAudience(audienceService.getById(lesson.getAudience().getId()));
@@ -87,7 +87,7 @@ public class LessonController {
     }
 
     @GetMapping("/edit/{id}")
-    public String editStudent(@PathVariable int id, Model model) {
+    public String editLesson(@PathVariable int id, Model model) {
 	model.addAttribute("lesson", lessonService.getById(id));
 	model.addAttribute("lessonTimes", lessonTimeService.getAll());
 	model.addAttribute("subjects", subjectService.getAll());
@@ -98,7 +98,7 @@ public class LessonController {
     }
     
     @GetMapping("/delete/{id}")
-    public String deleteStudent(@PathVariable int id, Model model) {
+    public String deleteLesson(@PathVariable int id, Model model) {
 	lessonService.delete(lessonService.getById(id));
 	return "redirect:/lessons";
     }

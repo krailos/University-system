@@ -4,12 +4,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class Teacher {
 
     private int id;
     private String teacherId;
     private String firstName;
     private String lastName;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate birthDate;
     private List<Subject> subjects = new ArrayList<>();
     private String phone;
