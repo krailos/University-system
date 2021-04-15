@@ -3,6 +3,7 @@ package ua.com.foxminded.krailo.university.service;
 import static java.lang.String.format;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,9 @@ public class LessonTimeService {
     }
 
     private void checkLessonTimeBeFree(LessonTime lessonTime) {
-	if (lessonTimeDao.findByStartOrEndLessonTime(lessonTime).isPresent()) {
+	Optional<LessonTime> existingLessonTime = lessonTimeDao.findByStartOrEndLessonTime(lessonTime);
+	log.debug("existing audience={}", existingLessonTime);
+	if (existingLessonTime.filter(a -> a.getId() != lessonTime.getId()).isPresent()) {
 	    throw new LessonTimeNotFreeException("lessonTime not free, lessonTime=" + lessonTime);
 	}
     }

@@ -2,11 +2,15 @@ package ua.com.foxminded.krailo.university.model;
 
 import java.time.LocalTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class LessonTime {
 
     private int id;
     private String orderNumber;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalTime startTime;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalTime endTime;
 
     public LessonTime() {
