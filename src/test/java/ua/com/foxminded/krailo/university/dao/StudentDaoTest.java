@@ -36,18 +36,6 @@ class StudentDaoTest {
 	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "students");
 	assertEquals(3, actual);
     }
-    
-    @Test
-    void givenNewStudentWithoutGroup_whenCreate_thenCreated() {
-	Student student = Student.builder().studentId("student id").firstName("first name").lastName("last name")
-		.birthDate(LocalDate.of(2000, 01, 01)).address("address").phone("phone").email("email").rank("rank")
-		.gender(Gender.MALE).build();
-
-	studentDao.create(student);
-
-	int actual = JdbcTestUtils.countRowsInTable(jdbcTemplate, "students");
-	assertEquals(3, actual);
-    }
 
     @Test
     void givenNewFieldsOfStudents_whenUpdate_tnenUpdated() {
