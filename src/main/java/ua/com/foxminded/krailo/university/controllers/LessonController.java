@@ -1,5 +1,10 @@
 package ua.com.foxminded.krailo.university.controllers;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
+import ua.com.foxminded.krailo.university.model.LessonTime;
+import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.service.AudienceService;
 import ua.com.foxminded.krailo.university.service.GroupService;
 import ua.com.foxminded.krailo.university.service.LessonService;
@@ -96,10 +103,41 @@ public class LessonController {
 	model.addAttribute("groups", groupService.getAll());
 	return "lessons/edit";
     }
-    
+
     @GetMapping("/delete/{id}")
     public String deleteLesson(@PathVariable int id, Model model) {
 	lessonService.delete(lessonService.getById(id));
+	return "redirect:/lessons";
+    }
+
+    @GetMapping("/substituteTeacherForm")
+    public String substituteTeacherGetForm(Model model) {
+	List<Teacher> teachers = teacherService.getAll();
+	model.addAttribute("teachers", teachers);
+	return "lessons/substituteTeacherForm";
+    }
+
+    @PostMapping("/findTeacherForSubstitute")
+    public String findTeacherForSubstitute(
+	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate substituteDate, @RequestParam int id,
+	    Model model) {
+	List<Teacher> teachers = teacherService.getAll();
+	List<Teacher> teachersForSubstitite = teachers.stream()
+		.filter(t -> lessonService.canTeacherBeReplaced(id, t.getId(), substituteDate))
+		.collect(Collectors.toList());
+	model.addAttribute("substituteDate", substituteDate);
+	model.addAttribute("teacher", teacherService.getById(id));
+	model.addAttribute("teachersForSubstitite", teachersForSubstitite);
+	return "lessons/substituteTeacher";
+    }
+
+    @PostMapping("/substituteTeacher")
+    public String substituteTeacher(
+	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate substituteDate,
+	    @RequestParam int oldId, @RequestParam int newId, Model model) {
+	Teacher newTeacher = teacherService.getById(newId);
+	lessonService.getLessonsForTeacherByDate(teacherService.getById(oldId), substituteDate).stream()
+		.peek(l -> l.setTeacher(newTeacher)).forEach(lessonService::update);
 	return "redirect:/lessons";
     }
 

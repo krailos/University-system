@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+	xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Jquery-->
+<script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
+
+<!-- Bootstrap -->
+<link rel="stylesheet" type="text/css"
+	th:href="@{/bootstrap/css/bootstrap.min.css}">
+<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+
+<!-- Custom css -->
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/modal.css}" />
+
+<!-- Web font awesome 5 local -->
+<link rel="stylesheet"
+	th:href="@{/webfonts/fontawesome/css/all.min.css}">
+
+
+<!-- Web font bootstrap 4 local -->
+<link rel="stylesheet"
+	th:href="@{/webfonts/bootstrap-icon/bootstrap-icons.css}">
+
+<!-- Web font awesome 4 local -->
+<link rel="stylesheet"
+	th:href="@{/webfonts/font-awesome-4/font-awesome-4.7.0/css/font-awesome.min.css}">
+
+<title>Lessons</title>
+</head>
+
+<body>
+
+	<header>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-info">
+
+			<div class="font-weight-bolder">
+				<a class="navbar-brand" th:href="@{/admin}">University/Admin</a>
+			</div>
+
+
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item active">
+						<a class="nav-link" th:href="@{/}">Home/University</a>
+					</li>
+				</ul>
+			</div>
+
+
+		</nav>
+	</header>
+	<div class="container-fluid ">
+		<div class="row">
+			<div class="col-md-2 bg-info " style="height: 100vh;">
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item">
+						<a th:href="@{/lessons}" class="text-info">
+							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
+							Lessons
+						</a>
+					</li>
+
+				</ul>
+			</div>
+			<div class="col-md-6 offset-3 mt-2" style="height: 100vh;">
+				<form th:method="POST"
+					th:action="@{/lessons/findTeacherForSubstitute}" class="" id="formFindSubstitute">
+					<div class="form-group row">
+						<label for="dateId" class="col-form-label text-right mr-3">Start
+							date</label>
+						<div>
+							<input type="date" class="form-control" id="dateId"
+								th:value="${substituteDate}" th:name="substituteDate">
+						</div>
+					</div>
+					<div class="form-check" th:each="teacher, index : ${teachers}">
+						<input class="form-check-input" type="radio" th:name="id"
+							id="exampleRadios1" th:value="${teacher.getId()}">
+						<label class="form-check-label" for="id"
+							th:text="${teacher.firstName + ' ' + teacher.lastName}">
+						</label>
+
+					</div>
+					<div class=" row">
+
+						<div class="text-right mt-2">
+							<a class="btn btn-secondary mr-3" th:href="@{/lessons}"
+								role="button">Back to lessons</a>
+							<button type="submit" class="btn btn btn-success"  id="buttonFindSubstitute">Find
+								substitute</button>
+						</div>
+					</div>
+				</form>
+
+			</div>
+		</div>
+	</div>
+
+
+</body>
+</html>

@@ -10,16 +10,12 @@
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" type="text/css"
 	th:href="@{/bootstrap/css/bootstrap.min.css}">
-<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
-
-<!-- Jquery CSS -->
-<script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
 
 <!-- Custom css -->
 <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/modal.css}" />
 
-<!-- Custom js -->
-<script th:src="@{/js/main.js}"></script>
+
 
 <!-- Web font awesome 5 local -->
 <link rel="stylesheet"
@@ -38,10 +34,16 @@
 
 <body>
 
-	<!-- Bootstrap CSS -->
-	<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
-	<!-- Jquery CSS -->
-	<script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
+	<!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+		crossorigin="anonymous"></script>
+	<script th:src="@{/js/modal.js}"></script>
+
 
 
 	<th:header th:fragment="header">
@@ -77,6 +79,7 @@
 						</a>
 					</li>
 					<li class="list-group-item">
+
 						<a th:href="@{/students/create}" class="text-info">
 							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
 							Create student
@@ -136,37 +139,68 @@
 										<i class="bi bi-pencil-square"></i>
 									</a>
 
-									<button type="button" class="btn btn-outline-danger btn-sm"
+
+									<button type="button"
+										class="btn btn-outline-danger btn-sm modal-delete-show"
+										data-modal="#deleteStudent"
+										th:attrappend="data-modal=${student.id}">
+										<i class="bi bi-x-circle"></i>
+									</button>
+
+
+									<div class="form-delete hide" id="deleteStudent"
+										th:attrappend="id=${student.id}">
+										<form th:action="@{/students/delete/(id=${student.getId()})}"
+											th:method="POST">
+											<label class="text-danger" for="studentId">Delete</label>
+											<input class="form-control" type="text" id="studentId"
+												th:value="${student.firstName + ' ' + student.lastName}"
+												readonly>
+											<button type="submit" class="btn btn btn-danger mt-1"
+												style="width: 60px;">Yes</button>
+											<button type="button"
+												class="btn btn btn-success modal-delete-hide mt-1"
+												data-modal="#deleteStudent"
+												th:attrappend="data-modal=${student.id}"
+												style="width: 60px;">No</button>
+										</form>
+									</div>
+
+
+									<!-- <button type="button" class="btn btn-outline-danger btn-sm"
 										data-toggle="modal" data-target="#deleteModal"
 										th:attrappend="data-target=${student.id}">
 										<i class="bi bi-x-circle"></i>
 									</button>
-									<!-- Modal -->
+
+
 									<div class="modal fade" id="deleteModal" tabindex="-1"
 										aria-labelledby="exampleModalLabel" aria-hidden="true"
 										th:attrappend="id=${student.id}">
 										<div class="modal-dialog modal-dialog-centered">
 											<div class="modal-content">
-												<div class="modal-header">
-													<h5 class="modal-title" id="exampleModalLabel">Delete
-														student?</h5>
-													<button type="button" class="close" data-dismiss="modal"
-														aria-label="Close">
-														<span aria-hidden="true">&times;</span>
-													</button>
+												<div class="modal-body  text-center">
+													<h5 class="modal-title text-danger" id="exampleModalLabel">Delete
+													</h5>
 												</div>
-												<!-- div class="modal-body">Are you sure?</div-->
-												<div class="modal-footer">
-													<button type="button" class="btn btn-secondary"
-														data-dismiss="modal">No</button>
-													<a title="edit"
-														th:href="@{/students/delete/{id}(id=${student.id})}"
-														class="btn btn-danger" role="button" aria-pressed="true">
-														Yes </a>
+												<div class="modal-body">
+
+													<h5 class="modal-title" id="exampleModalLabel">Are you
+														sure?</h5>
+												</div>
+												<div class="modal-footer text-center">
+													<form th:action="@{/students/delete/(id=${student.getId()})}" th:method="POST">
+												
+														<button type="submit" class="btn btn btn-danger" style="width: 100px;">delete</button>
+													</form>
+													<button type="button" class="btn btn-success"
+														data-dismiss="modal" style="width: 100px;">No</button>
+
 												</div>
 											</div>
 										</div>
-									</div>
+									</div> -->
+
 
 
 								</td>
@@ -186,6 +220,9 @@
 			</div>
 		</div>
 	</div>
+
+
+
 
 </body>
 

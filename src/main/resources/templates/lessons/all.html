@@ -36,10 +36,10 @@
 </head>
 
 <body>
-<!-- Bootstrap JS -->
-<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
-<!-- Jquery CSS -->
-<script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
+	<!-- Bootstrap JS -->
+	<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+	<!-- Jquery CSS -->
+	<script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
 
 
 	<header>
@@ -74,18 +74,27 @@
 			<div class="col-md-2 bg-info " style="height: 100vh;">
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item">
-						<a th:href="@{/lessons}" class="text-info"> <i
-							class="fa fa-cog mr-2" aria-hidden="true"></i>All lessons
+						<a th:href="@{/lessons}" class="text-info">
+							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
+							All lessons
 						</a>
 					</li>
 					<li class="list-group-item">
-						<a th:href="@{/lessons/create}" class="text-info"> <i class="fa fa-cog mr-2"
-							aria-hidden="true"></i>Create lesson
+						<a th:href="@{/lessons/create}" class="text-info">
+							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
+							Create lesson
 						</a>
 					</li>
 					<li class="list-group-item">
-						<a href="#" class="text-info"> <i class="fa fa-cog mr-2"
-							aria-hidden="true"></i>Find lesson
+						<a href="#" class="text-info">
+							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
+							Find lesson
+						</a>
+					</li>
+					<li class="list-group-item">
+						<a th:href="@{/lessons/substituteTeacherForm}" class="text-info">
+							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
+							Substitute teacher
 						</a>
 					</li>
 				</ul>
@@ -118,18 +127,21 @@
 								<td th:text="${lesson.subject.name}"></td>
 								<td th:text="${lesson.audience.number}"></td>
 								<td th:text="${lesson.teacher.lastName}"></td>
-								<td class="text-center"><a title="view"
-									th:href="@{/lessons/{id}(id=${lesson.id})}"
-									class="btn btn-outline-success btn-sm" role="button"
-									aria-pressed="true"> <i class="fa fa-eye"></i>
-								</a> <a title="update" 
-								th:href="@{/lessons/edit/{id}(id=${lesson.getId()})}"
-									class="btn btn-outline-success btn-sm" role="button"
-									aria-pressed="true"> <i class="bi bi-pencil-square"></i>
-								</a> 
-								
-								
-										<button type="button" class="btn btn-outline-danger btn-sm"
+								<td class="text-center">
+									<a title="view" th:href="@{/lessons/{id}(id=${lesson.id})}"
+										class="btn btn-outline-success btn-sm" role="button"
+										aria-pressed="true">
+										<i class="fa fa-eye"></i>
+									</a>
+									<a title="update"
+										th:href="@{/lessons/edit/{id}(id=${lesson.getId()})}"
+										class="btn btn-outline-success btn-sm" role="button"
+										aria-pressed="true">
+										<i class="bi bi-pencil-square"></i>
+									</a>
+
+
+									<button type="button" class="btn btn-outline-danger btn-sm"
 										data-toggle="modal" data-target="#deleteModal"
 										th:attrappend="data-target=${lesson.id}">
 										<i class="bi bi-x-circle"></i>
@@ -160,8 +172,8 @@
 											</div>
 										</div>
 									</div>
-								
-								
+
+
 								</td>
 							</tr>
 						</table>
@@ -175,6 +187,9 @@
 						class="btn btn-outline-info btn-sm ml-1" role="button"
 						aria-pressed="true" th:text="${i}">page</a>
 				</div>
+
+
+			
 
 			</div>
 		</div>

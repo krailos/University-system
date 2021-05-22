@@ -60,7 +60,7 @@ public class StudentController {
 	if (student.getId() == 0) {
 	    studentService.create(student);
 	} else {
-	    studentService.update(student);	
+	    studentService.update(student);
 	}
 	return "redirect:/students";
     }
@@ -72,8 +72,8 @@ public class StudentController {
 	return "students/edit";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteStudent(@PathVariable int id, Model model) {
+    @PostMapping("/delete")
+    public String deleteStudent(@RequestParam("id") int id, Model model) {
 	studentService.delete(studentService.getById(id));
 	return "redirect:/students";
     }
@@ -87,7 +87,7 @@ public class StudentController {
 	model.addAttribute("lessons", lessonService.getLessonsForStudentByPeriod(student, startDate, finishDate));
 	model.addAttribute("startDate", startDate);
 	model.addAttribute("finishDate", finishDate);
-	return "students/schedule";
+	return "students/calendar";
     }
 
 }

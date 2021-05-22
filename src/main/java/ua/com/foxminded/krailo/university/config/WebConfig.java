@@ -1,10 +1,13 @@
 package ua.com.foxminded.krailo.university.config;
 
+import javax.servlet.Filter;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -30,6 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
 	templateResolver.setPrefix("classpath:/templates/");
 	templateResolver.setSuffix(".html");
 	templateResolver.setCacheable(false);
+	templateResolver.setCharacterEncoding("UTF-8");
 	return templateResolver;
     }
 
@@ -47,6 +51,7 @@ public class WebConfig implements WebMvcConfigurer {
 	resolver.setTemplateEngine(templateEngine);
 	templateEngine.addDialect(new Java8TimeDialect());
 	resolver.setCharacterEncoding("UTF-8");
+	resolver.setContentType("text/html; charset=UTF-8");
 	return resolver;
     }
 
@@ -61,5 +66,15 @@ public class WebConfig implements WebMvcConfigurer {
 	registry.addFormatter(new SubjectFormatter());
 	registry.addFormatter(new TeacherFormatter());
     }
+
+    @Bean
+    public Filter characterEncodingFilter() {
+	CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+	characterEncodingFilter.setEncoding("UTF-8");
+	characterEncodingFilter.setForceEncoding(true);
+	return characterEncodingFilter;
+    }
+    
+  
 
 }

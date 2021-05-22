@@ -194,6 +194,10 @@ public class Teacher {
 	    this.gender = gender;
 	    return this;
 	}
+	public TeacherBuilder subjects (List<Subject> subjects) {
+	    this.subjects = subjects;
+	    return this;
+	}
 
 	public Teacher build() {
 	    return new Teacher(id, teacherId, firstName, lastName, birthDate, subjects, phone, address, email, gender,

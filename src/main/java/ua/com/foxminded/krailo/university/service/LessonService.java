@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
+import ua.com.foxminded.krailo.university.dao.TeacherDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
 import ua.com.foxminded.krailo.university.exception.AudienceNotFreeException;
 import ua.com.foxminded.krailo.university.exception.AudienceOverflowException;
@@ -40,11 +41,13 @@ public class LessonService {
     private LessonDao lessonDao;
     private VocationDao vocationDao;
     private HolidayDao holidayDao;
+    private TeacherDao teacherDao;
 
-    public LessonService(LessonDao lessonDao, VocationDao vocationDao, HolidayDao holidayDao) {
+    public LessonService(LessonDao lessonDao, VocationDao vocationDao, HolidayDao holidayDao, TeacherDao teacherDao) {
 	this.lessonDao = lessonDao;
 	this.vocationDao = vocationDao;
 	this.holidayDao = holidayDao;
+	this.teacherDao = teacherDao;
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
@@ -121,6 +124,19 @@ public class LessonService {
 	log.debug("get timetable for student={} by month", student);
 	return lessonDao.findByStudentBetweenDates(student, startDate, finishDate);
 
+    }
+
+    public boolean canTeacherBeReplaced(int oldTecherId, int newTecherId, LocalDate lessonDate) {
+	Teacher oldTeacher = teacherDao.findById(oldTecherId)
+		.orElseThrow(() -> new EntityNotFoundException(format("Lesson whith id=%s not exist", oldTecherId)));
+	Teacher newTeacher = teacherDao.findById(newTecherId)
+		.orElseThrow(() -> new EntityNotFoundException(format("Lesson whith id=%s not exist", newTecherId)));
+	List<Lesson> oldTeacherLessons = lessonDao.findByTeacherAndDate(oldTeacher, lessonDate);
+	return !oldTeacherLessons.stream()
+		.anyMatch(l -> lessonDao
+			.findByDateAndTeacherIdAndLessonTimeId(l.getDate(), newTeacher.getId(),
+				l.getLessonTime().getId())
+			.isPresent() || !newTeacher.getSubjects().contains(l.getSubject()));
     }
 
     private void checkTeacherIsFree(Lesson lesson) {
