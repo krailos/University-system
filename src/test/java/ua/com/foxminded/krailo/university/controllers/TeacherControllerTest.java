@@ -9,6 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
+import java.time.LocalDate;
+import java.time.Year;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,10 +24,15 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
+import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
+import ua.com.foxminded.krailo.university.model.Vocation;
+import ua.com.foxminded.krailo.university.model.VocationKind;
+import ua.com.foxminded.krailo.university.service.LessonService;
 import ua.com.foxminded.krailo.university.service.SubjectService;
 import ua.com.foxminded.krailo.university.service.TeacherService;
+import ua.com.foxminded.krailo.university.service.VocationService;
 
 @ExtendWith(MockitoExtension.class)
 class TeacherControllerTest {
@@ -34,6 +41,11 @@ class TeacherControllerTest {
     private TeacherService teacherService;
     @Mock
     private SubjectService subjectService;
+    @Mock
+    private VocationService vocationService;
+    @Mock
+    private LessonService lessonService;
+
     @InjectMocks
     private TeacherController teacherController;
     private MockMvc mockMvc;
@@ -116,6 +128,35 @@ class TeacherControllerTest {
 	mockMvc.perform(post("/teachers/delete").param("id", "1")).andExpect(view().name("redirect:/teachers"))
 		.andExpect(status().is(302));
 	verify(teacherService).delete(teacher);
+    }
+
+    @Test
+    void whenGetVocationsByTeacher_ThenVocationsReturned() throws Exception {
+	List<Vocation> vocations = Arrays.asList(Vocation.builder().id(1).kind(VocationKind.GENERAL).build());
+	when(vocationService.getByTeacherIdAndYear(1, Year.from(LocalDate.now()))).thenReturn(vocations);
+	Teacher teacher = buildTeachers().get(0);
+	when(teacherService.getById(1)).thenReturn(teacher);
+
+	mockMvc.perform(get("/teachers/vocations/{id}", "1").param("year", Year.from(LocalDate.now()).toString()))
+		.andExpect(view().name("teachers/vocations")).andExpect(status().isOk())
+		.andExpect(model().attribute("year", Year.from(LocalDate.now()).toString()))
+		.andExpect(model().attribute("teacher", teacher)).andExpect(model().attribute("vocations", vocations));
+    }
+
+    @Test
+    void whenGetScheduleByTeacher_ThenScheduleReturned() throws Exception {
+	Teacher teacher = buildTeachers().get(0);
+	List<Lesson> lessons = Arrays.asList(Lesson.builder().id(1).date(LocalDate.now()).build());
+	when(lessonService.getLessonsForTeacherByPeriod(teacher, LocalDate.now(), LocalDate.now().plusMonths(1)))
+		.thenReturn(lessons);
+	when(teacherService.getById(1)).thenReturn(teacher);
+
+	mockMvc.perform(get("/teachers/schedule/{id}", "1").param("startDate", LocalDate.now().toString())
+		.param("finishDate", LocalDate.now().plusMonths(1).toString()))
+		.andExpect(view().name("teachers/schedule")).andExpect(status().isOk())
+		.andExpect(model().attribute("startDate", LocalDate.now()))
+		.andExpect(model().attribute("finishDate", LocalDate.now().plusMonths(1)))
+		.andExpect(model().attribute("teacher", teacher)).andExpect(model().attribute("lessons", lessons));
     }
 
     private List<Teacher> buildTeachers() {
