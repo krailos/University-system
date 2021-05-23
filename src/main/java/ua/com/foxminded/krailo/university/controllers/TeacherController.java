@@ -1,6 +1,7 @@
 package ua.com.foxminded.krailo.university.controllers;
 
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,6 +18,7 @@ import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.service.LessonService;
 import ua.com.foxminded.krailo.university.service.SubjectService;
 import ua.com.foxminded.krailo.university.service.TeacherService;
+import ua.com.foxminded.krailo.university.service.VocationService;
 
 @Controller
 @RequestMapping("/teachers")
@@ -25,12 +27,14 @@ public class TeacherController {
     private TeacherService teacherService;
     private SubjectService subjectService;
     private LessonService lessonService;
+    private VocationService vocationService;
 
-    public TeacherController(TeacherService teacherService, SubjectService subjectService,
-	    LessonService lessonService) {
+    public TeacherController(TeacherService teacherService, SubjectService subjectService, LessonService lessonService,
+	    VocationService vocationService) {
 	this.teacherService = teacherService;
 	this.subjectService = subjectService;
 	this.lessonService = lessonService;
+	this.vocationService = vocationService;
     }
 
     @GetMapping
@@ -71,8 +75,8 @@ public class TeacherController {
 	return "teachers/edit";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteTeacher(@PathVariable int id, Model model) {
+    @PostMapping("/delete")
+    public String deleteTeacher(@RequestParam int id, Model model) {
 	teacherService.delete(teacherService.getById(id));
 	return "redirect:/teachers";
     }
@@ -87,6 +91,16 @@ public class TeacherController {
 	model.addAttribute("startDate", startDate);
 	model.addAttribute("finishDate", finishDate);
 	return "teachers/schedule";
+    }
+
+    @GetMapping("/vocations/{id}")
+    public String getVocation(Model model, @PathVariable("id") int teacherId,
+	    @RequestParam String year) {
+	Teacher teacher = teacherService.getById(teacherId);
+	model.addAttribute("year", year);
+	model.addAttribute("teacher", teacher);
+	model.addAttribute("vocations", vocationService.getByTeacherIdAndYear(teacherId, Year.of(Integer.valueOf(year))));
+	return "teachers/vocations";
     }
 
 }

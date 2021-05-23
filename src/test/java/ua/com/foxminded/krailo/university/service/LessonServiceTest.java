@@ -442,7 +442,7 @@ class LessonServiceTest {
 	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lessonDate, 1, lesson.getLessonTime().getId()))
 		.thenReturn(Optional.empty());
 
-	boolean isSubstitute = lessonService.canTeacherBeReplaced(1, 1, lessonDate);
+	boolean isSubstitute = lessonService.isTeacherReplaced(1, 1, lessonDate);
 
 	assertTrue(isSubstitute);
     }
@@ -461,7 +461,7 @@ class LessonServiceTest {
 	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lessonDate, 1, lesson.getLessonTime().getId()))
 		.thenReturn(Optional.of(Lesson.builder().id(1).build()));
 
-	boolean isSubstitute = lessonService.canTeacherBeReplaced(1, 1, lessonDate);
+	boolean isSubstitute = lessonService.isTeacherReplaced(1, 1, lessonDate);
 
 	assertFalse(isSubstitute);
     }
@@ -480,7 +480,7 @@ class LessonServiceTest {
 	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lessonDate, 1, lesson.getLessonTime().getId()))
 		.thenReturn(Optional.empty());
 
-	boolean isSubstitute = lessonService.canTeacherBeReplaced(1, 1, lessonDate);
+	boolean isSubstitute = lessonService.isTeacherReplaced(1, 1, lessonDate);
 
 	assertFalse(isSubstitute);
     }

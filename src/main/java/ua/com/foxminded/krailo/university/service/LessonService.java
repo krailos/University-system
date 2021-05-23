@@ -126,7 +126,7 @@ public class LessonService {
 
     }
 
-    public boolean canTeacherBeReplaced(int oldTecherId, int newTecherId, LocalDate lessonDate) {
+    public boolean isTeacherReplaced(int oldTecherId, int newTecherId, LocalDate lessonDate) {
 	Teacher oldTeacher = teacherDao.findById(oldTecherId)
 		.orElseThrow(() -> new EntityNotFoundException(format("Lesson whith id=%s not exist", oldTecherId)));
 	Teacher newTeacher = teacherDao.findById(newTecherId)

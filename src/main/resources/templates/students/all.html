@@ -139,8 +139,7 @@
 										<i class="bi bi-pencil-square"></i>
 									</a>
 
-
-									<button type="button"
+									<!-- button type="button"
 										class="btn btn-outline-danger btn-sm modal-delete-show"
 										data-modal="#deleteStudent"
 										th:attrappend="data-modal=${student.id}">
@@ -164,16 +163,13 @@
 												th:attrappend="data-modal=${student.id}"
 												style="width: 60px;">No</button>
 										</form>
-									</div>
+									</div-->
 
-
-									<!-- <button type="button" class="btn btn-outline-danger btn-sm"
+									<button type="button" class="btn btn-outline-danger btn-sm"
 										data-toggle="modal" data-target="#deleteModal"
 										th:attrappend="data-target=${student.id}">
 										<i class="bi bi-x-circle"></i>
 									</button>
-
-
 									<div class="modal fade" id="deleteModal" tabindex="-1"
 										aria-labelledby="exampleModalLabel" aria-hidden="true"
 										th:attrappend="id=${student.id}">
@@ -189,19 +185,15 @@
 														sure?</h5>
 												</div>
 												<div class="modal-footer text-center">
-													<form th:action="@{/students/delete/(id=${student.getId()})}" th:method="POST">
-												
+													<form th:action="@{/students/delete/(id=${student.getId()})}" th:method="POST">								
 														<button type="submit" class="btn btn btn-danger" style="width: 100px;">delete</button>
 													</form>
 													<button type="button" class="btn btn-success"
 														data-dismiss="modal" style="width: 100px;">No</button>
-
 												</div>
 											</div>
 										</div>
-									</div> -->
-
-
+									</div>
 
 								</td>
 							</tr>

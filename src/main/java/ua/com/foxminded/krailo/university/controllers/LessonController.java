@@ -123,7 +123,7 @@ public class LessonController {
 	    Model model) {
 	List<Teacher> teachers = teacherService.getAll();
 	List<Teacher> teachersForSubstitite = teachers.stream()
-		.filter(t -> lessonService.canTeacherBeReplaced(id, t.getId(), substituteDate))
+		.filter(t -> lessonService.isTeacherReplaced(id, t.getId(), substituteDate))
 		.collect(Collectors.toList());
 	model.addAttribute("substituteDate", substituteDate);
 	model.addAttribute("teacher", teacherService.getById(id));

@@ -15,7 +15,6 @@ public class ControllerExceptionHandler {
     public String handleException(Exception e, Model model) {
 	model.addAttribute("message", e.getMessage());
 	log.error("exception message={}", e.getMessage());
-	log.error("exception stackTrace={}", e.fillInStackTrace());
 	return "errors/error";
     }
 

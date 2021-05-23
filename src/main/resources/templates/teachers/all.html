@@ -142,6 +142,13 @@
 										<i class="bi bi-pencil-square"></i>
 									</a>
 
+									<a title="vocations"
+										th:href="@{/teachers/vocations/{id}(id=${teacher.id}, 
+										year=${#temporals.format(#temporals.createNow(), 'yyyy')})}"
+										class="btn btn-outline-success btn-sm" role="bu	tton"
+										aria-pressed="true">
+										<i class="fas fa-calendar-alt"></i>
+									</a>
 
 									<button type="button" class="btn btn-outline-danger btn-sm"
 										data-toggle="modal" data-target="#deleteModal"
@@ -166,10 +173,12 @@
 												<div class="modal-footer">
 													<button type="button" class="btn btn-secondary"
 														data-dismiss="modal">No</button>
-													<a title="edit"
-														th:href="@{/teachers/delete/{id}(id=${teacher.id})}"
-														class="btn btn-danger" role="button" aria-pressed="true">
-														Yes </a>
+													<form
+														th:action="@{/teachers/delete/(id=${teacher.getId()})}"
+														th:method="POST">
+														<button type="submit" class="btn btn btn-danger"
+															style="width: 100px;">delete</button>
+													</form>
 												</div>
 											</div>
 										</div>
@@ -187,7 +196,7 @@
 		</div>
 
 	</div>
-
+	
 
 </body>
 

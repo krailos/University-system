@@ -78,6 +78,11 @@ public class VocationService {
 	vocationDao.deleteById(vocation.getId());
     }
 
+    public List<Vocation> getByTeacherIdAndYear(int teacherId, Year year) {
+	log.debug("Get by teacherId={} and year={}", teacherId, year);
+	return vocationDao.findByTeacherIdAndYear(teacherId, year);
+    }
+
     private void checkVocationPeriodIsFree(Vocation vocation) {
 	if (!lessonDao.findByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd())
 		.isEmpty()) {

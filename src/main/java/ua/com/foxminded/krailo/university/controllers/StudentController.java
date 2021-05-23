@@ -87,7 +87,7 @@ public class StudentController {
 	model.addAttribute("lessons", lessonService.getLessonsForStudentByPeriod(student, startDate, finishDate));
 	model.addAttribute("startDate", startDate);
 	model.addAttribute("finishDate", finishDate);
-	return "students/calendar";
+	return "students/schedule";
     }
 
 }
