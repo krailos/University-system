@@ -1,7 +1,9 @@
 package ua.com.foxminded.krailo.university.controllers;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -20,9 +22,18 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
+import ua.com.foxminded.krailo.university.model.Audience;
+import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
+import ua.com.foxminded.krailo.university.model.LessonTime;
 import ua.com.foxminded.krailo.university.model.Subject;
+import ua.com.foxminded.krailo.university.model.Teacher;
+import ua.com.foxminded.krailo.university.service.AudienceService;
+import ua.com.foxminded.krailo.university.service.GroupService;
 import ua.com.foxminded.krailo.university.service.LessonService;
+import ua.com.foxminded.krailo.university.service.LessonTimeService;
+import ua.com.foxminded.krailo.university.service.SubjectService;
+import ua.com.foxminded.krailo.university.service.TeacherService;
 import ua.com.foxminded.krailo.university.util.Paging;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,6 +41,16 @@ class LessonControllerTest {
 
     @Mock
     private LessonService lessonService;
+    @Mock
+    private LessonTimeService lessonTimeService;
+    @Mock
+    private SubjectService subjectService;
+    @Mock
+    private AudienceService audienceService;
+    @Mock
+    private GroupService groupService;
+    @Mock
+    private TeacherService teacherService;
     @InjectMocks
     private LessonController lessonController;
     private MockMvc mockMvc;
@@ -80,9 +101,131 @@ class LessonControllerTest {
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
+    @Test
+    void WhenCreateLesson_ThenLessonWithTimesSubjectsAudiencesTeachersGroupsReturned() throws Exception {
+	List<LessonTime> lessonTimes = buildLessonTimes();
+	when(lessonTimeService.getAll()).thenReturn(lessonTimes);
+	List<Subject> subjects = buildSubjects();
+	when(subjectService.getAll()).thenReturn(subjects);
+	List<Audience> audiences = buildAudiences();
+	when(audienceService.getAll()).thenReturn(audiences);
+	List<Group> groups = buildGroups();
+	when(groupService.getAll()).thenReturn(groups);
+	List<Teacher> teachers = buildTeachers();
+	when(teacherService.getAll()).thenReturn(teachers);
+
+	mockMvc.perform(get("/lessons/create")).andExpect(view().name("lessons/edit")).andExpect(status().isOk())
+		.andExpect(model().attributeExists("lesson")).andExpect(model().attribute("subjects", subjects))
+		.andExpect(model().attribute("lessonTimes", lessonTimes))
+		.andExpect(model().attribute("audiences", audiences)).andExpect(model().attribute("teachers", teachers))
+		.andExpect(model().attribute("groups", groups));
+    }
+
+    @Test
+    void givenNewLesson_WhenSaveLesson_ThenLessonSaved() throws Exception {
+	Lesson lesson = buildLessons().get(0);
+	lesson.setId(0);
+	LessonTime lessonTime = buildLessonTimes().get(0);
+	when(lessonTimeService.getById(1)).thenReturn(lessonTime);
+	Subject subject = buildSubjects().get(0);
+	when(subjectService.getById(1)).thenReturn(subject);
+	Audience audience = buildAudiences().get(0);
+	when(audienceService.getById(1)).thenReturn(audience);
+	Group group = buildGroups().get(0);
+	when(groupService.getById(1)).thenReturn(group);
+	Teacher teacher = buildTeachers().get(0);
+	when(teacherService.getById(1)).thenReturn(teacher);
+
+	mockMvc.perform(post("/lessons/save").flashAttr("lesson", lesson)).andExpect(view().name("redirect:/lessons"))
+		.andExpect(status().is(302));
+	verify(lessonService).create(lesson);
+    }
+
+    @Test
+    void givenUpdatedLesson_whenUpdateLesson_ThenLessonUpdated() throws Exception {
+	Lesson lesson = buildLessons().get(0);
+	LessonTime lessonTime = buildLessonTimes().get(0);
+	when(lessonTimeService.getById(1)).thenReturn(lessonTime);
+	Subject subject = buildSubjects().get(0);
+	when(subjectService.getById(1)).thenReturn(subject);
+	Audience audience = buildAudiences().get(0);
+	when(audienceService.getById(1)).thenReturn(audience);
+	Group group = buildGroups().get(0);
+	when(groupService.getById(1)).thenReturn(group);
+	Teacher teacher = buildTeachers().get(0);
+	when(teacherService.getById(1)).thenReturn(teacher);
+
+	mockMvc.perform(post("/lessons/save").flashAttr("lesson", lesson)).andExpect(view().name("redirect:/lessons"))
+		.andExpect(status().is(302));
+	verify(lessonService).update(lesson);
+    }
+
+    @Test
+    void givenLessonId_whenEditLesson_ThenLessonReturnedToEdite() throws Exception {
+	Lesson lesson = buildLessons().get(0);
+	when(lessonService.getById(1)).thenReturn(lesson);
+	List<LessonTime> lessonTimes = buildLessonTimes();
+	when(lessonTimeService.getAll()).thenReturn(lessonTimes);
+	List<Subject> subjects = buildSubjects();
+	when(subjectService.getAll()).thenReturn(subjects);
+	List<Audience> audiences = buildAudiences();
+	when(audienceService.getAll()).thenReturn(audiences);
+	List<Group> groups = buildGroups();
+	when(groupService.getAll()).thenReturn(groups);
+	List<Teacher> teachers = buildTeachers();
+	when(teacherService.getAll()).thenReturn(teachers);
+
+	mockMvc.perform(get("/lessons/edit/{id}", "1")).andExpect(view().name("lessons/edit"))
+		.andExpect(status().isOk()).andExpect(model().attributeExists("lesson"))
+		.andExpect(model().attribute("subjects", subjects))
+		.andExpect(model().attribute("lessonTimes", lessonTimes))
+		.andExpect(model().attribute("audiences", audiences)).andExpect(model().attribute("teachers", teachers))
+		.andExpect(model().attribute("groups", groups));
+    }
+
+    @Test
+    void whenDeleteLesson_ThenLessonDeleted() throws Exception {
+	Lesson lesson = buildLessons().get(0);
+	when(lessonService.getById(1)).thenReturn(lesson);
+
+	mockMvc.perform(post("/lessons/delete").param("id", "1")).andExpect(view().name("redirect:/lessons"))
+		.andExpect(status().is(302));
+	verify(lessonService).delete(lesson);
+    }
+
     private List<Lesson> buildLessons() {
-	return Arrays.asList(Lesson.builder().id(1).subject(Subject.builder().id(1).name("subject1").build()).build(),
-		Lesson.builder().id(2).subject(Subject.builder().id(2).name("subject2").build()).build());
+	return Arrays.asList(Lesson.builder().id(1).lessonTime(LessonTime.builder().id(1).build())
+		.audience(Audience.builder().id(1).build()).subject(Subject.builder().id(1).name("subject1").build())
+		.teacher(Teacher.builder().id(1).build()).groups(buildGroups()).build(),
+		Lesson.builder().id(2).lessonTime(LessonTime.builder().id(2).build())
+			.audience(Audience.builder().id(2).build())
+			.subject(Subject.builder().id(2).name("subject1").build())
+			.teacher(Teacher.builder().id(2).build()).groups(buildGroups()).build());
+    }
+
+    private List<LessonTime> buildLessonTimes() {
+	return Arrays.asList(LessonTime.builder().id(1).orderNumber("first").build(),
+		LessonTime.builder().id(2).orderNumber("second").build());
+    }
+
+    private List<Subject> buildSubjects() {
+	return Arrays.asList(Subject.builder().id(1).name("subjecet1").build(),
+		Subject.builder().id(2).name("subjecet2").build());
+    }
+
+    private List<Audience> buildAudiences() {
+	return Arrays.asList(Audience.builder().id(1).number("1").build(),
+		Audience.builder().id(2).number("2").build());
+    }
+
+    private List<Teacher> buildTeachers() {
+	return Arrays.asList(Teacher.builder().id(1).firstName("Jon").build(),
+		Teacher.builder().id(2).firstName("Tom").build());
+    }
+
+    private List<Group> buildGroups() {
+	return Arrays.asList(Group.builder().id(1).name("group1").build(),
+		Group.builder().id(2).name("group2").build());
     }
 
 }

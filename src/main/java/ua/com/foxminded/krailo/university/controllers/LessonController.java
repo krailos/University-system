@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
-import ua.com.foxminded.krailo.university.model.LessonTime;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.service.AudienceService;
 import ua.com.foxminded.krailo.university.service.GroupService;
@@ -104,8 +103,8 @@ public class LessonController {
 	return "lessons/edit";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteLesson(@PathVariable int id, Model model) {
+    @PostMapping("/delete")
+    public String deleteLesson(@RequestParam int id, Model model) {
 	lessonService.delete(lessonService.getById(id));
 	return "redirect:/lessons";
     }

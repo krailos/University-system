@@ -12,11 +12,10 @@ public class MainController {
     public String getIndexPage() {
 	return "index";
     }
-    
+
     @GetMapping("admin")
     public String getAdminPage() {
 	return "adminPage";
     }
-
 
 }

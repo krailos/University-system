@@ -94,12 +94,12 @@ public class TeacherController {
     }
 
     @GetMapping("/vocations/{id}")
-    public String getVocation(Model model, @PathVariable("id") int teacherId,
-	    @RequestParam String year) {
+    public String getVocation(Model model, @PathVariable("id") int teacherId, @RequestParam String year) {
 	Teacher teacher = teacherService.getById(teacherId);
 	model.addAttribute("year", year);
 	model.addAttribute("teacher", teacher);
-	model.addAttribute("vocations", vocationService.getByTeacherIdAndYear(teacherId, Year.of(Integer.valueOf(year))));
+	model.addAttribute("vocations",
+		vocationService.getByTeacherIdAndYear(teacherId, Year.of(Integer.valueOf(year))));
 	return "teachers/vocations";
     }
 

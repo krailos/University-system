@@ -152,10 +152,12 @@
 												<div class="modal-footer">
 													<button type="button" class="btn btn-secondary"
 														data-dismiss="modal">No</button>
-													<a title="edit"
-														th:href="@{/vocations/delete/{id}(id=${vocation.id})}"
-														class="btn btn-danger" role="button" aria-pressed="true">
-														Yes </a>
+													<form
+														th:action="@{/vocations/delete/(id=${vocation.getId()})}"
+														th:method="POST">
+														<button type="submit" class="btn btn btn-danger"
+															style="width: 100px;">delete</button>
+													</form>
 												</div>
 											</div>
 										</div>

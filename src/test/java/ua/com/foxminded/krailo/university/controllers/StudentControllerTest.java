@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,8 +25,10 @@ import ua.com.foxminded.krailo.university.controllers.exception.ControllerExcept
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Group;
+import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.service.GroupService;
+import ua.com.foxminded.krailo.university.service.LessonService;
 import ua.com.foxminded.krailo.university.service.StudentService;
 import ua.com.foxminded.krailo.university.util.Paging;
 
@@ -36,6 +39,8 @@ class StudentControllerTest {
     private StudentService studentService;
     @Mock
     private GroupService groupService;
+    @Mock
+    private LessonService lessonService;
     @InjectMocks
     private StudentController studentController;
     private MockMvc mockMvc;
@@ -127,9 +132,25 @@ class StudentControllerTest {
     void givenStudent_whenDeleteStudent_thenDeleteMethodCalled() throws Exception {
 	when(studentService.getById(1)).thenReturn(buildStudent());
 
-	mockMvc.perform(get("/students/delete/1")).andExpect(view().name("redirect:/students"));
+	mockMvc.perform(post("/students/delete/").param("id", "1")).andExpect(view().name("redirect:/students"));
 
 	verify(studentService).delete(buildStudent());
+    }
+
+    @Test
+    void whenGetScheduleByStudent_ThenScheduleReturned() throws Exception {
+	Student student = buildStudent();
+	List<Lesson> lessons = Arrays.asList(Lesson.builder().id(1).date(LocalDate.now()).build());
+	when(lessonService.getLessonsForStudentByPeriod(student, LocalDate.now(), LocalDate.now().plusMonths(1)))
+		.thenReturn(lessons);
+	when(studentService.getById(1)).thenReturn(student);
+
+	mockMvc.perform(get("/students/schedule/{id}", "1").param("startDate", LocalDate.now().toString())
+		.param("finishDate", LocalDate.now().plusMonths(1).toString()))
+		.andExpect(view().name("students/schedule")).andExpect(status().isOk())
+		.andExpect(model().attribute("startDate", LocalDate.now()))
+		.andExpect(model().attribute("finishDate", LocalDate.now().plusMonths(1)))
+		.andExpect(model().attribute("student", student)).andExpect(model().attribute("lessons", lessons));
     }
 
     private List<Student> buildStudents() {

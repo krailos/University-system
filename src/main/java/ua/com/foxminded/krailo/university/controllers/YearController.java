@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ua.com.foxminded.krailo.university.model.Year;
 import ua.com.foxminded.krailo.university.service.SubjectService;
@@ -64,8 +65,8 @@ public class YearController {
 	return "redirect:/years";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteYear(@PathVariable int id) {
+    @PostMapping("/delete")
+    public String deleteYear(@RequestParam int id) {
 	yearService.delete(yearService.getById(id));
 	return "redirect:/years";
     }

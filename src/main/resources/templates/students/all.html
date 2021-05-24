@@ -139,32 +139,6 @@
 										<i class="bi bi-pencil-square"></i>
 									</a>
 
-									<!-- button type="button"
-										class="btn btn-outline-danger btn-sm modal-delete-show"
-										data-modal="#deleteStudent"
-										th:attrappend="data-modal=${student.id}">
-										<i class="bi bi-x-circle"></i>
-									</button>
-
-
-									<div class="form-delete hide" id="deleteStudent"
-										th:attrappend="id=${student.id}">
-										<form th:action="@{/students/delete/(id=${student.getId()})}"
-											th:method="POST">
-											<label class="text-danger" for="studentId">Delete</label>
-											<input class="form-control" type="text" id="studentId"
-												th:value="${student.firstName + ' ' + student.lastName}"
-												readonly>
-											<button type="submit" class="btn btn btn-danger mt-1"
-												style="width: 60px;">Yes</button>
-											<button type="button"
-												class="btn btn btn-success modal-delete-hide mt-1"
-												data-modal="#deleteStudent"
-												th:attrappend="data-modal=${student.id}"
-												style="width: 60px;">No</button>
-										</form>
-									</div-->
-
 									<button type="button" class="btn btn-outline-danger btn-sm"
 										data-toggle="modal" data-target="#deleteModal"
 										th:attrappend="data-target=${student.id}">
@@ -185,8 +159,11 @@
 														sure?</h5>
 												</div>
 												<div class="modal-footer text-center">
-													<form th:action="@{/students/delete/(id=${student.getId()})}" th:method="POST">								
-														<button type="submit" class="btn btn btn-danger" style="width: 100px;">delete</button>
+													<form
+														th:action="@{/students/delete/(id=${student.getId()})}"
+														th:method="POST">
+														<button type="submit" class="btn btn btn-danger"
+															style="width: 100px;">delete</button>
 													</form>
 													<button type="button" class="btn btn-success"
 														data-dismiss="modal" style="width: 100px;">No</button>

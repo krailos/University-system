@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ua.com.foxminded.krailo.university.model.Vocation;
-import ua.com.foxminded.krailo.university.model.Year;
 import ua.com.foxminded.krailo.university.service.TeacherService;
 import ua.com.foxminded.krailo.university.service.VocationService;
 
@@ -65,8 +65,8 @@ public class VocationController {
 	return "redirect:/vocations";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteVocation(@PathVariable int id) {
+    @PostMapping("/delete")
+    public String deleteVocation(@RequestParam int id) {
 	vocationService.delete(vocationService.getById(id));
 	return "redirect:/vocations";
     }

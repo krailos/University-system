@@ -1,7 +1,9 @@
 package ua.com.foxminded.krailo.university.controllers;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -43,8 +45,8 @@ class LessonTimeControllerTest {
 	List<LessonTime> expected = buildLessonTimes();
 	when(lessonTimeService.getAll()).thenReturn(expected);
 
-	mockMvc.perform(get("/lessonTimes")).andExpect(view().name("lessonTimes/all"))
-		.andExpect(status().isOk()).andExpect(model().attribute("lessonTimes", expected));
+	mockMvc.perform(get("/lessonTimes")).andExpect(view().name("lessonTimes/all")).andExpect(status().isOk())
+		.andExpect(model().attribute("lessonTimes", expected));
 
     }
 
@@ -57,8 +59,7 @@ class LessonTimeControllerTest {
 		.andExpect(status().isOk()).andExpect(model().attribute("lessonTime", expected));
 
     }
-    
-    
+
     @Test
     void givenWrongLessonTimeId_whenGetLessonTime_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(lessonTimeService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
@@ -67,6 +68,49 @@ class LessonTimeControllerTest {
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
+    @Test
+    void WhenCreateLessonTime_ThenLessonTimeReturned() throws Exception {
+
+	mockMvc.perform(get("/lessonTimes/create")).andExpect(view().name("lessonTimes/edit"))
+		.andExpect(status().isOk()).andExpect(model().attributeExists("lessonTime"));
+    }
+
+    @Test
+    void givenNewLessonTime_WhenSaveLessonTime_ThenLessonTimeSaved() throws Exception {
+	LessonTime lessonTime = new LessonTime();
+
+	mockMvc.perform(post("/lessonTimes/save").flashAttr("lessonTime", lessonTime))
+		.andExpect(view().name("redirect:/lessonTimes")).andExpect(status().is(302));
+	verify(lessonTimeService).create(lessonTime);
+    }
+
+    @Test
+    void givenUpdatedLessonTime_whenUpdateLessonTime_ThenLessonTimeUpdated() throws Exception {
+	LessonTime lessonTime = buildLessonTimes().get(0);
+
+	mockMvc.perform(post("/lessonTimes/save").flashAttr("lessonTime", lessonTime))
+		.andExpect(view().name("redirect:/lessonTimes")).andExpect(status().is(302));
+	verify(lessonTimeService).update(lessonTime);
+    }
+
+    @Test
+    void givenLessonTimeId_whenEditLessonTime_ThenLessonTimeReturnedToEdite() throws Exception {
+	LessonTime lessonTime = buildLessonTimes().get(0);
+	when(lessonTimeService.getById(1)).thenReturn(lessonTime);
+
+	mockMvc.perform(get("/lessonTimes/edit/{id}", "1")).andExpect(view().name("lessonTimes/edit"))
+		.andExpect(status().isOk()).andExpect(model().attribute("lessonTime", lessonTime));
+    }
+
+    @Test
+    void whenDeleteLessonTime_ThenLessonTimeDeleted() throws Exception {
+	LessonTime lessonTime = buildLessonTimes().get(0);
+	when(lessonTimeService.getById(1)).thenReturn(lessonTime);
+
+	mockMvc.perform(post("/lessonTimes/delete").param("id", "1")).andExpect(view().name("redirect:/lessonTimes"))
+		.andExpect(status().is(302));
+	verify(lessonTimeService).delete(lessonTime);
+    }
 
     private List<LessonTime> buildLessonTimes() {
 	return Arrays.asList(LessonTime.builder().id(1).orderNumber("first").build(),

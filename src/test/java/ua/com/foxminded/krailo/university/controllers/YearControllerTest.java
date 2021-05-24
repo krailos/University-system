@@ -1,7 +1,9 @@
 package ua.com.foxminded.krailo.university.controllers;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -20,7 +22,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
+import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Year;
+import ua.com.foxminded.krailo.university.service.SubjectService;
 import ua.com.foxminded.krailo.university.service.YearService;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,6 +32,8 @@ class YearControllerTest {
 
     @Mock
     private YearService yearService;
+    @Mock
+    private SubjectService subjectService;
     @InjectMocks
     private YearController yearController;
     private MockMvc mockMvc;
@@ -65,8 +71,61 @@ class YearControllerTest {
 
     }
 
+    @Test
+    void WhenCreateYear_ThenYearWithSubjectsReturned() throws Exception {
+	List<Subject> subjects = buildSubjects();
+	when(subjectService.getAll()).thenReturn(subjects);
+
+	mockMvc.perform(get("/years/create")).andExpect(view().name("years/edit")).andExpect(status().isOk())
+		.andExpect(model().attribute("subjects", subjects)).andExpect(model().attributeExists("year"));
+    }
+
+    @Test
+    void givenNewYear_WhenSaveYear_ThenYearSaved() throws Exception {
+	Year year = new Year();
+
+	mockMvc.perform(post("/years/save").flashAttr("year", year)).andExpect(view().name("redirect:/years"))
+		.andExpect(status().is(302));
+	verify(yearService).create(year);
+    }
+
+    @Test
+    void givenUpdatedYear_whenUpdateYear_ThenYeatUpdated() throws Exception {
+	Year year = buildYaers().get(0);
+
+	mockMvc.perform(post("/years/save").flashAttr("year", year)).andExpect(view().name("redirect:/years"))
+		.andExpect(status().is(302));
+	verify(yearService).update(year);
+    }
+
+    @Test
+    void givenYearId_whenEditYear_ThenYeatReturnedToEdite() throws Exception {
+	List<Subject> subjects = buildSubjects();
+	when(subjectService.getAll()).thenReturn(subjects);
+	Year year = buildYaers().get(0);
+	when(yearService.getById(1)).thenReturn(year);
+
+	mockMvc.perform(get("/years/edit/{id}", "1")).andExpect(view().name("years/edit")).andExpect(status().isOk())
+		.andExpect(model().attribute("year", year)).andExpect(model().attribute("subjects", subjects));
+    }
+
+    @Test
+    void whenDeleteYear_ThenYearDeleted() throws Exception {
+	Year year = buildYaers().get(0);
+	when(yearService.getById(1)).thenReturn(year);
+
+	mockMvc.perform(post("/years/delete").param("id", "1")).andExpect(view().name("redirect:/years"))
+		.andExpect(status().is(302));
+	verify(yearService).delete(year);
+    }
+
     private List<Year> buildYaers() {
 	return Arrays.asList(Year.builder().id(1).name("year1").build(), Year.builder().id(2).name("year2").build());
+    }
+
+    private List<Subject> buildSubjects() {
+	return Arrays.asList(Subject.builder().id(1).name("subjecet1").build(),
+		Subject.builder().id(2).name("subjecet2").build());
     }
 
 }

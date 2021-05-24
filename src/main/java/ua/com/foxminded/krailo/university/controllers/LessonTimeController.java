@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ua.com.foxminded.krailo.university.model.LessonTime;
 import ua.com.foxminded.krailo.university.service.LessonTimeService;
@@ -50,7 +51,7 @@ public class LessonTimeController {
     }
 
     @PostMapping("/save")
-    public String saveLessonTimes(@ModelAttribute("teacher") LessonTime lessonTime) {
+    public String saveLessonTimes(@ModelAttribute("lessonTime") LessonTime lessonTime) {
 	if (lessonTime.getId() == 0) {
 	    lessonTimeService.create(lessonTime);
 	} else {
@@ -59,8 +60,8 @@ public class LessonTimeController {
 	return "redirect:/lessonTimes";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteLessonTime(@PathVariable int id) {
+    @PostMapping("/delete")
+    public String deleteLessonTime(@RequestParam int id) {
 	lessonTimeService.delete(lessonTimeService.getById(id));
 	return "redirect:/lessonTimes";
     }

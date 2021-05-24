@@ -53,7 +53,7 @@ public class AudienceController {
     }
 
     @PostMapping("/save")
-    public String saveAudeince(@ModelAttribute("teacher") Audience audience) {
+    public String saveAudeince(@ModelAttribute("audience") Audience audience) {
 	if (audience.getId() == 0) {
 	    audienceService.create(audience);
 	} else {
@@ -62,8 +62,8 @@ public class AudienceController {
 	return "redirect:/audiences";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteAudience(@PathVariable int id) {
+    @PostMapping("/delete")
+    public String deleteAudience(@RequestParam int id) {
 	audienceService.delete(audienceService.getById(id));
 	return "redirect:/audiences";
     }

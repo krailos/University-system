@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ua.com.foxminded.krailo.university.model.Holiday;
 import ua.com.foxminded.krailo.university.service.HolidayService;
@@ -59,8 +60,8 @@ public class HolidaysController {
 	return "redirect:/holidays";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteHoliday(@PathVariable int id) {
+    @PostMapping("/delete")
+    public String deleteHoliday(@RequestParam int id) {
 	holidayService.delete(holidayService.getById(id));
 	return "redirect:/holidays";
     }

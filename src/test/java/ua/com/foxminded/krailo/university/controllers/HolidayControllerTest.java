@@ -1,7 +1,9 @@
 package ua.com.foxminded.krailo.university.controllers;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -64,6 +66,50 @@ class HolidayControllerTest {
 
 	mockMvc.perform(get("/holidays/1")).andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
+    }
+
+    @Test
+    void WhenCreateAudience_ThenAudienceReturned() throws Exception {
+
+	mockMvc.perform(get("/audiences/create")).andExpect(view().name("audiences/edit")).andExpect(status().isOk())
+		.andExpect(model().attributeExists("audience"));
+    }
+
+    @Test
+    void givenNewHoliday_WhenSaveHoliday_ThenHolidaySaved() throws Exception {
+	Holiday holiday = new Holiday();
+
+	mockMvc.perform(post("/holidays/save").flashAttr("holiday", holiday))
+		.andExpect(view().name("redirect:/holidays")).andExpect(status().is(302));
+	verify(holidayService).create(holiday);
+    }
+
+    @Test
+    void givenUpdatedHoliday_whenUpdateHoliday_ThenHolidayUpdated() throws Exception {
+	Holiday holiday = buildHolidays().get(0);
+
+	mockMvc.perform(post("/holidays/save").flashAttr("holiday", holiday))
+		.andExpect(view().name("redirect:/holidays")).andExpect(status().is(302));
+	verify(holidayService).update(holiday);
+    }
+
+    @Test
+    void givenholidayId_whenEditholiday_ThenholidayReturnedToEdite() throws Exception {
+	Holiday holiday = buildHolidays().get(0);
+	when(holidayService.getById(1)).thenReturn(holiday);
+
+	mockMvc.perform(get("/holidays/edit/{id}", "1")).andExpect(view().name("holidays/edit"))
+		.andExpect(status().isOk()).andExpect(model().attribute("holiday", holiday));
+    }
+
+    @Test
+    void whenDeleteHoliday_ThenHolidayDeleted() throws Exception {
+	Holiday holiday = buildHolidays().get(0);
+	when(holidayService.getById(1)).thenReturn(holiday);
+
+	mockMvc.perform(post("/holidays/delete").param("id", "1")).andExpect(view().name("redirect:/holidays"))
+		.andExpect(status().is(302));
+	verify(holidayService).delete(holiday);
     }
 
     private List<Holiday> buildHolidays() {

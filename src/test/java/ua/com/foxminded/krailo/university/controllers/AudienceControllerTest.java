@@ -1,7 +1,9 @@
 package ua.com.foxminded.krailo.university.controllers;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -76,6 +78,50 @@ class AudienceControllerTest {
 
 	mockMvc.perform(get("/audiences/1")).andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
+    }
+
+    @Test
+    void WhenCreateAudience_ThenAudienceReturned() throws Exception {
+
+	mockMvc.perform(get("/audiences/create")).andExpect(view().name("audiences/edit")).andExpect(status().isOk())
+		.andExpect(model().attributeExists("audience"));
+    }
+
+    @Test
+    void givenNewAudience_WhenSaveAudience_ThenAudienceSaved() throws Exception {
+	Audience audience = new Audience();
+
+	mockMvc.perform(post("/audiences/save").flashAttr("audience", audience))
+		.andExpect(view().name("redirect:/audiences")).andExpect(status().is(302));
+	verify(audienceService).create(audience);
+    }
+
+    @Test
+    void givenUpdatedAudience_whenUpdateAudience_ThenAudienceUpdated() throws Exception {
+	Audience audience = buildAudiences().get(0);
+
+	mockMvc.perform(post("/audiences/save").flashAttr("audience", audience))
+		.andExpect(view().name("redirect:/audiences")).andExpect(status().is(302));
+	verify(audienceService).update(audience);
+    }
+
+    @Test
+    void givenAudienceId_whenEditAudience_ThenAudienceReturnedToEdite() throws Exception {
+	Audience audience = buildAudiences().get(0);
+	when(audienceService.getById(1)).thenReturn(audience);
+
+	mockMvc.perform(get("/audiences/edit/{id}", "1")).andExpect(view().name("audiences/edit"))
+		.andExpect(status().isOk()).andExpect(model().attribute("audience", audience));
+    }
+
+    @Test
+    void whenDeleteAudience_ThenAudienceDeleted() throws Exception {
+	Audience audience = buildAudiences().get(0);
+	when(audienceService.getById(1)).thenReturn(audience);
+
+	mockMvc.perform(post("/audiences/delete").param("id", "1")).andExpect(view().name("redirect:/audiences"))
+		.andExpect(status().is(302));
+	verify(audienceService).delete(audience);
     }
 
     private List<Audience> buildAudiences() {

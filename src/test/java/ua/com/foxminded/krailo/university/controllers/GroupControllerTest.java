@@ -1,7 +1,9 @@
 package ua.com.foxminded.krailo.university.controllers;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -21,7 +23,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Group;
+import ua.com.foxminded.krailo.university.model.Year;
 import ua.com.foxminded.krailo.university.service.GroupService;
+import ua.com.foxminded.krailo.university.service.YearService;
 import ua.com.foxminded.krailo.university.util.Paging;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,6 +33,8 @@ class GroupControllerTest {
 
     @Mock
     private GroupService groupService;
+    @Mock
+    private YearService yearService;
     @InjectMocks
     private GroupController groupController;
 
@@ -79,9 +85,61 @@ class GroupControllerTest {
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
+    @Test
+    void WhenCreateGroup_ThenGroupWithYearsReturned() throws Exception {
+	List<Year> years = buildYears();
+	when(yearService.getAll()).thenReturn(years);
+
+	mockMvc.perform(get("/groups/create")).andExpect(view().name("groups/edit")).andExpect(status().isOk())
+		.andExpect(model().attribute("years", years)).andExpect(model().attributeExists("group"));
+    }
+
+    @Test
+    void givenNewGroup_WhenSaveGroup_ThenGroupSaved() throws Exception {
+	Group group = new Group();
+
+	mockMvc.perform(post("/groups/save").flashAttr("group", group)).andExpect(view().name("redirect:/groups"))
+		.andExpect(status().is(302));
+	verify(groupService).create(group);
+    }
+
+    @Test
+    void givenUpdatedGroup_whenUpdateGroup_ThenGroupUpdated() throws Exception {
+	Group group = buildGroups().get(0);
+
+	mockMvc.perform(post("/groups/save").flashAttr("group", group)).andExpect(view().name("redirect:/groups"))
+		.andExpect(status().is(302));
+	verify(groupService).update(group);
+    }
+
+    @Test
+    void givenGroupId_whenEditGroup_ThenGroupReturnedToEdite() throws Exception {
+	List<Year> years = buildYears();
+	when(yearService.getAll()).thenReturn(years);
+	Group group = buildGroups().get(0);
+	when(groupService.getById(1)).thenReturn(group);
+
+	mockMvc.perform(get("/groups/edit/{id}", "1")).andExpect(view().name("groups/edit")).andExpect(status().isOk())
+		.andExpect(model().attribute("group", group)).andExpect(model().attribute("years", years));
+    }
+
+    @Test
+    void whenDeleteGroup_ThenGroupDeleted() throws Exception {
+	Group group = buildGroups().get(0);
+	when(groupService.getById(1)).thenReturn(group);
+
+	mockMvc.perform(post("/groups/delete").param("id", "1")).andExpect(view().name("redirect:/groups"))
+		.andExpect(status().is(302));
+	verify(groupService).delete(group);
+    }
+
     private List<Group> buildGroups() {
 	return Arrays.asList(Group.builder().id(1).name("group1").build(),
 		Group.builder().id(2).name("group2").build());
+    }
+
+    private List<Year> buildYears() {
+	return Arrays.asList(Year.builder().id(1).name("year1").build(), Year.builder().id(2).name("year2").build());
     }
 
 }
