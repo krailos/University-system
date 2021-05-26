@@ -57,8 +57,10 @@ class StudentControllerTest {
 	when(studentService.getQuantity()).thenReturn(4);
 	when(studentService.getByPage(paging)).thenReturn(expected);
 
-	mockMvc.perform(get("/students").param("pageSize", "2")).andExpect(view().name("students/all"))
-		.andExpect(status().isOk()).andExpect(model().attribute("students", expected));
+	mockMvc.perform(get("/students").param("pageSize", "2"))
+		.andExpect(view().name("students/all"))
+		.andExpect(status().isOk())
+		.andExpect(model().attribute("students", expected));
     }
 
     @Test
@@ -68,8 +70,10 @@ class StudentControllerTest {
 	when(studentService.getByPage(paging)).thenReturn(expected);
 	when(studentService.getQuantity()).thenReturn(6);
 
-	mockMvc.perform(get("/students?pageSize=2&pageNumber=3")).andExpect(view().name("students/all"))
-		.andExpect(status().isOk()).andExpect(model().attribute("students", expected))
+	mockMvc.perform(get("/students?pageSize=2&pageNumber=3"))
+		.andExpect(view().name("students/all"))
+		.andExpect(status().isOk())
+		.andExpect(model().attribute("students", expected))
 		.andExpect(model().attribute("pageQuantity", 3));
     }
 
@@ -78,7 +82,9 @@ class StudentControllerTest {
 	Student expected = buildStudents().get(0);
 	when(studentService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/students/1")).andExpect(view().name("students/student")).andExpect(status().isOk())
+	mockMvc.perform(get("/students/1"))
+		.andExpect(view().name("students/student"))
+		.andExpect(status().isOk())
 		.andExpect(model().attribute("student", expected));
     }
 
@@ -86,7 +92,8 @@ class StudentControllerTest {
     void givenWrongStudentId_whenGetStudent_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(studentService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/students/1")).andExpect(view().name("errors/error"))
+	mockMvc.perform(get("/students/1"))
+		.andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
@@ -95,7 +102,8 @@ class StudentControllerTest {
 	List<Group> expected = buildGroups();
 	when(groupService.getAll()).thenReturn(expected);
 
-	mockMvc.perform(get("/students/create")).andExpect(view().name("students/edit"))
+	mockMvc.perform(get("/students/create"))
+		.andExpect(view().name("students/edit"))
 		.andExpect(model().attribute("groups", expected));
     }
 
@@ -113,7 +121,8 @@ class StudentControllerTest {
 	when(studentService.getById(1)).thenReturn(buildStudent());
 	when(groupService.getAll()).thenReturn(buildGroups());
 
-	mockMvc.perform(get("/students/edit/1")).andExpect(view().name("students/edit"))
+	mockMvc.perform(get("/students/edit/1"))
+		.andExpect(view().name("students/edit"))
 		.andExpect(model().attribute("student", buildStudent()))
 		.andExpect(model().attribute("groups", buildGroups()));
     }
@@ -122,6 +131,7 @@ class StudentControllerTest {
     void givenUpdatedStudent_whenSaveStudent_thenUpdateMethodCalled() throws Exception {
 	Student student = buildStudent();
 	student.setId(1);
+	
 	mockMvc.perform(post("/students/save").flashAttr("student", student))
 		.andExpect(view().name("redirect:/students"));
 
@@ -132,7 +142,8 @@ class StudentControllerTest {
     void givenStudent_whenDeleteStudent_thenDeleteMethodCalled() throws Exception {
 	when(studentService.getById(1)).thenReturn(buildStudent());
 
-	mockMvc.perform(post("/students/delete/").param("id", "1")).andExpect(view().name("redirect:/students"));
+	mockMvc.perform(post("/students/delete/").param("id", "1"))
+		.andExpect(view().name("redirect:/students"));
 
 	verify(studentService).delete(buildStudent());
     }
@@ -147,10 +158,12 @@ class StudentControllerTest {
 
 	mockMvc.perform(get("/students/schedule/{id}", "1").param("startDate", LocalDate.now().toString())
 		.param("finishDate", LocalDate.now().plusMonths(1).toString()))
-		.andExpect(view().name("students/schedule")).andExpect(status().isOk())
+		.andExpect(view().name("students/schedule"))
+		.andExpect(status().isOk())
 		.andExpect(model().attribute("startDate", LocalDate.now()))
 		.andExpect(model().attribute("finishDate", LocalDate.now().plusMonths(1)))
-		.andExpect(model().attribute("student", student)).andExpect(model().attribute("lessons", lessons));
+		.andExpect(model().attribute("student", student))
+		.andExpect(model().attribute("lessons", lessons));
     }
 
     private List<Student> buildStudents() {

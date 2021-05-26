@@ -25,6 +25,7 @@ import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.GroupNotFreeException;
 import ua.com.foxminded.krailo.university.exception.LessonDateOnHolidayException;
 import ua.com.foxminded.krailo.university.exception.LessonDateOnWeekendException;
+import ua.com.foxminded.krailo.university.exception.NoTeachersForSubstitute;
 import ua.com.foxminded.krailo.university.exception.TeacherNotFreeException;
 import ua.com.foxminded.krailo.university.exception.TeacherNotTeachLessonException;
 import ua.com.foxminded.krailo.university.exception.TeacherOnVocationException;
@@ -127,30 +128,21 @@ public class LessonService {
 
     }
 
-//    public boolean isTeacherReplaced(int oldTeacherId, int newTecherId, LocalDate lessonDate) {
-//	Teacher oldTeacher = teacherDao.findById(oldTeacherId)
-//		.orElseThrow(() -> new EntityNotFoundException(format("Lesson whith id=%s not exist", oldTeacherId)));
-//	Teacher newTeacher = teacherDao.findById(newTecherId)
-//		.orElseThrow(() -> new EntityNotFoundException(format("Lesson whith id=%s not exist", newTecherId)));
-//	List<Lesson> oldTeacherLessons = lessonDao.findByTeacherAndDate(oldTeacher, lessonDate);
-//	return !oldTeacherLessons.stream()
-//		.anyMatch(l -> lessonDao
-//			.findByDateAndTeacherIdAndLessonTimeId(l.getDate(), newTeacher.getId(),
-//				l.getLessonTime().getId())
-//			.isPresent() || !newTeacher.getSubjects().contains(l.getSubject()));
-//    }
-
     public List<Teacher> findTeachersForSubstitute(int substitutedTeacherId, LocalDate startDate,
 	    LocalDate finishDate) {
 	Teacher substitutedTeacher = teacherDao.findById(substitutedTeacherId).orElseThrow(
 		() -> new EntityNotFoundException(format("Lesson whith id=%s not exist", substitutedTeacherId)));
 	List<Lesson> substitutedLessons = lessonDao.findByTeacherBetweenDates(substitutedTeacher, startDate,
 		finishDate);
-	return teacherDao.findAll().stream()
+	List<Teacher> teachersForSubstitute = teacherDao.findAll().stream()
 		.filter(t -> substitutedLessons.stream()
 			.allMatch(l -> !lessonDao.findByDateAndTeacherIdAndLessonTimeId(l.getDate(), t.getId(),
 				l.getLessonTime().getId()).isPresent() && t.getSubjects().contains(l.getSubject())))
 		.collect(Collectors.toList());
+	if (teachersForSubstitute.isEmpty()) {
+	    throw new NoTeachersForSubstitute("there is no free teachers");
+	}
+	return teachersForSubstitute;
     }
 
     private void checkTeacherIsFree(Lesson lesson) {

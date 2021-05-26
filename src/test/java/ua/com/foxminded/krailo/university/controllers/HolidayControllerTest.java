@@ -45,7 +45,9 @@ class HolidayControllerTest {
 	List<Holiday> expected = buildHolidays();
 	when(holidayService.getAll()).thenReturn(expected);
 
-	mockMvc.perform(get("/holidays")).andExpect(view().name("holidays/all")).andExpect(status().isOk())
+	mockMvc.perform(get("/holidays"))
+		.andExpect(view().name("holidays/all"))
+		.andExpect(status().isOk())
 		.andExpect(model().attribute("holidays", expected));
 
     }
@@ -55,7 +57,9 @@ class HolidayControllerTest {
 	Holiday expected = buildHolidays().get(0);
 	when(holidayService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/holidays/1")).andExpect(view().name("holidays/holiday")).andExpect(status().isOk())
+	mockMvc.perform(get("/holidays/1"))
+		.andExpect(view().name("holidays/holiday"))
+		.andExpect(status().isOk())
 		.andExpect(model().attribute("holiday", expected));
 
     }
@@ -64,14 +68,17 @@ class HolidayControllerTest {
     void givenWrongHolidayId_whenGetHoliday_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(holidayService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/holidays/1")).andExpect(view().name("errors/error"))
+	mockMvc.perform(get("/holidays/1"))
+		.andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
     @Test
     void WhenCreateAudience_ThenAudienceReturned() throws Exception {
 
-	mockMvc.perform(get("/holidays/create")).andExpect(view().name("holidays/edit")).andExpect(status().isOk())
+	mockMvc.perform(get("/holidays/create"))
+		.andExpect(view().name("holidays/edit"))
+		.andExpect(status().isOk())
 		.andExpect(model().attributeExists("holiday"));
     }
 
@@ -80,7 +87,9 @@ class HolidayControllerTest {
 	Holiday holiday = new Holiday();
 
 	mockMvc.perform(post("/holidays/save").flashAttr("holiday", holiday))
-		.andExpect(view().name("redirect:/holidays")).andExpect(status().is(302));
+		.andExpect(view().name("redirect:/holidays"))
+		.andExpect(status().is(302));
+	
 	verify(holidayService).create(holiday);
     }
 
@@ -89,7 +98,9 @@ class HolidayControllerTest {
 	Holiday holiday = buildHolidays().get(0);
 
 	mockMvc.perform(post("/holidays/save").flashAttr("holiday", holiday))
-		.andExpect(view().name("redirect:/holidays")).andExpect(status().is(302));
+		.andExpect(view().name("redirect:/holidays"))
+		.andExpect(status().is(302));
+	
 	verify(holidayService).update(holiday);
     }
 
@@ -98,8 +109,10 @@ class HolidayControllerTest {
 	Holiday holiday = buildHolidays().get(0);
 	when(holidayService.getById(1)).thenReturn(holiday);
 
-	mockMvc.perform(get("/holidays/edit/{id}", "1")).andExpect(view().name("holidays/edit"))
-		.andExpect(status().isOk()).andExpect(model().attribute("holiday", holiday));
+	mockMvc.perform(get("/holidays/edit/{id}", "1"))
+		.andExpect(view().name("holidays/edit"))
+		.andExpect(status().isOk())
+		.andExpect(model().attribute("holiday", holiday));
     }
 
     @Test
@@ -107,8 +120,10 @@ class HolidayControllerTest {
 	Holiday holiday = buildHolidays().get(0);
 	when(holidayService.getById(1)).thenReturn(holiday);
 
-	mockMvc.perform(post("/holidays/delete").param("id", "1")).andExpect(view().name("redirect:/holidays"))
+	mockMvc.perform(post("/holidays/delete").param("id", "1"))
+		.andExpect(view().name("redirect:/holidays"))
 		.andExpect(status().is(302));
+	
 	verify(holidayService).delete(holiday);
     }
 

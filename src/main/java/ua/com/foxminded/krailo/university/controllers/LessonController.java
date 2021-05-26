@@ -2,7 +2,6 @@ package ua.com.foxminded.krailo.university.controllers;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -130,10 +129,9 @@ public class LessonController {
     }
 
     @PostMapping("/substituteTeacher")
-    public String substituteTeacher(
-	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finishDate,
-	    @RequestParam int oldId, @RequestParam int newId, Model model) {
+    public String substituteTeacher(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finishDate, @RequestParam int oldId,
+	    @RequestParam int newId, Model model) {
 	Teacher newTeacher = teacherService.getById(newId);
 	Teacher oldTeacher = teacherService.getById(oldId);
 	lessonService.getLessonsForTeacherByPeriod(oldTeacher, startDate, finishDate).stream()

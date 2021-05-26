@@ -48,8 +48,10 @@ class YearControllerTest {
 	List<Year> expected = buildYaers();
 	when(yearService.getAll()).thenReturn(expected);
 
-	mockMvc.perform(get("/years")).andExpect(view().name("years/all")).andExpect(status().isOk())
-		.andExpect(model().attribute("years", expected));
+	mockMvc.perform(get("/years"))
+	.andExpect(view().name("years/all"))
+	.andExpect(status().isOk())
+	.andExpect(model().attribute("years", expected));
 
     }
 
@@ -57,8 +59,9 @@ class YearControllerTest {
     void givenWrongYearId_whenGetYears_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(yearService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/years/1")).andExpect(view().name("errors/error"))
-		.andExpect(model().attribute("message", "entity not exist"));
+	mockMvc.perform(get("/years/1"))
+	.andExpect(view().name("errors/error"))
+	.andExpect(model().attribute("message", "entity not exist"));
     }
 
     @Test
@@ -66,8 +69,10 @@ class YearControllerTest {
 	Year expected = buildYaers().get(0);
 	when(yearService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/years/1")).andExpect(view().name("years/year")).andExpect(status().isOk())
-		.andExpect(model().attribute("year", expected));
+	mockMvc.perform(get("/years/1"))
+	.andExpect(view().name("years/year"))
+	.andExpect(status().isOk())
+	.andExpect(model().attribute("year", expected));
 
     }
 
@@ -76,16 +81,20 @@ class YearControllerTest {
 	List<Subject> subjects = buildSubjects();
 	when(subjectService.getAll()).thenReturn(subjects);
 
-	mockMvc.perform(get("/years/create")).andExpect(view().name("years/edit")).andExpect(status().isOk())
-		.andExpect(model().attribute("subjects", subjects)).andExpect(model().attributeExists("year"));
+	mockMvc.perform(get("/years/create"))
+	.andExpect(view().name("years/edit"))
+	.andExpect(status().isOk())
+	.andExpect(model().attribute("subjects", subjects))
+	.andExpect(model().attributeExists("year"));
     }
 
     @Test
     void givenNewYear_WhenSaveYear_ThenYearSaved() throws Exception {
 	Year year = new Year();
 
-	mockMvc.perform(post("/years/save").flashAttr("year", year)).andExpect(view().name("redirect:/years"))
-		.andExpect(status().is(302));
+	mockMvc.perform(post("/years/save").flashAttr("year", year))
+	.andExpect(view().name("redirect:/years"))
+	.andExpect(status().is(302));
 	verify(yearService).create(year);
     }
 
@@ -93,8 +102,9 @@ class YearControllerTest {
     void givenUpdatedYear_whenUpdateYear_ThenYeatUpdated() throws Exception {
 	Year year = buildYaers().get(0);
 
-	mockMvc.perform(post("/years/save").flashAttr("year", year)).andExpect(view().name("redirect:/years"))
-		.andExpect(status().is(302));
+	mockMvc.perform(post("/years/save").flashAttr("year", year))
+	.andExpect(view().name("redirect:/years"))
+	.andExpect(status().is(302));
 	verify(yearService).update(year);
     }
 
@@ -105,8 +115,11 @@ class YearControllerTest {
 	Year year = buildYaers().get(0);
 	when(yearService.getById(1)).thenReturn(year);
 
-	mockMvc.perform(get("/years/edit/{id}", "1")).andExpect(view().name("years/edit")).andExpect(status().isOk())
-		.andExpect(model().attribute("year", year)).andExpect(model().attribute("subjects", subjects));
+	mockMvc.perform(get("/years/edit/{id}", "1"))
+	.andExpect(view().name("years/edit"))
+	.andExpect(status().isOk())
+	.andExpect(model().attribute("year", year))
+	.andExpect(model().attribute("subjects", subjects));
     }
 
     @Test
@@ -114,8 +127,9 @@ class YearControllerTest {
 	Year year = buildYaers().get(0);
 	when(yearService.getById(1)).thenReturn(year);
 
-	mockMvc.perform(post("/years/delete").param("id", "1")).andExpect(view().name("redirect:/years"))
-		.andExpect(status().is(302));
+	mockMvc.perform(post("/years/delete").param("id", "1"))
+	.andExpect(view().name("redirect:/years"))
+	.andExpect(status().is(302));
 	verify(yearService).delete(year);
     }
 

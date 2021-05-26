@@ -60,7 +60,9 @@ class TeacherControllerTest {
 	List<Teacher> expected = buildTeachers();
 	when(teacherService.getAll()).thenReturn(expected);
 
-	mockMvc.perform(get("/teachers")).andExpect(view().name("teachers/all")).andExpect(status().isOk())
+	mockMvc.perform(get("/teachers"))
+		.andExpect(view().name("teachers/all"))
+		.andExpect(status().isOk())
 		.andExpect(model().attribute("teachers", expected));
     }
 
@@ -69,7 +71,9 @@ class TeacherControllerTest {
 	Teacher expected = buildTeachers().get(0);
 	when(teacherService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/teachers/1")).andExpect(view().name("teachers/teacher")).andExpect(status().isOk())
+	mockMvc.perform(get("/teachers/1"))
+		.andExpect(view().name("teachers/teacher"))
+		.andExpect(status().isOk())
 		.andExpect(model().attribute("teacher", expected));
     }
 
@@ -77,7 +81,8 @@ class TeacherControllerTest {
     void givenWrongTeacherId_whenGetTeacher_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(teacherService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/teachers/1")).andExpect(view().name("errors/error"))
+	mockMvc.perform(get("/teachers/1"))
+		.andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
@@ -86,8 +91,11 @@ class TeacherControllerTest {
 	List<Subject> subjects = buildSubjects();
 	when(subjectService.getAll()).thenReturn(subjects);
 
-	mockMvc.perform(get("/teachers/create")).andExpect(view().name("teachers/edit")).andExpect(status().isOk())
-		.andExpect(model().attribute("subjects", subjects)).andExpect(model().attributeExists("teacher"));
+	mockMvc.perform(get("/teachers/create"))
+		.andExpect(view().name("teachers/edit"))
+		.andExpect(status().isOk())
+		.andExpect(model().attribute("subjects", subjects))
+		.andExpect(model().attributeExists("teacher"));
     }
 
     @Test
@@ -95,7 +103,9 @@ class TeacherControllerTest {
 	Teacher teacher = new Teacher();
 
 	mockMvc.perform(post("/teachers/save").flashAttr("teacher", teacher))
-		.andExpect(view().name("redirect:/teachers")).andExpect(status().is(302));
+		.andExpect(view().name("redirect:/teachers"))
+		.andExpect(status().is(302));
+	
 	verify(teacherService).create(teacher);
     }
 
@@ -104,7 +114,9 @@ class TeacherControllerTest {
 	Teacher teacher = buildTeachers().get(0);
 
 	mockMvc.perform(post("/teachers/save").flashAttr("teacher", teacher))
-		.andExpect(view().name("redirect:/teachers")).andExpect(status().is(302));
+		.andExpect(view().name("redirect:/teachers"))
+		.andExpect(status().is(302));
+	
 	verify(teacherService).update(teacher);
     }
 
@@ -125,8 +137,10 @@ class TeacherControllerTest {
 	Teacher teacher = buildTeachers().get(0);
 	when(teacherService.getById(1)).thenReturn(teacher);
 
-	mockMvc.perform(post("/teachers/delete").param("id", "1")).andExpect(view().name("redirect:/teachers"))
+	mockMvc.perform(post("/teachers/delete").param("id", "1"))
+		.andExpect(view().name("redirect:/teachers"))
 		.andExpect(status().is(302));
+	
 	verify(teacherService).delete(teacher);
     }
 
@@ -138,9 +152,11 @@ class TeacherControllerTest {
 	when(teacherService.getById(1)).thenReturn(teacher);
 
 	mockMvc.perform(get("/teachers/vocations/{id}", "1").param("year", Year.from(LocalDate.now()).toString()))
-		.andExpect(view().name("teachers/vocations")).andExpect(status().isOk())
+		.andExpect(view().name("teachers/vocations"))
+		.andExpect(status().isOk())
 		.andExpect(model().attribute("year", Year.from(LocalDate.now()).toString()))
-		.andExpect(model().attribute("teacher", teacher)).andExpect(model().attribute("vocations", vocations));
+		.andExpect(model().attribute("teacher", teacher))
+		.andExpect(model().attribute("vocations", vocations));
     }
 
     @Test

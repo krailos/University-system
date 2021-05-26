@@ -48,7 +48,9 @@ class SubjectControllerTest {
 	List<Subject> expected = buildSubjects();
 	when(subjectService.getAll()).thenReturn(expected);
 
-	mockMvc.perform(get("/subjects")).andExpect(view().name("subjects/all")).andExpect(status().isOk())
+	mockMvc.perform(get("/subjects"))
+        	.andExpect(view().name("subjects/all"))
+        	.andExpect(status().isOk())
 		.andExpect(model().attribute("subjects", expected));
     }
 
@@ -57,7 +59,8 @@ class SubjectControllerTest {
 	Subject expected = buildSubjects().get(0);
 	when(subjectService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/subjects/1")).andExpect(view().name("subjects/subject")).andExpect(status().isOk())
+	mockMvc.perform(get("/subjects/1")).andExpect(view().name("subjects/subject"))
+		.andExpect(status().isOk())
 		.andExpect(model().attribute("subject", expected));
     }
 
@@ -65,7 +68,8 @@ class SubjectControllerTest {
     void givenWrongSubjectId_whenGetSubject_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(subjectService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/subjects/1")).andExpect(view().name("errors/error"))
+	mockMvc.perform(get("/subjects/1"))
+		.andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
@@ -74,8 +78,11 @@ class SubjectControllerTest {
 	List<Teacher> teachers = buildTeachers();
 	when(teacherService.getAll()).thenReturn(teachers);
 
-	mockMvc.perform(get("/subjects/create")).andExpect(view().name("subjects/edit")).andExpect(status().isOk())
-		.andExpect(model().attribute("teachers", teachers)).andExpect(model().attributeExists("subject"));
+	mockMvc.perform(get("/subjects/create"))
+		.andExpect(view().name("subjects/edit"))
+		.andExpect(status().isOk())
+		.andExpect(model().attribute("teachers", teachers))
+		.andExpect(model().attributeExists("subject"));
     }
 
     @Test
@@ -83,7 +90,8 @@ class SubjectControllerTest {
 	Subject subject = new Subject();
 
 	mockMvc.perform(post("/subjects/save").flashAttr("subject", subject))
-		.andExpect(view().name("redirect:/subjects")).andExpect(status().is(302));
+		.andExpect(view().name("redirect:/subjects"))
+		.andExpect(status().is(302));
 	verify(subjectService).create(subject);
     }
 
@@ -92,7 +100,8 @@ class SubjectControllerTest {
 	Subject subject = buildSubjects().get(0);
 
 	mockMvc.perform(post("/subjects/save").flashAttr("subject", subject))
-		.andExpect(view().name("redirect:/subjects")).andExpect(status().is(302));
+		.andExpect(view().name("redirect:/subjects"))
+		.andExpect(status().is(302));
 	verify(subjectService).update(subject);
     }
 
@@ -103,8 +112,10 @@ class SubjectControllerTest {
 	Subject subject = buildSubjects().get(0);
 	when(subjectService.getById(1)).thenReturn(subject);
 
-	mockMvc.perform(get("/subjects/edit/{id}", "1")).andExpect(view().name("subjects/edit"))
-		.andExpect(status().isOk()).andExpect(model().attribute("subject", subject))
+	mockMvc.perform(get("/subjects/edit/{id}", "1"))
+		.andExpect(view().name("subjects/edit"))
+		.andExpect(status().isOk())
+		.andExpect(model().attribute("subject", subject))
 		.andExpect(model().attribute("teachers", teachers));
     }
 
@@ -113,8 +124,10 @@ class SubjectControllerTest {
 	Subject subject = buildSubjects().get(0);
 	when(subjectService.getById(1)).thenReturn(subject);
 
-	mockMvc.perform(post("/subjects/delete").param("id", "1")).andExpect(view().name("redirect:/subjects"))
+	mockMvc.perform(post("/subjects/delete").param("id", "1"))
+		.andExpect(view().name("redirect:/subjects"))
 		.andExpect(status().is(302));
+	
 	verify(subjectService).delete(subject);
     }
 

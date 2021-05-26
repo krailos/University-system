@@ -50,8 +50,10 @@ class VocationControllerTest {
 	List<Vocation> expected = buildVocations();
 	when(vocationService.getAll()).thenReturn(expected);
 
-	mockMvc.perform(get("/vocations")).andExpect(view().name("vocations/all")).andExpect(status().isOk())
-		.andExpect(model().attribute("vocations", expected));
+	mockMvc.perform(get("/vocations"))
+        	.andExpect(view().name("vocations/all"))
+        	.andExpect(status().isOk())
+        	.andExpect(model().attribute("vocations", expected));
 
     }
 
@@ -60,8 +62,10 @@ class VocationControllerTest {
 	Vocation expected = buildVocations().get(0);
 	when(vocationService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/vocations/1")).andExpect(view().name("vocations/vocation")).andExpect(status().isOk())
-		.andExpect(model().attribute("vocation", expected));
+	mockMvc.perform(get("/vocations/1"))
+        	.andExpect(view().name("vocations/vocation"))
+        	.andExpect(status().isOk())
+        	.andExpect(model().attribute("vocation", expected));
 
     }
 
@@ -69,8 +73,9 @@ class VocationControllerTest {
     void givenWrongVocatioId_whenGetVocation_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(vocationService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/vocations/1")).andExpect(view().name("errors/error"))
-		.andExpect(model().attribute("message", "entity not exist"));
+	mockMvc.perform(get("/vocations/1"))
+        	.andExpect(view().name("errors/error"))
+        	.andExpect(model().attribute("message", "entity not exist"));
     }
 
     @Test
@@ -78,8 +83,11 @@ class VocationControllerTest {
 	List<Teacher> teachers = buildTeachers();
 	when(teacherService.getAll()).thenReturn(teachers);
 
-	mockMvc.perform(get("/vocations/create")).andExpect(view().name("vocations/edit")).andExpect(status().isOk())
-		.andExpect(model().attribute("teachers", teachers)).andExpect(model().attributeExists("vocation"));
+	mockMvc.perform(get("/vocations/create"))
+        	.andExpect(view().name("vocations/edit"))
+        	.andExpect(status().isOk())
+        	.andExpect(model().attribute("teachers", teachers))
+        	.andExpect(model().attributeExists("vocation"));
     }
 
     @Test
@@ -87,7 +95,9 @@ class VocationControllerTest {
 	Vocation vocation = new Vocation();
 
 	mockMvc.perform(post("/vocations/save").flashAttr("vocation", vocation))
-		.andExpect(view().name("redirect:/vocations")).andExpect(status().is(302));
+		.andExpect(view().name("redirect:/vocations"))
+		.andExpect(status().is(302));
+	
 	verify(vocationService).create(vocation);
     }
 
@@ -96,7 +106,9 @@ class VocationControllerTest {
 	Vocation vocation = buildVocations().get(0);
 
 	mockMvc.perform(post("/vocations/save").flashAttr("vocation", vocation))
-		.andExpect(view().name("redirect:/vocations")).andExpect(status().is(302));
+		.andExpect(view().name("redirect:/vocations"))
+		.andExpect(status().is(302));
+	
 	verify(vocationService).update(vocation);
     }
 
@@ -107,9 +119,10 @@ class VocationControllerTest {
 	Vocation vocation = buildVocations().get(0);
 	when(vocationService.getById(1)).thenReturn(vocation);
 
-	mockMvc.perform(get("/vocations/edit/{id}", "1")).andExpect(view().name("vocations/edit"))
-		.andExpect(status().isOk()).andExpect(model().attribute("vocation", vocation))
-		.andExpect(model().attribute("teachers", teachers));
+	mockMvc.perform(get("/vocations/edit/{id}", "1"))
+        	.andExpect(view().name("vocations/edit"))
+        	.andExpect(status().isOk()).andExpect(model().attribute("vocation", vocation))
+        	.andExpect(model().attribute("teachers", teachers));
     }
 
     @Test
@@ -117,8 +130,10 @@ class VocationControllerTest {
 	Vocation vocation = buildVocations().get(0);
 	when(vocationService.getById(1)).thenReturn(vocation);
 
-	mockMvc.perform(post("/vocations/delete").param("id", "1")).andExpect(view().name("redirect:/vocations"))
+	mockMvc.perform(post("/vocations/delete").param("id", "1"))
+		.andExpect(view().name("redirect:/vocations"))
 		.andExpect(status().is(302));
+	
 	verify(vocationService).delete(vocation);
     }
 

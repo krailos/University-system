@@ -45,7 +45,9 @@ class LessonTimeControllerTest {
 	List<LessonTime> expected = buildLessonTimes();
 	when(lessonTimeService.getAll()).thenReturn(expected);
 
-	mockMvc.perform(get("/lessonTimes")).andExpect(view().name("lessonTimes/all")).andExpect(status().isOk())
+	mockMvc.perform(get("/lessonTimes"))
+		.andExpect(view().name("lessonTimes/all"))
+		.andExpect(status().isOk())
 		.andExpect(model().attribute("lessonTimes", expected));
 
     }
@@ -55,8 +57,10 @@ class LessonTimeControllerTest {
 	LessonTime expected = buildLessonTimes().get(0);
 	when(lessonTimeService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/lessonTimes/1")).andExpect(view().name("lessonTimes/lessonTime"))
-		.andExpect(status().isOk()).andExpect(model().attribute("lessonTime", expected));
+	mockMvc.perform(get("/lessonTimes/1"))
+		.andExpect(view().name("lessonTimes/lessonTime"))
+		.andExpect(status().isOk())
+		.andExpect(model().attribute("lessonTime", expected));
 
     }
 
@@ -64,15 +68,18 @@ class LessonTimeControllerTest {
     void givenWrongLessonTimeId_whenGetLessonTime_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(lessonTimeService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/lessonTimes/1")).andExpect(view().name("errors/error"))
+	mockMvc.perform(get("/lessonTimes/1"))
+		.andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
     @Test
     void WhenCreateLessonTime_ThenLessonTimeReturned() throws Exception {
 
-	mockMvc.perform(get("/lessonTimes/create")).andExpect(view().name("lessonTimes/edit"))
-		.andExpect(status().isOk()).andExpect(model().attributeExists("lessonTime"));
+	mockMvc.perform(get("/lessonTimes/create"))
+		.andExpect(view().name("lessonTimes/edit"))
+		.andExpect(status().isOk())
+		.andExpect(model().attributeExists("lessonTime"));
     }
 
     @Test
@@ -80,7 +87,9 @@ class LessonTimeControllerTest {
 	LessonTime lessonTime = new LessonTime();
 
 	mockMvc.perform(post("/lessonTimes/save").flashAttr("lessonTime", lessonTime))
-		.andExpect(view().name("redirect:/lessonTimes")).andExpect(status().is(302));
+		.andExpect(view().name("redirect:/lessonTimes"))
+		.andExpect(status().is(302));
+	
 	verify(lessonTimeService).create(lessonTime);
     }
 
@@ -89,7 +98,9 @@ class LessonTimeControllerTest {
 	LessonTime lessonTime = buildLessonTimes().get(0);
 
 	mockMvc.perform(post("/lessonTimes/save").flashAttr("lessonTime", lessonTime))
-		.andExpect(view().name("redirect:/lessonTimes")).andExpect(status().is(302));
+		.andExpect(view().name("redirect:/lessonTimes"))
+		.andExpect(status().is(302));
+	
 	verify(lessonTimeService).update(lessonTime);
     }
 
@@ -98,8 +109,10 @@ class LessonTimeControllerTest {
 	LessonTime lessonTime = buildLessonTimes().get(0);
 	when(lessonTimeService.getById(1)).thenReturn(lessonTime);
 
-	mockMvc.perform(get("/lessonTimes/edit/{id}", "1")).andExpect(view().name("lessonTimes/edit"))
-		.andExpect(status().isOk()).andExpect(model().attribute("lessonTime", lessonTime));
+	mockMvc.perform(get("/lessonTimes/edit/{id}", "1"))
+		.andExpect(view().name("lessonTimes/edit"))
+		.andExpect(status().isOk())
+		.andExpect(model().attribute("lessonTime", lessonTime));
     }
 
     @Test
@@ -107,8 +120,10 @@ class LessonTimeControllerTest {
 	LessonTime lessonTime = buildLessonTimes().get(0);
 	when(lessonTimeService.getById(1)).thenReturn(lessonTime);
 
-	mockMvc.perform(post("/lessonTimes/delete").param("id", "1")).andExpect(view().name("redirect:/lessonTimes"))
+	mockMvc.perform(post("/lessonTimes/delete").param("id", "1"))
+		.andExpect(view().name("redirect:/lessonTimes"))
 		.andExpect(status().is(302));
+	
 	verify(lessonTimeService).delete(lessonTime);
     }
 

@@ -47,8 +47,10 @@ class AudienceControllerTest {
 	when(audienceService.getQuantity()).thenReturn(4);
 	when(audienceService.getByPage(paging)).thenReturn(expected);
 
-	mockMvc.perform(get("/audiences").param("pageSize", "2")).andExpect(view().name("audiences/all"))
-		.andExpect(status().isOk()).andExpect(model().attribute("audiences", expected));
+	mockMvc.perform(get("/audiences").param("pageSize", "2"))
+		.andExpect(view().name("audiences/all"))
+		.andExpect(status().isOk())
+		.andExpect(model().attribute("audiences", expected));
     }
 
     @Test
@@ -58,8 +60,10 @@ class AudienceControllerTest {
 	when(audienceService.getByPage(paging)).thenReturn(expected);
 	when(audienceService.getQuantity()).thenReturn(6);
 
-	mockMvc.perform(get("/audiences?pageSize=2&pageNumber=3")).andExpect(view().name("audiences/all"))
-		.andExpect(status().isOk()).andExpect(model().attribute("audiences", expected))
+	mockMvc.perform(get("/audiences?pageSize=2&pageNumber=3"))
+		.andExpect(view().name("audiences/all"))
+		.andExpect(status().isOk())
+		.andExpect(model().attribute("audiences", expected))
 		.andExpect(model().attribute("pageQuantity", 3));
     }
 
@@ -68,7 +72,8 @@ class AudienceControllerTest {
 	Audience expected = buildAudiences().get(0);
 	when(audienceService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/audiences/1")).andExpect(view().name("audiences/audience"))
+	mockMvc.perform(get("/audiences/1"))
+		.andExpect(view().name("audiences/audience"))
 		.andExpect(model().attribute("audience", expected));
     }
 
@@ -76,14 +81,17 @@ class AudienceControllerTest {
     void givenWrongAudienceId_whenGetAudience_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(audienceService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/audiences/1")).andExpect(view().name("errors/error"))
+	mockMvc.perform(get("/audiences/1"))
+		.andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
     @Test
     void WhenCreateAudience_ThenAudienceReturned() throws Exception {
 
-	mockMvc.perform(get("/audiences/create")).andExpect(view().name("audiences/edit")).andExpect(status().isOk())
+	mockMvc.perform(get("/audiences/create"))
+		.andExpect(view().name("audiences/edit"))
+		.andExpect(status().isOk())
 		.andExpect(model().attributeExists("audience"));
     }
 
@@ -92,7 +100,9 @@ class AudienceControllerTest {
 	Audience audience = new Audience();
 
 	mockMvc.perform(post("/audiences/save").flashAttr("audience", audience))
-		.andExpect(view().name("redirect:/audiences")).andExpect(status().is(302));
+		.andExpect(view().name("redirect:/audiences"))
+		.andExpect(status().is(302));
+	
 	verify(audienceService).create(audience);
     }
 
@@ -101,7 +111,9 @@ class AudienceControllerTest {
 	Audience audience = buildAudiences().get(0);
 
 	mockMvc.perform(post("/audiences/save").flashAttr("audience", audience))
-		.andExpect(view().name("redirect:/audiences")).andExpect(status().is(302));
+		.andExpect(view().name("redirect:/audiences"))
+		.andExpect(status().is(302));
+	
 	verify(audienceService).update(audience);
     }
 
@@ -110,8 +122,10 @@ class AudienceControllerTest {
 	Audience audience = buildAudiences().get(0);
 	when(audienceService.getById(1)).thenReturn(audience);
 
-	mockMvc.perform(get("/audiences/edit/{id}", "1")).andExpect(view().name("audiences/edit"))
-		.andExpect(status().isOk()).andExpect(model().attribute("audience", audience));
+	mockMvc.perform(get("/audiences/edit/{id}", "1"))
+		.andExpect(view().name("audiences/edit"))
+		.andExpect(status().isOk())
+		.andExpect(model().attribute("audience", audience));
     }
 
     @Test
@@ -119,8 +133,10 @@ class AudienceControllerTest {
 	Audience audience = buildAudiences().get(0);
 	when(audienceService.getById(1)).thenReturn(audience);
 
-	mockMvc.perform(post("/audiences/delete").param("id", "1")).andExpect(view().name("redirect:/audiences"))
+	mockMvc.perform(post("/audiences/delete").param("id", "1"))
+		.andExpect(view().name("redirect:/audiences"))
 		.andExpect(status().is(302));
+	
 	verify(audienceService).delete(audience);
     }
 
