@@ -41,7 +41,7 @@ class HolidayControllerTest {
     }
 
     @Test
-    void WhenGetAllHolidays_ThenAllHolidaysReturned() throws Exception {
+    void whenGetAllHolidays_thenAllHolidaysReturned() throws Exception {
 	List<Holiday> expected = buildHolidays();
 	when(holidayService.getAll()).thenReturn(expected);
 
@@ -53,7 +53,7 @@ class HolidayControllerTest {
     }
 
     @Test
-    void givenHolidayId_WhenGetHoliday_ThenHolidayGot() throws Exception {
+    void givenHolidayId_whenGetHoliday_thenHolidayGot() throws Exception {
 	Holiday expected = buildHolidays().get(0);
 	when(holidayService.getById(1)).thenReturn(expected);
 
@@ -74,7 +74,7 @@ class HolidayControllerTest {
     }
 
     @Test
-    void WhenCreateAudience_ThenAudienceReturned() throws Exception {
+    void whenCreateAudience_thenAudienceReturned() throws Exception {
 
 	mockMvc.perform(get("/holidays/create"))
 		.andExpect(view().name("holidays/edit"))
@@ -83,7 +83,7 @@ class HolidayControllerTest {
     }
 
     @Test
-    void givenNewHoliday_WhenSaveHoliday_ThenHolidaySaved() throws Exception {
+    void givenNewHoliday_whenSaveHoliday_thenHolidaySaved() throws Exception {
 	Holiday holiday = new Holiday();
 
 	mockMvc.perform(post("/holidays/save").flashAttr("holiday", holiday))
@@ -94,7 +94,7 @@ class HolidayControllerTest {
     }
 
     @Test
-    void givenUpdatedHoliday_whenUpdateHoliday_ThenHolidayUpdated() throws Exception {
+    void givenUpdatedHoliday_whenUpdateHoliday_thenHolidayUpdated() throws Exception {
 	Holiday holiday = buildHolidays().get(0);
 
 	mockMvc.perform(post("/holidays/save").flashAttr("holiday", holiday))
@@ -105,7 +105,7 @@ class HolidayControllerTest {
     }
 
     @Test
-    void givenholidayId_whenEditholiday_ThenholidayReturnedToEdite() throws Exception {
+    void givenholidayId_whenEditholiday_thenholidayReturnedToEdite() throws Exception {
 	Holiday holiday = buildHolidays().get(0);
 	when(holidayService.getById(1)).thenReturn(holiday);
 
@@ -116,7 +116,7 @@ class HolidayControllerTest {
     }
 
     @Test
-    void whenDeleteHoliday_ThenHolidayDeleted() throws Exception {
+    void whenDeleteHoliday_thenHolidayDeleted() throws Exception {
 	Holiday holiday = buildHolidays().get(0);
 	when(holidayService.getById(1)).thenReturn(holiday);
 

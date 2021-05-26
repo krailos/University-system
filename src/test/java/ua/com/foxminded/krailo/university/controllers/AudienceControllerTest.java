@@ -87,7 +87,7 @@ class AudienceControllerTest {
     }
 
     @Test
-    void WhenCreateAudience_ThenAudienceReturned() throws Exception {
+    void whenCreateAudience_thenAudienceReturned() throws Exception {
 
 	mockMvc.perform(get("/audiences/create"))
 		.andExpect(view().name("audiences/edit"))
@@ -96,7 +96,7 @@ class AudienceControllerTest {
     }
 
     @Test
-    void givenNewAudience_WhenSaveAudience_ThenAudienceSaved() throws Exception {
+    void givenNewAudience_whenSaveAudience_thenAudienceSaved() throws Exception {
 	Audience audience = new Audience();
 
 	mockMvc.perform(post("/audiences/save").flashAttr("audience", audience))
@@ -107,7 +107,7 @@ class AudienceControllerTest {
     }
 
     @Test
-    void givenUpdatedAudience_whenUpdateAudience_ThenAudienceUpdated() throws Exception {
+    void givenUpdatedAudience_whenUpdateAudience_thenAudienceUpdated() throws Exception {
 	Audience audience = buildAudiences().get(0);
 
 	mockMvc.perform(post("/audiences/save").flashAttr("audience", audience))
@@ -118,7 +118,7 @@ class AudienceControllerTest {
     }
 
     @Test
-    void givenAudienceId_whenEditAudience_ThenAudienceReturnedToEdite() throws Exception {
+    void givenAudienceId_whenEditAudience_thenAudienceReturnedToEdite() throws Exception {
 	Audience audience = buildAudiences().get(0);
 	when(audienceService.getById(1)).thenReturn(audience);
 
@@ -129,7 +129,7 @@ class AudienceControllerTest {
     }
 
     @Test
-    void whenDeleteAudience_ThenAudienceDeleted() throws Exception {
+    void whenDeleteAudience_thenAudienceDeleted() throws Exception {
 	Audience audience = buildAudiences().get(0);
 	when(audienceService.getById(1)).thenReturn(audience);
 

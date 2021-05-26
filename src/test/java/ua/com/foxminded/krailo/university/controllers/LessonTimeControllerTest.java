@@ -41,7 +41,7 @@ class LessonTimeControllerTest {
     }
 
     @Test
-    void WhenGetAllLessonsTimes_ThenAllLessonsTimesReturned() throws Exception {
+    void whenGetAllLessonsTimes_thenAllLessonsTimesReturned() throws Exception {
 	List<LessonTime> expected = buildLessonTimes();
 	when(lessonTimeService.getAll()).thenReturn(expected);
 
@@ -53,7 +53,7 @@ class LessonTimeControllerTest {
     }
 
     @Test
-    void givenLessonTimeId_WhenGetLessonTime_ThenLessonTimeGot() throws Exception {
+    void givenLessonTimeId_whenGetLessonTime_thenLessonTimeGot() throws Exception {
 	LessonTime expected = buildLessonTimes().get(0);
 	when(lessonTimeService.getById(1)).thenReturn(expected);
 
@@ -74,7 +74,7 @@ class LessonTimeControllerTest {
     }
 
     @Test
-    void WhenCreateLessonTime_ThenLessonTimeReturned() throws Exception {
+    void whenCreateLessonTime_thenLessonTimeReturned() throws Exception {
 
 	mockMvc.perform(get("/lessonTimes/create"))
 		.andExpect(view().name("lessonTimes/edit"))
@@ -83,7 +83,7 @@ class LessonTimeControllerTest {
     }
 
     @Test
-    void givenNewLessonTime_WhenSaveLessonTime_ThenLessonTimeSaved() throws Exception {
+    void givenNewLessonTime_whenSaveLessonTime_thenLessonTimeSaved() throws Exception {
 	LessonTime lessonTime = new LessonTime();
 
 	mockMvc.perform(post("/lessonTimes/save").flashAttr("lessonTime", lessonTime))
@@ -94,7 +94,7 @@ class LessonTimeControllerTest {
     }
 
     @Test
-    void givenUpdatedLessonTime_whenUpdateLessonTime_ThenLessonTimeUpdated() throws Exception {
+    void givenUpdatedLessonTime_whenUpdateLessonTime_thenLessonTimeUpdated() throws Exception {
 	LessonTime lessonTime = buildLessonTimes().get(0);
 
 	mockMvc.perform(post("/lessonTimes/save").flashAttr("lessonTime", lessonTime))
@@ -105,7 +105,7 @@ class LessonTimeControllerTest {
     }
 
     @Test
-    void givenLessonTimeId_whenEditLessonTime_ThenLessonTimeReturnedToEdite() throws Exception {
+    void givenLessonTimeId_whenEditLessonTime_thenLessonTimeReturnedToEdite() throws Exception {
 	LessonTime lessonTime = buildLessonTimes().get(0);
 	when(lessonTimeService.getById(1)).thenReturn(lessonTime);
 
@@ -116,7 +116,7 @@ class LessonTimeControllerTest {
     }
 
     @Test
-    void whenDeleteLessonTime_ThenLessonTimeDeleted() throws Exception {
+    void whenDeleteLessonTime_thenLessonTimeDeleted() throws Exception {
 	LessonTime lessonTime = buildLessonTimes().get(0);
 	when(lessonTimeService.getById(1)).thenReturn(lessonTime);
 

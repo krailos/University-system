@@ -46,7 +46,7 @@ class VocationControllerTest {
     }
 
     @Test
-    void WhenGetAllVocations_ThenAllVocationsReturned() throws Exception {
+    void whenGetAllVocations_thenAllVocationsReturned() throws Exception {
 	List<Vocation> expected = buildVocations();
 	when(vocationService.getAll()).thenReturn(expected);
 
@@ -58,7 +58,7 @@ class VocationControllerTest {
     }
 
     @Test
-    void givenVocationId_WhenGetVocation_ThenVocationGot() throws Exception {
+    void givenVocationId_whenGetVocation_thenVocationGot() throws Exception {
 	Vocation expected = buildVocations().get(0);
 	when(vocationService.getById(1)).thenReturn(expected);
 
@@ -79,7 +79,7 @@ class VocationControllerTest {
     }
 
     @Test
-    void WhenCreateVocation_ThenVocationWithTeachersReturned() throws Exception {
+    void whenCreateVocation_thenVocationWithTeachersReturned() throws Exception {
 	List<Teacher> teachers = buildTeachers();
 	when(teacherService.getAll()).thenReturn(teachers);
 
@@ -91,7 +91,7 @@ class VocationControllerTest {
     }
 
     @Test
-    void givenNewVocations_WhenSaveVocation_ThenVocationSaved() throws Exception {
+    void givenNewVocations_whenSaveVocation_thenVocationSaved() throws Exception {
 	Vocation vocation = new Vocation();
 
 	mockMvc.perform(post("/vocations/save").flashAttr("vocation", vocation))
@@ -102,7 +102,7 @@ class VocationControllerTest {
     }
 
     @Test
-    void givenUpdatedVocation_whenUpdateVocation_ThenVocationUpdated() throws Exception {
+    void givenUpdatedVocation_whenUpdateVocation_thenVocationUpdated() throws Exception {
 	Vocation vocation = buildVocations().get(0);
 
 	mockMvc.perform(post("/vocations/save").flashAttr("vocation", vocation))
@@ -113,7 +113,7 @@ class VocationControllerTest {
     }
 
     @Test
-    void givenVocationId_whenEditVocation_ThenVocationReturnedToEdite() throws Exception {
+    void givenVocationId_whenEditVocation_thenVocationReturnedToEdite() throws Exception {
 	List<Teacher> teachers = buildTeachers();
 	when(teacherService.getAll()).thenReturn(teachers);
 	Vocation vocation = buildVocations().get(0);
@@ -126,7 +126,7 @@ class VocationControllerTest {
     }
 
     @Test
-    void whenDeleteVocation_ThenVocationDeleted() throws Exception {
+    void whenDeleteVocation_thenVocationDeleted() throws Exception {
 	Vocation vocation = buildVocations().get(0);
 	when(vocationService.getById(1)).thenReturn(vocation);
 

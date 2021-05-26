@@ -56,7 +56,7 @@ class TeacherControllerTest {
     }
 
     @Test
-    void WhenGetAllTeachers_ThenAllTeachersReturned() throws Exception {
+    void whenGetAllTeachers_thenAllTeachersReturned() throws Exception {
 	List<Teacher> expected = buildTeachers();
 	when(teacherService.getAll()).thenReturn(expected);
 
@@ -67,7 +67,7 @@ class TeacherControllerTest {
     }
 
     @Test
-    void givenTeacherId_WhenGetTeacher_ThenTeacherGot() throws Exception {
+    void givenTeacherId_whenGetTeacher_thenTeacherGot() throws Exception {
 	Teacher expected = buildTeachers().get(0);
 	when(teacherService.getById(1)).thenReturn(expected);
 
@@ -87,7 +87,7 @@ class TeacherControllerTest {
     }
 
     @Test
-    void WhenCreateTeacher_ThenTeacherWithSubjectsReturned() throws Exception {
+    void whenCreateTeacher_thenTeacherWithSubjectsReturned() throws Exception {
 	List<Subject> subjects = buildSubjects();
 	when(subjectService.getAll()).thenReturn(subjects);
 
@@ -99,7 +99,7 @@ class TeacherControllerTest {
     }
 
     @Test
-    void givenNewTeacher_WhenSaveTeacher_ThenTeacherSaved() throws Exception {
+    void givenNewTeacher_whenSaveTeacher_thenTeacherSaved() throws Exception {
 	Teacher teacher = new Teacher();
 
 	mockMvc.perform(post("/teachers/save").flashAttr("teacher", teacher))
@@ -110,7 +110,7 @@ class TeacherControllerTest {
     }
 
     @Test
-    void givenUpdatedTeacher_whenUpdateTeacher_ThenTeacherUpdated() throws Exception {
+    void givenUpdatedTeacher_whenUpdateTeacher_thenTeacherUpdated() throws Exception {
 	Teacher teacher = buildTeachers().get(0);
 
 	mockMvc.perform(post("/teachers/save").flashAttr("teacher", teacher))
@@ -121,7 +121,7 @@ class TeacherControllerTest {
     }
 
     @Test
-    void givenTeacherId_whenEditTeacher_ThenTeacherReturnedToEdite() throws Exception {
+    void givenTeacherId_whenEditTeacher_thenTeacherReturnedToEdite() throws Exception {
 	List<Subject> subjects = buildSubjects();
 	when(subjectService.getAll()).thenReturn(subjects);
 	Teacher teacher = buildTeachers().get(0);
@@ -133,7 +133,7 @@ class TeacherControllerTest {
     }
 
     @Test
-    void whenDeleteTeacher_ThenTeacherDeleted() throws Exception {
+    void whenDeleteTeacher_thenTeacherDeleted() throws Exception {
 	Teacher teacher = buildTeachers().get(0);
 	when(teacherService.getById(1)).thenReturn(teacher);
 
@@ -145,7 +145,7 @@ class TeacherControllerTest {
     }
 
     @Test
-    void whenGetVocationsByTeacher_ThenVocationsReturned() throws Exception {
+    void whenGetVocationsByTeacher_thenVocationsReturned() throws Exception {
 	List<Vocation> vocations = Arrays.asList(Vocation.builder().id(1).kind(VocationKind.GENERAL).build());
 	when(vocationService.getByTeacherIdAndYear(1, Year.from(LocalDate.now()))).thenReturn(vocations);
 	Teacher teacher = buildTeachers().get(0);
@@ -160,7 +160,7 @@ class TeacherControllerTest {
     }
 
     @Test
-    void whenGetScheduleByTeacher_ThenScheduleReturned() throws Exception {
+    void whenGetScheduleByTeacher_thenScheduleReturned() throws Exception {
 	Teacher teacher = buildTeachers().get(0);
 	List<Lesson> lessons = Arrays.asList(Lesson.builder().id(1).date(LocalDate.now()).build());
 	when(lessonService.getLessonsForTeacherByPeriod(teacher, LocalDate.now(), LocalDate.now().plusMonths(1)))
@@ -172,7 +172,8 @@ class TeacherControllerTest {
 		.andExpect(view().name("teachers/schedule")).andExpect(status().isOk())
 		.andExpect(model().attribute("startDate", LocalDate.now()))
 		.andExpect(model().attribute("finishDate", LocalDate.now().plusMonths(1)))
-		.andExpect(model().attribute("teacher", teacher)).andExpect(model().attribute("lessons", lessons));
+		.andExpect(model().attribute("teacher", teacher))
+		.andExpect(model().attribute("lessons", lessons));
     }
 
     private List<Teacher> buildTeachers() {

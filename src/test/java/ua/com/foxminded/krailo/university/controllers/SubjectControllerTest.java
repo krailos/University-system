@@ -44,7 +44,7 @@ class SubjectControllerTest {
     }
 
     @Test
-    void WhenGetAllSubjects_ThenAllSubjectsReturned() throws Exception {
+    void whenGetAllSubjects_thenAllSubjectsReturned() throws Exception {
 	List<Subject> expected = buildSubjects();
 	when(subjectService.getAll()).thenReturn(expected);
 
@@ -55,7 +55,7 @@ class SubjectControllerTest {
     }
 
     @Test
-    void givenSubjecttId_WhenGetSubject_ThenSubjectGot() throws Exception {
+    void givenSubjecttId_whenGetSubject_thenSubjectGot() throws Exception {
 	Subject expected = buildSubjects().get(0);
 	when(subjectService.getById(1)).thenReturn(expected);
 
@@ -74,7 +74,7 @@ class SubjectControllerTest {
     }
 
     @Test
-    void WhenCreateVocation_ThenVocationWithTeachersReturned() throws Exception {
+    void whenCreateVocation_thenVocationWithTeachersReturned() throws Exception {
 	List<Teacher> teachers = buildTeachers();
 	when(teacherService.getAll()).thenReturn(teachers);
 
@@ -86,7 +86,7 @@ class SubjectControllerTest {
     }
 
     @Test
-    void givenNewSubject_WhenSaveSubject_ThenSubjectSaved() throws Exception {
+    void givenNewSubject_whenSaveSubject_thenSubjectSaved() throws Exception {
 	Subject subject = new Subject();
 
 	mockMvc.perform(post("/subjects/save").flashAttr("subject", subject))
@@ -96,7 +96,7 @@ class SubjectControllerTest {
     }
 
     @Test
-    void givenUpdatedSubject_whenUpdateSubject_ThenSubjectUpdated() throws Exception {
+    void givenUpdatedSubject_whenUpdateSubject_thenSubjectUpdated() throws Exception {
 	Subject subject = buildSubjects().get(0);
 
 	mockMvc.perform(post("/subjects/save").flashAttr("subject", subject))
@@ -106,7 +106,7 @@ class SubjectControllerTest {
     }
 
     @Test
-    void givenSubjectId_whenEditSubject_ThenSubjectReturnedToEdite() throws Exception {
+    void givenSubjectId_whenEditSubject_thenSubjectReturnedToEdite() throws Exception {
 	List<Teacher> teachers = buildTeachers();
 	when(teacherService.getAll()).thenReturn(teachers);
 	Subject subject = buildSubjects().get(0);
@@ -120,7 +120,7 @@ class SubjectControllerTest {
     }
 
     @Test
-    void whenDeleteVocation_ThenVocationDeleted() throws Exception {
+    void whenDeleteVocation_thenVocationDeleted() throws Exception {
 	Subject subject = buildSubjects().get(0);
 	when(subjectService.getById(1)).thenReturn(subject);
 

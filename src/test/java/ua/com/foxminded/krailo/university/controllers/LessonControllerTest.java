@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
+import ua.com.foxminded.krailo.university.exception.NoTeachersForSubstitute;
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
@@ -61,7 +63,7 @@ class LessonControllerTest {
     }
 
     @Test
-    void WhenGetAllLessons_ThenFirstPageLessonsReturned() throws Exception {
+    void whenGetAllLessons_thenFirstPageLessonsReturned() throws Exception {
 	List<Lesson> expected = buildLessons();
 	Paging paging = new Paging(2, 1, 4);
 	when(lessonService.getQuantity()).thenReturn(4);
@@ -88,7 +90,7 @@ class LessonControllerTest {
     }
 
     @Test
-    void givenLessonId_WhenGetLesson_ThenLessonGot() throws Exception {
+    void givenLessonId_whenGetLesson_thenLessonGot() throws Exception {
 	Lesson expected = buildLessons().get(0);
 	when(lessonService.getById(1)).thenReturn(expected);
 
@@ -109,7 +111,7 @@ class LessonControllerTest {
     }
 
     @Test
-    void WhenCreateLesson_ThenLessonWithTimesSubjectsAudiencesTeachersGroupsReturned() throws Exception {
+    void whenCreateLesson_thenLessonWithTimesSubjectsAudiencesTeachersGroupsReturned() throws Exception {
 	List<LessonTime> lessonTimes = buildLessonTimes();
 	when(lessonTimeService.getAll()).thenReturn(lessonTimes);
 	List<Subject> subjects = buildSubjects();
@@ -133,7 +135,7 @@ class LessonControllerTest {
     }
 
     @Test
-    void givenNewLesson_WhenSaveLesson_ThenLessonSaved() throws Exception {
+    void givenNewLesson_whenSaveLesson_thenLessonSaved() throws Exception {
 	Lesson lesson = buildLessons().get(0);
 	lesson.setId(0);
 	LessonTime lessonTime = buildLessonTimes().get(0);
@@ -155,7 +157,7 @@ class LessonControllerTest {
     }
 
     @Test
-    void givenUpdatedLesson_whenUpdateLesson_ThenLessonUpdated() throws Exception {
+    void givenUpdatedLesson_whenUpdateLesson_thenLessonUpdated() throws Exception {
 	Lesson lesson = buildLessons().get(0);
 	LessonTime lessonTime = buildLessonTimes().get(0);
 	when(lessonTimeService.getById(1)).thenReturn(lessonTime);
@@ -176,7 +178,7 @@ class LessonControllerTest {
     }
 
     @Test
-    void givenLessonId_whenEditLesson_ThenLessonReturnedToEdite() throws Exception {
+    void givenLessonId_whenEditLesson_thenLessonReturnedToEdite() throws Exception {
 	Lesson lesson = buildLessons().get(0);
 	when(lessonService.getById(1)).thenReturn(lesson);
 	List<LessonTime> lessonTimes = buildLessonTimes();
@@ -202,7 +204,7 @@ class LessonControllerTest {
     }
 
     @Test
-    void whenDeleteLesson_ThenLessonDeleted() throws Exception {
+    void whenDeleteLesson_thenLessonDeleted() throws Exception {
 	Lesson lesson = buildLessons().get(0);
 	when(lessonService.getById(1)).thenReturn(lesson);
 
@@ -212,6 +214,52 @@ class LessonControllerTest {
 	
 	verify(lessonService).delete(lesson);
     }
+    
+    
+    @Test
+    void whenSubstituteTeacherGetForm_thensubstituteTeacherFormGot() throws Exception {
+	List<Teacher> teachers = buildTeachers();
+	when(teacherService.getAll()).thenReturn(teachers);
+
+	mockMvc.perform(get("/lessons/substituteTeacherForm"))
+		.andExpect(view().name("lessons/substituteTeacherForm"))
+		.andExpect(model().attribute("teachers", teachers));
+    }
+    
+    @Test
+    void givenTeacherStartDateFinishDate_whenFindTeacherForSubstitute_thensubstituteTeacherFormGot() throws Exception {
+	List<Teacher> teachers = buildTeachers();
+	LocalDate startDate = LocalDate.now();
+	LocalDate finishDate = LocalDate.now().plusWeeks(1);
+	Teacher teacher = buildTeachers().get(0);
+	when(lessonService.findTeachersForSubstitute(teacher.getId(), startDate, finishDate)).thenReturn(teachers);
+	when(teacherService.getById(1)).thenReturn(teacher);
+
+	mockMvc.perform(post("/lessons/findTeacherForSubstitute").param("startDate", startDate.toString())
+		.param("finishDate", finishDate.toString()).param("id", "1"))
+		.andExpect(view().name("lessons/substituteTeacher"))
+		.andExpect(model().attribute("startDate", startDate))
+		.andExpect(model().attribute("finishDate", finishDate))
+		.andExpect(model().attribute("teachersForSubstitite", teachers))
+		.andExpect(model().attribute("teacher", teacher));
+    }
+    
+    
+    @Test
+    void givenNoTeachersForSubstitute_whenFindTeacherForSubstitute_thenNoTeachersForSubstituteThrown() throws Exception {
+	LocalDate startDate = LocalDate.now();
+	LocalDate finishDate = LocalDate.now().plusWeeks(1);
+	Teacher teacher = buildTeachers().get(0);
+	when(lessonService.findTeachersForSubstitute(teacher.getId(), startDate, finishDate))
+		.thenThrow(new NoTeachersForSubstitute("there is no free teachers"));
+
+	mockMvc.perform(post("/lessons/findTeacherForSubstitute").param("startDate", startDate.toString())
+		.param("finishDate", finishDate.toString()).param("id", "1"))
+		.andExpect(view().name("errors/error"))
+		.andExpect(model().attribute("message", "there is no free teachers"));
+    }
+    
+    
 
     private List<Lesson> buildLessons() {
 	return Arrays.asList(Lesson.builder().id(1).lessonTime(LessonTime.builder().id(1).build())

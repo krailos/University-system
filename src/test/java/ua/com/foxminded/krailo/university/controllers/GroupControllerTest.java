@@ -46,7 +46,7 @@ class GroupControllerTest {
     }
 
     @Test
-    void WhenGetAllGroups_ThenFirstPageGroupsReturned() throws Exception {
+    void whenGetAllGroups_thenFirstPageGroupsReturned() throws Exception {
 	List<Group> expected = buildGroups();
 	Paging paging = new Paging(2, 1, 4);
 	when(groupService.getQuantity()).thenReturn(4);
@@ -73,7 +73,7 @@ class GroupControllerTest {
     }
 
     @Test
-    void givenGroupId_WhenGetGroup_ThenGroupGot() throws Exception {
+    void givenGroupId_whenGetGroup_thenGroupGot() throws Exception {
 	Group expected = buildGroups().get(0);
 	when(groupService.getById(1)).thenReturn(expected);
 
@@ -93,7 +93,7 @@ class GroupControllerTest {
     }
 
     @Test
-    void WhenCreateGroup_ThenGroupWithYearsReturned() throws Exception {
+    void whenCreateGroup_thenGroupWithYearsReturned() throws Exception {
 	List<Year> years = buildYears();
 	when(yearService.getAll()).thenReturn(years);
 
@@ -105,7 +105,7 @@ class GroupControllerTest {
     }
 
     @Test
-    void givenNewGroup_WhenSaveGroup_ThenGroupSaved() throws Exception {
+    void givenNewGroup_whenSaveGroup_thenGroupSaved() throws Exception {
 	Group group = new Group();
 
 	mockMvc.perform(post("/groups/save").flashAttr("group", group))
@@ -116,7 +116,7 @@ class GroupControllerTest {
     }
 
     @Test
-    void givenUpdatedGroup_whenUpdateGroup_ThenGroupUpdated() throws Exception {
+    void givenUpdatedGroup_whenUpdateGroup_thenGroupUpdated() throws Exception {
 	Group group = buildGroups().get(0);
 
 	mockMvc.perform(post("/groups/save").flashAttr("group", group))
@@ -127,7 +127,7 @@ class GroupControllerTest {
     }
 
     @Test
-    void givenGroupId_whenEditGroup_ThenGroupReturnedToEdite() throws Exception {
+    void givenGroupId_whenEditGroup_thenGroupReturnedToEdite() throws Exception {
 	List<Year> years = buildYears();
 	when(yearService.getAll()).thenReturn(years);
 	Group group = buildGroups().get(0);
@@ -141,7 +141,7 @@ class GroupControllerTest {
     }
 
     @Test
-    void whenDeleteGroup_ThenGroupDeleted() throws Exception {
+    void whenDeleteGroup_thenGroupDeleted() throws Exception {
 	Group group = buildGroups().get(0);
 	when(groupService.getById(1)).thenReturn(group);
 

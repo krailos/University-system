@@ -44,7 +44,7 @@ class YearControllerTest {
     }
 
     @Test
-    void WhenGetAllYears_ThenAllYearsReturned() throws Exception {
+    void whenGetAllYears_thenAllYearsReturned() throws Exception {
 	List<Year> expected = buildYaers();
 	when(yearService.getAll()).thenReturn(expected);
 
@@ -65,7 +65,7 @@ class YearControllerTest {
     }
 
     @Test
-    void givenYearId_WhenGetYear_ThenYearGot() throws Exception {
+    void givenYearId_whenGetYear_thenYearGot() throws Exception {
 	Year expected = buildYaers().get(0);
 	when(yearService.getById(1)).thenReturn(expected);
 
@@ -77,7 +77,7 @@ class YearControllerTest {
     }
 
     @Test
-    void WhenCreateYear_ThenYearWithSubjectsReturned() throws Exception {
+    void whenCreateYear_thenYearWithSubjectsReturned() throws Exception {
 	List<Subject> subjects = buildSubjects();
 	when(subjectService.getAll()).thenReturn(subjects);
 
@@ -89,7 +89,7 @@ class YearControllerTest {
     }
 
     @Test
-    void givenNewYear_WhenSaveYear_ThenYearSaved() throws Exception {
+    void givenNewYear_whenSaveYear_thenYearSaved() throws Exception {
 	Year year = new Year();
 
 	mockMvc.perform(post("/years/save").flashAttr("year", year))
@@ -99,7 +99,7 @@ class YearControllerTest {
     }
 
     @Test
-    void givenUpdatedYear_whenUpdateYear_ThenYeatUpdated() throws Exception {
+    void givenUpdatedYear_whenUpdateYear_thenYeatUpdated() throws Exception {
 	Year year = buildYaers().get(0);
 
 	mockMvc.perform(post("/years/save").flashAttr("year", year))
@@ -109,7 +109,7 @@ class YearControllerTest {
     }
 
     @Test
-    void givenYearId_whenEditYear_ThenYeatReturnedToEdite() throws Exception {
+    void givenYearId_whenEditYear_thenYearReturnedToEdite() throws Exception {
 	List<Subject> subjects = buildSubjects();
 	when(subjectService.getAll()).thenReturn(subjects);
 	Year year = buildYaers().get(0);
@@ -123,7 +123,7 @@ class YearControllerTest {
     }
 
     @Test
-    void whenDeleteYear_ThenYearDeleted() throws Exception {
+    void whenDeleteYear_thenYearDeleted() throws Exception {
 	Year year = buildYaers().get(0);
 	when(yearService.getById(1)).thenReturn(year);
 

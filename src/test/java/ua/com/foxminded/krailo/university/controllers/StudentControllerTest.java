@@ -51,7 +51,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void WhenGetAllStudents_ThenAllStudentsReturned() throws Exception {
+    void whenGetAllStudents_thenAllStudentsReturned() throws Exception {
 	List<Student> expected = buildStudents();
 	Paging paging = new Paging(2, 1, 4);
 	when(studentService.getQuantity()).thenReturn(4);
@@ -78,7 +78,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void givenStudentId_WhenGetStudent_ThenStudentGot() throws Exception {
+    void givenStudentId_whenGetStudent_thenStudentGot() throws Exception {
 	Student expected = buildStudents().get(0);
 	when(studentService.getById(1)).thenReturn(expected);
 
@@ -149,7 +149,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void whenGetScheduleByStudent_ThenScheduleReturned() throws Exception {
+    void whenGetScheduleByStudent_thenScheduleReturned() throws Exception {
 	Student student = buildStudent();
 	List<Lesson> lessons = Arrays.asList(Lesson.builder().id(1).date(LocalDate.now()).build());
 	when(lessonService.getLessonsForStudentByPeriod(student, LocalDate.now(), LocalDate.now().plusMonths(1)))
