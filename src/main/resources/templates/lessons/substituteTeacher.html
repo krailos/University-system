@@ -95,11 +95,19 @@
 							th:text="${teacher.lastName} +' ' + teacher.firstName "></p>
 					</div>
 					<div class="form-group row">
-						<label for="dateId" class="col-form-label text-right mr-3">Substitute
+						<label for="dateId" class="col-form-label text-right mr-3">Start
 							date</label>
 						<div>
 							<input type="date" class="form-control" id="dateId"
-								th:value="${substituteDate}" th:name="substituteDate">
+								th:value="${startDate}" th:name="startDate">
+						</div>
+					</div>
+							<div class="form-group row">
+						<label for="dateId" class="col-form-label text-right mr-3">Finish
+							date</label>
+						<div>
+							<input type="date" class="form-control" id="dateId"
+								th:value="${finishDate}" th:name="finishDate">
 						</div>
 					</div>
 					<div class="form-group row" hidden="true">

@@ -429,60 +429,73 @@ class LessonServiceTest {
     }
 
     @Test
-    void givenFreeTeacher_whenCanTeacherBeReplaced_thenTrue() {
-	LocalDate lessonDate = LocalDate.now();
-	Subject subject = Subject.builder().id(1).name("economy").build();
-	List<Subject> subjects = Arrays.asList(subject);
-	Teacher teacher = Teacher.builder().id(1).firstName("teacher").subjects(subjects).build();
-	Lesson lesson = Lesson.builder().id(1).date(lessonDate).subject(subject)
-		.lessonTime(LessonTime.builder().id(1).build()).build();
-	List<Lesson> lessons = Arrays.asList(lesson);
-	when(teacherDao.findById(1)).thenReturn(Optional.of(teacher));
-	when(lessonDao.findByTeacherAndDate(teacher, lessonDate)).thenReturn(lessons);
-	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lessonDate, 1, lesson.getLessonTime().getId()))
+    void givenFreeTeacher_whenfindTeacherForSubstitute_thenFound() {
+	LocalDate startDate = LocalDate.now();
+	LocalDate finishDate = LocalDate.now().plusWeeks(1);
+	Subject subject = Subject.builder().id(1).name("rightLesson").build();
+	Teacher subsitutedTeacher = Teacher.builder().id(1).firstName("substitutedTeacher").build();
+	Teacher newTeacher = Teacher.builder().id(2).firstName("newTeacher").subjects(Arrays.asList(subject)).build();
+	List<Teacher> allTeachers = Arrays.asList(newTeacher);
+	Lesson lesson = Lesson.builder().id(1).date(startDate).subject(subject)
+		.lessonTime(LessonTime.builder().id(1).orderNumber("first").build()).teacher(subsitutedTeacher).build();
+	List<Lesson> substitutedlessons = Arrays.asList(lesson);
+	when(teacherDao.findAll()).thenReturn(allTeachers);
+	when(teacherDao.findById(1)).thenReturn(Optional.of(subsitutedTeacher));
+	when(lessonDao.findByTeacherBetweenDates(subsitutedTeacher, startDate, finishDate)).thenReturn(substitutedlessons);
+	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), newTeacher.getId(), lesson.getLessonTime().getId()))
 		.thenReturn(Optional.empty());
 
-	boolean isSubstitute = lessonService.isTeacherReplaced(1, 1, lessonDate);
+	List<Teacher> teachersForSubstitute = lessonService.findTeachersForSubstitute(subsitutedTeacher.getId(),
+		startDate, finishDate);
 
-	assertTrue(isSubstitute);
+	assertEquals(Arrays.asList(newTeacher), teachersForSubstitute);
     }
 
     @Test
-    void givenNotFreeTeacher_whenCanTeacherBeReplaced_thenFalse() {
-	LocalDate lessonDate = LocalDate.now();
-	Subject subject = Subject.builder().id(1).name("economy").build();
-	List<Subject> subjects = Arrays.asList(subject);
-	Teacher teacher = Teacher.builder().id(1).firstName("teacher").subjects(subjects).build();
-	Lesson lesson = Lesson.builder().id(1).date(lessonDate).subject(subject)
-		.lessonTime(LessonTime.builder().id(1).build()).build();
-	List<Lesson> lessons = Arrays.asList(lesson);
-	when(teacherDao.findById(1)).thenReturn(Optional.of(teacher));
-	when(lessonDao.findByTeacherAndDate(teacher, lessonDate)).thenReturn(lessons);
-	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lessonDate, 1, lesson.getLessonTime().getId()))
-		.thenReturn(Optional.of(Lesson.builder().id(1).build()));
+    void givenNotFreeTeacher_whenfindTeacherForSubstitute_thenNotFound() {
+	LocalDate startDate = LocalDate.now();
+	LocalDate finishDate = LocalDate.now().plusWeeks(1);
+	Subject subject = Subject.builder().id(1).name("rightLesson").build();
+	Teacher subsitutedTeacher = Teacher.builder().id(1).firstName("substitutedTeacher").build();
+	Teacher newTeacher = Teacher.builder().id(2).firstName("newTeacher").subjects(Arrays.asList(subject)).build();
+	List<Teacher> allTeachers = Arrays.asList(newTeacher);
+	Lesson lesson = Lesson.builder().id(1).date(startDate).subject(subject)
+		.lessonTime(LessonTime.builder().id(1).orderNumber("first").build()).teacher(subsitutedTeacher).build();
+	List<Lesson> substitutedlessons = Arrays.asList(lesson);
+	when(teacherDao.findAll()).thenReturn(allTeachers);
+	when(teacherDao.findById(1)).thenReturn(Optional.of(subsitutedTeacher));
+	when(lessonDao.findByTeacherBetweenDates(subsitutedTeacher, startDate, finishDate)).thenReturn(substitutedlessons);
+	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), newTeacher.getId(), lesson.getLessonTime().getId()))
+		.thenReturn(Optional.of(Lesson.builder().id(2).build()));
 
-	boolean isSubstitute = lessonService.isTeacherReplaced(1, 1, lessonDate);
+	List<Teacher> teachersForSubstitute = lessonService.findTeachersForSubstitute(subsitutedTeacher.getId(),
+		startDate, finishDate);
 
-	assertFalse(isSubstitute);
+	assertTrue(teachersForSubstitute.isEmpty());
     }
 
     @Test
-    void givenTeacherNotTeachLesson_whenCanTeacherBeReplaced_thenFalse() {
-	LocalDate lessonDate = LocalDate.now();
-	Subject subject = Subject.builder().id(1).name("economy").build();
-	List<Subject> subjects = Arrays.asList(Subject.builder().id(9).build());
-	Teacher teacher = Teacher.builder().id(1).firstName("teacher").subjects(subjects).build();
-	Lesson lesson = Lesson.builder().id(1).date(lessonDate).subject(subject)
-		.lessonTime(LessonTime.builder().id(1).build()).build();
-	List<Lesson> lessons = Arrays.asList(lesson);
-	when(teacherDao.findById(1)).thenReturn(Optional.of(teacher));
-	when(lessonDao.findByTeacherAndDate(teacher, lessonDate)).thenReturn(lessons);
-	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lessonDate, 1, lesson.getLessonTime().getId()))
+    void givenTeacherNotTeachLesson_whenfindTeacherForSubstitute_thenNotFound() {
+	LocalDate startDate = LocalDate.now();
+	LocalDate finishDate = LocalDate.now().plusWeeks(1);
+	Subject rightSubject = Subject.builder().id(1).name("rightLesson").build();
+	Subject wrongSubject = Subject.builder().id(1).name("wrongLesson").build();
+	Teacher subsitutedTeacher = Teacher.builder().id(1).firstName("substitutedTeacher").build();
+	Teacher newTeacher = Teacher.builder().id(2).firstName("newTeacher").subjects(Arrays.asList(wrongSubject)).build();
+	List<Teacher> allTeachers = Arrays.asList(newTeacher);
+	Lesson lesson = Lesson.builder().id(1).date(startDate).subject(rightSubject)
+		.lessonTime(LessonTime.builder().id(1).orderNumber("first").build()).teacher(subsitutedTeacher).build();
+	List<Lesson> substitutedlessons = Arrays.asList(lesson);
+	when(teacherDao.findAll()).thenReturn(allTeachers);
+	when(teacherDao.findById(1)).thenReturn(Optional.of(subsitutedTeacher));
+	when(lessonDao.findByTeacherBetweenDates(subsitutedTeacher, startDate, finishDate)).thenReturn(substitutedlessons);
+	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), newTeacher.getId(), lesson.getLessonTime().getId()))
 		.thenReturn(Optional.empty());
 
-	boolean isSubstitute = lessonService.isTeacherReplaced(1, 1, lessonDate);
+	List<Teacher> teachersForSubstitute = lessonService.findTeachersForSubstitute(subsitutedTeacher.getId(),
+		startDate, finishDate);
 
-	assertFalse(isSubstitute);
+	assertTrue(teachersForSubstitute.isEmpty());
     }
 
     private Lesson createLesson() {

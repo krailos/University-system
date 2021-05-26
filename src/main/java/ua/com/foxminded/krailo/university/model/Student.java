@@ -17,7 +17,7 @@ public class Student {
     private String email;
     private String rank;
     private Gender gender;
-    private Group group = new Group();
+    private Group group;
 
     public Student() {
     }

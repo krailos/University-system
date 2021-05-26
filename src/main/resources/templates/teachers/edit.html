@@ -188,14 +188,13 @@
 								<div class="col-sm-6 text-left">
 									<select class="form-control" id="subjects" name="subjects"
 										size="5" multiple="multiple" required>
-										<option th:each="subject : ${subjects}" th:value="${subject.id}"
-											th:text="${subject.name}"
-											 th:selected="${teacher.subjects.contains(subject)}"
-											></option>
+										<option th:each="subject : ${subjects}"
+											th:value="${subject.id}" th:text="${subject.name}"
+											th:selected="${teacher.subjects.contains(subject)}"></option>
 									</select>
 								</div>
 							</div>
-							
+
 							<div class=" row">
 								<div th:if="${teacher.getId() == 0}"
 									class="col-md-6 offset-3 text-right">

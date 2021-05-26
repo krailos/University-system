@@ -118,13 +118,12 @@ public class LessonController {
 
     @PostMapping("/findTeacherForSubstitute")
     public String findTeacherForSubstitute(
-	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate substituteDate, @RequestParam int id,
+	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finishDate, @RequestParam int id,
 	    Model model) {
-	List<Teacher> teachers = teacherService.getAll();
-	List<Teacher> teachersForSubstitite = teachers.stream()
-		.filter(t -> lessonService.isTeacherReplaced(id, t.getId(), substituteDate))
-		.collect(Collectors.toList());
-	model.addAttribute("substituteDate", substituteDate);
+	List<Teacher> teachersForSubstitite = lessonService.findTeachersForSubstitute(id, startDate, finishDate);
+	model.addAttribute("startDate", startDate);
+	model.addAttribute("finishDate", finishDate);
 	model.addAttribute("teacher", teacherService.getById(id));
 	model.addAttribute("teachersForSubstitite", teachersForSubstitite);
 	return "lessons/substituteTeacher";
@@ -132,10 +131,12 @@ public class LessonController {
 
     @PostMapping("/substituteTeacher")
     public String substituteTeacher(
-	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate substituteDate,
+	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finishDate,
 	    @RequestParam int oldId, @RequestParam int newId, Model model) {
 	Teacher newTeacher = teacherService.getById(newId);
-	lessonService.getLessonsForTeacherByDate(teacherService.getById(oldId), substituteDate).stream()
+	Teacher oldTeacher = teacherService.getById(oldId);
+	lessonService.getLessonsForTeacherByPeriod(oldTeacher, startDate, finishDate).stream()
 		.peek(l -> l.setTeacher(newTeacher)).forEach(lessonService::update);
 	return "redirect:/lessons";
     }

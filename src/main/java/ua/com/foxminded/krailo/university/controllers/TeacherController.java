@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.service.LessonService;
 import ua.com.foxminded.krailo.university.service.SubjectService;
@@ -54,7 +55,7 @@ public class TeacherController {
     @GetMapping("/create")
     public String createTeacher(Model model) {
 	model.addAttribute("teacher", new Teacher());
-	model.addAttribute("subjects", subjectService.getAll());
+	model.addAttribute("subjects", subjectService.getAll());	    
 	return "teachers/edit";
     }
 

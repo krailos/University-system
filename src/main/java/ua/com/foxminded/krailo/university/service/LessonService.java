@@ -6,6 +6,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,17 +127,30 @@ public class LessonService {
 
     }
 
-    public boolean isTeacherReplaced(int oldTecherId, int newTecherId, LocalDate lessonDate) {
-	Teacher oldTeacher = teacherDao.findById(oldTecherId)
-		.orElseThrow(() -> new EntityNotFoundException(format("Lesson whith id=%s not exist", oldTecherId)));
-	Teacher newTeacher = teacherDao.findById(newTecherId)
-		.orElseThrow(() -> new EntityNotFoundException(format("Lesson whith id=%s not exist", newTecherId)));
-	List<Lesson> oldTeacherLessons = lessonDao.findByTeacherAndDate(oldTeacher, lessonDate);
-	return !oldTeacherLessons.stream()
-		.anyMatch(l -> lessonDao
-			.findByDateAndTeacherIdAndLessonTimeId(l.getDate(), newTeacher.getId(),
-				l.getLessonTime().getId())
-			.isPresent() || !newTeacher.getSubjects().contains(l.getSubject()));
+//    public boolean isTeacherReplaced(int oldTeacherId, int newTecherId, LocalDate lessonDate) {
+//	Teacher oldTeacher = teacherDao.findById(oldTeacherId)
+//		.orElseThrow(() -> new EntityNotFoundException(format("Lesson whith id=%s not exist", oldTeacherId)));
+//	Teacher newTeacher = teacherDao.findById(newTecherId)
+//		.orElseThrow(() -> new EntityNotFoundException(format("Lesson whith id=%s not exist", newTecherId)));
+//	List<Lesson> oldTeacherLessons = lessonDao.findByTeacherAndDate(oldTeacher, lessonDate);
+//	return !oldTeacherLessons.stream()
+//		.anyMatch(l -> lessonDao
+//			.findByDateAndTeacherIdAndLessonTimeId(l.getDate(), newTeacher.getId(),
+//				l.getLessonTime().getId())
+//			.isPresent() || !newTeacher.getSubjects().contains(l.getSubject()));
+//    }
+
+    public List<Teacher> findTeachersForSubstitute(int substitutedTeacherId, LocalDate startDate,
+	    LocalDate finishDate) {
+	Teacher substitutedTeacher = teacherDao.findById(substitutedTeacherId).orElseThrow(
+		() -> new EntityNotFoundException(format("Lesson whith id=%s not exist", substitutedTeacherId)));
+	List<Lesson> substitutedLessons = lessonDao.findByTeacherBetweenDates(substitutedTeacher, startDate,
+		finishDate);
+	return teacherDao.findAll().stream()
+		.filter(t -> substitutedLessons.stream()
+			.allMatch(l -> !lessonDao.findByDateAndTeacherIdAndLessonTimeId(l.getDate(), t.getId(),
+				l.getLessonTime().getId()).isPresent() && t.getSubjects().contains(l.getSubject())))
+		.collect(Collectors.toList());
     }
 
     private void checkTeacherIsFree(Lesson lesson) {

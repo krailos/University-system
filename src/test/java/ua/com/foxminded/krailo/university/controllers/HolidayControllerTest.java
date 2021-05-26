@@ -71,8 +71,8 @@ class HolidayControllerTest {
     @Test
     void WhenCreateAudience_ThenAudienceReturned() throws Exception {
 
-	mockMvc.perform(get("/audiences/create")).andExpect(view().name("audiences/edit")).andExpect(status().isOk())
-		.andExpect(model().attributeExists("audience"));
+	mockMvc.perform(get("/holidays/create")).andExpect(view().name("holidays/edit")).andExpect(status().isOk())
+		.andExpect(model().attributeExists("holiday"));
     }
 
     @Test

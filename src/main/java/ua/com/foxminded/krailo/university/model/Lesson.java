@@ -11,10 +11,10 @@ public class Lesson {
     private int id;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate date;
-    private LessonTime lessonTime = new LessonTime();
-    private Subject subject = new Subject();
-    private Audience audience = new Audience();
-    private Teacher teacher = new Teacher();
+    private LessonTime lessonTime;
+    private Subject subject;
+    private Audience audience;
+    private Teacher teacher;
     private List<Group> groups = new ArrayList<>();
 
     public Lesson() {
