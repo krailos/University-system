@@ -122,13 +122,11 @@ public class LessonService {
 	return lessonDao.findByStudentBetweenDates(student, startDate, finishDate);
 
     }
-    
 
     public void substituteTeacher(Teacher oldTeacher, Teacher newTeacher, LocalDate startDate, LocalDate finishDate) {
 	lessonDao.findByTeacherBetweenDates(oldTeacher, startDate, finishDate).stream()
 		.peek(l -> l.setTeacher(newTeacher)).forEach(lessonDao::update);
     }
-
 
     private void checkTeacherIsFree(Lesson lesson) {
 	Optional<Lesson> existingLesson = lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(),

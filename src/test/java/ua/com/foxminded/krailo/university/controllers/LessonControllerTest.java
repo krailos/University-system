@@ -105,7 +105,7 @@ class LessonControllerTest {
     void givenWrongLessonId_whenGetLesson_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(lessonService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/lessons/{id}", "id"))
+	mockMvc.perform(get("/lessons/{id}", "1"))
 		.andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
@@ -258,6 +258,19 @@ class LessonControllerTest {
 	mockMvc.perform(get("/lessons/substituteTeacherForm"))
 		.andExpect(view().name("lessons/substituteTeacherForm"))
 		.andExpect(model().attribute("teachers", teachers));
+    }
+    
+    @Test 
+    void givenOldTeacherIdNewTeacherIdPeriodSubstitute_whenSubstituteTeacher_thenTeaceherSubstituted() throws Exception{
+	LocalDate startDate = LocalDate.now();
+	LocalDate finishDate = LocalDate.now().plusWeeks(1);
+	Teacher teacher = buildTeachers().get(0);
+	when(teacherService.getById(1)).thenReturn(teacher);
+	
+	mockMvc.perform(post("/lessons/substituteTeacher").param("startDate", startDate.toString())
+		.param("finishDate", finishDate.toString()).param("oldId", "1").param("newId", "1"))
+		.andExpect(view().name("redirect:/lessons"));
+	verify(lessonService).substituteTeacher(teacher, teacher, startDate, finishDate);	
     }
     
     private List<Lesson> buildLessons() {

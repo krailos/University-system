@@ -425,6 +425,21 @@ class LessonServiceTest {
 	List<Lesson> expected = createLessons();
 	assertEquals(expected, actual);
     }
+    
+    @Test
+    void givenOldTeacherNewTeacherSubstitutePeriod_whenSubstituteTeacher_thenLessonsUpdatedAndTeacherSubstituted() {
+	LocalDate startDate = LocalDate.now();
+	LocalDate finishDate = LocalDate.now().plusWeeks(1);
+	Teacher oldTeacher = Teacher.builder().id(1).firstName("oldTeacher").build();
+	Teacher newTeacher = Teacher.builder().id(2).firstName("newTeacher").build();
+	Lesson lesson = createLesson();
+	lesson.setTeacher(oldTeacher);
+	when(lessonDao.findByTeacherBetweenDates(oldTeacher, startDate, finishDate)).thenReturn(Arrays.asList(lesson));
+	
+	lessonService.substituteTeacher(oldTeacher, newTeacher, startDate, finishDate);
+	
+	verify(lessonDao).update(lesson);
+    }
 
   
 
