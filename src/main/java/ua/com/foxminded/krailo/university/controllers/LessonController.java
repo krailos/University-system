@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.university.controllers;
+	package ua.com.foxminded.krailo.university.controllers;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -118,12 +118,13 @@ public class LessonController {
     @PostMapping("/findTeacherForSubstitute")
     public String findTeacherForSubstitute(
 	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finishDate, @RequestParam int id,
+	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finishDate, @RequestParam int teacherId,
 	    Model model) {
-	List<Teacher> teachersForSubstitite = lessonService.findTeachersForSubstitute(id, startDate, finishDate);
+	Teacher substitutedTeacher = teacherService.getById(teacherId);
+	List<Teacher> teachersForSubstitite = teacherService.findTeachersForSubstitute(substitutedTeacher, startDate, finishDate);
 	model.addAttribute("startDate", startDate);
 	model.addAttribute("finishDate", finishDate);
-	model.addAttribute("teacher", teacherService.getById(id));
+	model.addAttribute("teacher", teacherService.getById(teacherId));
 	model.addAttribute("teachersForSubstitite", teachersForSubstitite);
 	return "lessons/substituteTeacher";
     }
@@ -134,8 +135,7 @@ public class LessonController {
 	    @RequestParam int newId, Model model) {
 	Teacher newTeacher = teacherService.getById(newId);
 	Teacher oldTeacher = teacherService.getById(oldId);
-	lessonService.getLessonsForTeacherByPeriod(oldTeacher, startDate, finishDate).stream()
-		.peek(l -> l.setTeacher(newTeacher)).forEach(lessonService::update);
+	lessonService.substituteTeacher(oldTeacher, newTeacher, startDate, finishDate);
 	return "redirect:/lessons";
     }
 

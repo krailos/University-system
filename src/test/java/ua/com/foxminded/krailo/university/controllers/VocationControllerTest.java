@@ -62,7 +62,7 @@ class VocationControllerTest {
 	Vocation expected = buildVocations().get(0);
 	when(vocationService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/vocations/1"))
+	mockMvc.perform(get("/vocations/{id}", "1"))
         	.andExpect(view().name("vocations/vocation"))
         	.andExpect(status().isOk())
         	.andExpect(model().attribute("vocation", expected));
@@ -73,7 +73,7 @@ class VocationControllerTest {
     void givenWrongVocatioId_whenGetVocation_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(vocationService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/vocations/1"))
+	mockMvc.perform(get("/vocations/{id}", "1"))
         	.andExpect(view().name("errors/error"))
         	.andExpect(model().attribute("message", "entity not exist"));
     }
@@ -92,7 +92,8 @@ class VocationControllerTest {
 
     @Test
     void givenNewVocations_whenSaveVocation_thenVocationSaved() throws Exception {
-	Vocation vocation = new Vocation();
+	Vocation vocation = buildVocations().get(0);
+	vocation.setId(0);
 
 	mockMvc.perform(post("/vocations/save").flashAttr("vocation", vocation))
 		.andExpect(view().name("redirect:/vocations"))

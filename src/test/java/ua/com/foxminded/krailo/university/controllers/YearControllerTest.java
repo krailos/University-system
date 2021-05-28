@@ -59,7 +59,7 @@ class YearControllerTest {
     void givenWrongYearId_whenGetYears_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(yearService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/years/1"))
+	mockMvc.perform(get("/years/{id}", "1"))
 	.andExpect(view().name("errors/error"))
 	.andExpect(model().attribute("message", "entity not exist"));
     }
@@ -69,7 +69,7 @@ class YearControllerTest {
 	Year expected = buildYaers().get(0);
 	when(yearService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/years/1"))
+	mockMvc.perform(get("/years/{id}", "1"))
 	.andExpect(view().name("years/year"))
 	.andExpect(status().isOk())
 	.andExpect(model().attribute("year", expected));
@@ -90,7 +90,8 @@ class YearControllerTest {
 
     @Test
     void givenNewYear_whenSaveYear_thenYearSaved() throws Exception {
-	Year year = new Year();
+	Year year = buildYaers().get(0);
+	year.setId(0);
 
 	mockMvc.perform(post("/years/save").flashAttr("year", year))
 	.andExpect(view().name("redirect:/years"))

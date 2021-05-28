@@ -57,7 +57,7 @@ class LessonTimeControllerTest {
 	LessonTime expected = buildLessonTimes().get(0);
 	when(lessonTimeService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/lessonTimes/1"))
+	mockMvc.perform(get("/lessonTimes/{id}", "1"))
 		.andExpect(view().name("lessonTimes/lessonTime"))
 		.andExpect(status().isOk())
 		.andExpect(model().attribute("lessonTime", expected));
@@ -68,7 +68,7 @@ class LessonTimeControllerTest {
     void givenWrongLessonTimeId_whenGetLessonTime_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(lessonTimeService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/lessonTimes/1"))
+	mockMvc.perform(get("/lessonTimes/{id}", "1"))
 		.andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
@@ -84,7 +84,8 @@ class LessonTimeControllerTest {
 
     @Test
     void givenNewLessonTime_whenSaveLessonTime_thenLessonTimeSaved() throws Exception {
-	LessonTime lessonTime = new LessonTime();
+	LessonTime lessonTime = buildLessonTimes().get(0);
+	lessonTime.setId(0);
 
 	mockMvc.perform(post("/lessonTimes/save").flashAttr("lessonTime", lessonTime))
 		.andExpect(view().name("redirect:/lessonTimes"))

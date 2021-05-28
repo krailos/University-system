@@ -57,7 +57,7 @@ class HolidayControllerTest {
 	Holiday expected = buildHolidays().get(0);
 	when(holidayService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/holidays/1"))
+	mockMvc.perform(get("/holidays/{id}", "1"))
 		.andExpect(view().name("holidays/holiday"))
 		.andExpect(status().isOk())
 		.andExpect(model().attribute("holiday", expected));
@@ -68,7 +68,7 @@ class HolidayControllerTest {
     void givenWrongHolidayId_whenGetHoliday_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(holidayService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/holidays/1"))
+	mockMvc.perform(get("/holidays/{id}", "1"))
 		.andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
@@ -84,7 +84,8 @@ class HolidayControllerTest {
 
     @Test
     void givenNewHoliday_whenSaveHoliday_thenHolidaySaved() throws Exception {
-	Holiday holiday = new Holiday();
+	Holiday holiday = buildHolidays().get(0);
+	holiday.setId(0);
 
 	mockMvc.perform(post("/holidays/save").flashAttr("holiday", holiday))
 		.andExpect(view().name("redirect:/holidays"))

@@ -29,7 +29,6 @@ import ua.com.foxminded.krailo.university.exception.AudienceOverflowException;
 import ua.com.foxminded.krailo.university.exception.GroupNotFreeException;
 import ua.com.foxminded.krailo.university.exception.LessonDateOnHolidayException;
 import ua.com.foxminded.krailo.university.exception.LessonDateOnWeekendException;
-import ua.com.foxminded.krailo.university.exception.NoTeachersForSubstitute;
 import ua.com.foxminded.krailo.university.exception.TeacherNotFreeException;
 import ua.com.foxminded.krailo.university.exception.TeacherNotTeachLessonException;
 import ua.com.foxminded.krailo.university.exception.TeacherOnVocationException;
@@ -427,79 +426,7 @@ class LessonServiceTest {
 	assertEquals(expected, actual);
     }
 
-    @Test
-    void givenFreeTeacher_whenfindTeacherForSubstitute_thenFound() {
-	LocalDate startDate = LocalDate.now();
-	LocalDate finishDate = LocalDate.now().plusWeeks(1);
-	Subject subject = Subject.builder().id(1).name("rightLesson").build();
-	Teacher subsitutedTeacher = Teacher.builder().id(1).firstName("substitutedTeacher").build();
-	Teacher newTeacher = Teacher.builder().id(2).firstName("newTeacher").subjects(Arrays.asList(subject)).build();
-	List<Teacher> allTeachers = Arrays.asList(newTeacher);
-	Lesson lesson = Lesson.builder().id(1).date(startDate).subject(subject)
-		.lessonTime(LessonTime.builder().id(1).orderNumber("first").build()).teacher(subsitutedTeacher).build();
-	List<Lesson> substitutedlessons = Arrays.asList(lesson);
-	when(teacherDao.findAll()).thenReturn(allTeachers);
-	when(teacherDao.findById(1)).thenReturn(Optional.of(subsitutedTeacher));
-	when(lessonDao.findByTeacherBetweenDates(subsitutedTeacher, startDate, finishDate))
-		.thenReturn(substitutedlessons);
-	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), newTeacher.getId(),
-		lesson.getLessonTime().getId())).thenReturn(Optional.empty());
-
-	List<Teacher> teachersForSubstitute = lessonService.findTeachersForSubstitute(subsitutedTeacher.getId(),
-		startDate, finishDate);
-
-	assertEquals(Arrays.asList(newTeacher), teachersForSubstitute);
-    }
-
-    @Test
-    void givenNotFreeTeacher_whenfindTeacherForSubstitute_thenNoTeachersForSubstituteExceptionThrown() {
-	LocalDate startDate = LocalDate.now();
-	LocalDate finishDate = LocalDate.now().plusWeeks(1);
-	Subject subject = Subject.builder().id(1).name("rightLesson").build();
-	Teacher subsitutedTeacher = Teacher.builder().id(1).firstName("substitutedTeacher").build();
-	Teacher newTeacher = Teacher.builder().id(2).firstName("newTeacher").subjects(Arrays.asList(subject)).build();
-	List<Teacher> allTeachers = Arrays.asList(newTeacher);
-	Lesson lesson = Lesson.builder().id(1).date(startDate).subject(subject)
-		.lessonTime(LessonTime.builder().id(1).orderNumber("first").build()).teacher(subsitutedTeacher).build();
-	List<Lesson> substitutedlessons = Arrays.asList(lesson);
-	when(teacherDao.findAll()).thenReturn(allTeachers);
-	when(teacherDao.findById(1)).thenReturn(Optional.of(subsitutedTeacher));
-	when(lessonDao.findByTeacherBetweenDates(subsitutedTeacher, startDate, finishDate))
-		.thenReturn(substitutedlessons);
-	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), newTeacher.getId(),
-		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
-
-	Exception exception = assertThrows(NoTeachersForSubstitute.class,
-		() -> lessonService.findTeachersForSubstitute(subsitutedTeacher.getId(), startDate, finishDate));
-
-	assertEquals("there is no free teachers", exception.getMessage());
-    }
-
-    @Test
-    void givenTeacherNotTeachLesson_whenfindTeacherForSubstitute_thenNoTeachersForSubstituteExceptionThrown() {
-	LocalDate startDate = LocalDate.now();
-	LocalDate finishDate = LocalDate.now().plusWeeks(1);
-	Subject rightSubject = Subject.builder().id(1).name("rightLesson").build();
-	Subject wrongSubject = Subject.builder().id(1).name("wrongLesson").build();
-	Teacher subsitutedTeacher = Teacher.builder().id(1).firstName("substitutedTeacher").build();
-	Teacher newTeacher = Teacher.builder().id(2).firstName("newTeacher").subjects(Arrays.asList(wrongSubject))
-		.build();
-	List<Teacher> allTeachers = Arrays.asList(newTeacher);
-	Lesson lesson = Lesson.builder().id(1).date(startDate).subject(rightSubject)
-		.lessonTime(LessonTime.builder().id(1).orderNumber("first").build()).teacher(subsitutedTeacher).build();
-	List<Lesson> substitutedlessons = Arrays.asList(lesson);
-	when(teacherDao.findAll()).thenReturn(allTeachers);
-	when(teacherDao.findById(1)).thenReturn(Optional.of(subsitutedTeacher));
-	when(lessonDao.findByTeacherBetweenDates(subsitutedTeacher, startDate, finishDate))
-		.thenReturn(substitutedlessons);
-	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), newTeacher.getId(),
-		lesson.getLessonTime().getId())).thenReturn(Optional.empty());
-
-	Exception exception = assertThrows(NoTeachersForSubstitute.class,
-		() -> lessonService.findTeachersForSubstitute(subsitutedTeacher.getId(), startDate, finishDate));
-
-	assertEquals("there is no free teachers", exception.getMessage());
-    }
+  
 
     private Lesson createLesson() {
 	Student student1 = Student.builder().id(1).build();

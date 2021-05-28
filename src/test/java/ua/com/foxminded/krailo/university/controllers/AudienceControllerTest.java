@@ -60,7 +60,7 @@ class AudienceControllerTest {
 	when(audienceService.getByPage(paging)).thenReturn(expected);
 	when(audienceService.getQuantity()).thenReturn(6);
 
-	mockMvc.perform(get("/audiences?pageSize=2&pageNumber=3"))
+	mockMvc.perform(get("/audiences").param("pageSize", "2").param("pageNumber", "3"))
 		.andExpect(view().name("audiences/all"))
 		.andExpect(status().isOk())
 		.andExpect(model().attribute("audiences", expected))
@@ -72,7 +72,7 @@ class AudienceControllerTest {
 	Audience expected = buildAudiences().get(0);
 	when(audienceService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/audiences/1"))
+	mockMvc.perform(get("/audiences/{id}", "1"))
 		.andExpect(view().name("audiences/audience"))
 		.andExpect(model().attribute("audience", expected));
     }
@@ -81,7 +81,7 @@ class AudienceControllerTest {
     void givenWrongAudienceId_whenGetAudience_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(audienceService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/audiences/1"))
+	mockMvc.perform(get("/audiences/{id}", "1"))
 		.andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
@@ -97,7 +97,8 @@ class AudienceControllerTest {
 
     @Test
     void givenNewAudience_whenSaveAudience_thenAudienceSaved() throws Exception {
-	Audience audience = new Audience();
+	Audience audience = buildAudiences().get(0);
+	audience.setId(0);
 
 	mockMvc.perform(post("/audiences/save").flashAttr("audience", audience))
 		.andExpect(view().name("redirect:/audiences"))

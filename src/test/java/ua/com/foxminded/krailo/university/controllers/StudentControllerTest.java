@@ -70,7 +70,7 @@ class StudentControllerTest {
 	when(studentService.getByPage(paging)).thenReturn(expected);
 	when(studentService.getQuantity()).thenReturn(6);
 
-	mockMvc.perform(get("/students?pageSize=2&pageNumber=3"))
+	mockMvc.perform(get("/students").param("pageSize", "2").param("pageNumber", "3"))
 		.andExpect(view().name("students/all"))
 		.andExpect(status().isOk())
 		.andExpect(model().attribute("students", expected))
@@ -82,7 +82,7 @@ class StudentControllerTest {
 	Student expected = buildStudents().get(0);
 	when(studentService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/students/1"))
+	mockMvc.perform(get("/students/{id}", "1"))
 		.andExpect(view().name("students/student"))
 		.andExpect(status().isOk())
 		.andExpect(model().attribute("student", expected));
@@ -92,7 +92,7 @@ class StudentControllerTest {
     void givenWrongStudentId_whenGetStudent_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(studentService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/students/1"))
+	mockMvc.perform(get("/students/{id}", "1"))
 		.andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
@@ -109,8 +109,10 @@ class StudentControllerTest {
 
     @Test
     void givenStudent_whenSaveStudent_thenCreateMethodCalled() throws Exception {
-
-	mockMvc.perform(post("/students/save").flashAttr("student", buildStudent()))
+	Student student = buildStudent();
+	student.setId(0);
+	
+	mockMvc.perform(post("/students/save").flashAttr("student", student))
 		.andExpect(view().name("redirect:/students"));
 
 	verify(studentService).create(buildStudent());

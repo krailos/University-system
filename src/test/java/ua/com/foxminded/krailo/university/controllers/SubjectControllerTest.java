@@ -59,7 +59,7 @@ class SubjectControllerTest {
 	Subject expected = buildSubjects().get(0);
 	when(subjectService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/subjects/1")).andExpect(view().name("subjects/subject"))
+	mockMvc.perform(get("/subjects/{id}", "1")).andExpect(view().name("subjects/subject"))
 		.andExpect(status().isOk())
 		.andExpect(model().attribute("subject", expected));
     }
@@ -68,7 +68,7 @@ class SubjectControllerTest {
     void givenWrongSubjectId_whenGetSubject_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(subjectService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/subjects/1"))
+	mockMvc.perform(get("/subjects/{id}", "1"))
 		.andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
@@ -87,7 +87,8 @@ class SubjectControllerTest {
 
     @Test
     void givenNewSubject_whenSaveSubject_thenSubjectSaved() throws Exception {
-	Subject subject = new Subject();
+	Subject subject = buildSubjects().get(0);
+	subject.setId(0);
 
 	mockMvc.perform(post("/subjects/save").flashAttr("subject", subject))
 		.andExpect(view().name("redirect:/subjects"))

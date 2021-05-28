@@ -65,7 +65,7 @@ class GroupControllerTest {
 	when(groupService.getByPage(paging)).thenReturn(expected);
 	when(groupService.getQuantity()).thenReturn(6);
 
-	mockMvc.perform(get("/groups?pageSize=2&pageNumber=3"))
+	mockMvc.perform(get("/groups").param("pageSize", "2").param("pageNumber", "3"))
 		.andExpect(view().name("groups/all"))
 		.andExpect(status().isOk())
 		.andExpect(model().attribute("groups", expected))
@@ -77,7 +77,7 @@ class GroupControllerTest {
 	Group expected = buildGroups().get(0);
 	when(groupService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/groups/1"))
+	mockMvc.perform(get("/groups/{id}", "1"))
 		.andExpect(view().name("groups/group"))
 		.andExpect(status().isOk())
 		.andExpect(model().attribute("group", expected));
@@ -87,7 +87,7 @@ class GroupControllerTest {
     void givenWrongGroupId_whenGetGroup_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(groupService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/groups/1"))
+	mockMvc.perform(get("/groups/{id}", "1"))
 		.andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
@@ -106,7 +106,8 @@ class GroupControllerTest {
 
     @Test
     void givenNewGroup_whenSaveGroup_thenGroupSaved() throws Exception {
-	Group group = new Group();
+	Group group = buildGroups().get(0);
+	group.setId(0);
 
 	mockMvc.perform(post("/groups/save").flashAttr("group", group))
 		.andExpect(view().name("redirect:/groups"))

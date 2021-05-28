@@ -71,7 +71,7 @@ class TeacherControllerTest {
 	Teacher expected = buildTeachers().get(0);
 	when(teacherService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/teachers/1"))
+	mockMvc.perform(get("/teachers/{id}", "1"))
 		.andExpect(view().name("teachers/teacher"))
 		.andExpect(status().isOk())
 		.andExpect(model().attribute("teacher", expected));
@@ -81,7 +81,7 @@ class TeacherControllerTest {
     void givenWrongTeacherId_whenGetTeacher_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(teacherService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/teachers/1"))
+	mockMvc.perform(get("/teachers/{id}", "1"))
 		.andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
@@ -100,7 +100,8 @@ class TeacherControllerTest {
 
     @Test
     void givenNewTeacher_whenSaveTeacher_thenTeacherSaved() throws Exception {
-	Teacher teacher = new Teacher();
+	Teacher teacher = buildTeachers().get(0);
+	teacher.setId(0);
 
 	mockMvc.perform(post("/teachers/save").flashAttr("teacher", teacher))
 		.andExpect(view().name("redirect:/teachers"))
@@ -175,6 +176,7 @@ class TeacherControllerTest {
 		.andExpect(model().attribute("teacher", teacher))
 		.andExpect(model().attribute("lessons", lessons));
     }
+  
 
     private List<Teacher> buildTeachers() {
 	return Arrays.asList(Teacher.builder().id(1).firstName("Jon").build(),

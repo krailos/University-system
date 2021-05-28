@@ -82,7 +82,7 @@ class LessonControllerTest {
 	when(lessonService.getByPage(paging)).thenReturn(expected);
 	when(lessonService.getQuantity()).thenReturn(6);
 
-	mockMvc.perform(get("/lessons?pageSize=2&pageNumber=3"))
+	mockMvc.perform(get("/lessons").param("pageSize", "2").param("pageNumber", "3"))
 		.andExpect(view().name("lessons/all"))
 		.andExpect(status().isOk())
 		.andExpect(model().attribute("lessons", expected))
@@ -94,7 +94,7 @@ class LessonControllerTest {
 	Lesson expected = buildLessons().get(0);
 	when(lessonService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/lessons/1").param("pageSize", "2"))
+	mockMvc.perform(get("/lessons/{id}", "1").param("pageSize", "2"))
 		.andExpect(view().name("lessons/lesson"))
 		.andExpect(status().isOk())
 		.andExpect(model().attribute("lesson", expected));
@@ -105,7 +105,7 @@ class LessonControllerTest {
     void givenWrongLessonId_whenGetLesson_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(lessonService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/lessons/1"))
+	mockMvc.perform(get("/lessons/{id}", "id"))
 		.andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
@@ -217,6 +217,40 @@ class LessonControllerTest {
     
     
     @Test
+    void givenTeacherStartDateFinishDate_whenFindTeacherForSubstitute_thensubstituteTeacherFormGot() throws Exception {
+	List<Teacher> teachers = buildTeachers();
+	LocalDate startDate = LocalDate.now();
+	LocalDate finishDate = LocalDate.now().plusWeeks(1);
+	Teacher teacher = buildTeachers().get(0);
+	when(teacherService.findTeachersForSubstitute(teacher, startDate, finishDate)).thenReturn(teachers);
+	when(teacherService.getById(1)).thenReturn(teacher);
+
+	mockMvc.perform(post("/lessons/findTeacherForSubstitute").param("startDate", startDate.toString())
+		.param("finishDate", finishDate.toString()).param("teacherId", "1"))
+		.andExpect(view().name("lessons/substituteTeacher"))
+		.andExpect(model().attribute("startDate", startDate))
+		.andExpect(model().attribute("finishDate", finishDate))
+		.andExpect(model().attribute("teachersForSubstitite", teachers))
+		.andExpect(model().attribute("teacher", teacher));
+    }
+        
+    @Test
+    void givenNoTeachersForSubstitute_whenFindTeacherForSubstitute_thenNoTeachersForSubstituteThrown() throws Exception {
+	LocalDate startDate = LocalDate.now();
+	LocalDate finishDate = LocalDate.now().plusWeeks(1);
+	Teacher teacher = buildTeachers().get(0);
+	when(teacherService.findTeachersForSubstitute(teacher, startDate, finishDate))
+		.thenThrow(new NoTeachersForSubstitute("there is no free teachers"));
+	when(teacherService.getById(1)).thenReturn(teacher);
+
+	mockMvc.perform(post("/lessons/findTeacherForSubstitute").param("startDate", startDate.toString())
+		.param("finishDate", finishDate.toString()).param("teacherId", "1"))
+		.andExpect(view().name("errors/error"))
+		.andExpect(model().attribute("message", "there is no free teachers"));
+    }
+    
+    
+    @Test
     void whenSubstituteTeacherGetForm_thensubstituteTeacherFormGot() throws Exception {
 	List<Teacher> teachers = buildTeachers();
 	when(teacherService.getAll()).thenReturn(teachers);
@@ -226,41 +260,6 @@ class LessonControllerTest {
 		.andExpect(model().attribute("teachers", teachers));
     }
     
-    @Test
-    void givenTeacherStartDateFinishDate_whenFindTeacherForSubstitute_thensubstituteTeacherFormGot() throws Exception {
-	List<Teacher> teachers = buildTeachers();
-	LocalDate startDate = LocalDate.now();
-	LocalDate finishDate = LocalDate.now().plusWeeks(1);
-	Teacher teacher = buildTeachers().get(0);
-	when(lessonService.findTeachersForSubstitute(teacher.getId(), startDate, finishDate)).thenReturn(teachers);
-	when(teacherService.getById(1)).thenReturn(teacher);
-
-	mockMvc.perform(post("/lessons/findTeacherForSubstitute").param("startDate", startDate.toString())
-		.param("finishDate", finishDate.toString()).param("id", "1"))
-		.andExpect(view().name("lessons/substituteTeacher"))
-		.andExpect(model().attribute("startDate", startDate))
-		.andExpect(model().attribute("finishDate", finishDate))
-		.andExpect(model().attribute("teachersForSubstitite", teachers))
-		.andExpect(model().attribute("teacher", teacher));
-    }
-    
-    
-    @Test
-    void givenNoTeachersForSubstitute_whenFindTeacherForSubstitute_thenNoTeachersForSubstituteThrown() throws Exception {
-	LocalDate startDate = LocalDate.now();
-	LocalDate finishDate = LocalDate.now().plusWeeks(1);
-	Teacher teacher = buildTeachers().get(0);
-	when(lessonService.findTeachersForSubstitute(teacher.getId(), startDate, finishDate))
-		.thenThrow(new NoTeachersForSubstitute("there is no free teachers"));
-
-	mockMvc.perform(post("/lessons/findTeacherForSubstitute").param("startDate", startDate.toString())
-		.param("finishDate", finishDate.toString()).param("id", "1"))
-		.andExpect(view().name("errors/error"))
-		.andExpect(model().attribute("message", "there is no free teachers"));
-    }
-    
-    
-
     private List<Lesson> buildLessons() {
 	return Arrays.asList(Lesson.builder().id(1).lessonTime(LessonTime.builder().id(1).build())
 		.audience(Audience.builder().id(1).build()).subject(Subject.builder().id(1).name("subject1").build())

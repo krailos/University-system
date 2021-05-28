@@ -6,7 +6,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
-import ua.com.foxminded.krailo.university.dao.TeacherDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
 import ua.com.foxminded.krailo.university.exception.AudienceNotFreeException;
 import ua.com.foxminded.krailo.university.exception.AudienceOverflowException;
@@ -25,7 +23,6 @@ import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.GroupNotFreeException;
 import ua.com.foxminded.krailo.university.exception.LessonDateOnHolidayException;
 import ua.com.foxminded.krailo.university.exception.LessonDateOnWeekendException;
-import ua.com.foxminded.krailo.university.exception.NoTeachersForSubstitute;
 import ua.com.foxminded.krailo.university.exception.TeacherNotFreeException;
 import ua.com.foxminded.krailo.university.exception.TeacherNotTeachLessonException;
 import ua.com.foxminded.krailo.university.exception.TeacherOnVocationException;
@@ -43,13 +40,11 @@ public class LessonService {
     private LessonDao lessonDao;
     private VocationDao vocationDao;
     private HolidayDao holidayDao;
-    private TeacherDao teacherDao;
 
-    public LessonService(LessonDao lessonDao, VocationDao vocationDao, HolidayDao holidayDao, TeacherDao teacherDao) {
+    public LessonService(LessonDao lessonDao, VocationDao vocationDao, HolidayDao holidayDao) {
 	this.lessonDao = lessonDao;
 	this.vocationDao = vocationDao;
 	this.holidayDao = holidayDao;
-	this.teacherDao = teacherDao;
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
@@ -127,23 +122,13 @@ public class LessonService {
 	return lessonDao.findByStudentBetweenDates(student, startDate, finishDate);
 
     }
+    
 
-    public List<Teacher> findTeachersForSubstitute(int substitutedTeacherId, LocalDate startDate,
-	    LocalDate finishDate) {
-	Teacher substitutedTeacher = teacherDao.findById(substitutedTeacherId).orElseThrow(
-		() -> new EntityNotFoundException(format("Lesson whith id=%s not exist", substitutedTeacherId)));
-	List<Lesson> substitutedLessons = lessonDao.findByTeacherBetweenDates(substitutedTeacher, startDate,
-		finishDate);
-	List<Teacher> teachersForSubstitute = teacherDao.findAll().stream()
-		.filter(t -> substitutedLessons.stream()
-			.allMatch(l -> !lessonDao.findByDateAndTeacherIdAndLessonTimeId(l.getDate(), t.getId(),
-				l.getLessonTime().getId()).isPresent() && t.getSubjects().contains(l.getSubject())))
-		.collect(Collectors.toList());
-	if (teachersForSubstitute.isEmpty()) {
-	    throw new NoTeachersForSubstitute("there is no free teachers");
-	}
-	return teachersForSubstitute;
+    public void substituteTeacher(Teacher oldTeacher, Teacher newTeacher, LocalDate startDate, LocalDate finishDate) {
+	lessonDao.findByTeacherBetweenDates(oldTeacher, startDate, finishDate).stream()
+		.peek(l -> l.setTeacher(newTeacher)).forEach(lessonDao::update);
     }
+
 
     private void checkTeacherIsFree(Lesson lesson) {
 	Optional<Lesson> existingLesson = lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(),
