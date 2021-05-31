@@ -430,10 +430,12 @@ class LessonServiceTest {
     void givenOldTeacherNewTeacherSubstitutePeriod_whenSubstituteTeacher_thenLessonsUpdatedAndTeacherSubstituted() {
 	LocalDate startDate = LocalDate.now();
 	LocalDate finishDate = LocalDate.now().plusWeeks(1);
-	Teacher oldTeacher = Teacher.builder().id(1).firstName("oldTeacher").build();
-	Teacher newTeacher = Teacher.builder().id(2).firstName("newTeacher").build();
+	Subject subject = Subject.builder().id(1).name("subject name").build();
+	Teacher oldTeacher = Teacher.builder().id(1).firstName("oldTeacher").subjects(Arrays.asList(subject)).build();
+	Teacher newTeacher = Teacher.builder().id(2).firstName("newTeacher").subjects(Arrays.asList(subject)).build();
 	Lesson lesson = createLesson();
 	lesson.setTeacher(oldTeacher);
+	lesson.setSubject(subject);
 	when(lessonDao.findByTeacherBetweenDates(oldTeacher, startDate, finishDate)).thenReturn(Arrays.asList(lesson));
 	
 	lessonService.substituteTeacher(oldTeacher, newTeacher, startDate, finishDate);

@@ -60,7 +60,7 @@ CREATE TABLE lesson_times (
 
 CREATE TABLE students (
 	id serial NOT NULL,
-	student_id character varying (50) NOT NULL,
+	student_id character varying (50),
 	first_name character varying (50) NOT NULL,
 	last_name character varying (50) NOT NULL,
 	birth_date date NOT NULL,
@@ -82,7 +82,7 @@ CREATE TABLE subjects (
 
 CREATE TABLE teachers (
 	id serial NOT NULL,
-	teacher_id character varying (50) NOT NULL,
+	teacher_id character varying (50),
 	first_name character varying (50) NOT NULL,
 	last_name character varying (50) NOT NULL,
 	birth_date date NOT NULL,

@@ -1,7 +1,7 @@
 package ua.com.foxminded.krailo.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -20,7 +20,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
-import ua.com.foxminded.krailo.university.exception.NoTeachersForSubstitute;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.LessonTime;
@@ -114,7 +113,7 @@ class TeacherServiceTest {
     }
 
     @Test
-    void givenNotFreeTeacher_whenfindTeacherForSubstitute_thenNoTeachersForSubstituteExceptionThrown() {
+    void givenNotFreeTeacher_whenfindTeacherForSubstitute_thenEmptyListOfTeachersReturned() {
 	LocalDate startDate = LocalDate.now();
 	LocalDate finishDate = LocalDate.now().plusWeeks(1);
 	Subject subject = Subject.builder().id(1).name("rightLesson").build();
@@ -130,14 +129,14 @@ class TeacherServiceTest {
 	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), newTeacher.getId(),
 		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
 
-	Exception exception = assertThrows(NoTeachersForSubstitute.class,
-		() -> teacherService.findTeachersForSubstitute(subsitutedTeacher, startDate, finishDate));
 
-	assertEquals("there is no free teachers", exception.getMessage());
+	List<Teacher> teachers = teacherService.findTeachersForSubstitute(subsitutedTeacher, startDate, finishDate);
+
+	assertTrue(teachers.isEmpty());
     }
 
     @Test
-    void givenTeacherNotTeachLesson_whenfindTeacherForSubstitute_thenNoTeachersForSubstituteExceptionThrown() {
+    void givenTeacherNotTeachLesson_whenfindTeacherForSubstitute_thenEmptyListOfTeachersReturned() {
 	LocalDate startDate = LocalDate.now();
 	LocalDate finishDate = LocalDate.now().plusWeeks(1);
 	Subject rightSubject = Subject.builder().id(1).name("rightLesson").build();
@@ -149,10 +148,9 @@ class TeacherServiceTest {
 	when(lessonDao.findByTeacherBetweenDates(subsitutedTeacher, startDate, finishDate))
 		.thenReturn(substitutedlessons);
 
-	Exception exception = assertThrows(NoTeachersForSubstitute.class,
-		() -> teacherService.findTeachersForSubstitute(subsitutedTeacher, startDate, finishDate));
+	List<Teacher> teachers = teacherService.findTeachersForSubstitute(subsitutedTeacher, startDate, finishDate);
 
-	assertEquals("there is no free teachers", exception.getMessage());
+	assertTrue(teachers.isEmpty());
     }
 
     private Teacher createTeacher() {

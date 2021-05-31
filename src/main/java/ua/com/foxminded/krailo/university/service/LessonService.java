@@ -123,9 +123,13 @@ public class LessonService {
 
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void substituteTeacher(Teacher oldTeacher, Teacher newTeacher, LocalDate startDate, LocalDate finishDate) {
-	lessonDao.findByTeacherBetweenDates(oldTeacher, startDate, finishDate).stream()
-		.peek(l -> l.setTeacher(newTeacher)).forEach(lessonDao::update);
+	lessonDao.findByTeacherBetweenDates(oldTeacher, startDate, finishDate).stream().peek(l -> {
+	    checkTeacherIsFree(l);
+	    checkTeacherTeachesLessonSubject(l);
+	    l.setTeacher(newTeacher);
+	}).forEach(lessonDao::update);
     }
 
     private void checkTeacherIsFree(Lesson lesson) {

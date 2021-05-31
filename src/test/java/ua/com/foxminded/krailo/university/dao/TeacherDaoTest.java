@@ -30,7 +30,7 @@ class TeacherDaoTest {
 
     @Test
     void givenNewTeacher_whenCreate_thenCreated() {
-	Teacher teacher = Teacher.builder().teacherId("teacher id").firstName("first name").lastName("last name")
+	Teacher teacher = Teacher.builder().firstName("first name").lastName("last name")
 		.birthDate(LocalDate.of(2000, 01, 01)).address("address").phone("phone").email("email").degree("degree")
 		.gender(Gender.MALE).build();
 
@@ -42,7 +42,7 @@ class TeacherDaoTest {
 
     @Test
     void givenNewTeacherWithSubjects_whenCreate_thenNewRowsInTableTeachersSubjectsCreated() {
-	Teacher teacher = Teacher.builder().id(3).teacherId("teacher id").firstName("first name").lastName("last name")
+	Teacher teacher = Teacher.builder().id(3).firstName("first name").lastName("last name")
 		.birthDate(LocalDate.of(2000, 01, 01)).address("address").phone("phone").email("email").degree("degree")
 		.gender(Gender.MALE).build();
 	List<Subject> subjects = new ArrayList<>(Arrays.asList(Subject.builder().id(1).name("subject1").build(),
@@ -58,21 +58,21 @@ class TeacherDaoTest {
 
     @Test
     void givenNewFieldsOfTeacher_whenUpdate_tnenUpdated() {
-	Teacher teacher = Teacher.builder().id(1).teacherId("teacher id").firstName("first name").lastName("last name")
+	Teacher teacher = Teacher.builder().id(1).firstName("first name").lastName("last name")
 		.birthDate(LocalDate.of(2000, 01, 01)).address("address").phone("phone").email("email").degree("degree")
 		.gender(Gender.MALE).build();
 
 	teacherDao.update(teacher);
 
 	int actual = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers",
-		"teacher_id = 'teacher id' AND first_name  = 'first name' AND last_name = 'last name' AND birth_date = '2000-01-01'"
+		"first_name  = 'first name' AND last_name = 'last name' AND birth_date = '2000-01-01'"
 			+ " AND phone = 'phone' AND address = 'address' AND email = 'email'AND degree = 'degree'  AND gender = 'MALE' AND id = 1");
 	assertEquals(1, actual);
     }
 
     @Test
     void givenNewSubjectsOfTeacher_whenUpdate_thenUpdated() {
-	Teacher teacher = Teacher.builder().id(1).teacherId("teacher id").firstName("first name").lastName("last name")
+	Teacher teacher = Teacher.builder().id(1).firstName("first name").lastName("last name")
 		.birthDate(LocalDate.of(2000, 01, 01)).address("address").phone("phone").email("email").degree("degree")
 		.gender(Gender.MALE).build();
 	List<Subject> subjects = new ArrayList<>(Arrays.asList(Subject.builder().id(1).name("subject1").build(),

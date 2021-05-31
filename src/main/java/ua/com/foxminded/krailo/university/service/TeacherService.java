@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
-import ua.com.foxminded.krailo.university.exception.NoTeachersForSubstitute;
 import ua.com.foxminded.krailo.university.model.Lesson;
+import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
 
 @Service
@@ -70,16 +70,16 @@ public class TeacherService {
 	    LocalDate finishDate) {
 	List<Lesson> substitutedLessons = lessonDao.findByTeacherBetweenDates(substitutedTeacher, startDate,
 		finishDate);
-	List<Teacher> teachersForSubstitute = substitutedLessons.stream()
-		.flatMap(l -> teacherDao.findBySubjectId(l.getSubject().getId()).stream()).distinct()
-		.filter(t -> substitutedLessons.stream()
-			.allMatch(l -> !lessonDao.findByDateAndTeacherIdAndLessonTimeId(l.getDate(), t.getId(),
-				l.getLessonTime().getId()).isPresent()))
+	List<Subject> substitutedSubjects = substitutedLessons.stream().map(Lesson::getSubject)
 		.collect(Collectors.toList());
-	if (teachersForSubstitute.isEmpty()) {
-	    throw new NoTeachersForSubstitute("there is no free teachers");
-	}
-	return teachersForSubstitute;
+	List<Teacher> teachersForSubstitute = substitutedSubjects.stream()
+		.flatMap(s -> teacherDao.findBySubjectId(s.getId()).stream()).distinct()
+		.filter(t -> t.getSubjects().containsAll(substitutedSubjects)).collect(Collectors.toList());
+	return teachersForSubstitute.stream()
+		.filter(t -> substitutedLessons.stream().noneMatch(l -> lessonDao
+			.findByDateAndTeacherIdAndLessonTimeId(l.getDate(), t.getId(), l.getLessonTime().getId())
+			.isPresent()))
+		.collect(Collectors.toList());
     }
 
 }

@@ -34,10 +34,10 @@ INSERT INTO subjects (name) VALUES
 ('subject 3'),
 ('subject 4');
 
-INSERT INTO teachers (teacher_id, first_name, last_name, birth_date, phone,
+INSERT INTO teachers (first_name, last_name, birth_date, phone,
 address, email, degree, gender) VALUES 
-('1id', 'first name 1', 'last name 1', DATE '2000-01-01', '0670000001', 'address 1', 'email 1', '0', 'MALE' ),
-('2id', 'first name 2', 'last name 2', DATE '2002-02-02', '0670000002', 'address 2', 'email 2', '0', 'FEMALE' );
+('first name 1', 'last name 1', DATE '2000-01-01', '0670000001', 'address 1', 'email 1', '0', 'MALE' ),
+('first name 2', 'last name 2', DATE '2002-02-02', '0670000002', 'address 2', 'email 2', '0', 'FEMALE' );
 
 INSERT INTO timetables (name) VALUES 
 ('timetable student for one date'),
