@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan("ua.com.foxminded.krailo.university")
-@PropertySource({ "classpath:config.properties", "classpath:jndi.properties" })
+@PropertySource("classpath:config.properties")
 @EnableTransactionManagement
 public class UniversityConfig {
 
@@ -26,7 +26,6 @@ public class UniversityConfig {
     @Bean
     public DataSource dataSource() throws NamingException {
 	return (DataSource) new JndiTemplate().lookup(jdbcJndiName);
-
     }
 
     @Bean
