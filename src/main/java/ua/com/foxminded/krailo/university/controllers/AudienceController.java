@@ -1,5 +1,6 @@
 package ua.com.foxminded.krailo.university.controllers;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,12 +25,8 @@ public class AudienceController {
     }
 
     @GetMapping
-    public String getAllAudiences(
-	    @RequestParam(value = "pageSize", defaultValue = "${page.defaultPageSize:2}", required = false) int pageSize,
-	    @RequestParam(value = "pageNumber", defaultValue = "1", required = false) int pageNumber, Model model) {
-	Paging paging = new Paging(pageSize, pageNumber, audienceService.getQuantity());
-	model.addAttribute("pageQuantity", paging.getPageQuantity());
-	model.addAttribute("audiences", audienceService.getByPage(paging));
+    public String getAllAudiences (Model model, Pageable  pageable) {
+	model.addAttribute("audiencesPage", audienceService.getSelectedPage(pageable));
 	return "audiences/all";
     }
 

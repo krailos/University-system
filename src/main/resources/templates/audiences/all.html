@@ -108,7 +108,7 @@
 									<th class="text-center">Action</th>
 								</tr>
 							</thead>
-							<tr th:each="audience, index : ${audiences}">
+							<tr th:each="audience, index : ${audiencesPage.getContent()}">
 								<td th:text="${index.count}" class="font-weight-bold"></td>
 								<td th:text="${audience.id}"></td>
 								<td th:text="${audience.number}"></td>

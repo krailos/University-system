@@ -1,7 +1,24 @@
 package ua.com.foxminded.krailo.university.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
+
+@Entity
+@Table(name = "audiences")
+@NamedQueries({
+    @NamedQuery(name = "SelectAudienceByNumber", query = "from Audience where number = :number"),
+    @NamedQuery(name = "SelectAllAudiences", query = "from Audience order by number"),
+    @NamedQuery(name = "CountAllAudiences",query = "select count(id) from Audience")
+})
 public class Audience {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String number;
     private int capacity;
@@ -69,7 +86,6 @@ public class Audience {
 	    return this;
 	}
 
-
 	public AudienceBuilder capacity(int capacity) {
 	    this.capacity = capacity;
 	    return this;
@@ -88,7 +104,7 @@ public class Audience {
 
     @Override
     public String toString() {
-	return "id="+id + "; number=" + number +"; capacity=" + capacity + "; description=" + description;
+	return "id=" + id + "; number=" + number + "; capacity=" + capacity + "; description=" + description;
     }
 
     @Override
