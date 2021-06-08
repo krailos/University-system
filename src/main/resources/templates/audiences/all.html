@@ -1,188 +1,179 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en"
-	xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-<meta charset="utf-8">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" type="text/css"
-	th:href="@{/bootstrap/css/bootstrap.min.css}">
-<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
 
-<!-- Jquery CSS -->
-<script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
+    <!-- Jquery CSS -->
+    <script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
 
-<!-- Custom css -->
-<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+    <!-- Custom css -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
 
-<!-- Web font awesome 5 local -->
-<link rel="stylesheet"
-	th:href="@{/webfonts/fontawesome/css/all.min.css}">
+    <!-- Web font awesome 5 local -->
+    <link rel="stylesheet" th:href="@{/webfonts/fontawesome/css/all.min.css}">
 
-<!-- Web font bootstrap 4 local -->
-<link rel="stylesheet"
-	th:href="@{/webfonts/bootstrap-icon/bootstrap-icons.css}">
+    <!-- Web font bootstrap 4 local -->
+    <link rel="stylesheet" th:href="@{/webfonts/bootstrap-icon/bootstrap-icons.css}">
 
-<!-- Web font awesome 4 local -->
-<link rel="stylesheet"
-	th:href="@{/webfonts/font-awesome-4/font-awesome-4.7.0/css/font-awesome.min.css}">
+    <!-- Web font awesome 4 local -->
+    <link rel="stylesheet" th:href="@{/webfonts/font-awesome-4/font-awesome-4.7.0/css/font-awesome.min.css}">
 
 
 
-<title>Lessons</title>
+    <title>Lessons</title>
 </head>
 
 <body>
 
-	<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
-	<script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/jquery/jquery-3.6.0.min.js}"></script>
 
-	<header>
-		<nav class="navbar navbar-expand-lg navbar-dark bg-info">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-info">
 
-			<div class="font-weight-bolder">
-				<a class="navbar-brand" th:href="@{/admin}">University/Admin</a>
-			</div>
-
-
-			<button class="navbar-toggler" type="button" data-toggle="collapse"
-				data-target="#navbarSupportedContent"
-				aria-controls="navbarSupportedContent" aria-expanded="false"
-				aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-
-			<div class="collapse navbar-collapse" id="navbarSupportedContent">
-				<ul class="navbar-nav ml-auto">
-					<li class="nav-item active">
-						<a class="nav-link" th:href="@{/}">Home/University</a>
-					</li>
-				</ul>
-			</div>
-
-		</nav>
-	</header>
+            <div class="font-weight-bolder">
+                <a class="navbar-brand" th:href="@{/admin}">University/Admin</a>
+            </div>
 
 
-	<div class="container-fluid ">
-		<div class="row">
-			<div class="col-md-2 bg-info " style="height: 100vh;">
-				<ul class="list-group list-group-flush">
-					<li class="list-group-item">
-						<a th:href="@{/audiences}" class="text-info">
-							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
-							All audiences
-						</a>
-					</li>
-					<li class="list-group-item">
-						<a th:href="@{/audiences/create}" class="text-info">
-							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
-							Create audience
-						</a>
-					</li>
-					<li class="list-group-item">
-						<a href="#" class="text-info">
-							<i class="fa fa-cog mr-2" aria-hidden="true"></i>
-							Find student
-						</a>
-					</li>
-				</ul>
-			</div>
-			<div class="
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" th:href="@{/}">Home/University</a>
+                    </li>
+                </ul>
+            </div>
+
+        </nav>
+    </header>
+
+
+    <div class="container-fluid ">
+        <div class="row">
+            <div class="col-md-2 bg-info " style="height: 100vh;">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <a th:href="@{/audiences}" class="text-info">
+                            <i class="fa fa-cog mr-2" aria-hidden="true"></i>
+                            All audiences
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a th:href="@{/audiences/create}" class="text-info">
+                            <i class="fa fa-cog mr-2" aria-hidden="true"></i>
+                            Create audience
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="#" class="text-info">
+                            <i class="fa fa-cog mr-2" aria-hidden="true"></i>
+                            Find student
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="
 				col-md-10" style="height: 100vh;">
-				<div class="row">
-					<div class="col-12 text-center mt-3">
-						<p class="h4  text-center text-info">All audiences</p>
-					</div>
-					<div class="col-10 offset-1">
-						<table class="table table-hover table-sm">
-							<thead class="thead-light">
-								<tr>
-									<th>Order</th>
-									<th>ID</th>
-									<th>Number</th>
-									<th>Description</th>
-									<th class="text-center">Action</th>
-								</tr>
-							</thead>
-							<tr th:each="audience, index : ${audiencesPage.getContent()}">
-								<td th:text="${index.count}" class="font-weight-bold"></td>
-								<td th:text="${audience.id}"></td>
-								<td th:text="${audience.number}"></td>
-								<td th:text="${audience.description}"></td>
-								<td class="text-center">
-									<a title="view" th:href="@{/audiences/{id}(id=${audience.id})}"
-										class="btn btn-outline-success btn-sm" role="button"
-										aria-pressed="true">
-										<i class="fa fa-eye"></i>
-									</a>
-									<a title="edit"
-										th:href="@{audiences/edit/{id}(id=${audience.id})}"
-										class="btn btn-outline-success btn-sm" role="button"
-										aria-pressed="true">
-										<i class="bi bi-pencil-square"></i>
-									</a>
+                <div class="row">
+                    <div class="col-12 text-center mt-3">
+                        <p class="h4  text-center text-info">All audiences</p>
+                    </div>
+                    <div class="col-10 offset-1">
+                        <table class="table table-hover table-sm">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Order</th>
+                                    <th>ID</th>
+                                    <th>Number</th>
+                                    <th>Description</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tr th:each="audience, index : ${audiencesPage.getContent()}">
+                                <td th:text="${index.count}" class="font-weight-bold"></td>
+                                <td th:text="${audience.id}"></td>
+                                <td th:text="${audience.number}"></td>
+                                <td th:text="${audience.description}"></td>
+                                <td class="text-center">
+                                    <a title="view" th:href="@{/audiences/{id}(id=${audience.id})}"
+                                        class="btn btn-outline-success btn-sm" role="button" aria-pressed="true">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                    <a title="edit" th:href="@{audiences/edit/{id}(id=${audience.id})}"
+                                        class="btn btn-outline-success btn-sm" role="button" aria-pressed="true">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+
+                                    <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal"
+                                        data-target="#deleteModal" th:attrappend="data-target=${audience.id}">
+                                        <i class="bi bi-x-circle"></i>
+                                    </button>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="deleteModal" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true"
+                                        th:attrappend="id=${audience.id}">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Delete
+                                                        audience?</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <!-- div class="modal-body">Are you sure?</div-->
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal">No</button>
+                                                    <form th:action="@{/audiences/delete/(id=${audience.getId()})}"
+                                                        th:method="POST">
+                                                        <button type="submit" class="btn btn btn-danger"
+                                                            style="width: 100px;">delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-10 offset-1 text-right">
+                    <a th:if="${audiencesPage.hasPrevious()}"
+                        th:href="@{~/university/audiences?size=} + ${audiencesPage.getSize()} + '&page=' + ${audiencesPage.getNumber()}">Prev.</a>
+                    <span th:unless="${audiencesPage.hasPrevious()}">Prev.</span>
+                    &nbsp;
+
+                    <th:block th:each="pageNo : ${#numbers.sequence( 1, audiencesPage.getTotalPages(), 1)}">
+                        <a th:if="${audiencesPage.getNumber()+1 != pageNo}" th:text="${pageNo}"
+                            th:href="@{~/university/audiences?size=} + ${audiencesPage.getSize()} + '&page=' + ${pageNo}"></a>
+                        <span th:unless="${audiencesPage.getNumber()+1 != pageNo}" th:text="${pageNo}"></span>
+                        &nbsp
+                    </th:block>
+
+                    <a th:if="${audiencesPage.hasNext()}"
+                        th:href="@{~/university/audiences?size=} + ${audiencesPage.getSize()} + '&page=' + ${audiencesPage.getNumber()+2}">Next.</a>
+                    <span th:unless="${audiencesPage.hasNext()}">Next.</span>
+                </div>
 
 
-
-									<button type="button" class="btn btn-outline-danger btn-sm"
-										data-toggle="modal" data-target="#deleteModal"
-										th:attrappend="data-target=${audience.id}">
-										<i class="bi bi-x-circle"></i>
-									</button>
-									<!-- Modal -->
-									<div class="modal fade" id="deleteModal" tabindex="-1"
-										aria-labelledby="exampleModalLabel" aria-hidden="true"
-										th:attrappend="id=${audience.id}">
-										<div class="modal-dialog modal-dialog-centered">
-											<div class="modal-content">
-												<div class="modal-header">
-													<h5 class="modal-title" id="exampleModalLabel">Delete
-														audience?</h5>
-													<button type="button" class="close" data-dismiss="modal"
-														aria-label="Close">
-														<span aria-hidden="true">&times;</span>
-													</button>
-												</div>
-												<!-- div class="modal-body">Are you sure?</div-->
-												<div class="modal-footer">
-													<button type="button" class="btn btn-secondary"
-														data-dismiss="modal">No</button>
-													<form
-														th:action="@{/audiences/delete/(id=${audience.getId()})}"
-														th:method="POST">
-														<button type="submit" class="btn btn btn-danger"
-															style="width: 100px;">delete</button>
-													</form>
-												</div>
-											</div>
-										</div>
-									</div>
-
-
-
-								</td>
-							</tr>
-						</table>
-					</div>
-				</div>
-
-
-				<div class="col-10 offset-1 mt-2">
-					<a title="view" th:each="i: ${#numbers.sequence(1, pageQuantity)}"
-						th:href="@{/audiences?pageNumber={number}(number=${i})}"
-						class="btn btn-outline-info btn-sm ml-1" role="button"
-						aria-pressed="true" th:text="${i}">page</a>
-				</div>
-
-
-			</div>
-		</div>
-
-	</div>
+            </div>
+        </div>
+    </div>
 
 
 </body>
