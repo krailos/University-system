@@ -14,21 +14,20 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<postgresql.version>42.2.12</postgresql.version>
-		<spring.version>5.1.5.RELEASE</spring.version>
-		<junit.version>5.7.0</junit.version>
+		<maven.compiler.source>14</maven.compiler.source>
+		<maven.compiler.target>14</maven.compiler.target>
+		<postgresql.version>42.2.18</postgresql.version>
+		<spring.version>5.3.2</spring.version>
+		<junit.version>5.4.0</junit.version>
 		<h2.version>1.4.200</h2.version>
-		<mockito.version>2.23.0</mockito.version>
+		<mockito.version>3.1.0</mockito.version>
 		<logback.version>1.2.3</logback.version>
-		<thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
+		<thymeleaf.version>3.0.12.RELEASE</thymeleaf.version>
 		<thymeleaf-extras.version>3.0.4.RELEASE</thymeleaf-extras.version>
 		<servelet-api.version>4.0.1</servelet-api.version>
 		<hamcrest.version>2.2</hamcrest.version>
-		<hibernate-core.version>5.5.0.Final</hibernate-core.version>
-		<spring-data-commons.version>2.5.0</spring-data-commons.version>
-		<spring-orm.version>5.3.6</spring-orm.version>
+		<hibernate-core.version>5.4.29.Final</hibernate-core.version>
+		<spring-data-commons.version>2.4.5</spring-data-commons.version>
 	</properties>
 
 	<dependencies>
@@ -103,7 +102,6 @@
 			<artifactId>spring-orm</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
@@ -145,6 +143,10 @@
 			<version>${hamcrest.version}</version>
 			<scope>test</scope>
 		</dependency>
+
+
+
+
 
 	</dependencies>
 
