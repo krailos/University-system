@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.service.AudienceService;
-import ua.com.foxminded.krailo.university.util.Paging;
 
 @Controller
 @RequestMapping("/audiences")

@@ -3,11 +3,34 @@ package ua.com.foxminded.krailo.university.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
+
+@Entity
+@Table(name = "groups")
+@NamedQueries({
+    @NamedQuery(name = "SelectAllGroups", query = "select g from Group as g order by g.name"),
+    @NamedQuery(name = "SelectGroupsByYear", query = "select g from Group g inner join g.year as y where y.id = :yearId"),
+    @NamedQuery(name = "SelectGroupsByNameAndYear", query = "select g from Group g inner join g.year as y where g.name = :name and y.id = :yearId"),
+    @NamedQuery(name = "CountAllGroups",query = "select count(id) from Group")
+    })
 public class Group {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+    @ManyToOne
     private Year year;
+    @Transient
     private List<Student> students = new ArrayList<>();
 
     public Group() {
@@ -92,7 +115,7 @@ public class Group {
 
     @Override
     public String toString() {
-	return "id = " + id + " " + "name = " + name + " " + "year = " + year;
+	return "id = " + id + " " + "name = " + name + " " + "year = " + ((year == null) ? "null" : year.getName());
     }
 
     @Override

@@ -162,7 +162,7 @@
                         <a th:if="${audiencesPage.getNumber()+1 != pageNo}" th:text="${pageNo}"
                             th:href="@{~/university/audiences?size=} + ${audiencesPage.getSize()} + '&page=' + ${pageNo}"></a>
                         <span th:unless="${audiencesPage.getNumber()+1 != pageNo}" th:text="${pageNo}"></span>
-                        &nbsp
+                        &nbsp;
                     </th:block>
 
                     <a th:if="${audiencesPage.hasNext()}"

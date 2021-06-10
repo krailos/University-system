@@ -7,60 +7,65 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.dao.GroupDao;
+import ua.com.foxminded.krailo.university.dao.GroupDaoInt;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
 import ua.com.foxminded.krailo.university.model.Group;
-import ua.com.foxminded.krailo.university.util.Paging;
+import ua.com.foxminded.krailo.university.model.Year;
 
+@Transactional
 @Service
 public class GroupService {
 
     private static final Logger log = LoggerFactory.getLogger(GroupService.class);
 
-    private GroupDao groupDao;
+    private GroupDaoInt groupDaoInt;
 
-    public GroupService(GroupDao groupDao) {
-	this.groupDao = groupDao;
+    public GroupService(GroupDaoInt groupDaoInt) {
+	this.groupDaoInt = groupDaoInt;
+    }
+
+    public Group getById(int id) {
+	log.debug("get group by id={}", id);
+	return groupDaoInt.getById(id)
+		.orElseThrow(() -> new EntityNotFoundException(format("Group whith id=%s not exist", id)));
     }
 
     public void create(Group group) {
 	log.debug("create group={}", group);
 	checkGroupNameBeUnique(group);
-	groupDao.create(group);
+	groupDaoInt.create(group);
     }
 
     public void update(Group group) {
 	log.debug("update group={}", group);
 	checkGroupNameBeUnique(group);
-	groupDao.update(group);
-    }
-
-    public Group getById(int id) {
-	log.debug("get group by id={}", id);
-	return groupDao.findById(id)
-		.orElseThrow(() -> new EntityNotFoundException(format("Group whith id=%s not exist", id)));
+	groupDaoInt.update(group);
     }
 
     public List<Group> getAll() {
 	log.debug("get all groups");
-	return groupDao.findAll();
+	return groupDaoInt.getAll();
     }
 
-    public List<Group> getByYearId(int yearId) {
-	log.debug("get groups by yearId={}", yearId);
-	return groupDao.findByYearId(yearId);
+    public List<Group> getByYear(Year year) {
+	log.debug("get groups by yearId={}", year.getId());
+	return groupDaoInt.getByYear(year);
     }
 
     public void delete(Group group) {
 	log.debug("delete group={}", group);
-	groupDao.deleteById(group.getId());
+	groupDaoInt.delete(group);
     }
 
     private void checkGroupNameBeUnique(Group group) {
-	Optional<Group> existingGroup = groupDao.findByNameAndYearId(group.getName(), group.getYear().getId());
+	Optional<Group> existingGroup = groupDaoInt.getByNameAndYear(group.getName(), group.getYear());
 	if (existingGroup.filter(a -> a.getId() != group.getId()).isPresent()) {
 	    throw new NotUniqueNameException(
 		    format("group name=%s and yearId=%s not unique", group.getName(), group.getYear().getId()));
@@ -69,12 +74,12 @@ public class GroupService {
 
     public int getQuantity() {
 	log.debug("get group quantity");
-	return groupDao.findQuantity();
+	return groupDaoInt.count();
     }
 
-    public List<Group> getByPage(Paging paging) {
-	log.debug("get groups by limit");
-	return groupDao.findWithLimit(paging.getPageSize(), paging.getOffset());
+    public Page<Group> getSelectedPage(Pageable pageable) {
+	log.debug("get audiences by page");
+	return new PageImpl<>(groupDaoInt.getAllByPage(pageable), pageable, groupDaoInt.count());
     }
 
 }

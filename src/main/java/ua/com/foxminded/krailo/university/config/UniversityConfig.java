@@ -64,8 +64,8 @@ public class UniversityConfig {
 
     private final Properties hibernateProperties() {
 	Properties hibernateProperties = new Properties();
-	hibernateProperties.setProperty("hibernate.show_sql", showSql);
-	hibernateProperties.setProperty("hibernate.format_sql", formatSql);
+	hibernateProperties.setProperty("show_sql", showSql);
+	hibernateProperties.setProperty("format_sql", formatSql);
 	hibernateProperties.setProperty("hibernate.hbm2ddl.auto", hibernateHbm2ddl);
 	hibernateProperties.setProperty("hibernate.dialect", hibernateDialect);
 	hibernateProperties.setProperty("current_session_context_class", currentSessionContextClass);
