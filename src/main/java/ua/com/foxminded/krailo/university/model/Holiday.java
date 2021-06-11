@@ -2,10 +2,25 @@ package ua.com.foxminded.krailo.university.model;
 
 import java.time.LocalDate;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
 import org.springframework.format.annotation.DateTimeFormat;
 
+@Entity
+@Table(name = "holidays")
+@NamedQueries({
+    @NamedQuery(name = "SelectHolidaysByDate", query = "from Holiday where name = :name"),
+    @NamedQuery(name = "SelectAllHolidays", query = "from Holiday order by date")
+})
 public class Holiday {
 
+    @Id
+    @GeneratedValue
     private int id;
     private String name;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

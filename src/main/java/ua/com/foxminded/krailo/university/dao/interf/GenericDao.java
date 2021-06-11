@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.university.dao;
+package ua.com.foxminded.krailo.university.dao.interf;
 
 import java.util.Optional;
 
