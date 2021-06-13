@@ -4,20 +4,45 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
+@Entity
+@Table(name = "teachers")
 public class Teacher {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "teacher_id")
     private String teacherId;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @Column(name = "birth_date")
     private LocalDate birthDate;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "teachers_subjects", joinColumns = { @JoinColumn(name = "teacher_id") }, inverseJoinColumns = {
+	    @JoinColumn(name = "subject_id") })
     private List<Subject> subjects = new ArrayList<>();
     private String phone;
     private String address;
     private String email;
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     private String degree;
 

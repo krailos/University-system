@@ -2,15 +2,29 @@ package ua.com.foxminded.krailo.university.model;
 
 import java.time.LocalTime;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
+@Entity
+@Table(name = "lesson_Times")
 public class LessonTime {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "order_number")
     private String orderNumber;
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
+    @Column(name = "start_time")
     private LocalTime startTime;
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
+    @Column(name = "end_time")
     private LocalTime endTime;
 
     public LessonTime() {

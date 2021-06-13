@@ -119,7 +119,7 @@
 									<th class="text-center">Action</th>
 								</tr>
 							</thead>
-							<tr th:each="lesson, index : ${lessons}">
+							<tr th:each="lesson, index : ${lessonsPage.getContent()}">
 								<td th:text="${index.count}" class="font-weight-bold"></td>
 								<td th:text="${lesson.id}"></td>
 								<td th:text="${lesson.date}"></td>
@@ -183,13 +183,23 @@
 				</div>
 
 
-				<div class="col-10 offset-1 mt-2">
-					<a title="view" th:each="i: ${#numbers.sequence(1, pageQuantity)}"
-						th:href="@{/lessons?pageNumber={pageNumber}(pageNumber=${i})}"
-						class="btn btn-outline-info btn-sm ml-1" role="button"
-						aria-pressed="true" th:text="${i}">page</a>
-				</div>
+			 <div class="col-10 offset-1 text-right">
+                    <a th:if="${lessonsPage.hasPrevious()}"
+                        th:href="@{~/university/lessons?size=} + ${lessonsPage.getSize()} + '&page=' + ${lessonsPage.getNumber()}">Prev.</a>
+                    <span th:unless="${lessonsPage.hasPrevious()}">Prev.</span>
+                    &nbsp;
 
+                    <th:block th:each="pageNo : ${#numbers.sequence( 1, lessonsPage.getTotalPages(), 1)}">
+                        <a th:if="${lessonsPage.getNumber()+1 != pageNo}" th:text="${pageNo}"
+                            th:href="@{~/university/lessons?size=} + ${lessonsPage.getSize()} + '&page=' + ${pageNo}"></a>
+                        <span th:unless="${lessonsPage.getNumber()+1 != pageNo}" th:text="${pageNo}"></span>
+                        &nbsp;
+                    </th:block>
+
+                    <a th:if="${lessonsPage.hasNext()}"
+                        th:href="@{~/university/lessons?size=} + ${lessonsPage.getSize()} + '&page=' + ${lessonsPage.getNumber()+2}">Next.</a>
+                    <span th:unless="${lessonsPage.hasNext()}">Next.</span>
+                </div>
 
 			
 

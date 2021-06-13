@@ -1,5 +1,6 @@
 package ua.com.foxminded.krailo.university.dao.interf;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,6 @@ public interface AudienceDaoInt extends GenericDao<Audience> {
     List<Audience> getAllByPage(Pageable pageable);
     
     List<Audience> getAll();
-
+    
     int count();
 }

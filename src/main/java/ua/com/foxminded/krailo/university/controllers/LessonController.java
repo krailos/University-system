@@ -3,6 +3,7 @@
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,12 +48,8 @@ public class LessonController {
     }
 
     @GetMapping
-    public String getAllLessons(
-	    @RequestParam(defaultValue = "${page.defaultPageSize:2}", required = false) int pageSize,
-	    @RequestParam(defaultValue = "1", required = false) int pageNumber, Model model) {
-	Paging paging = new Paging(pageSize, pageNumber, lessonService.getQuantity());
-	model.addAttribute("pageQuantity", paging.getPageQuantity());
-	model.addAttribute("lessons", lessonService.getByPage(paging));
+    public String getAllLessons(Model model, Pageable  pageable) {
+	model.addAttribute("lessonsPage", lessonService.getSelectedPage(pageable));
 	return "lessons/all";
     }
 
