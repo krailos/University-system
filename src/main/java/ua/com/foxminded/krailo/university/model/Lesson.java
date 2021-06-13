@@ -15,8 +15,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.NamedNativeQueries;
-import org.hibernate.annotations.NamedNativeQuery;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,32 +22,20 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Table(name = "lessons")
 @NamedQueries({ 
-    	@NamedQuery(name = "SelectAllLessons", query = "from Lesson order by date"),
-	@NamedQuery(name = "SelectLessonsByDate", query = "from Lesson where date = :date "),
-	@NamedQuery(name = "SelectLessonsByTeachersBetweenDates", query = "from Lesson l where l.teacher.id = :teacherId and "
-		+ "l.date between   :startDate and :finishDate"),
+    	@NamedQuery(name = "SelectAllLessons", query = "from Lesson l order by l.date"),
+	@NamedQuery(name = "SelectLessonsByDate", query = "from Lesson l where l.date = :date "),
 	@NamedQuery(name = "SelectLessonsByTeacherBetweenDates", query = "from Lesson l where l.teacher.id = :teacherId and "
-		+ "l.date between   :startDate and :finishDate"),
+		+ " l.date between :startDate and :finishDate"),
 	@NamedQuery(name = "SelectLessonsByTeacherAndDate", query = "from Lesson l where l.teacher.id = :teacherId and "
-		+ "l.date = :date"),
+		+ " l.date = :date"),
 	@NamedQuery(name = "SelectLessonsByDateAndTeacherAndLessonTime", query = "from Lesson l where l.date = :date"
 		+ " and l.teacher.id = :teacherId and l.lessonTime.id = :lessonTimeId "),
 	@NamedQuery(name = "SelectLessonsByDateAndAudienceAndLessonTime", query = "from Lesson l where l.date = :date"
 		+ " and l.audience.id = :audienceId and l.lessonTime.id = :lessonTimeId "),
 	@NamedQuery(name = "SelectLessonsByDateAndLessonTimeAndGroup", query = "from Lesson l inner join l.groups as g"
 		+ " where l.date = :date and l.lessonTime.id = :lessonTimeId and g.id = :groupId "),
-	@NamedQuery(name = "CountAllLessons", query = "select count(id) from Lesson") })
-@NamedNativeQueries({
-	@NamedNativeQuery(name = "SelectLessonsByStudentBetweenDates", query = "SELECT lessons.id, date, lesson_time_id, subject_id, teacher_id,"
-		+ " audience_id, lesson_id, lessons_groups.group_id, students.id  FROM lessons"
-		+ " JOIN lessons_groups ON (lessons.id = lessons_groups.lesson_id) JOIN students ON (lessons_groups.group_id = students.group_id) "
-		+ " WHERE students.id = ?1 AND date BETWEEN ?2 AND ?3"),
-	@NamedNativeQuery(name = "SelectLessonsByStudentAndDate", query = "SELECT lessons.id, date, lesson_time_id, subject_id, teacher_id,"
-		+ " audience_id, lesson_id, lessons_groups.group_id, students.id  FROM lessons"
-		+ " JOIN lessons_groups ON (lessons.id = lessons_groups.lesson_id) JOIN students ON (lessons_groups.group_id = students.group_id) "
-		+ " WHERE students.id = :studentId AND date = :date")
-})
-
+	@NamedQuery(name = "CountAllLessons", query = "select count(id) from Lesson") 
+    	})
 public class Lesson {
 
     @Id

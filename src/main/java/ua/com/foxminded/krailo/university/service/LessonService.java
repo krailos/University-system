@@ -50,7 +50,6 @@ public class LessonService {
 	this.holidayDaoInt = holidayDaoInt;
     }
 
-    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void create(Lesson lesson) {
 	log.debug("create lesson={}", lesson);
 	checkTeacherIsFree(lesson);
@@ -64,7 +63,6 @@ public class LessonService {
 	lessonDaoInt.create(lesson);
     }
 
-    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void update(Lesson lesson) {
 	log.debug("update lesson={}", lesson);
 	checkTeacherIsFree(lesson);
@@ -126,7 +124,6 @@ public class LessonService {
 
     }
 
-   // @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void substituteTeacher(Teacher oldTeacher, Teacher newTeacher, LocalDate startDate, LocalDate finishDate) {
 	lessonDaoInt.getByTeacherBetweenDates(oldTeacher, startDate, finishDate).stream().peek(l -> {
 	    checkTeacherIsFree(l);

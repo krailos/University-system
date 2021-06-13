@@ -9,10 +9,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "lesson_Times")
+@NamedQueries({ @NamedQuery(name = "SelectAllLessonTime", query = "from LessonTime l order by l.startTime"),
+	@NamedQuery(name = "SelectLessonTimeByStartOrEnd", query = "from LessonTime l where :startLessonTime between l.startTime and l.endTime or "
+		+ ":endLessonTime between l.startTime and l.endTime order by l.startTime") })
 public class LessonTime {
 
     @Id

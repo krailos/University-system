@@ -99,19 +99,25 @@ public class LessonDaoHinernate implements LessonDaoInt {
     @Override
     public List<Lesson> getByStudentBetweenDates(Student student, LocalDate startDate, LocalDate finishDate) {
 	Session session = sessionFactory.getCurrentSession();
-	Query<Lesson> query = session.getNamedNativeQuery("SelectLessonsByStudentBetweenDates");
-	query.setParameter("studentId", student.getId());
-	query.setParameter("startDate", startDate);
-	query.setParameter("finishDate", finishDate);
+	Query<Lesson> query = session.createNativeQuery("SELECT lessons.id, date, lesson_time_id, subject_id, teacher_id,"
+		+ " audience_id, lesson_id, lessons_groups.group_id, students.id  FROM lessons"
+		+ " JOIN lessons_groups ON (lessons.id = lessons_groups.lesson_id) JOIN students ON (lessons_groups.group_id = students.group_id) "
+		+ " WHERE students.id = ? AND date between = ? AND ?").addEntity(Lesson.class);
+	query.setParameter(1, student.getId());
+	query.setParameter(2, startDate);
+	query.setParameter(3, finishDate);
 	return query.list();
     }
 
     @Override
     public List<Lesson> getByStudentAndDate(Student student, LocalDate date) {
 	Session session = sessionFactory.getCurrentSession();
-	Query<Lesson> query = session.getNamedNativeQuery("SelectLessonsByStudentAndDate");
-	query.setParameter("studentId", student.getId());
-	query.setParameter("date", date);
+	Query<Lesson> query = session.createNativeQuery("SELECT lessons.id, date, lesson_time_id, subject_id, teacher_id,"
+		+ " audience_id, lesson_id, lessons_groups.group_id, students.id  FROM lessons"
+		+ " JOIN lessons_groups ON (lessons.id = lessons_groups.lesson_id) JOIN students ON (lessons_groups.group_id = students.group_id) "
+		+ " WHERE students.id = ? AND date = ?").addEntity(Lesson.class);
+	query.setParameter(1, student.getId());
+	query.setParameter(2, date);
 	return query.list();
     }
 
