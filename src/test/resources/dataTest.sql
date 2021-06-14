@@ -1,4 +1,4 @@
-	INSERT INTO holidays (name, date) VALUES
+INSERT INTO holidays (name, date) VALUES
 ('Holiday 1', DATE '2021-01-01'),
 ('Holiday 2', DATE '2021-01-02');
 

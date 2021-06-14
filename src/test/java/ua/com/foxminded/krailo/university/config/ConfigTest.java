@@ -2,11 +2,13 @@ package ua.com.foxminded.krailo.university.config;
 
 import javax.sql.DataSource;
 
+import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 
 @Configuration
 @Import(UniversityConfig.class)
@@ -22,5 +24,11 @@ public class ConfigTest {
 	dataSource.setPassword("");
 	return dataSource;
     }
+    
+    @Bean
+    public HibernateTemplate hibernateTemplate(SessionFactory sessionFactory) {
+        return new HibernateTemplate(sessionFactory);
+    }
+
     
 }

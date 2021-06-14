@@ -420,7 +420,7 @@ class LessonServiceTest {
 	Paging paging = new Paging(4, 2, 16);
 	when(lessonDao.findWithLimit(4, 4)).thenReturn(lessons);
 
-	List<Lesson> actual = lessonService.getByPage(paging);
+	List<Lesson> actual = lessonService.getSelectedPage(paging);
 
 	List<Lesson> expected = createLessons();
 	assertEquals(expected, actual);

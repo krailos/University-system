@@ -8,67 +8,71 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.dao.GroupDao;
-import ua.com.foxminded.krailo.university.dao.StudentDao;
+import ua.com.foxminded.krailo.university.dao.interf.GroupDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.StudentDaoInt;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.GroupOverflowException;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Student;
-import ua.com.foxminded.krailo.university.util.Paging;
 
+@Transactional
 @Service
 @PropertySource("classpath:config.properties")
 public class StudentService {
 
     private static final Logger log = LoggerFactory.getLogger(StudentService.class);
 
-    private StudentDao studentDao;
-    private GroupDao groupDao;
+    private StudentDaoInt studentDaoInt;
+    private GroupDaoInt groupDaoInt;
     @Value("${group.maxSize}")
     private int groupMaxSize;
 
-    public StudentService(StudentDao studentDao, GroupDao groupDao) {
-	this.studentDao = studentDao;
-	this.groupDao = groupDao;
+    public StudentService(StudentDaoInt studentDaoInt, GroupDaoInt groupDaoInt) {
+	this.studentDaoInt = studentDaoInt;
+	this.groupDaoInt = groupDaoInt;
     }
 
     public void create(Student student) {
 	log.debug("Create student={}", student);
 	checkGroupCapacityNotTooBig(student);
-	studentDao.create(student);
+	studentDaoInt.create(student);
     }
 
     public void update(Student student) {
 	log.debug("Update student={}", student);
 	checkGroupCapacityNotTooBig(student);
-	studentDao.update(student);
+	studentDaoInt.update(student);
     }
 
     public Student getById(int id) {
 	log.debug("Get student by id={}", id);
-	return studentDao.findById(id)
+	return studentDaoInt.getById(id)
 		.orElseThrow(() -> new EntityNotFoundException(format("Student whith id=%s not exist", id)));
     }
 
     public List<Student> getAll() {
 	log.debug("Get all students");
-	return studentDao.findAll();
+	return studentDaoInt.getAll();
     }
 
-    public List<Student> getByGroupId(int id) {
-	log.debug("get students  by groupId={}", id);
-	return studentDao.findByGroupId(id);
+    public List<Student> getByGroup(Group group) {
+	log.debug("get students  by groupId={}", group.getId());
+	return studentDaoInt.getByGroup(group);
     }
 
     public void delete(Student student) {
 	log.debug("Delete student={}", student);
-	studentDao.deleteById(student.getId());
+	studentDaoInt.delete(student);
     }
 
     private void checkGroupCapacityNotTooBig(Student student) {
-	Group existingGroup = groupDao.findById(student.getGroup().getId())
+	Group existingGroup = groupDaoInt.getById(student.getGroup().getId())
 		.orElseThrow(() -> new EntityNotFoundException(
 			"group for this student not found, groupId=" + student.getGroup().getId()));
 	if (existingGroup.getStudents().size() >= groupMaxSize) {
@@ -77,11 +81,12 @@ public class StudentService {
     }
 
     public int getQuantity() {
-	return studentDao.findQuantity();
+	return studentDaoInt.count();
 
     }
 
-    public List<Student> getByPage(Paging paging) {
-	return studentDao.findWithLimit(paging.getPageSize(), paging.getOffset());
+    public Page<Student> getSelectedPage(Pageable pageable) {
+	log.debug("get lessons by page");
+	return new PageImpl<>(studentDaoInt.getAllByPage(pageable), pageable, studentDaoInt.count());
     }
 }

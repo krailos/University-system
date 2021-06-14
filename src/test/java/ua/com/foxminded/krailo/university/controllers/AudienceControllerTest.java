@@ -45,7 +45,7 @@ class AudienceControllerTest {
 	List<Audience> expected = buildAudiences();
 	Paging paging = new Paging(2, 1, 4);
 	when(audienceService.getQuantity()).thenReturn(4);
-	when(audienceService.getByPage(paging)).thenReturn(expected);
+	when(audienceService.getSelectedPage(paging)).thenReturn(expected);
 
 	mockMvc.perform(get("/audiences").param("pageSize", "2"))
 		.andExpect(view().name("audiences/all"))
@@ -57,7 +57,7 @@ class AudienceControllerTest {
     void whenGetAllAudiencesWithParameters_thenRightPageWithAudiencesReturned() throws Exception {
 	List<Audience> expected = buildAudiences();
 	Paging paging = new Paging(2, 3, 6);
-	when(audienceService.getByPage(paging)).thenReturn(expected);
+	when(audienceService.getSelectedPage(paging)).thenReturn(expected);
 	when(audienceService.getQuantity()).thenReturn(6);
 
 	mockMvc.perform(get("/audiences").param("pageSize", "2").param("pageNumber", "3"))

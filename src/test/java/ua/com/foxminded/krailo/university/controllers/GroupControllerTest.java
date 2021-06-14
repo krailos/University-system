@@ -50,7 +50,7 @@ class GroupControllerTest {
 	List<Group> expected = buildGroups();
 	Paging paging = new Paging(2, 1, 4);
 	when(groupService.getQuantity()).thenReturn(4);
-	when(groupService.getByPage(paging)).thenReturn(expected);
+	when(groupService.getSelectedPage(paging)).thenReturn(expected);
 
 	mockMvc.perform(get("/groups").param("pageSize", "2"))
 		.andExpect(view().name("groups/all"))
@@ -62,7 +62,7 @@ class GroupControllerTest {
     void whenGetAllroupsWithParameters_thenRightPageWithGroupsReturned() throws Exception {
 	List<Group> expected = buildGroups();
 	Paging paging = new Paging(2, 3, 6);
-	when(groupService.getByPage(paging)).thenReturn(expected);
+	when(groupService.getSelectedPage(paging)).thenReturn(expected);
 	when(groupService.getQuantity()).thenReturn(6);
 
 	mockMvc.perform(get("/groups").param("pageSize", "2").param("pageNumber", "3"))

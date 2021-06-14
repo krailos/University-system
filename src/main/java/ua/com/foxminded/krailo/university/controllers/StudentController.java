@@ -2,6 +2,7 @@ package ua.com.foxminded.krailo.university.controllers;
 
 import java.time.LocalDate;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,12 +34,8 @@ public class StudentController {
     }
 
     @GetMapping
-    public String getAllStudents(
-	    @RequestParam(defaultValue = "${page.defaultPageSize:2}", required = false) int pageSize,
-	    @RequestParam(defaultValue = "1", required = false) int pageNumber, Model model) {
-	Paging paging = new Paging(pageSize, pageNumber, studentService.getQuantity());
-	model.addAttribute("pageQuantity", paging.getPageQuantity());
-	model.addAttribute("students", studentService.getByPage(paging));
+    public String getAllStudents(Model model, Pageable  pageable) {
+	model.addAttribute("studentsPage", studentService.getSelectedPage(pageable));
 	return "students/all";
     }
 

@@ -146,7 +146,7 @@ class StudentServiceTest {
 	Paging paging = new Paging(4, 2, 16);
 	when(studentDao.findWithLimit(4, 4)).thenReturn(audiences);
 
-	List<Student> actual = studentService.getByPage(paging);
+	List<Student> actual = studentService.getSelectedPage(paging);
 
 	List<Student> expected = createStudents();
 	assertEquals(expected, actual);

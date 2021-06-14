@@ -55,7 +55,7 @@ class StudentControllerTest {
 	List<Student> expected = buildStudents();
 	Paging paging = new Paging(2, 1, 4);
 	when(studentService.getQuantity()).thenReturn(4);
-	when(studentService.getByPage(paging)).thenReturn(expected);
+	when(studentService.getSelectedPage(paging)).thenReturn(expected);
 
 	mockMvc.perform(get("/students").param("pageSize", "2"))
 		.andExpect(view().name("students/all"))
@@ -67,7 +67,7 @@ class StudentControllerTest {
     void whenGetAllStudentsWithParameters_thenRightPageWithStudentsReturned() throws Exception {
 	List<Student> expected = buildStudents();
 	Paging paging = new Paging(2, 3, 6);
-	when(studentService.getByPage(paging)).thenReturn(expected);
+	when(studentService.getSelectedPage(paging)).thenReturn(expected);
 	when(studentService.getQuantity()).thenReturn(6);
 
 	mockMvc.perform(get("/students").param("pageSize", "2").param("pageNumber", "3"))

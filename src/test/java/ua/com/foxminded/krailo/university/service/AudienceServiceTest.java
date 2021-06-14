@@ -141,7 +141,7 @@ class AudienceServiceTest {
 	Paging paging = new Paging (4, 2, 16);
 	when(audienceDao.findWithLimit(4, 4)).thenReturn(audiences);
 
-	List<Audience> actual = audienceService.getByPage(paging);
+	List<Audience> actual = audienceService.getSelectedPage(paging);
 
 	List<Audience> expected = createAudiences();
 	assertEquals(expected, actual);

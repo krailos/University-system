@@ -2,21 +2,49 @@ package ua.com.foxminded.krailo.university.model;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
 import org.springframework.format.annotation.DateTimeFormat;
 
+
+@Entity
+@Table(name = "students")
+@NamedQueries({
+    @NamedQuery(name = "SelectStudentsByGroup", query = "from Student s where s.group.id = :gruopId"),
+    @NamedQuery(name = "SelectAllStudents", query = "from Student s order by s.lastName"),
+    @NamedQuery(name = "CountAllStudents",query = "select count(id) from Student")
+})
 public class Student {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "student_id")
     private String studentId;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
+    @Column(name = "birth_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate birthDate;
     private String phone;
     private String address;
     private String email;
     private String rank;
+    @Enumerated(EnumType.STRING)
     private Gender gender;
+    @ManyToOne
     private Group group;
 
     public Student() {

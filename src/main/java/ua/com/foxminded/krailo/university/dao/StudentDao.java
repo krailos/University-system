@@ -136,6 +136,7 @@ public class StudentDao {
 	}
     }
 
+    
     public int findQuantity() {
 	log.debug("find students count");
 	try {

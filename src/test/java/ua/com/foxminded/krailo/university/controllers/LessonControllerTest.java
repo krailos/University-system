@@ -67,7 +67,7 @@ class LessonControllerTest {
 	List<Lesson> expected = buildLessons();
 	Paging paging = new Paging(2, 1, 4);
 	when(lessonService.getQuantity()).thenReturn(4);
-	when(lessonService.getByPage(paging)).thenReturn(expected);
+	when(lessonService.getSelectedPage(paging)).thenReturn(expected);
 
 	mockMvc.perform(get("/lessons").param("pageSize", "2"))
 		.andExpect(view().name("lessons/all"))
@@ -79,7 +79,7 @@ class LessonControllerTest {
     void whenGetAllLessonsWithParameters_thenRightPageWithLessonsReturned() throws Exception {
 	List<Lesson> expected = buildLessons();
 	Paging paging = new Paging(2, 3, 6);
-	when(lessonService.getByPage(paging)).thenReturn(expected);
+	when(lessonService.getSelectedPage(paging)).thenReturn(expected);
 	when(lessonService.getQuantity()).thenReturn(6);
 
 	mockMvc.perform(get("/lessons").param("pageSize", "2").param("pageNumber", "3"))

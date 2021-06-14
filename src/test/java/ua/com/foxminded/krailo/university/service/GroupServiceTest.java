@@ -127,7 +127,7 @@ class GroupServiceTest {
 	Paging paging = new Paging (4, 2, 16);
 	when(groupDao.findWithLimit(4, 4)).thenReturn(audiences);
 
-	List<Group> actual = groupService.getByPage(paging);
+	List<Group> actual = groupService.getSelectedPage(paging);
 
 	List<Group> expected = createGroups();
 	assertEquals(expected, actual);
