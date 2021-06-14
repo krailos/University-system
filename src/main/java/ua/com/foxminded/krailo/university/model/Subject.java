@@ -10,8 +10,15 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
+
 @Entity
 @Table(name = "subjects")
+@NamedQueries({ @NamedQuery(name = "SelectAllSubjects", query = "from Subject s order by s.name"),
+	@NamedQuery(name = "SelectSubjectsByTeacher", query = "from Subject s inner join s.teachers as t where t.id = :teacherId order by s.name"),
+	@NamedQuery(name = "SelectSubjectsByYear", query = "from Subject s inner join s.years as y where y.id = :yearId order by s.name"),
+	@NamedQuery(name = "CountAllSubjects", query = "select count(id) from Subject")})
 public class Subject {
 
     @Id
@@ -19,21 +26,32 @@ public class Subject {
     private int id;
     private String name;
     private String description;
-    @ManyToMany
+    @ManyToMany(mappedBy = "subjects")
     private List<Teacher> teachers = new ArrayList<>();
+    @ManyToMany(mappedBy = "subjects")
+    private List<Year> years = new ArrayList<>();
 
     public Subject() {
     }
 
-    public Subject(int id, String name, String description, List<Teacher> teachers) {
+    public Subject(int id, String name, String description, List<Teacher> teachers, List<Year> years) {
 	this.id = id;
 	this.name = name;
 	this.description = description;
 	this.teachers = teachers;
+	this.years = years;
     }
 
     public static SubjectBuilder builder() {
 	return new SubjectBuilder();
+    }
+
+    public List<Year> getYears() {
+	return years;
+    }
+
+    public void setYears(List<Year> years) {
+	this.years = years;
     }
 
     public int getId() {
@@ -74,6 +92,7 @@ public class Subject {
 	private String name;
 	private String description;
 	private List<Teacher> teachers = new ArrayList<>();
+	private List<Year> years = new ArrayList<>();
 
 	public SubjectBuilder id(int id) {
 	    this.id = id;
@@ -95,8 +114,13 @@ public class Subject {
 	    return this;
 	}
 
+	public SubjectBuilder years(List<Year> years) {
+	    this.years = years;
+	    return this;
+	}
+
 	public Subject build() {
-	    return new Subject(id, name, description, teachers);
+	    return new Subject(id, name, description, teachers, years);
 	}
 
     }
