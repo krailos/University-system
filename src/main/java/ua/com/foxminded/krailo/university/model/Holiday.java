@@ -15,9 +15,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Table(name = "holidays")
 @NamedQueries({
-    @NamedQuery(name = "SelectHolidaysByDate", query = "from Holiday where name = :name"),
-    @NamedQuery(name = "SelectAllHolidays", query = "from Holiday order by date")
-})
+    	@NamedQuery(name = "SelectHolidaysByDate", query = "from Holiday where date = :date"),
+	@NamedQuery(name = "SelectAllHolidays", query = "from Holiday order by date") })
 public class Holiday {
 
     @Id

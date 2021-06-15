@@ -17,7 +17,7 @@ public interface LessonDaoInt extends GenericDao<Lesson> {
 
     List<Lesson> getAll();
 
-    List<Lesson> getAllByPage(Pageable pageable);
+    List<Lesson> getByPage(Pageable pageable);
 
     List<Lesson> getByDate(LocalDate date);
 

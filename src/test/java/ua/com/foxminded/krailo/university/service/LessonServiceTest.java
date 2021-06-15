@@ -19,11 +19,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
+import ua.com.foxminded.krailo.university.dao.interf.HolidayDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.LessonDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.TeacherDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.VocationDaoInt;
 import ua.com.foxminded.krailo.university.exception.AudienceNotFreeException;
 import ua.com.foxminded.krailo.university.exception.AudienceOverflowException;
 import ua.com.foxminded.krailo.university.exception.GroupNotFreeException;
@@ -49,18 +57,18 @@ class LessonServiceTest {
     @InjectMocks
     private LessonService lessonService;
     @Mock
-    private LessonDao lessonDao;
+    private LessonDaoInt lessonDaoInt;
     @Mock
-    private VocationDao vocationDao;
+    private VocationDaoInt vocationDaoInt;
     @Mock
-    private HolidayDao holidayDao;
+    private HolidayDaoInt holidayDaoInt;
     @Mock
-    private TeacherDao teacherDao;
+    private TeacherDaoInt teacherDaoInt;
 
     @Test
     void givenLessonId_whenGetById_thenGot() {
 	Lesson lesson = createLesson();
-	when(lessonDao.findById(1)).thenReturn(Optional.of(lesson));
+	when(lessonDaoInt.getById(1)).thenReturn(Optional.of(lesson));
 
 	Lesson actual = lessonService.getById(1);
 
@@ -71,7 +79,7 @@ class LessonServiceTest {
     @Test
     void givenLessons_whenGetAll_thenGotAll() {
 	List<Lesson> lessons = createLessons();
-	when(lessonDao.findAll()).thenReturn(lessons);
+	when(lessonDaoInt.getAll()).thenReturn(lessons);
 
 	List<Lesson> actual = lessonService.getAll();
 
@@ -85,14 +93,14 @@ class LessonServiceTest {
 
 	lessonService.delete(lesson);
 
-	verify(lessonDao).deleteById(1);
+	verify(lessonDaoInt).delete(lesson);
     }
 
     @Test
-    void givenTeacherAndDate_whenGetLessonsForTeacherByDate_thenGot() {
+    void givenTeacherAndDate_whenGetLessonsByTeacherAndDate_thenGot() {
 	Teacher teacher = Teacher.builder().id(1).build();
 	List<Lesson> lessons = createLessons();
-	when(lessonDao.findByTeacherAndDate(teacher, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
+	when(lessonDaoInt.getByTeacherAndDate(teacher, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
 
 	List<Lesson> actual = lessonService.getLessonsForTeacherByDate(teacher, LocalDate.of(2021, 01, 02));
 	List<Lesson> expected = createLessons();
@@ -101,10 +109,10 @@ class LessonServiceTest {
     }
 
     @Test
-    void givenTeacherAndStartFinishDate_whenGetTimetableForTeacherByPeriod_thenGot() {
+    void givenTeacherAndStartFinishDate_whenGetByTeacherBetweenDates_thenGot() {
 	Teacher teacher = Teacher.builder().id(1).build();
 	List<Lesson> lessons = createLessons();
-	when(lessonDao.findByTeacherBetweenDates(teacher, LocalDate.of(2021, 01, 02), LocalDate.of(2021, 02, 02)))
+	when(lessonDaoInt.getByTeacherBetweenDates(teacher, LocalDate.of(2021, 01, 02), LocalDate.of(2021, 02, 02)))
 		.thenReturn(lessons);
 
 	List<Lesson> actual = lessonService.getLessonsForTeacherByPeriod(teacher, LocalDate.of(2021, 01, 02),
@@ -115,10 +123,10 @@ class LessonServiceTest {
     };
 
     @Test
-    void givenStudentAndDate_whenGetTimetableForStudentByDate_thenGot() {
+    void givenStudentAndDate_whenGetLessonsByStudentAndDate_thenGot() {
 	Student student = Student.builder().id(1).build();
 	List<Lesson> lessons = createLessons();
-	when(lessonDao.findByStudentAndDate(student, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
+	when(lessonDaoInt.getByStudentAndDate(student, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
 
 	List<Lesson> actual = lessonService.getLessonsForStudentByDate(student, LocalDate.of(2021, 01, 02));
 
@@ -127,10 +135,10 @@ class LessonServiceTest {
     };
 
     @Test
-    void givenStudentAndDate_whenGetTimetableForStudentByMonth_thenGot() {
+    void givenStudentAndDate_whenGetLessonsByStudentBerweenDates_thenGot() {
 	Student student = Student.builder().id(1).build();
 	List<Lesson> lessons = createLessons();
-	when(lessonDao.findByStudentBetweenDates(student, LocalDate.of(2021, 01, 02), LocalDate.of(2021, 01, 03)))
+	when(lessonDaoInt.getByStudentBetweenDates(student, LocalDate.of(2021, 01, 02), LocalDate.of(2021, 01, 03)))
 		.thenReturn(lessons);
 
 	List<Lesson> actual = lessonService.getLessonsForStudentByPeriod(student, LocalDate.of(2021, 01, 02),
@@ -144,44 +152,44 @@ class LessonServiceTest {
     @Test
     void givenLessonWhithAllCorrectFields_whenCreate_thenCreated() {
 	Lesson lesson = createLesson();
-	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), lesson.getTeacher().getId(),
-		lesson.getLessonTime().getId())).thenReturn(Optional.empty());
-	when(lessonDao.findByDateAndAudienceIdAndLessonTimeId(lesson.getDate(), lesson.getAudience().getId(),
-		lesson.getLessonTime().getId())).thenReturn(Optional.empty());
-	when(vocationDao.findByTeacherIdAndDate(lesson.getTeacher().getId(), lesson.getDate()))
+	when(lessonDaoInt.getByDateAndTeacherAndLessonTime(lesson.getDate(), lesson.getTeacher(),
+		lesson.getLessonTime())).thenReturn(Optional.empty());
+	when(lessonDaoInt.getByDateAndAudienceAndLessonTime(lesson.getDate(), lesson.getAudience(),
+		lesson.getLessonTime())).thenReturn(Optional.empty());
+	when(vocationDaoInt.getByTeacherAndDate(lesson.getTeacher(), lesson.getDate()))
 		.thenReturn(Optional.empty());
-	when(holidayDao.findByDate(lesson.getDate())).thenReturn(Optional.empty());
-	when(lessonDao.findByDateAndLessonTimeIdAndGroupId(lesson.getDate(), lesson.getLessonTime().getId(),
-		lesson.getGroups().get(0).getId())).thenReturn(Optional.empty());
+	when(holidayDaoInt.getByDate(lesson.getDate())).thenReturn(Optional.empty());
+	when(lessonDaoInt.getByDateAndLessonTimeAndGroup(lesson.getDate(), lesson.getLessonTime(),
+		lesson.getGroups().get(0))).thenReturn(Optional.empty());
 
 	lessonService.create(lesson);
 
-	verify(lessonDao).create(lesson);
+	verify(lessonDaoInt).create(lesson);
     }
 
     @Test
     void givenLessonWhithAllCorrectFields_whenUpdate_thenUpdated() {
 	Lesson lesson = createLesson();
-	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), lesson.getTeacher().getId(),
-		lesson.getLessonTime().getId())).thenReturn(Optional.empty());
-	when(lessonDao.findByDateAndAudienceIdAndLessonTimeId(lesson.getDate(), lesson.getAudience().getId(),
-		lesson.getLessonTime().getId())).thenReturn(Optional.empty());
-	when(vocationDao.findByTeacherIdAndDate(lesson.getTeacher().getId(), lesson.getDate()))
+	when(lessonDaoInt.getByDateAndTeacherAndLessonTime(lesson.getDate(), lesson.getTeacher(),
+		lesson.getLessonTime())).thenReturn(Optional.empty());
+	when(lessonDaoInt.getByDateAndAudienceAndLessonTime(lesson.getDate(), lesson.getAudience(),
+		lesson.getLessonTime())).thenReturn(Optional.empty());
+	when(vocationDaoInt.getByTeacherAndDate(lesson.getTeacher(), lesson.getDate()))
 		.thenReturn(Optional.empty());
-	when(holidayDao.findByDate(lesson.getDate())).thenReturn(Optional.empty());
-	when(lessonDao.findByDateAndLessonTimeIdAndGroupId(lesson.getDate(), lesson.getLessonTime().getId(),
-		lesson.getGroups().get(0).getId())).thenReturn(Optional.empty());
+	when(holidayDaoInt.getByDate(lesson.getDate())).thenReturn(Optional.empty());
+	when(lessonDaoInt.getByDateAndLessonTimeAndGroup(lesson.getDate(), lesson.getLessonTime(),
+		lesson.getGroups().get(0))).thenReturn(Optional.empty());
 
 	lessonService.update(lesson);
 
-	verify(lessonDao).update(lesson);
+	verify(lessonDaoInt).update(lesson);
     }
 
     @Test
     void givenLessonInWhichAudienceIsBooked_whenCreate_thenAudienceNotFreeExceptionThrown() {
 	Lesson lesson = createLesson();
-	when(lessonDao.findByDateAndAudienceIdAndLessonTimeId(lesson.getDate(), lesson.getAudience().getId(),
-		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
+	when(lessonDaoInt.getByDateAndAudienceAndLessonTime(lesson.getDate(), lesson.getAudience(),
+		lesson.getLessonTime())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
 
 	Exception exception = assertThrows(AudienceNotFreeException.class, () -> lessonService.create(lesson));
 
@@ -193,8 +201,8 @@ class LessonServiceTest {
     @Test
     void givenLessonInWhichAudienceIsBooked_whenUpdate_thenAudienceNotFreeExceptionThrown() {
 	Lesson lesson = createLesson();
-	when(lessonDao.findByDateAndAudienceIdAndLessonTimeId(lesson.getDate(), lesson.getAudience().getId(),
-		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
+	when(lessonDaoInt.getByDateAndAudienceAndLessonTime(lesson.getDate(), lesson.getAudience(),
+		lesson.getLessonTime())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
 
 	Exception exception = assertThrows(AudienceNotFreeException.class, () -> lessonService.update(lesson));
 
@@ -206,19 +214,19 @@ class LessonServiceTest {
     @Test
     void givenLessonInWhichAudienceIsBookedByTheSameLesson_whenUpdate_thenUpdated() {
 	Lesson lesson = createLesson();
-	when(lessonDao.findByDateAndAudienceIdAndLessonTimeId(lesson.getDate(), lesson.getAudience().getId(),
-		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(1).build()));
+	when(lessonDaoInt.getByDateAndAudienceAndLessonTime(lesson.getDate(), lesson.getAudience(),
+		lesson.getLessonTime())).thenReturn(Optional.of(Lesson.builder().id(1).build()));
 
 	lessonService.update(lesson);
 
-	verify(lessonDao).update(lesson);
+	verify(lessonDaoInt).update(lesson);
     }
 
     @Test
     void givenLessonInWhichTeacherIsBooked_whenCreate_thenTeacherNotFreeExceptionThrown() {
 	Lesson lesson = createLesson();
-	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), lesson.getTeacher().getId(),
-		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
+	when(lessonDaoInt.getByDateAndTeacherAndLessonTime(lesson.getDate(), lesson.getTeacher(),
+		lesson.getLessonTime())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
 
 	Exception exception = assertThrows(TeacherNotFreeException.class, () -> lessonService.create(lesson));
 
@@ -230,8 +238,8 @@ class LessonServiceTest {
     @Test
     void givenLessonInWhichTeacherIsBooked_whenUpdate_thenTeacherNotFreeExceptionThrown() {
 	Lesson lesson = createLesson();
-	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), lesson.getTeacher().getId(),
-		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
+	when(lessonDaoInt.getByDateAndTeacherAndLessonTime(lesson.getDate(), lesson.getTeacher(),
+		lesson.getLessonTime())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
 
 	Exception exception = assertThrows(TeacherNotFreeException.class, () -> lessonService.update(lesson));
 
@@ -243,12 +251,12 @@ class LessonServiceTest {
     @Test
     void givenLessonInWhichTeacherIsBookedByTheSameLesson_whenUpdate_thenUpdated() {
 	Lesson lesson = createLesson();
-	when(lessonDao.findByDateAndTeacherIdAndLessonTimeId(lesson.getDate(), lesson.getTeacher().getId(),
-		lesson.getLessonTime().getId())).thenReturn(Optional.of(Lesson.builder().id(1).build()));
+	when(lessonDaoInt.getByDateAndTeacherAndLessonTime(lesson.getDate(), lesson.getTeacher(),
+		lesson.getLessonTime())).thenReturn(Optional.of(Lesson.builder().id(1).build()));
 
 	lessonService.update(lesson);
 
-	verify(lessonDao).update(lesson);
+	verify(lessonDaoInt).update(lesson);
     }
 
     @Test
@@ -278,7 +286,7 @@ class LessonServiceTest {
     @Test
     void givenLessonInWhichTeacherIsOnVocation_whenCreate_thenTeacherOnVocationExceptionThrown() {
 	Lesson lesson = createLesson();
-	when(vocationDao.findByTeacherIdAndDate(lesson.getTeacher().getId(), lesson.getDate()))
+	when(vocationDaoInt.getByTeacherAndDate(lesson.getTeacher(), lesson.getDate()))
 		.thenReturn(Optional.of(Vocation.builder().id(1).build()));
 
 	Exception exception = assertThrows(TeacherOnVocationException.class, () -> lessonService.create(lesson));
@@ -291,7 +299,7 @@ class LessonServiceTest {
     @Test
     void givenLessonInWhichTeacherIsOnVocation_whenUpdate_thenTeacherOnVocationExceptionThrown() {
 	Lesson lesson = createLesson();
-	when(vocationDao.findByTeacherIdAndDate(lesson.getTeacher().getId(), lesson.getDate()))
+	when(vocationDaoInt.getByTeacherAndDate(lesson.getTeacher(), lesson.getDate()))
 		.thenReturn(Optional.of(Vocation.builder().id(1).build()));
 
 	Exception exception = assertThrows(TeacherOnVocationException.class, () -> lessonService.update(lesson));
@@ -304,7 +312,7 @@ class LessonServiceTest {
     @Test
     void givenLessonOnHoliday_whenCreate_thenLessonDateOnHolidayExceptionThrown() {
 	Lesson lesson = createLesson();
-	when(holidayDao.findByDate(lesson.getDate())).thenReturn(Optional.of(Holiday.builder().id(1).build()));
+	when(holidayDaoInt.getByDate(lesson.getDate())).thenReturn(Optional.of(Holiday.builder().id(1).build()));
 
 	Exception exception = assertThrows(LessonDateOnHolidayException.class, () -> lessonService.create(lesson));
 
@@ -316,7 +324,7 @@ class LessonServiceTest {
     @Test
     void givenLessonOnHoliday_whenUpdate_thenLessonDateOnHolidayExceptionThrown() {
 	Lesson lesson = createLesson();
-	when(holidayDao.findByDate(lesson.getDate())).thenReturn(Optional.of(Holiday.builder().id(1).build()));
+	when(holidayDaoInt.getByDate(lesson.getDate())).thenReturn(Optional.of(Holiday.builder().id(1).build()));
 
 	Exception exception = assertThrows(LessonDateOnHolidayException.class, () -> lessonService.update(lesson));
 
@@ -380,8 +388,8 @@ class LessonServiceTest {
 	Lesson lesson = createLesson();
 	lesson.setId(2);
 	lesson.getTeacher().getSubjects().add(Subject.builder().id(1).name("subject1").build());
-	when(lessonDao.findByDateAndLessonTimeIdAndGroupId(lesson.getDate(), lesson.getLessonTime().getId(),
-		lesson.getGroups().get(0).getId())).thenReturn(Optional.of(createLesson()));
+	when(lessonDaoInt.getByDateAndLessonTimeAndGroup(lesson.getDate(), lesson.getLessonTime(),
+		lesson.getGroups().get(0))).thenReturn(Optional.of(createLesson()));
 
 	Exception exception = assertThrows(GroupNotFreeException.class, () -> lessonService.create(lesson));
 
@@ -395,8 +403,8 @@ class LessonServiceTest {
 	Lesson lesson = createLesson();
 	lesson.setId(2);
 	lesson.getTeacher().getSubjects().add(Subject.builder().id(1).name("subject1").build());
-	when(lessonDao.findByDateAndLessonTimeIdAndGroupId(lesson.getDate(), lesson.getLessonTime().getId(),
-		lesson.getGroups().get(0).getId())).thenReturn(Optional.of(createLesson()));
+	when(lessonDaoInt.getByDateAndLessonTimeAndGroup(lesson.getDate(), lesson.getLessonTime(),
+		lesson.getGroups().get(0))).thenReturn(Optional.of(createLesson()));
 
 	Exception exception = assertThrows(GroupNotFreeException.class, () -> lessonService.update(lesson));
 
@@ -407,7 +415,7 @@ class LessonServiceTest {
 
     @Test
     void whenGetQuantity_thenGot() {
-	when(lessonDao.findQuantity()).thenReturn(10);
+	when(lessonDaoInt.count()).thenReturn(10);
 
 	int actual = lessonService.getQuantity();
 
@@ -415,15 +423,19 @@ class LessonServiceTest {
     }
 
     @Test
-    void givenAudiences_whenGetAudiencesByPage_thenGot() {
-	List<Lesson> lessons = createLessons();
-	Paging paging = new Paging(4, 2, 16);
-	when(lessonDao.findWithLimit(4, 4)).thenReturn(lessons);
+    void givenLessons_whenGetAudiencesByPage_thenGot() {
+	int pageNo = 1;
+        int pageSize = 3;
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        List<Lesson> lessons = new ArrayList<>();
+        lessons.add(createLesson());
+        when(lessonDaoInt.count()).thenReturn(6);
+        when(lessonDaoInt.getByPage(pageable)).thenReturn(lessons);
+        Page<Lesson> expected = new PageImpl<>(lessonDaoInt.getByPage(pageable),
+                pageable, lessonDaoInt.count());
 
-	List<Lesson> actual = lessonService.getSelectedPage(paging);
+        assertEquals(expected, lessonService.getSelectedPage(pageable));
 
-	List<Lesson> expected = createLessons();
-	assertEquals(expected, actual);
     }
     
     @Test
@@ -436,11 +448,11 @@ class LessonServiceTest {
 	Lesson lesson = createLesson();
 	lesson.setTeacher(oldTeacher);
 	lesson.setSubject(subject);
-	when(lessonDao.findByTeacherBetweenDates(oldTeacher, startDate, finishDate)).thenReturn(Arrays.asList(lesson));
+	when(lessonDaoInt.getByTeacherBetweenDates(oldTeacher, startDate, finishDate)).thenReturn(Arrays.asList(lesson));
 	
 	lessonService.substituteTeacher(oldTeacher, newTeacher, startDate, finishDate);
 	
-	verify(lessonDao).update(lesson);
+	verify(lessonDaoInt).update(lesson);
     }
 
   

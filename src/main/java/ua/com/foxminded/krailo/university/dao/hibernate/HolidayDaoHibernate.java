@@ -15,11 +15,11 @@ import ua.com.foxminded.krailo.university.dao.interf.HolidayDaoInt;
 import ua.com.foxminded.krailo.university.model.Holiday;
 
 @Repository
-public class HolidyDaoHibernate implements HolidayDaoInt {
+public class HolidayDaoHibernate implements HolidayDaoInt {
 
     SessionFactory sessionFactory;
 
-    public HolidyDaoHibernate(SessionFactory sessionFactory) {
+    public HolidayDaoHibernate(SessionFactory sessionFactory) {
 	this.sessionFactory = sessionFactory;
     }
 

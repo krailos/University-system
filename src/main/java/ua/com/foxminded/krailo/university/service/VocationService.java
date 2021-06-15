@@ -81,7 +81,7 @@ public class VocationService {
 	vocationDaoInt.delete(vocation);
     }
 
-    public List<Vocation> getByTeacherIdAndYear(Teacher teacher, Year year) {
+    public List<Vocation> getByTeacherAndYear(Teacher teacher, Year year) {
 	log.debug("Get by teacherId={} and year={}", teacher.getId(), year);
 	return vocationDaoInt.getByTeacherAndYear(teacher, year);
     }

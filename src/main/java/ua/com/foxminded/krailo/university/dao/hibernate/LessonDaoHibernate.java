@@ -21,11 +21,11 @@ import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.model.Teacher;
 
 @Repository
-public class LessonDaoHinernate implements LessonDaoInt {
+public class LessonDaoHibernate implements LessonDaoInt {
 
     SessionFactory sessionFactory;
 
-    public LessonDaoHinernate(SessionFactory sessionFactory) {
+    public LessonDaoHibernate(SessionFactory sessionFactory) {
 	this.sessionFactory = sessionFactory;
     }
 
@@ -61,7 +61,7 @@ public class LessonDaoHinernate implements LessonDaoInt {
     }
 
     @Override
-    public List<Lesson> getAllByPage(Pageable pageable) {
+    public List<Lesson> getByPage(Pageable pageable) {
 	Session session = sessionFactory.getCurrentSession();
 	Query<Lesson> query = session.createNamedQuery("SelectAllLessons");
 	query.setFirstResult((int) pageable.getOffset());
@@ -102,7 +102,7 @@ public class LessonDaoHinernate implements LessonDaoInt {
 	Query<Lesson> query = session.createNativeQuery("SELECT lessons.id, date, lesson_time_id, subject_id, teacher_id,"
 		+ " audience_id, lesson_id, lessons_groups.group_id, students.id  FROM lessons"
 		+ " JOIN lessons_groups ON (lessons.id = lessons_groups.lesson_id) JOIN students ON (lessons_groups.group_id = students.group_id) "
-		+ " WHERE students.id = ? AND date between = ? AND ?").addEntity(Lesson.class);
+		+ " WHERE students.id = ?1 AND date between ?2 AND ?3").addEntity(Lesson.class);
 	query.setParameter(1, student.getId());
 	query.setParameter(2, startDate);
 	query.setParameter(3, finishDate);

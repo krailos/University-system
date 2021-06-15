@@ -27,10 +27,10 @@ public class Subject {
     private int id;
     private String name;
     private String description;
-    @ManyToMany(mappedBy = "subjects")
-    private List<Teacher> teachers = new ArrayList<>();
-    @ManyToMany(mappedBy = "subjects")
-    private List<Year> years = new ArrayList<>();
+    @ManyToMany(mappedBy = "subjects", fetch = FetchType.LAZY)
+    private List<Teacher> teachers;
+    @ManyToMany(mappedBy = "subjects", fetch = FetchType.LAZY)
+    private List<Year> years;
 
     public Subject() {
     }
@@ -130,9 +130,11 @@ public class Subject {
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
+	result = prime * result + ((description == null) ? 0 : description.hashCode());
 	result = prime * result + id;
 	result = prime * result + ((name == null) ? 0 : name.hashCode());
 	result = prime * result + ((teachers == null) ? 0 : teachers.hashCode());
+	result = prime * result + ((years == null) ? 0 : years.hashCode());
 	return result;
     }
 
@@ -145,6 +147,11 @@ public class Subject {
 	if (getClass() != obj.getClass())
 	    return false;
 	Subject other = (Subject) obj;
+	if (description == null) {
+	    if (other.description != null)
+		return false;
+	} else if (!description.equals(other.description))
+	    return false;
 	if (id != other.id)
 	    return false;
 	if (name == null) {
@@ -157,12 +164,19 @@ public class Subject {
 		return false;
 	} else if (!teachers.equals(other.teachers))
 	    return false;
+	if (years == null) {
+	    if (other.years != null)
+		return false;
+	} else if (!years.equals(other.years))
+	    return false;
 	return true;
     }
 
     @Override
     public String toString() {
-	return "id = " + id + " " + "name = " + name;
+	return "Subject [id=" + id + ", name=" + name + ", description=" + description + ", teachers=" + ((teachers == null) ? 0 : teachers.size())
+		+ ", years=" + ((years == null) ? 0 : years.size()) + "]";
     }
 
+   
 }

@@ -100,7 +100,7 @@ public class TeacherController {
 	model.addAttribute("year", year);
 	model.addAttribute("teacher", teacher);
 	model.addAttribute("vocations",
-		vocationService.getByTeacherIdAndYear(teacherId, Year.of(Integer.valueOf(year))));
+		vocationService.getByTeacherAndYear(teacher, Year.of(Integer.valueOf(year))));
 	return "teachers/vocations";
     }
 

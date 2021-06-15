@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
 import ua.com.foxminded.krailo.university.dao.interf.HolidayDaoInt;
 import ua.com.foxminded.krailo.university.dao.interf.LessonDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.VocationDaoInt;
 import ua.com.foxminded.krailo.university.exception.AudienceNotFreeException;
 import ua.com.foxminded.krailo.university.exception.AudienceOverflowException;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
@@ -41,12 +42,12 @@ public class LessonService {
     private static final Logger log = LoggerFactory.getLogger(LessonService.class);
 
     private LessonDaoInt lessonDaoInt;
-    private VocationDao vocationDao;
+    private VocationDaoInt vocationDaoInt;
     private HolidayDaoInt holidayDaoInt;
 
-    public LessonService(LessonDaoInt lessonDaoInt, VocationDao vocationDao, HolidayDaoInt holidayDaoInt) {
+    public LessonService(LessonDaoInt lessonDaoInt, VocationDaoInt vocationDaoInt, HolidayDaoInt holidayDaoInt) {
 	this.lessonDaoInt = lessonDaoInt;
-	this.vocationDao = vocationDao;
+	this.vocationDaoInt = vocationDaoInt;
 	this.holidayDaoInt = holidayDaoInt;
     }
 
@@ -99,7 +100,7 @@ public class LessonService {
 
     public Page<Lesson> getSelectedPage(Pageable pageable) {
 	log.debug("get lessons by page");
-	return new PageImpl<>(lessonDaoInt.getAllByPage(pageable), pageable, lessonDaoInt.count());
+	return new PageImpl<>(lessonDaoInt.getByPage(pageable), pageable, lessonDaoInt.count());
     }
 
     public List<Lesson> getLessonsForTeacherByDate(Teacher teacher, LocalDate date) {
@@ -157,7 +158,7 @@ public class LessonService {
     }
 
     private void checkTeacherIsOnVocation(Lesson lesson) {
-	if (vocationDao.findByTeacherIdAndDate(lesson.getTeacher().getId(), lesson.getDate()).isPresent()) {
+	if (vocationDaoInt.getByTeacherAndDate(lesson.getTeacher(), lesson.getDate()).isPresent()) {
 	    throw new TeacherOnVocationException("teacher on vocation, teacherId=" + lesson.getTeacher().getId());
 	}
     }
@@ -176,7 +177,7 @@ public class LessonService {
     }
 
     private void checkTeacherTeachesLessonSubject(Lesson lesson) {
-	if (!lesson.getTeacher().getSubjects().contains(lesson.getSubject())) {
+	if (lesson.getTeacher().getSubjects().stream().noneMatch(s -> s.getId()==lesson.getSubject().getId())) {
 	    throw new TeacherNotTeachLessonException("teacher dosn't teach lesson's subject");
 	}
     }

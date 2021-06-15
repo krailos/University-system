@@ -43,7 +43,7 @@ public class Teacher {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "teachers_subjects", joinColumns = { @JoinColumn(name = "teacher_id") }, inverseJoinColumns = {
 	    @JoinColumn(name = "subject_id") })
-    private List<Subject> subjects = new ArrayList<>();
+    private List<Subject> subjects;
     private String phone;
     private String address;
     private String email;
@@ -239,7 +239,7 @@ public class Teacher {
     @Override
     public String toString() {
 	return "Teacher [id=" + id + ", teacherId=" + teacherId + ", firstName=" + firstName + ", lastName=" + lastName
-		+ ", birthDate=" + birthDate  + ", subjects=" + subjects + ", phone="
+		+ ", birthDate=" + birthDate  + ", subjects=" + ((subjects == null) ? 0 : subjects.size()) + ", phone="
 		+ phone + ", address=" + address + ", email=" + email + ", gender=" + gender + ", degree=" + degree
 		+ "]";
     }

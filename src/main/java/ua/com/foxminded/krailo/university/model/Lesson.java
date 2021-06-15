@@ -21,8 +21,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "lessons")
-@NamedQueries({ 
-    	@NamedQuery(name = "SelectAllLessons", query = "from Lesson l order by l.date"),
+@NamedQueries({ @NamedQuery(name = "SelectAllLessons", query = "from Lesson l order by l.date"),
 	@NamedQuery(name = "SelectLessonsByDate", query = "from Lesson l where l.date = :date "),
 	@NamedQuery(name = "SelectLessonsByTeacherBetweenDates", query = "from Lesson l where l.teacher.id = :teacherId and "
 		+ " l.date between :startDate and :finishDate"),
@@ -32,10 +31,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 		+ " and l.teacher.id = :teacherId and l.lessonTime.id = :lessonTimeId "),
 	@NamedQuery(name = "SelectLessonsByDateAndAudienceAndLessonTime", query = "from Lesson l where l.date = :date"
 		+ " and l.audience.id = :audienceId and l.lessonTime.id = :lessonTimeId "),
-	@NamedQuery(name = "SelectLessonsByDateAndLessonTimeAndGroup", query = "from Lesson l inner join l.groups as g"
+	@NamedQuery(name = "SelectLessonsByDateAndLessonTimeAndGroup", query = "select l from Lesson l inner join l.groups as g"
 		+ " where l.date = :date and l.lessonTime.id = :lessonTimeId and g.id = :groupId "),
-	@NamedQuery(name = "CountAllLessons", query = "select count(id) from Lesson") 
-    	})
+	@NamedQuery(name = "CountAllLessons", query = "select count(id) from Lesson") })
 public class Lesson {
 
     @Id
@@ -52,10 +50,10 @@ public class Lesson {
     private Audience audience;
     @ManyToOne
     private Teacher teacher;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "lessons_groups", joinColumns = { @JoinColumn(name = "lesson_id") }, inverseJoinColumns = {
 	    @JoinColumn(name = "group_id") })
-    private List<Group> groups = new ArrayList<>();
+    private List<Group> groups;
 
     public Lesson() {
     }
@@ -243,8 +241,8 @@ public class Lesson {
     @Override
     public String toString() {
 	return "Lesson [id=" + id + ", date=" + date + ", lessonTime=" + lessonTime.getId() + ", subject="
-		+ subject.getId() + ", audience=" + audience.getId() + ", teacher=" + teacher.getId() + ", timetable="
-		+ ", groups=" + groups + "]";
+		+ subject.getId() + ", audience=" + audience.getId() + ", teacher=" + teacher.getId() + ", groupsSize="
+		+ groups.size() + "]";
     }
 
 }
