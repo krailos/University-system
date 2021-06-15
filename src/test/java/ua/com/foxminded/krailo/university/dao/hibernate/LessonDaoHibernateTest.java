@@ -58,13 +58,16 @@ class LessonDaoHibernateTest {
     }
 
     @Test
-    void givenLesson_whenUpdate_thenUpdated() {
+    void givenLessonsWithNewDateAndAudience_whenUpdate_thenUpdated() {
 	Lesson lesson = getLesson();
 	lesson.setDate(LocalDate.now());
+	Audience audience = Audience.builder().id(3).number("3").capacity(120).description("description3").build();
+	lesson.setAudience(audience);
 
 	lessonDao.update(lesson);
 
 	assertEquals(lesson.getDate(), hibernateTemplate.get(Lesson.class, 1).getDate());
+	assertEquals(lesson.getAudience(), hibernateTemplate.get(Lesson.class, 1).getAudience());
     }
 
     @Test
@@ -75,16 +78,15 @@ class LessonDaoHibernateTest {
 
 	assertNull(hibernateTemplate.get(Lesson.class, 1));
     }
-    
+
     @Test
     void givenLessons_whenGetByPage_thenLessonsReturned() {
 	int pageNo = 1;
-        int pageSize = 3;
-        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+	int pageSize = 3;
+	Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
 
-        assertEquals(3, lessonDao.getByPage(pageable).size());
+	assertEquals(3, lessonDao.getByPage(pageable).size());
     }
-
 
     @Test
     void whenGetAllLessons_thenAllLessonsReturned() {

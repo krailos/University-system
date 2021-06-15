@@ -61,7 +61,7 @@ public class AudienceDaoHibernate implements AudienceDaoInt {
     }
 
     @Override
-    public List<Audience> getAllByPage(Pageable pageable) {
+    public List<Audience> getByPage(Pageable pageable) {
 	Session session = sessionFactory.getCurrentSession();
 	Query<Audience> query = session.createNamedQuery("SelectAllAudiences");
 	query.setFirstResult((int) pageable.getOffset());

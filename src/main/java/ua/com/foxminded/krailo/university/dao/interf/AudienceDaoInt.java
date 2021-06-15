@@ -12,7 +12,7 @@ public interface AudienceDaoInt extends GenericDao<Audience> {
 
     Optional<Audience> getByNumber(String number);
 
-    List<Audience> getAllByPage(Pageable pageable);
+    List<Audience> getByPage(Pageable pageable);
     
     List<Audience> getAll();
     

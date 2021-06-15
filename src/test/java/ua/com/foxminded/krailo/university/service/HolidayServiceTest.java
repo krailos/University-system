@@ -18,40 +18,41 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
+import ua.com.foxminded.krailo.university.dao.interf.HolidayDaoInt;
 import ua.com.foxminded.krailo.university.model.Holiday;
 
 @ExtendWith(MockitoExtension.class)
 class HolidayServiceTest {
 
     @Mock
-    private HolidayDao holidayDao;
+    private HolidayDaoInt holidayDaoInt;
     @InjectMocks
     private HolidayService holidayService;
 
     @Test
     void givenHoliday_whenCereate_thanCreated() {
 	Holiday holiday = createHoliday();
-	doNothing().when(holidayDao).create(holiday);
+	doNothing().when(holidayDaoInt).create(holiday);
 
 	holidayService.create(holiday);
 
-	verify(holidayDao).create(holiday);
+	verify(holidayDaoInt).create(holiday);
     }
 
     @Test
     void givenHoliday_whenUpdate_thanUpdeted() {
 	Holiday holiday = createHoliday();
-	doNothing().when(holidayDao).update(holiday);
+	doNothing().when(holidayDaoInt).update(holiday);
 
 	holidayService.update(holiday);
 
-	verify(holidayDao).update(holiday);
+	verify(holidayDaoInt).update(holiday);
     }
 
     @Test
     void givenHolidayId_whenGetById_thenGot() {
 	Holiday holiday = createHoliday();
-	when(holidayDao.findById(1)).thenReturn(Optional.of(holiday));
+	when(holidayDaoInt.getById(1)).thenReturn(Optional.of(holiday));
 	Holiday expected = createHoliday();
 
 	Holiday actual = holidayService.getById(1);
@@ -62,7 +63,7 @@ class HolidayServiceTest {
     @Test
     void givenHolidays_whenGetAll_thenGot() {
 	List<Holiday> holidays = createHolidays();
-	when(holidayDao.findAll()).thenReturn(holidays);
+	when(holidayDaoInt.getAll()).thenReturn(holidays);
 
 	List<Holiday> actual = holidayService.getAll();
 
@@ -73,11 +74,11 @@ class HolidayServiceTest {
     @Test
     void givenHoliday_whenDelete_thenDeleted() {
 	Holiday holiday = createHoliday();
-	doNothing().when(holidayDao).deleteById(1);
+	doNothing().when(holidayDaoInt).delete(holiday);
 
 	holidayService.delete(holiday);
 
-	verify(holidayDao).deleteById(1);
+	verify(holidayDaoInt).delete(holiday);
     }
 
     private Holiday createHoliday() {

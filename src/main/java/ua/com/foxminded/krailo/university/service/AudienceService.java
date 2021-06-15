@@ -62,7 +62,7 @@ public class AudienceService {
 
     public Page<Audience> getSelectedPage(Pageable pageable) {
 	log.debug("get audiences by page");
-	return new PageImpl<>(audienceDaoInt.getAllByPage(pageable), pageable, audienceDaoInt.count());
+	return new PageImpl<>(audienceDaoInt.getByPage(pageable), pageable, audienceDaoInt.count());
     }
 
     public void delete(Audience audience) {
