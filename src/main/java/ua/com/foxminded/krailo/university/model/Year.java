@@ -15,8 +15,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
+
 @Entity
 @Table(name = "years")
+@NamedQueries({
+    @NamedQuery(name = "SelectAllYears", query = "from Year y order by y.name")
+})
 public class Year {
 
     @Id
