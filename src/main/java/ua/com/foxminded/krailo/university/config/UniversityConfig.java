@@ -35,6 +35,8 @@ public class UniversityConfig {
     private String hibernateDialect;
     @Value("${current_session_context_class}")
     private String currentSessionContextClass;
+    @Value("${hibernate.enable_lazy_load_no_trans}")
+    private String hibernateLazyLoad;
 
     @Bean
     public DataSource dataSource() throws NamingException {
@@ -69,6 +71,7 @@ public class UniversityConfig {
 	hibernateProperties.setProperty("hibernate.hbm2ddl.auto", hibernateHbm2ddl);
 	hibernateProperties.setProperty("hibernate.dialect", hibernateDialect);
 	hibernateProperties.setProperty("current_session_context_class", currentSessionContextClass);
+	hibernateProperties.setProperty("hibernate.enable_lazy_load_no_trans", hibernateLazyLoad);
 	return hibernateProperties;
     }
 

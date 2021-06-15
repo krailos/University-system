@@ -17,10 +17,15 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "teachers")
+@NamedQueries({ @NamedQuery(name = "SelectAllTeachers", query = "from Teacher t order by t.lastName"),
+	@NamedQuery(name = "SelectTeachersBySubject", query = "from Teacher t inner join t.subjects as s where s.id = :subjectId order by t.lastName"),
+	@NamedQuery(name = "CountAllTeachers", query = "select count(id) from Teacher")})
 public class Teacher {
 
     @Id

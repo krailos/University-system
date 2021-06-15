@@ -2,18 +2,47 @@ package ua.com.foxminded.krailo.university.model;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
 import org.springframework.format.annotation.DateTimeFormat;
 
+@Entity
+@Table(name = "vocations")
+@NamedQueries({
+    @NamedQuery(name = "SelectAllVocations", query = "from Vocation v order by v.start"),
+    @NamedQuery(name = "SelectVocationsByTeacher", query = "from Vocation v where v.teacher.id = :teacherId order by v.start"),
+    @NamedQuery(name = "SelectVocationsByTeacherAndYear", query = "from Vocation v where v.teacher.id = :teacherId and"
+    	+ " extract (year from v.start) = :year order by v.start "),
+    @NamedQuery(name = "SelectVocationsByTeacherAndDate", query = "from Vocation v where v.teacher.id = :teacherId and"
+    	+ " :date between v.start and v.end")
+})
 public class Vocation {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Enumerated(EnumType.STRING)
     private VocationKind kind;
+    @Column(name = "applying_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate applyingDate;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @Column(name = "start_date")
     private LocalDate start;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @Column(name = "end_date")
     private LocalDate end;
+    @ManyToOne
     private Teacher teacher;
 
     public Vocation() {
