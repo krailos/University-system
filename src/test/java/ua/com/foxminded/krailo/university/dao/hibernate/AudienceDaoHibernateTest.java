@@ -36,6 +36,7 @@ class AudienceDaoHibernateTest {
     @Test
     void givenNewAudience_whenCreate_thenCreated() throws Exception {
 	Audience audience = getAudience();
+	audience.setNumber("one");
 	audience.setId(0);
 
 	audienceDao.create(audience);
@@ -89,6 +90,8 @@ class AudienceDaoHibernateTest {
     @Test
     void givenAudienceWithNewNumberAndCapacity_whenUpdate_thenUpdated() {
 	Audience audience = getAudience();
+	audience.setCapacity(111);
+	audience.setNumber("new number");
 	
 	audienceDao.update(audience);
 
@@ -123,7 +126,7 @@ class AudienceDaoHibernateTest {
     }
 
     private Audience getAudience () {
-	return Audience.builder().id(1).number("one").capacity(100).description("description").build();
+	return Audience.builder().id(1).number("1").capacity(300).description("description").build();
     }
     
 }
