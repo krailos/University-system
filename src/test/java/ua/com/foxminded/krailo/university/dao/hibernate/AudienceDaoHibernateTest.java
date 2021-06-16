@@ -10,17 +10,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
-import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.AudienceDao;
 import ua.com.foxminded.krailo.university.dao.interf.AudienceDaoInt;
-import ua.com.foxminded.krailo.university.exception.DaoConstraintViolationException;
 import ua.com.foxminded.krailo.university.model.Audience;
 
 @Transactional
@@ -40,7 +36,7 @@ class AudienceDaoHibernateTest {
 	audience.setId(0);
 
 	audienceDao.create(audience);
-	
+
 	assertEquals(audience, hibernateTemplate.get(Audience.class, 4));
     }
 
@@ -92,7 +88,7 @@ class AudienceDaoHibernateTest {
 	Audience audience = getAudience();
 	audience.setCapacity(111);
 	audience.setNumber("new number");
-	
+
 	audienceDao.update(audience);
 
 	assertEquals(audience.getNumber(), hibernateTemplate.get(Audience.class, 1).getNumber());
@@ -102,10 +98,10 @@ class AudienceDaoHibernateTest {
     @Test
     void givenAudience_whenDelete_thenDeleted() throws Exception {
 	Audience audience = getAudience();
-	
+
 	audienceDao.delete(audience);
 
-	assertEquals(null,  hibernateTemplate.get(Audience.class, 1));
+	assertEquals(null, hibernateTemplate.get(Audience.class, 1));
     }
 
     @Test
@@ -115,7 +111,7 @@ class AudienceDaoHibernateTest {
 
 	assertEquals(3, actual);
     }
-    
+
     @Test
     void givenAudiences_whenGetByPage_thenAudiencesReturned() {
 	int pageNo = 1;
@@ -125,8 +121,8 @@ class AudienceDaoHibernateTest {
 	assertEquals(3, audienceDao.getByPage(pageable).size());
     }
 
-    private Audience getAudience () {
+    private Audience getAudience() {
 	return Audience.builder().id(1).number("1").capacity(300).description("description").build();
     }
-    
+
 }

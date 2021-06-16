@@ -2,7 +2,6 @@ package ua.com.foxminded.krailo.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -21,15 +20,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import ua.com.foxminded.krailo.university.dao.GroupDao;
-import ua.com.foxminded.krailo.university.dao.StudentDao;
 import ua.com.foxminded.krailo.university.dao.interf.GroupDaoInt;
 import ua.com.foxminded.krailo.university.dao.interf.StudentDaoInt;
 import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
-import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Year;
-import ua.com.foxminded.krailo.university.util.Paging;
 
 @ExtendWith(MockitoExtension.class)
 class GroupServiceTest {
@@ -117,7 +112,7 @@ class GroupServiceTest {
 
 	verify(groupDao).delete(group);
     }
-    
+
     @Test
     void givenGroups_whenGetByPage_thenGot() {
 	int pageNo = 1;
@@ -132,7 +127,6 @@ class GroupServiceTest {
 	assertEquals(expected, groupService.getSelectedPage(pageable));
     }
 
-
     @Test
     void whenGetQuantity_thenGot() {
 	when(groupDao.count()).thenReturn(10);
@@ -141,7 +135,6 @@ class GroupServiceTest {
 
 	assertEquals(10, actual);
     }
-
 
     private Group createGroup() {
 	return Group.builder().id(1).name("name").year(Year.builder().id(1).build()).build();

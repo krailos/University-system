@@ -17,7 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.interf.HolidayDaoInt;
 import ua.com.foxminded.krailo.university.model.Holiday;
 
@@ -86,8 +85,8 @@ class HolidayServiceTest {
     }
 
     private List<Holiday> createHolidays() {
-	return new ArrayList<Holiday>(Arrays.asList(
-		Holiday.builder().id(1).name("name2").date(LocalDate.of(2021, 01, 01)).build(),
-		Holiday.builder().id(2).name("name2").date(LocalDate.of(2021, 02, 02)).build()));
+	return new ArrayList<Holiday>(
+		Arrays.asList(Holiday.builder().id(1).name("name2").date(LocalDate.of(2021, 01, 01)).build(),
+			Holiday.builder().id(2).name("name2").date(LocalDate.of(2021, 02, 02)).build()));
     }
 }

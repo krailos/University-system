@@ -18,8 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ua.com.foxminded.krailo.university.dao.LessonDao;
-import ua.com.foxminded.krailo.university.dao.TeacherDao;
 import ua.com.foxminded.krailo.university.dao.interf.LessonDaoInt;
 import ua.com.foxminded.krailo.university.dao.interf.TeacherDaoInt;
 import ua.com.foxminded.krailo.university.model.Gender;
@@ -105,8 +103,8 @@ class TeacherServiceTest {
 	when(lessonDao.getByTeacherBetweenDates(subsitutedTeacher, startDate, finishDate))
 		.thenReturn(substitutedlessons);
 	when(teacherDao.getBySubject(subject)).thenReturn(teachersTeachesTheSameLessons);
-	when(lessonDao.getByDateAndTeacherAndLessonTime(lesson.getDate(), newTeacher,
-		lesson.getLessonTime())).thenReturn(Optional.empty());
+	when(lessonDao.getByDateAndTeacherAndLessonTime(lesson.getDate(), newTeacher, lesson.getLessonTime()))
+		.thenReturn(Optional.empty());
 
 	List<Teacher> teachersForSubstitute = teacherService.findTeachersForSubstitute(subsitutedTeacher, startDate,
 		finishDate);
@@ -128,9 +126,8 @@ class TeacherServiceTest {
 	when(teacherDao.getBySubject(subject)).thenReturn(teachersTeachesTheSameLessons);
 	when(lessonDao.getByTeacherBetweenDates(subsitutedTeacher, startDate, finishDate))
 		.thenReturn(substitutedlessons);
-	when(lessonDao.getByDateAndTeacherAndLessonTime(lesson.getDate(), newTeacher,
-		lesson.getLessonTime())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
-
+	when(lessonDao.getByDateAndTeacherAndLessonTime(lesson.getDate(), newTeacher, lesson.getLessonTime()))
+		.thenReturn(Optional.of(Lesson.builder().id(2).build()));
 
 	List<Teacher> teachers = teacherService.findTeachersForSubstitute(subsitutedTeacher, startDate, finishDate);
 

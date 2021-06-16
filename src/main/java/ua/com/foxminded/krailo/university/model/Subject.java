@@ -19,7 +19,7 @@ import org.hibernate.annotations.NamedQuery;
 @NamedQueries({ @NamedQuery(name = "SelectAllSubjects", query = "from Subject s order by s.name"),
 	@NamedQuery(name = "SelectSubjectsByTeacher", query = "from Subject s inner join s.teachers as t where t.id = :teacherId order by s.name"),
 	@NamedQuery(name = "SelectSubjectsByYear", query = "from Subject s inner join s.years as y where y.id = :yearId order by s.name"),
-	@NamedQuery(name = "CountAllSubjects", query = "select count(id) from Subject")})
+	@NamedQuery(name = "CountAllSubjects", query = "select count(id) from Subject") })
 public class Subject {
 
     @Id
@@ -174,9 +174,8 @@ public class Subject {
 
     @Override
     public String toString() {
-	return "Subject [id=" + id + ", name=" + name + ", description=" + description + ", teachers=" + ((teachers == null) ? 0 : teachers.size())
-		+ ", years=" + ((years == null) ? 0 : years.size()) + "]";
+	return "Subject [id=" + id + ", name=" + name + ", description=" + description + ", teachers="
+		+ ((teachers == null) ? 0 : teachers.size()) + ", years=" + ((years == null) ? 0 : years.size()) + "]";
     }
 
-   
 }

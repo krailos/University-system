@@ -24,10 +24,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import ua.com.foxminded.krailo.university.dao.HolidayDao;
-import ua.com.foxminded.krailo.university.dao.LessonDao;
-import ua.com.foxminded.krailo.university.dao.TeacherDao;
-import ua.com.foxminded.krailo.university.dao.VocationDao;
 import ua.com.foxminded.krailo.university.dao.interf.HolidayDaoInt;
 import ua.com.foxminded.krailo.university.dao.interf.LessonDaoInt;
 import ua.com.foxminded.krailo.university.dao.interf.TeacherDaoInt;
@@ -49,7 +45,6 @@ import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Vocation;
-import ua.com.foxminded.krailo.university.util.Paging;
 
 @ExtendWith(MockitoExtension.class)
 class LessonServiceTest {
@@ -156,8 +151,7 @@ class LessonServiceTest {
 		lesson.getLessonTime())).thenReturn(Optional.empty());
 	when(lessonDaoInt.getByDateAndAudienceAndLessonTime(lesson.getDate(), lesson.getAudience(),
 		lesson.getLessonTime())).thenReturn(Optional.empty());
-	when(vocationDaoInt.getByTeacherAndDate(lesson.getTeacher(), lesson.getDate()))
-		.thenReturn(Optional.empty());
+	when(vocationDaoInt.getByTeacherAndDate(lesson.getTeacher(), lesson.getDate())).thenReturn(Optional.empty());
 	when(holidayDaoInt.getByDate(lesson.getDate())).thenReturn(Optional.empty());
 	when(lessonDaoInt.getByDateAndLessonTimeAndGroup(lesson.getDate(), lesson.getLessonTime(),
 		lesson.getGroups().get(0))).thenReturn(Optional.empty());
@@ -174,8 +168,7 @@ class LessonServiceTest {
 		lesson.getLessonTime())).thenReturn(Optional.empty());
 	when(lessonDaoInt.getByDateAndAudienceAndLessonTime(lesson.getDate(), lesson.getAudience(),
 		lesson.getLessonTime())).thenReturn(Optional.empty());
-	when(vocationDaoInt.getByTeacherAndDate(lesson.getTeacher(), lesson.getDate()))
-		.thenReturn(Optional.empty());
+	when(vocationDaoInt.getByTeacherAndDate(lesson.getTeacher(), lesson.getDate())).thenReturn(Optional.empty());
 	when(holidayDaoInt.getByDate(lesson.getDate())).thenReturn(Optional.empty());
 	when(lessonDaoInt.getByDateAndLessonTimeAndGroup(lesson.getDate(), lesson.getLessonTime(),
 		lesson.getGroups().get(0))).thenReturn(Optional.empty());
@@ -425,19 +418,18 @@ class LessonServiceTest {
     @Test
     void givenLessons_whenGetAudiencesByPage_thenGot() {
 	int pageNo = 1;
-        int pageSize = 3;
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
-        List<Lesson> lessons = new ArrayList<>();
-        lessons.add(createLesson());
-        when(lessonDaoInt.count()).thenReturn(6);
-        when(lessonDaoInt.getByPage(pageable)).thenReturn(lessons);
-        Page<Lesson> expected = new PageImpl<>(lessonDaoInt.getByPage(pageable),
-                pageable, lessonDaoInt.count());
+	int pageSize = 3;
+	Pageable pageable = PageRequest.of(pageNo, pageSize);
+	List<Lesson> lessons = new ArrayList<>();
+	lessons.add(createLesson());
+	when(lessonDaoInt.count()).thenReturn(6);
+	when(lessonDaoInt.getByPage(pageable)).thenReturn(lessons);
+	Page<Lesson> expected = new PageImpl<>(lessonDaoInt.getByPage(pageable), pageable, lessonDaoInt.count());
 
-        assertEquals(expected, lessonService.getSelectedPage(pageable));
+	assertEquals(expected, lessonService.getSelectedPage(pageable));
 
     }
-    
+
     @Test
     void givenOldTeacherNewTeacherSubstitutePeriod_whenSubstituteTeacher_thenLessonsUpdatedAndTeacherSubstituted() {
 	LocalDate startDate = LocalDate.now();
@@ -448,14 +440,13 @@ class LessonServiceTest {
 	Lesson lesson = createLesson();
 	lesson.setTeacher(oldTeacher);
 	lesson.setSubject(subject);
-	when(lessonDaoInt.getByTeacherBetweenDates(oldTeacher, startDate, finishDate)).thenReturn(Arrays.asList(lesson));
-	
+	when(lessonDaoInt.getByTeacherBetweenDates(oldTeacher, startDate, finishDate))
+		.thenReturn(Arrays.asList(lesson));
+
 	lessonService.substituteTeacher(oldTeacher, newTeacher, startDate, finishDate);
-	
+
 	verify(lessonDaoInt).update(lesson);
     }
-
-  
 
     private Lesson createLesson() {
 	Student student1 = Student.builder().id(1).build();

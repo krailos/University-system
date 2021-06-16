@@ -9,15 +9,12 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
-import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.TeacherDao;
 import ua.com.foxminded.krailo.university.dao.interf.TeacherDaoInt;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Subject;
@@ -62,7 +59,7 @@ class TeacherDaoHibernateTest {
 	Teacher teacher = getTeacher();
 	teacher.setFirstName("new name");
 	teacher.setBirthDate(LocalDate.of(1984, 01, 01));
-	
+
 	teacherDao.update(teacher);
 
 	assertEquals(teacher.getFirstName(), hibernateTemplate.get(Teacher.class, 1).getFirstName());
@@ -91,7 +88,7 @@ class TeacherDaoHibernateTest {
 
     @Test
     void givenTeachers_whenGetAll_thenFound() {
-	
+
 	int actual = teacherDao.getAll().size();
 
 	assertEquals(2, actual);
@@ -100,7 +97,7 @@ class TeacherDaoHibernateTest {
     @Test
     void givenId_whenDelete_thenDeleted() {
 	Teacher teacher = getTeacher();
-	
+
 	teacherDao.delete(teacher);
 
 	assertEquals(null, hibernateTemplate.get(Teacher.class, 1));

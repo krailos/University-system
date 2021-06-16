@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
-import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
@@ -67,10 +66,10 @@ class LessonTimeDaoHibernateTest {
     @Test
     void givenId_whenDelete_thenDeleted() {
 	LessonTime lessonTime = getLessonTime();
-	
+
 	lessonTimeDao.delete(lessonTime);
 
-	assertEquals(null, hibernateTemplate.get(LessonTime.class,1));
+	assertEquals(null, hibernateTemplate.get(LessonTime.class, 1));
     }
 
     @Test

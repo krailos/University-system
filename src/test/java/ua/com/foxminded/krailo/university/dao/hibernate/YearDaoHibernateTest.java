@@ -8,15 +8,12 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
-import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.YearDao;
 import ua.com.foxminded.krailo.university.dao.interf.YearDaoInt;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Year;
@@ -76,7 +73,7 @@ class YearDaoHibernateTest {
 
     @Test
     void givenYears_whenGetAll_thenFound() {
-	
+
 	int actual = yearDao.getAll().size();
 
 	assertEquals(3, actual);
@@ -85,7 +82,7 @@ class YearDaoHibernateTest {
     @Test
     void givenId_whenDelete_thenDeleted() {
 	Year year = Year.builder().id(1).name("new year 1").build();
-	
+
 	yearDao.delete(year);
 
 	assertEquals(null, hibernateTemplate.get(Year.class, 1));

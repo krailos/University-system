@@ -18,14 +18,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "vocations")
-@NamedQueries({
-    @NamedQuery(name = "SelectAllVocations", query = "from Vocation v order by v.start"),
-    @NamedQuery(name = "SelectVocationsByTeacher", query = "from Vocation v where v.teacher.id = :teacherId order by v.start"),
-    @NamedQuery(name = "SelectVocationsByTeacherAndYear", query = "from Vocation v where v.teacher.id = :teacherId and"
-    	+ " extract (year from v.start) = :year order by v.start "),
-    @NamedQuery(name = "SelectVocationsByTeacherAndDate", query = "from Vocation v where v.teacher.id = :teacherId and"
-    	+ " :date between v.start and v.end")
-})
+@NamedQueries({ @NamedQuery(name = "SelectAllVocations", query = "from Vocation v order by v.start"),
+	@NamedQuery(name = "SelectVocationsByTeacher", query = "from Vocation v where v.teacher.id = :teacherId order by v.start"),
+	@NamedQuery(name = "SelectVocationsByTeacherAndYear", query = "from Vocation v where v.teacher.id = :teacherId and"
+		+ " extract (year from v.start) = :year order by v.start "),
+	@NamedQuery(name = "SelectVocationsByTeacherAndDate", query = "from Vocation v where v.teacher.id = :teacherId and"
+		+ " :date between v.start and v.end") })
 public class Vocation {
 
     @Id

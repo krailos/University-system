@@ -9,15 +9,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
-import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.StudentDao;
 import ua.com.foxminded.krailo.university.dao.interf.StudentDaoInt;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Group;
@@ -49,16 +46,16 @@ class StudentDaoHobernateTest {
 	Student student = getStudent();
 	student.setFirstName("new first name");
 	student.setGroup(Group.builder().id(2).name("group 2").build());
-		
+
 	studentDao.update(student);
 
-	assertEquals(student.getFirstName(), hibernateTemplate.get(Student.class,1).getFirstName());
-	assertEquals(student.getGroup().getId(), hibernateTemplate.get(Student.class,1).getGroup().getId());
+	assertEquals(student.getFirstName(), hibernateTemplate.get(Student.class, 1).getFirstName());
+	assertEquals(student.getGroup().getId(), hibernateTemplate.get(Student.class, 1).getGroup().getId());
     }
 
     @Test
     void givenId_whenFindById_thenFound() {
-	
+
 	Student actual = studentDao.getById(1).get();
 
 	assertEquals(1, actual.getId());
@@ -75,7 +72,7 @@ class StudentDaoHobernateTest {
     @Test
     void givenGroup_whenGetByGroup_thenGot() {
 	Student student = getStudent();
-	
+
 	List<Student> students = studentDao.getByGroup(student.getGroup());
 
 	assertEquals(1, students.size());
@@ -84,7 +81,7 @@ class StudentDaoHobernateTest {
     @Test
     void givenId_whenDelete_thenDeleted() {
 	Student student = getStudent();
-	
+
 	studentDao.delete(student);
 
 	assertEquals(null, hibernateTemplate.get(Student.class, 1));
@@ -103,16 +100,18 @@ class StudentDaoHobernateTest {
 	int PageNo = 0;
 	int pageSize = 3;
 	Pageable pageable = PageRequest.of(PageNo, pageSize);
-	
+
 	List<Student> students = studentDao.getByPage(pageable);
 
 	assertEquals(2, students.size());
     }
-    
+
     private Student getStudent() {
-	return Student.builder().id(1).studentId("1id").firstName("student first name 1").lastName("student last name 1")
-		.birthDate(LocalDate.of(2000, 01, 01)).address("address 1").phone("0670000001").email("email 1").rank("0")
-		.gender(Gender.MALE).group(Group.builder().id(1).name("group 1").year(Year.builder().id(1).name("year 1").build()).build()).build();
+	return Student.builder().id(1).studentId("1id").firstName("student first name 1")
+		.lastName("student last name 1").birthDate(LocalDate.of(2000, 01, 01)).address("address 1")
+		.phone("0670000001").email("email 1").rank("0").gender(Gender.MALE)
+		.group(Group.builder().id(1).name("group 1").year(Year.builder().id(1).name("year 1").build()).build())
+		.build();
 
     }
 

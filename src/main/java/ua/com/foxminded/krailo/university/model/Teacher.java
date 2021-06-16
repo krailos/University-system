@@ -25,7 +25,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table(name = "teachers")
 @NamedQueries({ @NamedQuery(name = "SelectAllTeachers", query = "from Teacher t order by t.lastName"),
 	@NamedQuery(name = "SelectTeachersBySubject", query = "from Teacher t inner join t.subjects as s where s.id = :subjectId order by t.lastName"),
-	@NamedQuery(name = "CountAllTeachers", query = "select count(id) from Teacher")})
+	@NamedQuery(name = "CountAllTeachers", query = "select count(id) from Teacher") })
 public class Teacher {
 
     @Id
@@ -226,7 +226,8 @@ public class Teacher {
 	    this.gender = gender;
 	    return this;
 	}
-	public TeacherBuilder subjects (List<Subject> subjects) {
+
+	public TeacherBuilder subjects(List<Subject> subjects) {
 	    this.subjects = subjects;
 	    return this;
 	}
@@ -241,7 +242,7 @@ public class Teacher {
     @Override
     public String toString() {
 	return "Teacher [id=" + id + ", teacherId=" + teacherId + ", firstName=" + firstName + ", lastName=" + lastName
-		+ ", birthDate=" + birthDate  + ", subjects=" + ((subjects == null) ? 0 : subjects.size()) + ", phone="
+		+ ", birthDate=" + birthDate + ", subjects=" + ((subjects == null) ? 0 : subjects.size()) + ", phone="
 		+ phone + ", address=" + address + ", email=" + email + ", gender=" + gender + ", degree=" + degree
 		+ "]";
     }

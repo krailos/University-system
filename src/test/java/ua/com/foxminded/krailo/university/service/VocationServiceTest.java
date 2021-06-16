@@ -21,9 +21,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import ua.com.foxminded.krailo.university.dao.HolidayDao;
-import ua.com.foxminded.krailo.university.dao.LessonDao;
-import ua.com.foxminded.krailo.university.dao.VocationDao;
 import ua.com.foxminded.krailo.university.dao.interf.HolidayDaoInt;
 import ua.com.foxminded.krailo.university.dao.interf.LessonDaoInt;
 import ua.com.foxminded.krailo.university.dao.interf.VocationDaoInt;
@@ -87,7 +84,7 @@ class VocationServiceTest {
 
 	String expectedMessage = "vocation duration more then max duration";
 	String actualMessage = exception.getMessage();
-	assertEquals(expectedMessage, actualMessage); 
+	assertEquals(expectedMessage, actualMessage);
 
     }
 

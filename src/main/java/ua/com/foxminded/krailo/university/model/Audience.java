@@ -5,16 +5,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 @Entity
 @Table(name = "audiences")
-@NamedQueries({
-    @NamedQuery(name = "SelectAudienceByNumber", query = "from Audience where number = :number"),
-    @NamedQuery(name = "SelectAllAudiences", query = "from Audience order by number"),
-    @NamedQuery(name = "CountAllAudiences",query = "select count(id) from Audience")
-})
+@NamedQueries({ @NamedQuery(name = "SelectAudienceByNumber", query = "from Audience where number = :number"),
+	@NamedQuery(name = "SelectAllAudiences", query = "from Audience order by number"),
+	@NamedQuery(name = "CountAllAudiences", query = "select count(id) from Audience") })
 public class Audience {
 
     @Id

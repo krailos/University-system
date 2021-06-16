@@ -44,13 +44,13 @@ class LessonDaoHibernateTest {
 	lesson.setId(0);
 
 	lessonDao.create(lesson);
-	
+
 	assertEquals(lesson, hibernateTemplate.get(Lesson.class, 7));
     }
 
     @Test
     void givenLessonId_whenGetById_thenLessonReturned() {
-	
+
 	Lesson actual = lessonDao.getById(1).get();
 
 	assertEquals(1, actual.getId());

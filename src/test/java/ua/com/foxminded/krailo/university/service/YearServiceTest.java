@@ -16,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ua.com.foxminded.krailo.university.dao.YearDao;
 import ua.com.foxminded.krailo.university.dao.interf.YearDaoInt;
 import ua.com.foxminded.krailo.university.model.Year;
 
@@ -87,8 +86,7 @@ class YearServiceTest {
 
     private List<Year> createYears() {
 	return new ArrayList<>(
-		Arrays.asList(Year.builder().id(1).name("year").build(),
-			Year.builder().id(2).name("year2").build()));
+		Arrays.asList(Year.builder().id(1).name("year").build(), Year.builder().id(2).name("year2").build()));
     }
 
 }
