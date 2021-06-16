@@ -24,6 +24,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
+import ua.com.foxminded.krailo.university.dao.interf.HolidayDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.LessonDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.VocationDaoInt;
 import ua.com.foxminded.krailo.university.exception.VocationEndBoforeStartException;
 import ua.com.foxminded.krailo.university.exception.VocationPeriodNotFreeException;
 import ua.com.foxminded.krailo.university.exception.VocationPeriodNotSameYearException;
@@ -38,11 +41,11 @@ import ua.com.foxminded.krailo.university.model.VocationKind;
 class VocationServiceTest {
 
     @Mock
-    private VocationDao vocationDao;
+    private VocationDaoInt vocationDao;
     @Mock
-    private LessonDao lessonDao;
+    private LessonDaoInt lessonDao;
     @Mock
-    private HolidayDao holidayDao;
+    private HolidayDaoInt holidayDao;
     @InjectMocks
     private VocationService vocationService;
 
@@ -110,7 +113,7 @@ class VocationServiceTest {
 	Vocation vocation = createVocation();
 	vocation.setStart(LocalDate.of(2021, 03, 01));
 	vocation.setEnd(LocalDate.of(2021, 03, 14));
-	when(holidayDao.findAll())
+	when(holidayDao.getAll())
 		.thenReturn(new ArrayList<>(Arrays.asList(Holiday.builder().date(LocalDate.of(2021, 03, 01)).build())));
 
 	vocationService.create(vocation);
@@ -125,7 +128,7 @@ class VocationServiceTest {
 	vocation.setStart(LocalDate.of(2021, 01, 01));
 	vocation.setEnd(LocalDate.of(2021, 01, 03));
 	List<Lesson> lessons = createLessons();
-	when(lessonDao.findByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
+	when(lessonDao.getByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
 		.thenReturn(lessons);
 
 	Exception exception = assertThrows(VocationPeriodNotFreeException.class,
@@ -143,7 +146,7 @@ class VocationServiceTest {
 	vocation.setStart(LocalDate.of(2021, 01, 01));
 	vocation.setEnd(LocalDate.of(2021, 01, 03));
 	List<Lesson> lessons = createLessons();
-	when(lessonDao.findByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
+	when(lessonDao.getByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
 		.thenReturn(lessons);
 
 	Exception exception = assertThrows(VocationPeriodNotFreeException.class,
@@ -218,7 +221,7 @@ class VocationServiceTest {
     void givenVocationPeriodWhithoutLessons_whenUpdate_thenUpdated() {
 	ReflectionTestUtils.setField(vocationService, "vocationDurationBykind", getVocationDurationBykind());
 	Vocation vocation = createVocation();
-	when(lessonDao.findByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
+	when(lessonDao.getByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
 		.thenReturn(new ArrayList<>());
 
 	vocationService.update(vocation);
@@ -248,7 +251,7 @@ class VocationServiceTest {
 	Vocation vocation = createVocation();
 	vocation.setStart(LocalDate.of(2021, 03, 01));
 	vocation.setEnd(LocalDate.of(2021, 03, 14));
-	when(holidayDao.findAll())
+	when(holidayDao.getAll())
 		.thenReturn(new ArrayList<>(Arrays.asList(Holiday.builder().date(LocalDate.of(2021, 03, 01)).build())));
 
 	vocationService.update(vocation);
@@ -259,7 +262,7 @@ class VocationServiceTest {
     @Test
     void givenVocationId_whenGetById_thenGot() {
 	Vocation vocation = createVocation();
-	when(vocationDao.findById(1)).thenReturn(Optional.of(vocation));
+	when(vocationDao.getById(1)).thenReturn(Optional.of(vocation));
 	Vocation expected = createVocation();
 
 	Vocation actual = vocationService.getById(1);
@@ -270,7 +273,7 @@ class VocationServiceTest {
     @Test
     void givenVocations_whenGetAll_thenGot() {
 	List<Vocation> vocations = createVocations();
-	when(vocationDao.findAll()).thenReturn(vocations);
+	when(vocationDao.getAll()).thenReturn(vocations);
 
 	List<Vocation> actual = vocationService.getAll();
 
@@ -281,11 +284,11 @@ class VocationServiceTest {
     @Test
     void givenVocation_whenDelete_thenDeleted() {
 	Vocation vocation = createVocation();
-	doNothing().when(vocationDao).deleteById(1);
+	doNothing().when(vocationDao).delete(vocation);
 
 	vocationService.delete(vocation);
 
-	verify(vocationDao).deleteById(1);
+	verify(vocationDao).delete(vocation);
     }
 
     private List<Lesson> createLessons() {

@@ -10,7 +10,7 @@ import ua.com.foxminded.krailo.university.model.Student;
 
 public interface StudentDaoInt extends GenericDao<Student> {
 
-    List<Student> getAllByPage(Pageable pageable);
+    List<Student> getByPage(Pageable pageable);
 
     List<Student> getAll();
 

@@ -62,7 +62,7 @@ public class SubjectDaoHibernate implements SubjectDaoInt {
     }
 
     @Override
-    public List<Subject> findByTeacher(Teacher teacher) {
+    public List<Subject> getByTeacher(Teacher teacher) {
 	Session session = sessionFactory.getCurrentSession();
 	Query<Subject> query = session.createNamedQuery("SelectSubjectsByTeacher");
 	query.setParameter("teacherId", teacher.getId());
@@ -70,7 +70,7 @@ public class SubjectDaoHibernate implements SubjectDaoInt {
     }
 
     @Override
-    public List<Subject> findByYear(Year year) {
+    public List<Subject> getByYear(Year year) {
 	Session session = sessionFactory.getCurrentSession();
 	Query<Subject> query = session.createNamedQuery("SelectSubjectsByYear");
 	query.setParameter("yearId", year.getId());

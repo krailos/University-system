@@ -49,7 +49,7 @@ public class StudentDaoHibernate implements StudentDaoInt {
     }
 
     @Override
-    public List<Student> getAllByPage(Pageable pageable) {
+    public List<Student> getByPage(Pageable pageable) {
 	Session session = sessionFactory.getCurrentSession();
 	Query<Student> query = session.createNamedQuery("SelectAllStudents");
 	query.setFirstResult((int) pageable.getOffset());
@@ -69,7 +69,7 @@ public class StudentDaoHibernate implements StudentDaoInt {
 	Session session = sessionFactory.getCurrentSession();
 	Query<Student> query = session.createNamedQuery("SelectStudentsByGroup");
 	query.setParameter("groupId", group.getId());
-	return null;
+	return query.list();
     }
 
     @Override

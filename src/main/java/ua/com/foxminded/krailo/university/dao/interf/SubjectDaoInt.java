@@ -15,9 +15,9 @@ public interface SubjectDaoInt extends GenericDao<Subject> {
 
     List<Subject> getAll();
     
-    List<Subject> findByTeacher(Teacher teacher);
+    List<Subject> getByTeacher(Teacher teacher);
     
-    List<Subject> findByYear(Year year);
+    List<Subject> getByYear(Year year);
     
     int count();
 

@@ -45,7 +45,9 @@ public class Teacher {
 	    @JoinColumn(name = "subject_id") })
     private List<Subject> subjects;
     private String phone;
+    @Column(name = "address")
     private String address;
+    @Column(name = "email")
     private String email;
     @Enumerated(EnumType.STRING)
     private Gender gender;

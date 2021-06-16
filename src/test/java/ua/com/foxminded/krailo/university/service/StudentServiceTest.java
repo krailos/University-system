@@ -16,11 +16,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.StudentDao;
+import ua.com.foxminded.krailo.university.dao.interf.GroupDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.StudentDaoInt;
 import ua.com.foxminded.krailo.university.exception.ServiceException;
+import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Student;
@@ -32,9 +39,9 @@ class StudentServiceTest {
     @InjectMocks
     private StudentService studentService;
     @Mock
-    private StudentDao studentDao;
+    private StudentDaoInt studentDao;
     @Mock
-    private GroupDao groupDao;
+    private GroupDaoInt groupDao;
 
     @Test
     void givenStudent_whenCreate_thenCreated() {
@@ -42,7 +49,7 @@ class StudentServiceTest {
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
-	when(groupDao.findById(student.getGroup().getId())).thenReturn(Optional.of(group));
+	when(groupDao.getById(student.getGroup().getId())).thenReturn(Optional.of(group));
 
 	studentService.create(student);
 
@@ -55,7 +62,7 @@ class StudentServiceTest {
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
-	when(groupDao.findById(student.getGroup().getId())).thenReturn(Optional.of(group));
+	when(groupDao.getById(student.getGroup().getId())).thenReturn(Optional.of(group));
 
 	assertEquals("group capacity more then groupMaxSize=1",
 		assertThrows(ServiceException.class, () -> studentService.create(student)).getMessage());
@@ -68,7 +75,7 @@ class StudentServiceTest {
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
-	when(groupDao.findById(student.getGroup().getId())).thenReturn(Optional.of(group));
+	when(groupDao.getById(student.getGroup().getId())).thenReturn(Optional.of(group));
 
 	studentService.update(student);
 
@@ -81,7 +88,7 @@ class StudentServiceTest {
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
-	when(groupDao.findById(student.getGroup().getId())).thenReturn(Optional.of(group));
+	when(groupDao.getById(student.getGroup().getId())).thenReturn(Optional.of(group));
 
 	assertEquals("group capacity more then groupMaxSize=1",
 		assertThrows(ServiceException.class, () -> studentService.update(student)).getMessage());
@@ -91,7 +98,7 @@ class StudentServiceTest {
     @Test
     void givenStudentId_whenGetById_thenGot() {
 	Student student = createStudent();
-	when(studentDao.findById(1)).thenReturn(Optional.of(student));
+	when(studentDao.getById(1)).thenReturn(Optional.of(student));
 
 	Student actual = studentService.getById(1);
 
@@ -102,7 +109,7 @@ class StudentServiceTest {
     @Test
     void givenStudents_whenGetAll_thenGot() {
 	List<Student> students = createStudents();
-	when(studentDao.findAll()).thenReturn(students);
+	when(studentDao.getAll()).thenReturn(students);
 
 	List<Student> actual = studentService.getAll();
 
@@ -111,11 +118,12 @@ class StudentServiceTest {
     }
 
     @Test
-    void givenStudentId_whenGetByGroupId_thenGot() {
+    void givenStudentId_whenGetByGroup_thenGot() {
 	List<Student> students = createStudents();
-	when(studentDao.findByGroupId(1)).thenReturn(students);
+	Group group = Group.builder().id(1).build();
+	when(studentDao.getByGroup(group)).thenReturn(students);
 
-	List<Student> actual = studentService.getByGroupId(1);
+	List<Student> actual = studentService.getByGroup(group);
 
 	List<Student> expected = createStudents();
 	assertEquals(expected, actual);
@@ -124,16 +132,16 @@ class StudentServiceTest {
     @Test
     void givenStudent_whenDelete_thenDeleted() {
 	Student student = createStudent();
-	doNothing().when(studentDao).deleteById(1);
+	doNothing().when(studentDao).delete(student);
 
 	studentService.delete(student);
 
-	verify(studentDao).deleteById(1);
+	verify(studentDao).delete(student);
     }
 
     @Test
     void whenGetQuantity_thenGot() {
-	when(studentDao.findQuantity()).thenReturn(10);
+	when(studentDao.count()).thenReturn(10);
 
 	int actual = studentService.getQuantity();
 
@@ -141,15 +149,17 @@ class StudentServiceTest {
     }
 
     @Test
-    void givenStudents_whenGetStudentsByPage_thenGot() {
-	List<Student> audiences = createStudents();
-	Paging paging = new Paging(4, 2, 16);
-	when(studentDao.findWithLimit(4, 4)).thenReturn(audiences);
+    void givenStudents_whenGetByPage_thenGot() {
+	int pageNo = 1;
+	int pageSize = 3;
+	Pageable pageable = PageRequest.of(pageNo, pageSize);
+	List<Student> students = new ArrayList<>();
+	students.add(createStudent());
+	when(studentDao.count()).thenReturn(6);
+	when(studentDao.getByPage(pageable)).thenReturn(students);
+	Page<Student> expected = new PageImpl<>(studentDao.getByPage(pageable), pageable, studentDao.count());
 
-	List<Student> actual = studentService.getSelectedPage(paging);
-
-	List<Student> expected = createStudents();
-	assertEquals(expected, actual);
+	assertEquals(expected, studentService.getSelectedPage(pageable));
     }
 
     private Student createStudent() {

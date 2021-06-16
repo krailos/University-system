@@ -18,13 +18,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.krailo.university.dao.SubjectDao;
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
+import ua.com.foxminded.krailo.university.dao.interf.SubjectDaoInt;
 import ua.com.foxminded.krailo.university.model.Subject;
 
 @ExtendWith(MockitoExtension.class)
 class SubjectServiceTest {
 
     @Mock
-    private SubjectDao subjectDao;
+    private SubjectDaoInt subjectDao;
     @Mock
     private TeacherDao teacherDao;
     @InjectMocks
@@ -53,7 +54,7 @@ class SubjectServiceTest {
     @Test
     void givenSubjectId_whenGetById_thenGot() {
 	Subject subject = createSubject();
-	when(subjectDao.findById(1)).thenReturn(Optional.of(subject));
+	when(subjectDao.getById(1)).thenReturn(Optional.of(subject));
 	Subject expected = createSubject();
 
 	Subject actual = subjectService.getById(1);
@@ -64,7 +65,7 @@ class SubjectServiceTest {
     @Test
     void givenSubjects_whenGetAll_thenGot() {
 	List<Subject> subjects = createSubjects();
-	when(subjectDao.findAll()).thenReturn(subjects);
+	when(subjectDao.getAll()).thenReturn(subjects);
 
 	List<Subject> actual = subjectService.getAll();
 
@@ -75,11 +76,11 @@ class SubjectServiceTest {
     @Test
     void givenSubject_whenDelete_thenDeleted() {
 	Subject subject = createSubject();
-	doNothing().when(subjectDao).deleteById(1);
+	doNothing().when(subjectDao).delete(subject);
 
 	subjectService.delete(subject);
 
-	verify(subjectDao).deleteById(1);
+	verify(subjectDao).delete(subject);
     }
 
     private Subject createSubject() {

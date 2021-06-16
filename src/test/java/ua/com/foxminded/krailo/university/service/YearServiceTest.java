@@ -17,13 +17,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.krailo.university.dao.YearDao;
+import ua.com.foxminded.krailo.university.dao.interf.YearDaoInt;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @ExtendWith(MockitoExtension.class)
 class YearServiceTest {
 
     @Mock
-    private YearDao yearDao;
+    private YearDaoInt yearDao;
     @InjectMocks
     private YearService yearService;
 
@@ -50,7 +51,7 @@ class YearServiceTest {
     @Test
     void givenYearId_whenGetById_thenGot() {
 	Year year = createYear();
-	when(yearDao.findById(1)).thenReturn(Optional.of(year));
+	when(yearDao.getById(1)).thenReturn(Optional.of(year));
 	Year expected = createYear();
 
 	Year actual = yearService.getById(1);
@@ -61,7 +62,7 @@ class YearServiceTest {
     @Test
     void givenYears_whenGetAll_thenGot() {
 	List<Year> years = createYears();
-	when(yearDao.findAll()).thenReturn(years);
+	when(yearDao.getAll()).thenReturn(years);
 
 	List<Year> actual = yearService.getAll();
 
@@ -73,11 +74,11 @@ class YearServiceTest {
     @Test
     void givenYear_whenDelete_thenDeleted() {
 	Year year = createYear();
-	doNothing().when(yearDao).deleteById(1);
+	doNothing().when(yearDao).delete(year);
 
 	yearService.delete(year);
 
-	verify(yearDao).deleteById(1);
+	verify(yearDao).delete(year);
     }
 
     private Year createYear() {

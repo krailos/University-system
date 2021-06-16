@@ -20,7 +20,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Table(name = "students")
 @NamedQueries({
-    @NamedQuery(name = "SelectStudentsByGroup", query = "from Student s where s.group.id = :gruopId"),
+    @NamedQuery(name = "SelectStudentsByGroup", query = "from Student s inner join s.group as g  where  g.id = :groupId"),
     @NamedQuery(name = "SelectAllStudents", query = "from Student s order by s.lastName"),
     @NamedQuery(name = "CountAllStudents",query = "select count(id) from Student")
 })

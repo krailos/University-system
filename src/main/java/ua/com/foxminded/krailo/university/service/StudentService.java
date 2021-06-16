@@ -87,6 +87,6 @@ public class StudentService {
 
     public Page<Student> getSelectedPage(Pageable pageable) {
 	log.debug("get lessons by page");
-	return new PageImpl<>(studentDaoInt.getAllByPage(pageable), pageable, studentDaoInt.count());
+	return new PageImpl<>(studentDaoInt.getByPage(pageable), pageable, studentDaoInt.count());
     }
 }
