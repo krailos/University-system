@@ -182,7 +182,7 @@ class LessonDaoHibernateTest {
     }
 
     @Test
-    void givenLessons_whenCount_thenFound() {
+    void givenLessons_whenCount_thenCounted() {
 
 	int actual = lessonDao.count();
 

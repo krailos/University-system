@@ -12,7 +12,7 @@ public interface GroupDaoInt extends GenericDao<Group> {
 
     List<Group> getAll();
     
-    List<Group> getAllByPage(Pageable pageable);
+    List<Group> getByPage(Pageable pageable);
 
     List<Group> getByYear(Year year);
 

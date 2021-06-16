@@ -84,7 +84,7 @@ public class GroupDaoHibernate implements GroupDaoInt {
     }
 
     @Override
-    public List<Group> getAllByPage(Pageable pageable) {
+    public List<Group> getByPage(Pageable pageable) {
 	Session session = sessionFactory.getCurrentSession();
 	Query<Group> query = session.createNamedQuery("SelectAllGroups");
 	query.setFirstResult((int) pageable.getOffset());

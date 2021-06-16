@@ -79,7 +79,7 @@ public class GroupService {
 
     public Page<Group> getSelectedPage(Pageable pageable) {
 	log.debug("get audiences by page");
-	return new PageImpl<>(groupDaoInt.getAllByPage(pageable), pageable, groupDaoInt.count());
+	return new PageImpl<>(groupDaoInt.getByPage(pageable), pageable, groupDaoInt.count());
     }
 
 }

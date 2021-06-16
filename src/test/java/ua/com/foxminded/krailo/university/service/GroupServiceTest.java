@@ -16,10 +16,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.StudentDao;
+import ua.com.foxminded.krailo.university.dao.interf.GroupDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.StudentDaoInt;
 import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
+import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Year;
 import ua.com.foxminded.krailo.university.util.Paging;
@@ -28,16 +35,16 @@ import ua.com.foxminded.krailo.university.util.Paging;
 class GroupServiceTest {
 
     @Mock
-    private GroupDao groupDao;
+    private GroupDaoInt groupDao;
     @Mock
-    private StudentDao studentDao;
+    private StudentDaoInt studentDao;
     @InjectMocks
     private GroupService groupService;
 
     @Test
     void givenGroup_whenCereate_thanCreated() {
 	Group group = createGroup();
-	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId())).thenReturn(Optional.empty());
+	when(groupDao.getByNameAndYear(group.getName(), group.getYear())).thenReturn(Optional.empty());
 
 	groupService.create(group);
 
@@ -47,7 +54,7 @@ class GroupServiceTest {
     @Test
     void givenGroupWithExistingName_whenCereate_thenNotUniqueNameExceptionThrown() {
 	Group group = Group.builder().id(1).name("name1").year(Year.builder().id(1).build()).build();
-	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId()))
+	when(groupDao.getByNameAndYear(group.getName(), group.getYear()))
 		.thenReturn(Optional.of(Group.builder().name("name").build()));
 
 	Exception exception = assertThrows(NotUniqueNameException.class, () -> groupService.create(group));
@@ -60,7 +67,7 @@ class GroupServiceTest {
     @Test
     void givenGroup_whenUpdate_thanUpdeted() {
 	Group group = createGroup();
-	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId())).thenReturn(Optional.empty());
+	when(groupDao.getByNameAndYear(group.getName(), group.getYear())).thenReturn(Optional.empty());
 
 	groupService.update(group);
 
@@ -70,7 +77,7 @@ class GroupServiceTest {
     @Test
     void givenGroupWithExistingNameAndDiffrentId_whenUpdate_thenNotUniqueNameExceptionThrown() {
 	Group group = Group.builder().id(1).name("name1").year(Year.builder().id(1).build()).build();
-	when(groupDao.findByNameAndYearId(group.getName(), group.getYear().getId())).thenReturn(
+	when(groupDao.getByNameAndYear(group.getName(), group.getYear())).thenReturn(
 		Optional.of(Group.builder().id(2).name("name1").year(Year.builder().id(1).build()).build()));
 
 	Exception exception = assertThrows(NotUniqueNameException.class, () -> groupService.update(group));
@@ -83,7 +90,7 @@ class GroupServiceTest {
     @Test
     void givenGroupId_whenGetById_thenGot() {
 	Group group = createGroup();
-	when(groupDao.findById(1)).thenReturn(Optional.of(group));
+	when(groupDao.getById(1)).thenReturn(Optional.of(group));
 	Group expected = createGroup();
 
 	Group actual = groupService.getById(1);
@@ -94,7 +101,7 @@ class GroupServiceTest {
     @Test
     void givenGroups_whenGetAll_thenGot() {
 	List<Group> groups = createGroups();
-	when(groupDao.findAll()).thenReturn(groups);
+	when(groupDao.getAll()).thenReturn(groups);
 
 	List<Group> actual = groupService.getAll();
 
@@ -105,33 +112,36 @@ class GroupServiceTest {
     @Test
     void givenGroup_whenDelete_thenDeleted() {
 	Group group = createGroup();
-	doNothing().when(groupDao).deleteById(1);
 
 	groupService.delete(group);
 
-	verify(groupDao).deleteById(1);
+	verify(groupDao).delete(group);
     }
+    
+    @Test
+    void givenGroups_whenGetByPage_thenGot() {
+	int pageNo = 1;
+	int pageSize = 3;
+	Pageable pageable = PageRequest.of(pageNo, pageSize);
+	List<Group> groups = new ArrayList<>();
+	groups.add(createGroup());
+	when(groupDao.count()).thenReturn(6);
+	when(groupDao.getByPage(pageable)).thenReturn(groups);
+	Page<Group> expected = new PageImpl<>(groupDao.getByPage(pageable), pageable, groupDao.count());
+
+	assertEquals(expected, groupService.getSelectedPage(pageable));
+    }
+
 
     @Test
     void whenGetQuantity_thenGot() {
-	when(groupDao.findQuantity()).thenReturn(10);
+	when(groupDao.count()).thenReturn(10);
 
 	int actual = groupService.getQuantity();
 
 	assertEquals(10, actual);
     }
 
-    @Test
-    void givenGroups_whenGetGroupsByPage_thenGot() {
-	List<Group> audiences = createGroups();
-	Paging paging = new Paging (4, 2, 16);
-	when(groupDao.findWithLimit(4, 4)).thenReturn(audiences);
-
-	List<Group> actual = groupService.getSelectedPage(paging);
-
-	List<Group> expected = createGroups();
-	assertEquals(expected, actual);
-    }
 
     private Group createGroup() {
 	return Group.builder().id(1).name("name").year(Year.builder().id(1).build()).build();
