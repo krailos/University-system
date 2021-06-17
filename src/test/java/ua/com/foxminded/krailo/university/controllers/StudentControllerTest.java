@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,10 +20,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
 
 import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
+import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
@@ -47,34 +54,44 @@ class StudentControllerTest {
 
     @BeforeEach
     public void init() {
-	mockMvc = standaloneSetup(studentController).setControllerAdvice(new ControllerExceptionHandler()).build();
+	mockMvc = standaloneSetup(studentController).setControllerAdvice(new ControllerExceptionHandler())
+		.setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver()).build();
     }
 
     @Test
     void whenGetAllStudents_thenAllStudentsReturned() throws Exception {
-	List<Student> expected = buildStudents();
-	Paging paging = new Paging(2, 1, 4);
-	when(studentService.getQuantity()).thenReturn(4);
-	when(studentService.getSelectedPage(paging)).thenReturn(expected);
+	int pageNo = 0;
+	int pageSize = 3;
+	int allStudentsCount = 6;
+	List<Student> students = new ArrayList<>();
+	students.addAll(buildStudents());
+	Pageable pageable = PageRequest.of(pageNo, pageSize);
+	Page<Student> expected = new PageImpl<>(students, pageable, allStudentsCount);
+	when(studentService.getSelectedPage(pageable)).thenReturn(expected);
 
-	mockMvc.perform(get("/students").param("pageSize", "2"))
+	mockMvc.perform(get("/students")
+		.param("page", "0")
+		.param("size", "3"))
 		.andExpect(view().name("students/all"))
-		.andExpect(status().isOk())
-		.andExpect(model().attribute("students", expected));
+		.andExpect(model().attribute("studentsPage", expected));
     }
 
     @Test
     void whenGetAllStudentsWithParameters_thenRightPageWithStudentsReturned() throws Exception {
-	List<Student> expected = buildStudents();
-	Paging paging = new Paging(2, 3, 6);
-	when(studentService.getSelectedPage(paging)).thenReturn(expected);
-	when(studentService.getQuantity()).thenReturn(6);
+	int pageNo = 1;
+	int pageSize = 3;
+	int allStudentsCount = 6;
+	List<Student> students = new ArrayList<>();
+	students.addAll(buildStudents());
+	Pageable pageable = PageRequest.of(pageNo, pageSize);
+	Page<Student> expected = new PageImpl<>(students, pageable, allStudentsCount);
+	when(studentService.getSelectedPage(pageable)).thenReturn(expected);
 
-	mockMvc.perform(get("/students").param("pageSize", "2").param("pageNumber", "3"))
+	mockMvc.perform(get("/students")
+		.param("page", "1")
+		.param("size", "3"))
 		.andExpect(view().name("students/all"))
-		.andExpect(status().isOk())
-		.andExpect(model().attribute("students", expected))
-		.andExpect(model().attribute("pageQuantity", 3));
+		.andExpect(model().attribute("studentsPage", expected));
     }
 
     @Test

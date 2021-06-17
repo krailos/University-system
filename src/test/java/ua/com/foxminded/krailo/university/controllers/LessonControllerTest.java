@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,6 +20,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
 
 import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
@@ -59,34 +65,45 @@ class LessonControllerTest {
 
     @BeforeEach
     public void init() {
-	mockMvc = standaloneSetup(lessonController).setControllerAdvice(new ControllerExceptionHandler()).build();
+	mockMvc = standaloneSetup(lessonController)
+		.setControllerAdvice(new ControllerExceptionHandler())
+		.setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver()).build();
     }
 
     @Test
     void whenGetAllLessons_thenFirstPageLessonsReturned() throws Exception {
-	List<Lesson> expected = buildLessons();
-	Paging paging = new Paging(2, 1, 4);
-	when(lessonService.getQuantity()).thenReturn(4);
-	when(lessonService.getSelectedPage(paging)).thenReturn(expected);
+	int pageNo = 0;
+	int pageSize = 3;
+	int allLessonsCount = 6;
+	List<Lesson> lessons = new ArrayList<>();
+	lessons.addAll(buildLessons());
+	Pageable pageable = PageRequest.of(pageNo, pageSize);
+	Page<Lesson> expected = new PageImpl<>(lessons, pageable, allLessonsCount);
+	when(lessonService.getSelectedPage(pageable)).thenReturn(expected);
 
-	mockMvc.perform(get("/lessons").param("pageSize", "2"))
+	mockMvc.perform(get("/lessons")
+		.param("page", "0")
+		.param("size", "3"))
 		.andExpect(view().name("lessons/all"))
-		.andExpect(status().isOk())
-		.andExpect(model().attribute("lessons", expected));
+		.andExpect(model().attribute("lessonsPage", expected));
     }
 
     @Test
     void whenGetAllLessonsWithParameters_thenRightPageWithLessonsReturned() throws Exception {
-	List<Lesson> expected = buildLessons();
-	Paging paging = new Paging(2, 3, 6);
-	when(lessonService.getSelectedPage(paging)).thenReturn(expected);
-	when(lessonService.getQuantity()).thenReturn(6);
+	int pageNo = 1;
+	int pageSize = 3;
+	int allLessonsCount = 6;
+	List<Lesson> lessons = new ArrayList<>();
+	lessons.addAll(buildLessons());
+	Pageable pageable = PageRequest.of(pageNo, pageSize);
+	Page<Lesson> expected = new PageImpl<>(lessons, pageable, allLessonsCount);
+	when(lessonService.getSelectedPage(pageable)).thenReturn(expected);
 
-	mockMvc.perform(get("/lessons").param("pageSize", "2").param("pageNumber", "3"))
+	mockMvc.perform(get("/lessons")
+		.param("page", "1")
+		.param("size", "3"))
 		.andExpect(view().name("lessons/all"))
-		.andExpect(status().isOk())
-		.andExpect(model().attribute("lessons", expected))
-		.andExpect(model().attribute("pageQuantity", 3));
+		.andExpect(model().attribute("lessonsPage", expected));
     }
 
     @Test
@@ -94,7 +111,8 @@ class LessonControllerTest {
 	Lesson expected = buildLessons().get(0);
 	when(lessonService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/lessons/{id}", "1").param("pageSize", "2"))
+	mockMvc.perform(get("/lessons/{id}", "1")
+		.param("pageSize", "2"))
 		.andExpect(view().name("lessons/lesson"))
 		.andExpect(status().isOk())
 		.andExpect(model().attribute("lesson", expected));

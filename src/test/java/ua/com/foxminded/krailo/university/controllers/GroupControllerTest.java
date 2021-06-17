@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,10 +19,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
 
 import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
+import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Year;
 import ua.com.foxminded.krailo.university.service.GroupService;
@@ -42,34 +49,41 @@ class GroupControllerTest {
 
     @BeforeEach
     public void init() {
-	mockMvc = standaloneSetup(groupController).setControllerAdvice(new ControllerExceptionHandler()).build();
+	mockMvc = standaloneSetup(groupController).setControllerAdvice(new ControllerExceptionHandler())
+		.setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver()).build();
     }
 
     @Test
     void whenGetAllGroups_thenFirstPageGroupsReturned() throws Exception {
-	List<Group> expected = buildGroups();
-	Paging paging = new Paging(2, 1, 4);
-	when(groupService.getQuantity()).thenReturn(4);
-	when(groupService.getSelectedPage(paging)).thenReturn(expected);
+	int pageNo = 0;
+	int pageSize = 3;
+	int allGroupsCount = 6;
+	List<Group> groups = new ArrayList<>();
+	groups.addAll(buildGroups());
+	Pageable pageable = PageRequest.of(pageNo, pageSize);
+	Page<Group> expected = new PageImpl<>(groups, pageable, allGroupsCount);
+	when(groupService.getSelectedPage(pageable)).thenReturn(expected);
 
-	mockMvc.perform(get("/groups").param("pageSize", "2"))
-		.andExpect(view().name("groups/all"))
-		.andExpect(status().isOk())
-		.andExpect(model().attribute("groups", expected));
+	mockMvc.perform(get("/groups").param("page", "0").param("size", "3")).andExpect(view().name("groups/all"))
+		.andExpect(model().attribute("groupsPage", expected));
     }
 
     @Test
     void whenGetAllroupsWithParameters_thenRightPageWithGroupsReturned() throws Exception {
-	List<Group> expected = buildGroups();
-	Paging paging = new Paging(2, 3, 6);
-	when(groupService.getSelectedPage(paging)).thenReturn(expected);
-	when(groupService.getQuantity()).thenReturn(6);
+	int pageNo = 1;
+	int pageSize = 3;
+	int allGroupsCount = 6;
+	List<Group> groups = new ArrayList<>();
+	groups.addAll(buildGroups());
+	Pageable pageable = PageRequest.of(pageNo, pageSize);
+	Page<Group> expected = new PageImpl<>(groups, pageable, allGroupsCount);
+	when(groupService.getSelectedPage(pageable)).thenReturn(expected);
 
-	mockMvc.perform(get("/groups").param("pageSize", "2").param("pageNumber", "3"))
+	mockMvc.perform(get("/groups")
+		.param("page", "1")
+		.param("size", "3"))
 		.andExpect(view().name("groups/all"))
-		.andExpect(status().isOk())
-		.andExpect(model().attribute("groups", expected))
-		.andExpect(model().attribute("pageQuantity", 3));
+		.andExpect(model().attribute("groupsPage", expected));
     }
 
     @Test
@@ -109,10 +123,11 @@ class GroupControllerTest {
 	Group group = buildGroups().get(0);
 	group.setId(0);
 
-	mockMvc.perform(post("/groups/save").flashAttr("group", group))
+	mockMvc.perform(post("/groups/save")
+		.flashAttr("group", group))
 		.andExpect(view().name("redirect:/groups"))
 		.andExpect(status().is(302));
-	
+
 	verify(groupService).create(group);
     }
 
@@ -120,10 +135,11 @@ class GroupControllerTest {
     void givenUpdatedGroup_whenUpdateGroup_thenGroupUpdated() throws Exception {
 	Group group = buildGroups().get(0);
 
-	mockMvc.perform(post("/groups/save").flashAttr("group", group))
+	mockMvc.perform(post("/groups/save")
+		.flashAttr("group", group))
 		.andExpect(view().name("redirect:/groups"))
 		.andExpect(status().is(302));
-	
+
 	verify(groupService).update(group);
     }
 
@@ -146,10 +162,11 @@ class GroupControllerTest {
 	Group group = buildGroups().get(0);
 	when(groupService.getById(1)).thenReturn(group);
 
-	mockMvc.perform(post("/groups/delete").param("id", "1"))
+	mockMvc.perform(post("/groups/delete")
+		.param("id", "1"))
 		.andExpect(view().name("redirect:/groups"))
 		.andExpect(status().is(302));
-	
+
 	verify(groupService).delete(group);
     }
 

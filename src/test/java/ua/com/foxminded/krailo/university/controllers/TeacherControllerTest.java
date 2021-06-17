@@ -148,7 +148,7 @@ class TeacherControllerTest {
     @Test
     void whenGetVocationsByTeacher_thenVocationsReturned() throws Exception {
 	List<Vocation> vocations = Arrays.asList(Vocation.builder().id(1).kind(VocationKind.GENERAL).build());
-	when(vocationService.getByTeacherAndYear(1, Year.from(LocalDate.now()))).thenReturn(vocations);
+	when(vocationService.getByTeacherAndYear(buildTeachers().get(0), Year.from(LocalDate.now()))).thenReturn(vocations);
 	Teacher teacher = buildTeachers().get(0);
 	when(teacherService.getById(1)).thenReturn(teacher);
 
