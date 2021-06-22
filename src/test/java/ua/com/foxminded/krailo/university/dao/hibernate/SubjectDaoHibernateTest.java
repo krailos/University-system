@@ -2,6 +2,9 @@ package ua.com.foxminded.krailo.university.dao.hibernate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateTemplate;
@@ -10,7 +13,7 @@ import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.interf.SubjectDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.SubjectDao;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Year;
@@ -21,45 +24,46 @@ import ua.com.foxminded.krailo.university.model.Year;
 class SubjectDaoHibernateTest {
 
     @Autowired
-    private SubjectDaoInt subjectDao;
+    private SubjectDao subjectDao;
     @Autowired
     private HibernateTemplate hibernateTemplate;
 
     @Test
     void givenNewSubject_whenCreate_thenCreated() {
-	Subject subject = getSubject();
-	subject.setId(0);
+	Subject expected = getSubject();
+	expected.setId(0);
 
-	subjectDao.create(subject);
+	subjectDao.create(expected);
 
-	assertEquals(subject, hibernateTemplate.get(Subject.class, 5));
+	assertEquals(expected, hibernateTemplate.get(Subject.class, expected.getId()));
     }
 
     @Test
     void givenNewFieldsOfSubject_whenUpdate_tnenUpdated() {
-	Subject subject = getSubject();
-	subject.setName("new name");
+	Subject expected = getSubject();
+	expected.setName("new name");
 
-	subjectDao.update(subject);
+	subjectDao.update(expected);
 
-	assertEquals(subject.getName(), hibernateTemplate.get(Subject.class, 1).getName());
+	assertEquals(expected, hibernateTemplate.get(Subject.class, expected.getId()));
     }
 
     @Test
     void givenId_whenGetById_thenGot() {
-	Subject subject = getSubject();
+	Subject expected = getSubject();
 
 	Subject actual = subjectDao.getById(1).get();
 
-	assertEquals(subject.getId(), actual.getId());
+	assertEquals(expected, actual);
     }
 
     @Test
     void givenSubjects_whenGetAll_thenGot() {
+	List<Subject> expected = getSubjects();
 
-	int actual = subjectDao.getAll().size();
+	List<Subject> actual = subjectDao.getAll();
 
-	assertEquals(4, actual);
+	assertEquals(expected, actual);
     }
 
     @Test
@@ -68,29 +72,44 @@ class SubjectDaoHibernateTest {
 
 	subjectDao.delete(subject);
 
-	assertEquals(null, hibernateTemplate.get(Subject.class, 1));
+	assertEquals(null, hibernateTemplate.get(Subject.class, subject.getId()));
     }
 
     @Test
     void givenTeacher_whenGetSubjectsByTeacher_thenGot() {
 	Teacher teacher = Teacher.builder().id(1).build();
+	List<Subject> expected = new ArrayList<>();
+	expected.add(Subject.builder().id(1).name("subject 1").build());
+	expected.add(Subject.builder().id(2).name("subject 2").build());
 
-	int actual = subjectDao.getByTeacher(teacher).size();
+	List<Subject> actual = subjectDao.getByTeacher(teacher);
 
-	assertEquals(2, actual);
+	assertEquals(expected, actual);
     }
 
     @Test
     void givenYearId_whenGetSubjectsByYear_thenGot() {
-	Year year = Year.builder().id(1).name("new year").build();
+	Year year = Year.builder().id(1).name("year first").build();
+	List<Subject> expected = new ArrayList<>();
+	expected.add(Subject.builder().id(1).name("subject 1").build());
+	expected.add(Subject.builder().id(2).name("subject 2").build());
 
-	int actual = subjectDao.getByYear(year).size();
+	List<Subject> actual = subjectDao.getByYear(year);
 
-	assertEquals(2, actual);
+	assertEquals(expected, actual);
     }
 
     private Subject getSubject() {
 	return Subject.builder().id(1).name("subject 1").build();
+    }
+
+    private List<Subject> getSubjects() {
+	List<Subject> subjects = new ArrayList<>();
+	subjects.add(Subject.builder().id(1).name("subject 1").build());
+	subjects.add(Subject.builder().id(2).name("subject 2").build());
+	subjects.add(Subject.builder().id(3).name("subject 3").build());
+	subjects.add(Subject.builder().id(4).name("subject 4").build());
+	return subjects;
     }
 
 }

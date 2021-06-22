@@ -4,7 +4,7 @@ import java.util.List;
 
 import ua.com.foxminded.krailo.university.model.Year;
 
-public interface YearDaoInt extends GenericDao<Year> {
+public interface YearDao extends GenericDao<Year> {
 
     List<Year> getAll();
 

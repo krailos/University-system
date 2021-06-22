@@ -22,8 +22,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import ua.com.foxminded.krailo.university.dao.interf.GroupDaoInt;
-import ua.com.foxminded.krailo.university.dao.interf.StudentDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.GroupDao;
+import ua.com.foxminded.krailo.university.dao.interf.StudentDao;
 import ua.com.foxminded.krailo.university.exception.ServiceException;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Group;
@@ -35,9 +35,9 @@ class StudentServiceTest {
     @InjectMocks
     private StudentService studentService;
     @Mock
-    private StudentDaoInt studentDao;
+    private StudentDao studentDao;
     @Mock
-    private GroupDaoInt groupDao;
+    private GroupDao groupDao;
 
     @Test
     void givenStudent_whenCreate_thenCreated() {

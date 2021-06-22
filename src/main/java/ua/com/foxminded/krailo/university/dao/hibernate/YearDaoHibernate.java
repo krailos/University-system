@@ -6,13 +6,14 @@ import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import ua.com.foxminded.krailo.university.dao.interf.YearDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.YearDao;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @Repository
-public class YearDaoHibernate implements YearDaoInt {
+public class YearDaoHibernate implements YearDao {
 
     private SessionFactory sessionFactory;
 
@@ -50,6 +51,16 @@ public class YearDaoHibernate implements YearDaoInt {
 	Session session = sessionFactory.getCurrentSession();
 	Query<Year> query = session.createNamedQuery("SelectAllYears");
 	return query.list();
+    }
+
+    @Override
+    public List<Year> getByPage(Pageable pageable) {
+	return null;
+    }
+
+    @Override
+    public int count() {
+	return 0;
     }
 
 }

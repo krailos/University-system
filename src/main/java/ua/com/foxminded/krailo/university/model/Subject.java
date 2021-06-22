@@ -17,8 +17,8 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name = "subjects")
 @NamedQueries({ @NamedQuery(name = "SelectAllSubjects", query = "from Subject s order by s.name"),
-	@NamedQuery(name = "SelectSubjectsByTeacher", query = "from Subject s inner join s.teachers as t where t.id = :teacherId order by s.name"),
-	@NamedQuery(name = "SelectSubjectsByYear", query = "from Subject s inner join s.years as y where y.id = :yearId order by s.name"),
+	@NamedQuery(name = "SelectSubjectsByTeacher", query = "select s from Subject s inner join s.teachers as t where t.id = :teacherId order by s.name"),
+	@NamedQuery(name = "SelectSubjectsByYear", query = "select s from Subject s inner join s.years as y where y.id = :yearId order by s.name"),
 	@NamedQuery(name = "CountAllSubjects", query = "select count(id) from Subject") })
 public class Subject {
 
@@ -28,9 +28,9 @@ public class Subject {
     private String name;
     private String description;
     @ManyToMany(mappedBy = "subjects", fetch = FetchType.LAZY)
-    private List<Teacher> teachers;
+    private List<Teacher> teachers = new ArrayList<>();
     @ManyToMany(mappedBy = "subjects", fetch = FetchType.LAZY)
-    private List<Year> years;
+    private List<Year> years = new ArrayList<>();
 
     public Subject() {
     }
@@ -126,6 +126,9 @@ public class Subject {
 
     }
 
+  
+    
+
     @Override
     public int hashCode() {
 	final int prime = 31;
@@ -133,8 +136,6 @@ public class Subject {
 	result = prime * result + ((description == null) ? 0 : description.hashCode());
 	result = prime * result + id;
 	result = prime * result + ((name == null) ? 0 : name.hashCode());
-	result = prime * result + ((teachers == null) ? 0 : teachers.hashCode());
-	result = prime * result + ((years == null) ? 0 : years.hashCode());
 	return result;
     }
 
@@ -158,16 +159,6 @@ public class Subject {
 	    if (other.name != null)
 		return false;
 	} else if (!name.equals(other.name))
-	    return false;
-	if (teachers == null) {
-	    if (other.teachers != null)
-		return false;
-	} else if (!teachers.equals(other.teachers))
-	    return false;
-	if (years == null) {
-	    if (other.years != null)
-		return false;
-	} else if (!years.equals(other.years))
 	    return false;
 	return true;
     }

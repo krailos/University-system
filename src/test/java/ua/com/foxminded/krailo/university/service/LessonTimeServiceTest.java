@@ -18,7 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ua.com.foxminded.krailo.university.dao.interf.LessonTimeDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.LessonTimeDao;
 import ua.com.foxminded.krailo.university.exception.LessonTimeNotFreeException;
 import ua.com.foxminded.krailo.university.model.LessonTime;
 
@@ -26,7 +26,7 @@ import ua.com.foxminded.krailo.university.model.LessonTime;
 class LessonTimeServiceTest {
 
     @Mock
-    private LessonTimeDaoInt lessonTimeDao;
+    private LessonTimeDao lessonTimeDao;
     @InjectMocks
     private LessonTimeService lessonTimeService;
 

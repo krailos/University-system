@@ -48,10 +48,7 @@ INSERT INTO timetables (name) VALUES
 INSERT INTO lessons (date, lesson_time_id, subject_id, teacher_id, audience_id) VALUES 
 (DATE '2021-01-01', '1', '1', '1', '1'),
 (DATE '2021-01-01', '2', '2', '2', '2'),
-(DATE '2021-01-02', '1', '1', '1', '1'),
-(DATE '2021-01-03', '1', '1', '1', '1'),
-(DATE '2021-01-04', '1', '1', '1', '1'),
-(DATE '2021-01-05', '1', '1', '1', '1');
+(DATE '2021-01-02', '1', '1', '1', '1');
 
 INSERT INTO vocations (kind, applying_date, start_date, end_date, teacher_id) VALUES
 ('GENERAL', DATE '2021-01-01', DATE '2021-02-02', DATE '2021-02-010', '1'),

@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import ua.com.foxminded.krailo.university.model.Holiday;
 
-public interface HolidayDaoInt extends GenericDao<Holiday> {
+public interface HolidayDao extends GenericDao<Holiday> {
 
     List<Holiday> getAll();
 

@@ -14,7 +14,7 @@ import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.interf.YearDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.YearDao;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Year;
 
@@ -24,59 +24,63 @@ import ua.com.foxminded.krailo.university.model.Year;
 class YearDaoHibernateTest {
 
     @Autowired
-    private YearDaoInt yearDao;
+    private YearDao yearDao;
     @Autowired
     private HibernateTemplate hibernateTemplate;
 
     @Test
     void givenNewYear_whenCreate_thenCreated() {
-	Year year = Year.builder().id(1).name("new year 1").build();
-	year.setId(0);
+	Year expected = Year.builder().id(1).name("new year 1").build();
+	expected.setId(0);
 
-	yearDao.create(year);
+	yearDao.create(expected);
 
-	assertEquals(year, year);
+	assertEquals(expected, hibernateTemplate.get(Year.class, expected.getId()));
     }
 
     @Test
     void givenNewYearWithSubjects_whenCreate_thenNewRowsInYearsSubjectsCreated() {
-	Year year = Year.builder().id(1).name("new year 1").build();
+	Year expected = Year.builder().id(1).name("new year 1").build();
 	List<Subject> subjects = new ArrayList<>(Arrays.asList(Subject.builder().id(3).name("new subject").build(),
 		Subject.builder().id(4).name("new subject").build()));
-	year.setSubjects(subjects);
+	expected.setSubjects(subjects);
 
-	yearDao.create(year);
+	yearDao.create(expected);
 
-	assertEquals(2, year.getSubjects().size());
+	assertEquals(subjects, expected.getSubjects());
     }
 
     @Test
     void givenNewFieldsOfYear_whenUpdate_tnenUpdated() {
-	Year year = Year.builder().id(1).name("new name").build();
+	Year expected = Year.builder().id(1).name("new name").build();
 	List<Subject> subjects = new ArrayList<>(Arrays.asList(Subject.builder().id(1).name("new subject").build(),
 		Subject.builder().id(2).name("new subject").build()));
-	year.setSubjects(subjects);
+	expected.setSubjects(subjects);
 
-	yearDao.update(year);
+	yearDao.update(expected);
 
-	assertEquals(year.getName(), hibernateTemplate.get(Year.class, 1).getName());
-	assertEquals(2, hibernateTemplate.get(Year.class, 1).getSubjects().size());
+	assertEquals(expected, hibernateTemplate.get(Year.class, expected.getId()));
     }
 
     @Test
     void givenId_whenGetById_thenGot() {
+	Year expected = Year.builder().id(1).name("year 1").build();
 
 	Year actual = yearDao.getById(1).get();
 
-	assertEquals(1, actual.getId());
+	assertEquals(expected, actual);
     }
 
     @Test
     void givenYears_whenGetAll_thenFound() {
+	List<Year> expected = new ArrayList<>();
+	expected.add(Year.builder().id(1).name("year 1").build());
+	expected.add(Year.builder().id(2).name("year 2").build());
+	expected.add(Year.builder().id(3).name("year 3").build());
 
-	int actual = yearDao.getAll().size();
+	List<Year> actual = yearDao.getAll();
 
-	assertEquals(3, actual);
+	assertEquals(expected, actual);
     }
 
     @Test
@@ -85,7 +89,7 @@ class YearDaoHibernateTest {
 
 	yearDao.delete(year);
 
-	assertEquals(null, hibernateTemplate.get(Year.class, 1));
+	assertEquals(null, hibernateTemplate.get(Year.class, year.getId()));
     }
 
 }

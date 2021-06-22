@@ -24,7 +24,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Table(name = "teachers")
 @NamedQueries({ @NamedQuery(name = "SelectAllTeachers", query = "from Teacher t order by t.lastName"),
-	@NamedQuery(name = "SelectTeachersBySubject", query = "from Teacher t inner join t.subjects as s where s.id = :subjectId order by t.lastName"),
+	@NamedQuery(name = "SelectTeachersBySubject", query = "select t from Teacher t inner join t.subjects as s where s.id = :subjectId order by t.lastName"),
 	@NamedQuery(name = "CountAllTeachers", query = "select count(id) from Teacher") })
 public class Teacher {
 
@@ -43,7 +43,7 @@ public class Teacher {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "teachers_subjects", joinColumns = { @JoinColumn(name = "teacher_id") }, inverseJoinColumns = {
 	    @JoinColumn(name = "subject_id") })
-    private List<Subject> subjects;
+    private List<Subject> subjects = new ArrayList<>();
     private String phone;
     @Column(name = "address")
     private String address;
@@ -260,7 +260,6 @@ public class Teacher {
 	result = prime * result + id;
 	result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
 	result = prime * result + ((phone == null) ? 0 : phone.hashCode());
-	result = prime * result + ((subjects == null) ? 0 : subjects.hashCode());
 	result = prime * result + ((teacherId == null) ? 0 : teacherId.hashCode());
 	return result;
     }
@@ -312,11 +311,6 @@ public class Teacher {
 	    if (other.phone != null)
 		return false;
 	} else if (!phone.equals(other.phone))
-	    return false;
-	if (subjects == null) {
-	    if (other.subjects != null)
-		return false;
-	} else if (!subjects.equals(other.subjects))
 	    return false;
 	if (teacherId == null) {
 	    if (other.teacherId != null)

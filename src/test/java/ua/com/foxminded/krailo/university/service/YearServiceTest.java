@@ -16,14 +16,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ua.com.foxminded.krailo.university.dao.interf.YearDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.YearDao;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @ExtendWith(MockitoExtension.class)
 class YearServiceTest {
 
     @Mock
-    private YearDaoInt yearDao;
+    private YearDao yearDao;
     @InjectMocks
     private YearService yearService;
 

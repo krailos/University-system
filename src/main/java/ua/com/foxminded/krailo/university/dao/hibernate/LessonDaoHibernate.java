@@ -12,16 +12,15 @@ import org.hibernate.query.Query;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import ua.com.foxminded.krailo.university.dao.interf.LessonDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.LessonDao;
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.LessonTime;
-import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.model.Teacher;
 
 @Repository
-public class LessonDaoHibernate implements LessonDaoInt {
+public class LessonDaoHibernate implements LessonDao {
 
     SessionFactory sessionFactory;
 
@@ -97,31 +96,21 @@ public class LessonDaoHibernate implements LessonDaoInt {
     }
 
     @Override
-    public List<Lesson> getByStudentBetweenDates(Student student, LocalDate startDate, LocalDate finishDate) {
+    public List<Lesson> getByGroupBetweenDates(Group group, LocalDate startDate, LocalDate finishDate) {
 	Session session = sessionFactory.getCurrentSession();
-	Query<Lesson> query = session
-		.createNativeQuery("SELECT lessons.id, date, lesson_time_id, subject_id, teacher_id,"
-			+ " audience_id, lesson_id, lessons_groups.group_id, students.id  FROM lessons"
-			+ " JOIN lessons_groups ON (lessons.id = lessons_groups.lesson_id) JOIN students ON (lessons_groups.group_id = students.group_id) "
-			+ " WHERE students.id = ?1 AND date between ?2 AND ?3")
-		.addEntity(Lesson.class);
-	query.setParameter(1, student.getId());
-	query.setParameter(2, startDate);
-	query.setParameter(3, finishDate);
+	Query<Lesson> query = session.getNamedQuery("SelectLessonsByGroupBetweenDates");
+	query.setParameter("groupId", group.getId());
+	query.setParameter("startDate", startDate);
+	query.setParameter("finishDate", finishDate);
 	return query.list();
     }
 
     @Override
-    public List<Lesson> getByStudentAndDate(Student student, LocalDate date) {
+    public List<Lesson> getByGroupAndDate(Group group, LocalDate date) {
 	Session session = sessionFactory.getCurrentSession();
-	Query<Lesson> query = session
-		.createNativeQuery("SELECT lessons.id, date, lesson_time_id, subject_id, teacher_id,"
-			+ " audience_id, lesson_id, lessons_groups.group_id, students.id  FROM lessons"
-			+ " JOIN lessons_groups ON (lessons.id = lessons_groups.lesson_id) JOIN students ON (lessons_groups.group_id = students.group_id) "
-			+ " WHERE students.id = ? AND date = ?")
-		.addEntity(Lesson.class);
-	query.setParameter(1, student.getId());
-	query.setParameter(2, date);
+	Query<Lesson> query = session.getNamedQuery("SelectLessonsByGroupAndDate");
+	query.setParameter("groupId", group.getId());
+	query.setParameter("date", date);
 	return query.list();
     }
 

@@ -17,14 +17,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ua.com.foxminded.krailo.university.dao.interf.HolidayDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.HolidayDao;
 import ua.com.foxminded.krailo.university.model.Holiday;
 
 @ExtendWith(MockitoExtension.class)
 class HolidayServiceTest {
 
     @Mock
-    private HolidayDaoInt holidayDaoInt;
+    private HolidayDao holidayDaoInt;
     @InjectMocks
     private HolidayService holidayService;
 

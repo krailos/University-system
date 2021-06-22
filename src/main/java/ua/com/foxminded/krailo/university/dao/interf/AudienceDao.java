@@ -3,15 +3,11 @@ package ua.com.foxminded.krailo.university.dao.interf;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Pageable;
-
 import ua.com.foxminded.krailo.university.model.Audience;
 
-public interface AudienceDaoInt extends GenericDao<Audience> {
+public interface AudienceDao extends GenericDao<Audience> {
 
     Optional<Audience> getByNumber(String number);
-
-    List<Audience> getByPage(Pageable pageable);
 
     List<Audience> getAll();
 

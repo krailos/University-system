@@ -15,7 +15,7 @@ import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.interf.TeacherDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.TeacherDao;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
@@ -26,72 +26,78 @@ import ua.com.foxminded.krailo.university.model.Teacher;
 class TeacherDaoHibernateTest {
 
     @Autowired
-    private TeacherDaoInt teacherDao;
+    private TeacherDao teacherDao;
     @Autowired
     private HibernateTemplate hibernateTemplate;
 
     @Test
     void givenNewTeacher_whenCreate_thenCreated() {
-	Teacher teacher = getTeacher();
-	teacher.setId(0);
+	Teacher expected = getTeacher();
+	expected.setId(0);
 
-	teacherDao.create(teacher);
+	teacherDao.create(expected);
 
-	assertEquals(teacher, hibernateTemplate.get(Teacher.class, 3));
+	assertEquals(expected, hibernateTemplate.get(Teacher.class, expected.getId()));
     }
 
     @Test
     void givenNewTeacherWithSubjects_whenCreate_thenNewRowsInTableTeachersSubjectsCreated() {
 	Teacher teacher = getTeacher();
-	List<Subject> subjects = new ArrayList<>(Arrays.asList(Subject.builder().id(1).name("subject1").build(),
+	List<Subject> expected = new ArrayList<>(Arrays.asList(Subject.builder().id(1).name("subject1").build(),
 		Subject.builder().id(2).name("subject2").build()));
-	teacher.setSubjects(subjects);
+	teacher.setSubjects(expected);
 
 	teacherDao.create(teacher);
 
-	int expected = 2;
-	int actual = hibernateTemplate.get(Teacher.class, 3).getSubjects().size();
+	List<Subject> actual = hibernateTemplate.get(Teacher.class, teacher.getId()).getSubjects();
 	assertEquals(expected, actual);
     }
 
     @Test
     void givenNewFieldsOfTeacher_whenUpdate_tnenUpdated() {
-	Teacher teacher = getTeacher();
-	teacher.setFirstName("new name");
-	teacher.setBirthDate(LocalDate.of(1984, 01, 01));
+	Teacher expected = getTeacher();
+	expected.setFirstName("new name");
+	expected.setBirthDate(LocalDate.of(1984, 01, 01));
 
-	teacherDao.update(teacher);
+	teacherDao.update(expected);
 
-	assertEquals(teacher.getFirstName(), hibernateTemplate.get(Teacher.class, 1).getFirstName());
-	assertEquals(teacher.getBirthDate(), hibernateTemplate.get(Teacher.class, 1).getBirthDate());
+	assertEquals(expected, hibernateTemplate.get(Teacher.class, expected.getId()));
     }
 
     @Test
-    void givenNewSubjectsOfTeacher_whenUpdate_thenUpdated() {
+    void givenNewSubjectsOfTeacher_whenUpdate_thenTeachersSubjectUpdated() {
 	Teacher teacher = getTeacher();
-	List<Subject> subjects = new ArrayList<>(Arrays.asList(Subject.builder().id(1).name("subject1").build(),
-		Subject.builder().id(2).name("subject2").build()));
-	teacher.setSubjects(subjects);
+	List<Subject> expected = new ArrayList<>(Arrays.asList(Subject.builder().id(4).name("subject 4").build(),
+		Subject.builder().id(3).name("subject 3").build()));
+	teacher.setSubjects(expected);
 
 	teacherDao.update(teacher);
 
-	assertEquals(teacher.getSubjects().size(), hibernateTemplate.get(Teacher.class, 1).getSubjects().size());
+	assertEquals(expected, hibernateTemplate.get(Teacher.class, teacher.getId()).getSubjects());
     }
 
     @Test
     void givenId_whenGetById_thenGot() {
+	Teacher expected = getTeacher();
 
 	Teacher actual = teacherDao.getById(1).get();
 
-	assertEquals(1, actual.getId());
+	assertEquals(expected, actual);
     }
 
     @Test
     void givenTeachers_whenGetAll_thenFound() {
+	List<Teacher> expected = new ArrayList<>();
+	expected.add(Teacher.builder().id(1).firstName("first name 1").lastName("last name 1")
+		.birthDate(LocalDate.of(2000, 01, 01)).address("address 1").phone("0670000001").email("email 1")
+		.degree("0").gender(Gender.MALE).build());
+	expected.add(Teacher.builder().id(2).firstName("first name 2").lastName("last name 2")
+		.birthDate(LocalDate.of(2002, 02, 02)).address("address 2").phone("0670000002").email("email 2")
+		.degree("0").gender(Gender.FEMALE).build());
 
-	int actual = teacherDao.getAll().size();
+	List<Teacher> actual = teacherDao.getAll();
 
-	assertEquals(2, actual);
+	assertEquals(expected, actual);
     }
 
     @Test
@@ -100,21 +106,28 @@ class TeacherDaoHibernateTest {
 
 	teacherDao.delete(teacher);
 
-	assertEquals(null, hibernateTemplate.get(Teacher.class, 1));
+	assertEquals(null, hibernateTemplate.get(Teacher.class, teacher.getId()));
     }
 
     @Test
     void givenSubject_whenGetBySubject_thenGot() {
+	List<Teacher> expected = new ArrayList<>();
+	expected.add(Teacher.builder().id(1).firstName("first name 1").lastName("last name 1")
+		.birthDate(LocalDate.of(2000, 01, 01)).address("address 1").phone("0670000001").email("email 1")
+		.degree("0").gender(Gender.MALE).build());
+	expected.add(Teacher.builder().id(2).firstName("first name 2").lastName("last name 2")
+		.birthDate(LocalDate.of(2002, 02, 02)).address("address 2").phone("0670000002").email("email 2")
+		.degree("0").gender(Gender.FEMALE).build());
 	Subject subject = Subject.builder().id(1).name("subject 1").build();
 
 	List<Teacher> actual = teacherDao.getBySubject(subject);
 
-	assertEquals(2, actual.size());
+	assertEquals(expected, actual);
     }
 
     private Teacher getTeacher() {
 	return Teacher.builder().id(1).firstName("first name 1").lastName("last name 1")
-		.birthDate(LocalDate.of(2000, 01, 01)).address("address").phone("0670000001").email("email 1")
+		.birthDate(LocalDate.of(2000, 01, 01)).address("address 1").phone("0670000001").email("email 1")
 		.degree("0").gender(Gender.MALE).build();
     }
 

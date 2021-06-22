@@ -10,14 +10,15 @@ import javax.persistence.NoResultException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import ua.com.foxminded.krailo.university.dao.interf.VocationDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.VocationDao;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Vocation;
 
 @Repository
-public class VocationDaoHibernate implements VocationDaoInt {
+public class VocationDaoHibernate implements VocationDao {
 
     private SessionFactory sessionFactory;
 
@@ -85,6 +86,16 @@ public class VocationDaoHibernate implements VocationDaoInt {
 	} catch (NoResultException e) {
 	    return Optional.empty();
 	}
+    }
+
+    @Override
+    public List<Vocation> getByPage(Pageable pageable) {
+	return null;
+    }
+
+    @Override
+    public int count() {
+	return 0;
     }
 
 }

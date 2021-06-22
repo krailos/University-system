@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Student;
 
-public interface StudentDaoInt extends GenericDao<Student> {
+public interface StudentDao extends GenericDao<Student> {
 
     List<Student> getByPage(Pageable pageable);
 

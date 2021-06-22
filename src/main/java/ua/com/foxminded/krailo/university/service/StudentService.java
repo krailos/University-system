@@ -14,8 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.dao.interf.GroupDaoInt;
-import ua.com.foxminded.krailo.university.dao.interf.StudentDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.GroupDao;
+import ua.com.foxminded.krailo.university.dao.interf.StudentDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.GroupOverflowException;
 import ua.com.foxminded.krailo.university.model.Group;
@@ -28,12 +28,12 @@ public class StudentService {
 
     private static final Logger log = LoggerFactory.getLogger(StudentService.class);
 
-    private StudentDaoInt studentDaoInt;
-    private GroupDaoInt groupDaoInt;
+    private StudentDao studentDaoInt;
+    private GroupDao groupDaoInt;
     @Value("${group.maxSize}")
     private int groupMaxSize;
 
-    public StudentService(StudentDaoInt studentDaoInt, GroupDaoInt groupDaoInt) {
+    public StudentService(StudentDao studentDaoInt, GroupDao groupDaoInt) {
 	this.studentDaoInt = studentDaoInt;
 	this.groupDaoInt = groupDaoInt;
     }

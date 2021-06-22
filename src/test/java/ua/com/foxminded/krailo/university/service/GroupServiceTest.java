@@ -20,8 +20,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import ua.com.foxminded.krailo.university.dao.interf.GroupDaoInt;
-import ua.com.foxminded.krailo.university.dao.interf.StudentDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.GroupDao;
+import ua.com.foxminded.krailo.university.dao.interf.StudentDao;
 import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Year;
@@ -30,9 +30,9 @@ import ua.com.foxminded.krailo.university.model.Year;
 class GroupServiceTest {
 
     @Mock
-    private GroupDaoInt groupDao;
+    private GroupDao groupDao;
     @Mock
-    private StudentDaoInt studentDao;
+    private StudentDao studentDao;
     @InjectMocks
     private GroupService groupService;
 

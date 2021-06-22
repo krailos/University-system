@@ -51,17 +51,16 @@ class HolidayDaoHibernateTest {
 
 	holidayDao.update(holiday);
 
-	assertEquals(holiday, hibernateTemplate.get(Holiday.class, 1));
+	assertEquals(holiday, hibernateTemplate.get(Holiday.class, holiday.getId()));
     }
 
     @Test
     void givenNewHoliday_whenCreate_thenCreated() {
-	Holiday holiday = Holiday.builder().name("new Holiday").date(LocalDate.of(2021, 02, 02)).build();
-	Holiday expected = Holiday.builder().id(3).name("new Holiday").date(LocalDate.of(2021, 02, 02)).build();
+	Holiday expected = Holiday.builder().id(0).name("new Holiday").date(LocalDate.of(2021, 02, 02)).build();
 
-	holidayDao.create(holiday);
+	holidayDao.create(expected);
 
-	assertEquals(expected, hibernateTemplate.get(Holiday.class, 3));
+	assertEquals(expected, hibernateTemplate.get(Holiday.class, expected.getId()));
     }
 
     @Test
@@ -70,7 +69,7 @@ class HolidayDaoHibernateTest {
 
 	holidayDao.delete(holiday);
 
-	assertNull(hibernateTemplate.get(Holiday.class, 2));
+	assertNull(hibernateTemplate.get(Holiday.class, holiday.getId()));
     }
 
     @Test

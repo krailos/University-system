@@ -18,8 +18,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ua.com.foxminded.krailo.university.dao.interf.LessonDaoInt;
-import ua.com.foxminded.krailo.university.dao.interf.TeacherDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.LessonDao;
+import ua.com.foxminded.krailo.university.dao.interf.TeacherDao;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.LessonTime;
@@ -30,9 +30,9 @@ import ua.com.foxminded.krailo.university.model.Teacher;
 class TeacherServiceTest {
 
     @Mock
-    private TeacherDaoInt teacherDao;
+    private TeacherDao teacherDao;
     @Mock
-    private LessonDaoInt lessonDao;
+    private LessonDao lessonDao;
     @InjectMocks
     private TeacherService teacherService;
 

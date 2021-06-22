@@ -21,9 +21,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import ua.com.foxminded.krailo.university.dao.interf.HolidayDaoInt;
-import ua.com.foxminded.krailo.university.dao.interf.LessonDaoInt;
-import ua.com.foxminded.krailo.university.dao.interf.VocationDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.HolidayDao;
+import ua.com.foxminded.krailo.university.dao.interf.LessonDao;
+import ua.com.foxminded.krailo.university.dao.interf.VocationDao;
 import ua.com.foxminded.krailo.university.exception.VocationEndBoforeStartException;
 import ua.com.foxminded.krailo.university.exception.VocationPeriodNotFreeException;
 import ua.com.foxminded.krailo.university.exception.VocationPeriodNotSameYearException;
@@ -38,11 +38,11 @@ import ua.com.foxminded.krailo.university.model.VocationKind;
 class VocationServiceTest {
 
     @Mock
-    private VocationDaoInt vocationDao;
+    private VocationDao vocationDao;
     @Mock
-    private LessonDaoInt lessonDao;
+    private LessonDao lessonDao;
     @Mock
-    private HolidayDaoInt holidayDao;
+    private HolidayDao holidayDao;
     @InjectMocks
     private VocationService vocationService;
 

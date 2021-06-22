@@ -16,9 +16,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.dao.interf.HolidayDaoInt;
-import ua.com.foxminded.krailo.university.dao.interf.LessonDaoInt;
-import ua.com.foxminded.krailo.university.dao.interf.VocationDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.HolidayDao;
+import ua.com.foxminded.krailo.university.dao.interf.LessonDao;
+import ua.com.foxminded.krailo.university.dao.interf.VocationDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.VocationEndBoforeStartException;
 import ua.com.foxminded.krailo.university.exception.VocationPeriodNotFreeException;
@@ -35,13 +35,13 @@ public class VocationService {
 
     private static final Logger log = LoggerFactory.getLogger(VocationService.class);
 
-    private VocationDaoInt vocationDaoInt;
-    private LessonDaoInt lessonDaoInt;
-    private HolidayDaoInt holidayDaoInt;
+    private VocationDao vocationDaoInt;
+    private LessonDao lessonDaoInt;
+    private HolidayDao holidayDaoInt;
     @Value("#{${vocation.durationBykind}}")
     private Map<VocationKind, Integer> vocationDurationBykind;
 
-    public VocationService(VocationDaoInt vocationDaoInt, LessonDaoInt lessonDaoInt, HolidayDaoInt holidayDaoInt) {
+    public VocationService(VocationDao vocationDaoInt, LessonDao lessonDaoInt, HolidayDao holidayDaoInt) {
 	this.vocationDaoInt = vocationDaoInt;
 	this.lessonDaoInt = lessonDaoInt;
 	this.holidayDaoInt = holidayDaoInt;

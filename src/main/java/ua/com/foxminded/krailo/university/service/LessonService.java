@@ -13,14 +13,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.dao.VocationDao;
-import ua.com.foxminded.krailo.university.dao.interf.HolidayDaoInt;
-import ua.com.foxminded.krailo.university.dao.interf.LessonDaoInt;
-import ua.com.foxminded.krailo.university.dao.interf.VocationDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.GroupDao;
+import ua.com.foxminded.krailo.university.dao.interf.HolidayDao;
+import ua.com.foxminded.krailo.university.dao.interf.LessonDao;
+import ua.com.foxminded.krailo.university.dao.interf.VocationDao;
 import ua.com.foxminded.krailo.university.exception.AudienceNotFreeException;
 import ua.com.foxminded.krailo.university.exception.AudienceOverflowException;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
@@ -41,14 +39,16 @@ public class LessonService {
 
     private static final Logger log = LoggerFactory.getLogger(LessonService.class);
 
-    private LessonDaoInt lessonDaoInt;
-    private VocationDaoInt vocationDaoInt;
-    private HolidayDaoInt holidayDaoInt;
+    private LessonDao lessonDao;
+    private VocationDao vocationDao;
+    private HolidayDao holidayDao;
+    private GroupDao groupDao;
 
-    public LessonService(LessonDaoInt lessonDaoInt, VocationDaoInt vocationDaoInt, HolidayDaoInt holidayDaoInt) {
-	this.lessonDaoInt = lessonDaoInt;
-	this.vocationDaoInt = vocationDaoInt;
-	this.holidayDaoInt = holidayDaoInt;
+    public LessonService(LessonDao lessonDao, VocationDao vocationDao, HolidayDao holidayDao, GroupDao groupDao) {
+	this.lessonDao = lessonDao;
+	this.vocationDao = vocationDao;
+	this.holidayDao = holidayDao;
+	this.groupDao = groupDao;
     }
 
     public void create(Lesson lesson) {
@@ -61,7 +61,7 @@ public class LessonService {
 	checkLessonDateIsWeekend(lesson);
 	checkTeacherTeachesLessonSubject(lesson);
 	checkLessonGroupsAreFree(lesson);
-	lessonDaoInt.create(lesson);
+	lessonDao.create(lesson);
     }
 
     public void update(Lesson lesson) {
@@ -74,67 +74,68 @@ public class LessonService {
 	checkLessonDateIsWeekend(lesson);
 	checkTeacherTeachesLessonSubject(lesson);
 	checkLessonGroupsAreFree(lesson);
-	lessonDaoInt.update(lesson);
+	lessonDao.update(lesson);
     }
 
     public Lesson getById(int id) {
 	log.debug("Get lesson by id={}", id);
-	return lessonDaoInt.getById(id)
+	return lessonDao.getById(id)
 		.orElseThrow(() -> new EntityNotFoundException(format("Lesson whith id=%s not exist", id)));
     }
 
     public List<Lesson> getAll() {
 	log.debug("get all lessons");
-	return lessonDaoInt.getAll();
+	return lessonDao.getAll();
     }
 
     public void delete(Lesson lesson) {
 	log.debug("delete lesson={}", lesson);
-	lessonDaoInt.delete(lesson);
+	lessonDao.delete(lesson);
     }
 
     public int getQuantity() {
 	log.debug("get lessons quantity");
-	return lessonDaoInt.count();
+	return lessonDao.count();
     }
 
     public Page<Lesson> getSelectedPage(Pageable pageable) {
 	log.debug("get lessons by page");
-	return new PageImpl<>(lessonDaoInt.getByPage(pageable), pageable, lessonDaoInt.count());
+	return new PageImpl<>(lessonDao.getByPage(pageable), pageable, lessonDao.count());
     }
 
     public List<Lesson> getLessonsForTeacherByDate(Teacher teacher, LocalDate date) {
 	log.debug("get lessons for teacher={} by date={}", teacher, date);
-	return lessonDaoInt.getByTeacherAndDate(teacher, date);
+	return lessonDao.getByTeacherAndDate(teacher, date);
     }
 
     public List<Lesson> getLessonsForTeacherByPeriod(Teacher teacher, LocalDate startDate, LocalDate finishDate) {
 	log.debug("get timetable for teacher={} by month", teacher);
-	return lessonDaoInt.getByTeacherBetweenDates(teacher, startDate, finishDate);
+	return lessonDao.getByTeacherBetweenDates(teacher, startDate, finishDate);
     }
 
     public List<Lesson> getLessonsForStudentByDate(Student student, LocalDate date) {
 	log.debug("get timetable for student={} by date={}", student, date);
-	return lessonDaoInt.getByStudentAndDate(student, date);
+	return lessonDao.getByGroupAndDate(groupDao.getById(student.getGroup().getId()).get(), date);
 
     }
 
     public List<Lesson> getLessonsForStudentByPeriod(Student student, LocalDate startDate, LocalDate finishDate) {
 	log.debug("get timetable for student={} by month", student);
-	return lessonDaoInt.getByStudentBetweenDates(student, startDate, finishDate);
+	return lessonDao.getByGroupBetweenDates(groupDao.getById(student.getGroup().getId()).get(), startDate,
+		finishDate);
 
     }
 
     public void substituteTeacher(Teacher oldTeacher, Teacher newTeacher, LocalDate startDate, LocalDate finishDate) {
-	lessonDaoInt.getByTeacherBetweenDates(oldTeacher, startDate, finishDate).stream().peek(l -> {
+	lessonDao.getByTeacherBetweenDates(oldTeacher, startDate, finishDate).stream().peek(l -> {
 	    checkTeacherIsFree(l);
 	    checkTeacherTeachesLessonSubject(l);
 	    l.setTeacher(newTeacher);
-	}).forEach(lessonDaoInt::update);
+	}).forEach(lessonDao::update);
     }
 
     private void checkTeacherIsFree(Lesson lesson) {
-	Optional<Lesson> existingLesson = lessonDaoInt.getByDateAndTeacherAndLessonTime(lesson.getDate(),
+	Optional<Lesson> existingLesson = lessonDao.getByDateAndTeacherAndLessonTime(lesson.getDate(),
 		lesson.getTeacher(), lesson.getLessonTime());
 	if (existingLesson.filter(l -> l.getId() != lesson.getId()).isPresent()) {
 	    throw new TeacherNotFreeException("Teacher not free, teacherId=" + lesson.getTeacher().getId());
@@ -142,7 +143,7 @@ public class LessonService {
     }
 
     private void checkAudienceIsFree(Lesson lesson) {
-	Optional<Lesson> existingLeson = lessonDaoInt.getByDateAndAudienceAndLessonTime(lesson.getDate(),
+	Optional<Lesson> existingLeson = lessonDao.getByDateAndAudienceAndLessonTime(lesson.getDate(),
 		lesson.getAudience(), lesson.getLessonTime());
 	if (existingLeson.filter(l -> l.getId() != lesson.getId()).isPresent()) {
 	    throw new AudienceNotFreeException("Audience not free, audienceId=" + lesson.getAudience().getId());
@@ -158,13 +159,13 @@ public class LessonService {
     }
 
     private void checkTeacherIsOnVocation(Lesson lesson) {
-	if (vocationDaoInt.getByTeacherAndDate(lesson.getTeacher(), lesson.getDate()).isPresent()) {
+	if (vocationDao.getByTeacherAndDate(lesson.getTeacher(), lesson.getDate()).isPresent()) {
 	    throw new TeacherOnVocationException("teacher on vocation, teacherId=" + lesson.getTeacher().getId());
 	}
     }
 
     private void checkLessonDateIsOutoffHoliday(Lesson lesson) {
-	if (holidayDaoInt.getByDate(lesson.getDate()).isPresent()) {
+	if (holidayDao.getByDate(lesson.getDate()).isPresent()) {
 	    throw new LessonDateOnHolidayException(format("lesson date=%s is holiday", lesson.getDate()));
 	}
     }
@@ -177,15 +178,14 @@ public class LessonService {
     }
 
     private void checkTeacherTeachesLessonSubject(Lesson lesson) {
-	if (lesson.getTeacher().getSubjects().stream().noneMatch(s -> s.getId()==lesson.getSubject().getId())) {
+	if (lesson.getTeacher().getSubjects().stream().noneMatch(s -> s.getId() == lesson.getSubject().getId())) {
 	    throw new TeacherNotTeachLessonException("teacher dosn't teach lesson's subject");
 	}
     }
 
     private void checkLessonGroupsAreFree(Lesson lesson) {
 	if (lesson.getGroups().stream()
-		.map(g -> lessonDaoInt.getByDateAndLessonTimeAndGroup(lesson.getDate(),
-			lesson.getLessonTime(), g))
+		.map(g -> lessonDao.getByDateAndLessonTimeAndGroup(lesson.getDate(), lesson.getLessonTime(), g))
 		.anyMatch(o -> o.filter(l -> l.getId() != lesson.getId()).isPresent())) {
 	    throw new GroupNotFreeException("lesson groups are not free");
 	}

@@ -112,14 +112,14 @@ public class Year {
 
     }
 
+  
+
     @Override
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
-	result = prime * result + ((groups == null) ? 0 : groups.hashCode());
 	result = prime * result + id;
 	result = prime * result + ((name == null) ? 0 : name.hashCode());
-	result = prime * result + ((subjects == null) ? 0 : subjects.hashCode());
 	return result;
     }
 
@@ -132,22 +132,12 @@ public class Year {
 	if (getClass() != obj.getClass())
 	    return false;
 	Year other = (Year) obj;
-	if (groups == null) {
-	    if (other.groups != null)
-		return false;
-	} else if (!groups.equals(other.groups))
-	    return false;
 	if (id != other.id)
 	    return false;
 	if (name == null) {
 	    if (other.name != null)
 		return false;
 	} else if (!name.equals(other.name))
-	    return false;
-	if (subjects == null) {
-	    if (other.subjects != null)
-		return false;
-	} else if (!subjects.equals(other.subjects))
 	    return false;
 	return true;
     }

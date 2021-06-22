@@ -33,7 +33,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 		+ " and l.audience.id = :audienceId and l.lessonTime.id = :lessonTimeId "),
 	@NamedQuery(name = "SelectLessonsByDateAndLessonTimeAndGroup", query = "select l from Lesson l inner join l.groups as g"
 		+ " where l.date = :date and l.lessonTime.id = :lessonTimeId and g.id = :groupId "),
-	@NamedQuery(name = "CountAllLessons", query = "select count(id) from Lesson") })
+	@NamedQuery(name = "CountAllLessons", query = "select count(id) from Lesson"),
+	@NamedQuery(name = "SelectLessonsByGroupAndDate", query = "select l from Lesson l join l.groups as g  where g.id = :groupId and "
+		+ " l.date = :date"),
+	@NamedQuery(name = "SelectLessonsByGroupBetweenDates", query = "select l from Lesson l join l.groups as g  where g.id = :groupId and "
+		+ " l.date between :startDate and :finishDate")
+})
 public class Lesson {
 
     @Id
@@ -53,8 +58,8 @@ public class Lesson {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "lessons_groups", joinColumns = { @JoinColumn(name = "lesson_id") }, inverseJoinColumns = {
 	    @JoinColumn(name = "group_id") })
-    private List<Group> groups;
-
+    private List<Group> groups = new ArrayList<>();
+   
     public Lesson() {
     }
 
@@ -179,6 +184,8 @@ public class Lesson {
 	}
 
     }
+
+  
 
     @Override
     public int hashCode() {

@@ -17,14 +17,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
-import ua.com.foxminded.krailo.university.dao.interf.SubjectDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.SubjectDao;
 import ua.com.foxminded.krailo.university.model.Subject;
 
 @ExtendWith(MockitoExtension.class)
 class SubjectServiceTest {
 
     @Mock
-    private SubjectDaoInt subjectDao;
+    private SubjectDao subjectDao;
     @Mock
     private TeacherDao teacherDao;
     @InjectMocks

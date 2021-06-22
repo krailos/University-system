@@ -5,7 +5,7 @@ import java.util.List;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
 
-public interface TeacherDaoInt extends GenericDao<Teacher> {
+public interface TeacherDao extends GenericDao<Teacher> {
 
     List<Teacher> getAll();
 

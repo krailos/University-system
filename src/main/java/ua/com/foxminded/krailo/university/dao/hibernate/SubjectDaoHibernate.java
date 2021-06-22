@@ -6,15 +6,16 @@ import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import ua.com.foxminded.krailo.university.dao.interf.SubjectDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.SubjectDao;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @Repository
-public class SubjectDaoHibernate implements SubjectDaoInt {
+public class SubjectDaoHibernate implements SubjectDao {
 
     private SessionFactory sessionFactory;
 
@@ -75,6 +76,11 @@ public class SubjectDaoHibernate implements SubjectDaoInt {
 	Query<Subject> query = session.createNamedQuery("SelectSubjectsByYear");
 	query.setParameter("yearId", year.getId());
 	return query.list();
+    }
+
+    @Override
+    public List<Subject> getByPage(Pageable pageable) {
+	return null;
     }
 
 }

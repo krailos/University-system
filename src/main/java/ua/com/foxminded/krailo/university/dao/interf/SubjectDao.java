@@ -6,7 +6,7 @@ import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Year;
 
-public interface SubjectDaoInt extends GenericDao<Subject> {
+public interface SubjectDao extends GenericDao<Subject> {
 
     List<Subject> getAll();
 

@@ -3,6 +3,8 @@ package ua.com.foxminded.krailo.university.dao.hibernate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -16,7 +18,7 @@ import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.interf.AudienceDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.AudienceDao;
 import ua.com.foxminded.krailo.university.model.Audience;
 
 @Transactional
@@ -25,7 +27,7 @@ import ua.com.foxminded.krailo.university.model.Audience;
 class AudienceDaoHibernateTest {
 
     @Autowired
-    private AudienceDaoInt audienceDao;
+    private AudienceDao audienceDao;
     @Autowired
     private HibernateTemplate hibernateTemplate;
 
@@ -37,7 +39,7 @@ class AudienceDaoHibernateTest {
 
 	audienceDao.create(audience);
 
-	assertEquals(audience, hibernateTemplate.get(Audience.class, 4));
+	assertEquals(audience, hibernateTemplate.get(Audience.class, audience.getId()));
     }
 
     @Test
@@ -53,26 +55,32 @@ class AudienceDaoHibernateTest {
 
     @Test
     void givenAudience_whenGetByNumber_thenGot() {
-
+	Audience expected = getAudience();
+		
 	Audience actual = audienceDao.getByNumber("1").get();
 
-	assertEquals("1", actual.getNumber());
+	assertEquals(expected, actual);
     }
 
     @Test
     void givenAudiences_whenGetAll_thenGot() {
+	List<Audience> expected = new ArrayList<>();
+	expected.add(Audience.builder().id(1).number("1").capacity(300).description("description1").build());
+	expected.add(Audience.builder().id(2).number("2").capacity(120).description("description2").build());
+	expected.add(Audience.builder().id(3).number("3").capacity(120).description("description3").build());
+	
+	List<Audience> actual = audienceDao.getAll();
 
-	int actual = audienceDao.getAll().size();
-
-	assertEquals(3, actual);
+	assertEquals(expected, actual);
     }
 
     @Test
     void givenId_whenGetdById_thenGot() {
-
+	Audience expected = getAudience();
+	
 	Audience actual = audienceDao.getById(1).get();
 
-	assertEquals(1, actual.getId());
+	assertEquals(expected, actual);
     }
 
     @Test
@@ -85,14 +93,13 @@ class AudienceDaoHibernateTest {
 
     @Test
     void givenAudienceWithNewNumberAndCapacity_whenUpdate_thenUpdated() {
-	Audience audience = getAudience();
-	audience.setCapacity(111);
-	audience.setNumber("new number");
+	Audience expected = getAudience();
+	expected.setCapacity(111);
+	expected.setNumber("new number");
 
-	audienceDao.update(audience);
+	audienceDao.update(expected);
 
-	assertEquals(audience.getNumber(), hibernateTemplate.get(Audience.class, 1).getNumber());
-	assertEquals(audience.getCapacity(), hibernateTemplate.get(Audience.class, 1).getCapacity());
+	assertEquals(expected, hibernateTemplate.get(Audience.class, expected.getId()));
     }
 
     @Test
@@ -101,7 +108,7 @@ class AudienceDaoHibernateTest {
 
 	audienceDao.delete(audience);
 
-	assertEquals(null, hibernateTemplate.get(Audience.class, 1));
+	assertEquals(null, hibernateTemplate.get(Audience.class, audience.getId()));
     }
 
     @Test
@@ -114,15 +121,19 @@ class AudienceDaoHibernateTest {
 
     @Test
     void givenAudiences_whenGetByPage_thenAudiencesReturned() {
+	List<Audience> expected = new ArrayList<>();
+	expected.add(Audience.builder().id(1).number("1").capacity(300).description("description1").build());
+	expected.add(Audience.builder().id(2).number("2").capacity(120).description("description2").build());
+	expected.add(Audience.builder().id(3).number("3").capacity(120).description("description3").build());	
 	int pageNo = 1;
 	int pageSize = 3;
 	Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
 
-	assertEquals(3, audienceDao.getByPage(pageable).size());
+	assertEquals(expected, audienceDao.getByPage(pageable));
     }
 
     private Audience getAudience() {
-	return Audience.builder().id(1).number("1").capacity(300).description("description").build();
+	return Audience.builder().id(1).number("1").capacity(300).description("description1").build();
     }
 
 }

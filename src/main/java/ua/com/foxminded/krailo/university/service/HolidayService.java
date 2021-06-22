@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.dao.interf.HolidayDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.HolidayDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Holiday;
 
@@ -18,9 +18,9 @@ import ua.com.foxminded.krailo.university.model.Holiday;
 public class HolidayService {
 
     private static final Logger log = LoggerFactory.getLogger(HolidayService.class);
-    private HolidayDaoInt holidayDaoInt;
+    private HolidayDao holidayDaoInt;
 
-    public HolidayService(HolidayDaoInt holidayDaoInt) {
+    public HolidayService(HolidayDao holidayDaoInt) {
 	this.holidayDaoInt = holidayDaoInt;
     }
 

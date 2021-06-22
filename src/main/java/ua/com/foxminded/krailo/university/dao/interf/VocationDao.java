@@ -8,7 +8,7 @@ import java.util.Optional;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Vocation;
 
-public interface VocationDaoInt extends GenericDao<Vocation> {
+public interface VocationDao extends GenericDao<Vocation> {
 
     List<Vocation> getAll();
 

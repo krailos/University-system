@@ -6,14 +6,15 @@ import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import ua.com.foxminded.krailo.university.dao.interf.TeacherDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.TeacherDao;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
 
 @Repository
-public class TeacherDaoHibernate implements TeacherDaoInt {
+public class TeacherDaoHibernate implements TeacherDao {
 
     private SessionFactory sessionFactory;
 
@@ -66,6 +67,11 @@ public class TeacherDaoHibernate implements TeacherDaoInt {
 	Query<Teacher> query = session.createNamedQuery("SelectTeachersBySubject");
 	query.setParameter("subjectId", subject.getId());
 	return query.list();
+    }
+
+    @Override
+    public List<Teacher> getByPage(Pageable pageable) {
+	return null;
     }
 
 }

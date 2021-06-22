@@ -9,8 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.dao.SubjectDao;
-import ua.com.foxminded.krailo.university.dao.interf.SubjectDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.SubjectDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Subject;
 
@@ -20,9 +19,9 @@ public class SubjectService {
 
     private static final Logger log = LoggerFactory.getLogger(SubjectService.class);
 
-    private SubjectDaoInt subjectDaoInt;
+    private SubjectDao subjectDaoInt;
 
-    public SubjectService(SubjectDaoInt subjectDaoInt) {
+    public SubjectService(SubjectDao subjectDaoInt) {
 	this.subjectDaoInt = subjectDaoInt;
     }
 

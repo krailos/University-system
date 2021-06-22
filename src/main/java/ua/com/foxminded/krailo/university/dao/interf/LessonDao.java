@@ -13,7 +13,7 @@ import ua.com.foxminded.krailo.university.model.LessonTime;
 import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.model.Teacher;
 
-public interface LessonDaoInt extends GenericDao<Lesson> {
+public interface LessonDao extends GenericDao<Lesson> {
 
     List<Lesson> getAll();
 
@@ -25,9 +25,9 @@ public interface LessonDaoInt extends GenericDao<Lesson> {
 
     List<Lesson> getByTeacherAndDate(Teacher teacher, LocalDate date);
 
-    List<Lesson> getByStudentBetweenDates(Student student, LocalDate startDate, LocalDate finishDate);
+    List<Lesson> getByGroupBetweenDates(Group group, LocalDate startDate, LocalDate finishDate);
 
-    List<Lesson> getByStudentAndDate(Student student, LocalDate date);
+    List<Lesson> getByGroupAndDate(Group group, LocalDate date);
 
     Optional<Lesson> getByDateAndTeacherAndLessonTime(LocalDate date, Teacher teacher, LessonTime lessonTime);
 

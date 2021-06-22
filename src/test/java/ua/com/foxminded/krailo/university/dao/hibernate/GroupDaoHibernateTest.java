@@ -2,6 +2,7 @@ package ua.com.foxminded.krailo.university.dao.hibernate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.interf.GroupDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.GroupDao;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Year;
 
@@ -24,7 +25,7 @@ import ua.com.foxminded.krailo.university.model.Year;
 class GroupDaoHibernateTest {
 
     @Autowired
-    private GroupDaoInt groupDao;
+    private GroupDao groupDao;
     @Autowired
     private HibernateTemplate hibernateTemplate;
 
@@ -35,33 +36,35 @@ class GroupDaoHibernateTest {
 
 	groupDao.create(group);
 
-	assertEquals(group, hibernateTemplate.get(Group.class, 3));
+	assertEquals(group, hibernateTemplate.get(Group.class, group.getId()));
     }
 
     @Test
     void givenNewGroupName_whenUpdate_tnenUpdated() {
-	Group group = getGroup();
-	group.setName("new name");
+	Group expected = getGroup();
+	expected.setName("new name");
 
-	groupDao.update(group);
+	groupDao.update(expected);
 
-	assertEquals(group.getName(), hibernateTemplate.get(Group.class, 1).getName());
+	assertEquals(expected, hibernateTemplate.get(Group.class, expected.getId()));
     }
 
     @Test
     void givenId_whenGetById_thenGot() {
+	Group expected = getGroup();
 
 	Group actual = getGroup();
 
-	assertEquals(1, actual.getId());
+	assertEquals(expected, actual);
     }
 
     @Test
     void givenGroups_whenGetAll_thenGot() {
+	List<Group> expected = getGroups();
 
-	int actual = groupDao.getAll().size();
+	List<Group> actual = groupDao.getAll();
 
-	assertEquals(2, actual);
+	assertEquals(expected, actual);
     }
 
     @Test
@@ -70,27 +73,28 @@ class GroupDaoHibernateTest {
 
 	groupDao.delete(group);
 
-	assertEquals(null, hibernateTemplate.get(Group.class, 1));
+	assertEquals(null, hibernateTemplate.get(Group.class, group.getId()));
     }
 
     @Test
     void givenLessonId_whenGetByYear_thenGot() {
-	Group group = getGroup();
+	Year year = Year.builder().id(1).name("first").build();
+	List<Group> expected = getGroups();
 
-	List<Group> groups = groupDao.getByYear(group.getYear());
+	List<Group> actual = groupDao.getByYear(year);
 
-	assertEquals(2, groups.size());
+	assertEquals(expected, actual);
     }
 
     @Test
     void givenGroupNameAndYear_whenGetByNameAndYear_thenGot() {
+	Group expected = getGroup();
 	String groupName = "group 1";
 	Year year = Year.builder().id(1).name("year 1").build();
 
 	Group actual = groupDao.getByNameAndYear(groupName, year).get();
 
-	assertEquals(groupName, actual.getName());
-	assertEquals(year.getId(), actual.getYear().getId());
+	assertEquals(expected, actual);
     }
 
     @Test
@@ -98,9 +102,11 @@ class GroupDaoHibernateTest {
 	int pageNumber = 0;
 	int pageSize = 3;
 	Pageable pageable = PageRequest.of(pageNumber, pageSize);
+	List<Group> expected = getGroups();
+
 	List<Group> actual = groupDao.getByPage(pageable);
 
-	assertEquals(2, actual.size());
+	assertEquals(expected, actual);
     }
 
     @Test
@@ -112,7 +118,14 @@ class GroupDaoHibernateTest {
     }
 
     private Group getGroup() {
-	return Group.builder().id(1).name("group 1").year(Year.builder().id(1).name("year 1").build()).build();
+	return Group.builder().id(1).name("group 1").build();
+    }
+
+    private List<Group> getGroups() {
+	List<Group> groups = new ArrayList<>();
+	groups.add(Group.builder().id(1).name("group 1").build());
+	groups.add(Group.builder().id(2).name("group 2").build());
+	return groups;
     }
 
 }

@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import ua.com.foxminded.krailo.university.model.LessonTime;
 
-public interface LessonTimeDaoInt extends GenericDao<LessonTime> {
+public interface LessonTimeDao extends GenericDao<LessonTime> {
 
     List<LessonTime> getAll();
 

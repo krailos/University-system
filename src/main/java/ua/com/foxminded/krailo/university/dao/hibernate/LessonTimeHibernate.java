@@ -8,13 +8,14 @@ import javax.persistence.NoResultException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import ua.com.foxminded.krailo.university.dao.interf.LessonTimeDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.LessonTimeDao;
 import ua.com.foxminded.krailo.university.model.LessonTime;
 
 @Repository
-public class LessonTimeHibernate implements LessonTimeDaoInt {
+public class LessonTimeHibernate implements LessonTimeDao {
 
     SessionFactory sessionFactory;
 
@@ -64,6 +65,16 @@ public class LessonTimeHibernate implements LessonTimeDaoInt {
 	} catch (NoResultException e) {
 	    return Optional.empty();
 	}
+    }
+
+    @Override
+    public List<LessonTime> getByPage(Pageable pageable) {
+	return null;
+    }
+
+    @Override
+    public int count() {
+	return 0;
     }
 
 }

@@ -1,15 +1,24 @@
 package ua.com.foxminded.krailo.university.dao.interf;
 
+import java.util.List;
 import java.util.Optional;
 
-public interface GenericDao<T> {
+import org.springframework.data.domain.Pageable;
 
-    Optional<T> getById(int id);
+public interface GenericDao<Dao> {
 
-    void create(T t);
+    Optional<Dao> getById(int id);
 
-    void update(T t);
+    void create(Dao dao);
 
-    void delete(T t);
+    void update(Dao dao);
+
+    void delete(Dao dao);
+    
+    List<Dao> getByPage(Pageable pageable);
+    
+    List<Dao> getAll();
+    
+    int count();
 
 }

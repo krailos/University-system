@@ -11,12 +11,12 @@ import org.hibernate.query.Query;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import ua.com.foxminded.krailo.university.dao.interf.GroupDaoInt;
+import ua.com.foxminded.krailo.university.dao.interf.GroupDao;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @Repository
-public class GroupDaoHibernate implements GroupDaoInt {
+public class GroupDaoHibernate implements GroupDao {
 
     private SessionFactory sessionFactory;
 
