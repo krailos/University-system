@@ -15,10 +15,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.dao.interf.GroupDao;
-import ua.com.foxminded.krailo.university.dao.interf.HolidayDao;
-import ua.com.foxminded.krailo.university.dao.interf.LessonDao;
-import ua.com.foxminded.krailo.university.dao.interf.VocationDao;
+import ua.com.foxminded.krailo.university.dao.GroupDao;
+import ua.com.foxminded.krailo.university.dao.HolidayDao;
+import ua.com.foxminded.krailo.university.dao.LessonDao;
+import ua.com.foxminded.krailo.university.dao.VocationDao;
 import ua.com.foxminded.krailo.university.exception.AudienceNotFreeException;
 import ua.com.foxminded.krailo.university.exception.AudienceOverflowException;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;

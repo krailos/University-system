@@ -11,7 +11,7 @@ import org.hibernate.query.Query;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import ua.com.foxminded.krailo.university.dao.interf.AudienceDao;
+import ua.com.foxminded.krailo.university.dao.AudienceDao;
 import ua.com.foxminded.krailo.university.model.Audience;
 
 @Repository

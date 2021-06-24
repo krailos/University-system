@@ -14,8 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.dao.interf.GroupDao;
-import ua.com.foxminded.krailo.university.dao.interf.StudentDao;
+import ua.com.foxminded.krailo.university.dao.GroupDao;
+import ua.com.foxminded.krailo.university.dao.StudentDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.GroupOverflowException;
 import ua.com.foxminded.krailo.university.model.Group;

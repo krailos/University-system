@@ -21,9 +21,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import ua.com.foxminded.krailo.university.dao.interf.HolidayDao;
-import ua.com.foxminded.krailo.university.dao.interf.LessonDao;
-import ua.com.foxminded.krailo.university.dao.interf.VocationDao;
+import ua.com.foxminded.krailo.university.dao.HolidayDao;
+import ua.com.foxminded.krailo.university.dao.LessonDao;
+import ua.com.foxminded.krailo.university.dao.VocationDao;
 import ua.com.foxminded.krailo.university.exception.VocationEndBoforeStartException;
 import ua.com.foxminded.krailo.university.exception.VocationPeriodNotFreeException;
 import ua.com.foxminded.krailo.university.exception.VocationPeriodNotSameYearException;

@@ -15,7 +15,7 @@ import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.interf.VocationDao;
+import ua.com.foxminded.krailo.university.dao.VocationDao;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Vocation;
@@ -24,7 +24,7 @@ import ua.com.foxminded.krailo.university.model.VocationKind;
 @Transactional
 @SpringJUnitWebConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
-class VocationDaoHibernateTest {
+class HibernateVocationDaoTest {
 
     @Autowired
     private VocationDao vocationDao;

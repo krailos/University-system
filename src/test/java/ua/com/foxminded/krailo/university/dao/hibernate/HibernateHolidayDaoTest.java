@@ -20,7 +20,7 @@ import ua.com.foxminded.krailo.university.model.Holiday;
 @Transactional
 @SpringJUnitWebConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
-class HolidayDaoHibernateTest {
+class HibernateHolidayDaoTest {
 
     @Autowired
     private HibernateHolidayDao holidayDao;

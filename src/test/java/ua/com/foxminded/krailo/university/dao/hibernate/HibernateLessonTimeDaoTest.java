@@ -15,13 +15,13 @@ import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.config.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.interf.LessonTimeDao;
+import ua.com.foxminded.krailo.university.dao.LessonTimeDao;
 import ua.com.foxminded.krailo.university.model.LessonTime;
 
 @Transactional
 @SpringJUnitWebConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
-class LessonTimeDaoHibernateTest {
+class HibernateLessonTimeDaoTest {
 
     @Autowired
     private LessonTimeDao lessonTimeDao;

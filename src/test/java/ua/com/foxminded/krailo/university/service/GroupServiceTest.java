@@ -20,8 +20,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import ua.com.foxminded.krailo.university.dao.interf.GroupDao;
-import ua.com.foxminded.krailo.university.dao.interf.StudentDao;
+import ua.com.foxminded.krailo.university.dao.GroupDao;
+import ua.com.foxminded.krailo.university.dao.StudentDao;
 import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Year;

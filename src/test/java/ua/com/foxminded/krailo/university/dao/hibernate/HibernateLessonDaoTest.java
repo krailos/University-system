@@ -31,7 +31,7 @@ import ua.com.foxminded.krailo.university.model.Year;
 @Transactional
 @SpringJUnitWebConfig(ConfigTest.class)
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
-class LessonDaoHibernateTest {
+class HibernateLessonDaoTest {
 
     @Autowired
     private HibernateLessonDao lessonDao;
