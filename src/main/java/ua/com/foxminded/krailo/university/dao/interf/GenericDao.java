@@ -5,20 +5,20 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 
-public interface GenericDao<Dao> {
+public interface GenericDao<Entity> {
 
-    Optional<Dao> getById(int id);
+    Optional<Entity> getById(int id);
 
-    void create(Dao dao);
+    void create(Entity entity);
 
-    void update(Dao dao);
+    void update(Entity entity);
 
-    void delete(Dao dao);
-    
-    List<Dao> getByPage(Pageable pageable);
-    
-    List<Dao> getAll();
-    
+    void delete(Entity entity);
+
+    List<Entity> getByPage(Pageable pageable);
+
+    List<Entity> getAll();
+
     int count();
 
 }

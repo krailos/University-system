@@ -26,58 +26,58 @@ public class TeacherService {
 
     private static final Logger log = LoggerFactory.getLogger(TeacherService.class);
 
-    private TeacherDao teacherDaoInt;
-    private LessonDao lessonDaoInt;
+    private TeacherDao teacherDao;
+    private LessonDao lessonDao;
 
     public TeacherService(TeacherDao teacherDaoInt, LessonDao lessonDaoInt) {
-	this.teacherDaoInt = teacherDaoInt;
-	this.lessonDaoInt = lessonDaoInt;
+	this.teacherDao = teacherDaoInt;
+	this.lessonDao = lessonDaoInt;
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void create(Teacher teacher) {
 	log.debug("Create teacher={}", teacher);
-	teacherDaoInt.create(teacher);
+	teacherDao.create(teacher);
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void update(Teacher teacher) {
 	log.debug("Update teacher={}", teacher);
-	teacherDaoInt.update(teacher);
+	teacherDao.update(teacher);
     }
 
     public Teacher getById(int id) {
 	log.debug("Get teacher by id={}", id);
-	return teacherDaoInt.getById(id)
+	return teacherDao.getById(id)
 		.orElseThrow(() -> new EntityNotFoundException(format("Teacher whith id=%s not exist", id)));
     }
 
     public List<Teacher> getAll() {
 	log.debug("Get all teachers");
-	return teacherDaoInt.getAll();
+	return teacherDao.getAll();
     }
 
     public List<Teacher> getBySubjectId(Subject subject) {
 	log.debug("Get teachers by subjectId={}", subject.getId());
-	return teacherDaoInt.getBySubject(subject);
+	return teacherDao.getBySubject(subject);
     }
 
     public void delete(Teacher teacher) {
 	log.debug("Delete teacher={}", teacher);
-	teacherDaoInt.delete(teacher);
+	teacherDao.delete(teacher);
     }
 
     public List<Teacher> findTeachersForSubstitute(Teacher substitutedTeacher, LocalDate startDate,
 	    LocalDate finishDate) {
-	List<Lesson> substitutedLessons = lessonDaoInt.getByTeacherBetweenDates(substitutedTeacher, startDate,
+	List<Lesson> substitutedLessons = lessonDao.getByTeacherBetweenDates(substitutedTeacher, startDate,
 		finishDate);
 	List<Subject> substitutedSubjects = substitutedLessons.stream().map(Lesson::getSubject)
 		.collect(Collectors.toList());
 	List<Teacher> teachersForSubstitute = substitutedSubjects.stream()
-		.flatMap(s -> teacherDaoInt.getBySubject(s).stream()).distinct()
+		.flatMap(s -> teacherDao.getBySubject(s).stream()).distinct()
 		.filter(t -> t.getSubjects().containsAll(substitutedSubjects)).collect(Collectors.toList());
 	return teachersForSubstitute.stream()
-		.filter(t -> substitutedLessons.stream().noneMatch(l -> lessonDaoInt
+		.filter(t -> substitutedLessons.stream().noneMatch(l -> lessonDao
 			.getByDateAndTeacherAndLessonTime(l.getDate(), t, l.getLessonTime()).isPresent()))
 		.collect(Collectors.toList());
     }

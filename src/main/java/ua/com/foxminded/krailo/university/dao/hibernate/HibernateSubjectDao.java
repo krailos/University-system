@@ -15,11 +15,11 @@ import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @Repository
-public class SubjectDaoHibernate implements SubjectDao {
+public class HibernateSubjectDao implements SubjectDao {
 
     private SessionFactory sessionFactory;
 
-    public SubjectDaoHibernate(SessionFactory sessionFactory) {
+    public HibernateSubjectDao(SessionFactory sessionFactory) {
 	this.sessionFactory = sessionFactory;
     }
 

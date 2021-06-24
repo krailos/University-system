@@ -20,11 +20,11 @@ import ua.com.foxminded.krailo.university.model.LessonTime;
 import ua.com.foxminded.krailo.university.model.Teacher;
 
 @Repository
-public class LessonDaoHibernate implements LessonDao {
+public class HibernateLessonDao implements LessonDao {
 
     SessionFactory sessionFactory;
 
-    public LessonDaoHibernate(SessionFactory sessionFactory) {
+    public HibernateLessonDao(SessionFactory sessionFactory) {
 	this.sessionFactory = sessionFactory;
     }
 

@@ -35,16 +35,16 @@ public class VocationService {
 
     private static final Logger log = LoggerFactory.getLogger(VocationService.class);
 
-    private VocationDao vocationDaoInt;
-    private LessonDao lessonDaoInt;
-    private HolidayDao holidayDaoInt;
+    private VocationDao vocationDao;
+    private LessonDao lessonDao;
+    private HolidayDao holidayDao;
     @Value("#{${vocation.durationBykind}}")
     private Map<VocationKind, Integer> vocationDurationBykind;
 
     public VocationService(VocationDao vocationDaoInt, LessonDao lessonDaoInt, HolidayDao holidayDaoInt) {
-	this.vocationDaoInt = vocationDaoInt;
-	this.lessonDaoInt = lessonDaoInt;
-	this.holidayDaoInt = holidayDaoInt;
+	this.vocationDao = vocationDaoInt;
+	this.lessonDao = lessonDaoInt;
+	this.holidayDao = holidayDaoInt;
     }
 
     public void create(Vocation vocation) {
@@ -53,7 +53,7 @@ public class VocationService {
 	checkVocationPeriodIsFree(vocation);
 	checkVocationsEndDateMoreThenStart(vocation);
 	checkVocationsStartAndEndDateBelongsTheSameYear(vocation);
-	vocationDaoInt.create(vocation);
+	vocationDao.create(vocation);
     }
 
     public void update(Vocation vocation) {
@@ -62,32 +62,32 @@ public class VocationService {
 	checkVocationPeriodIsFree(vocation);
 	checkVocationsEndDateMoreThenStart(vocation);
 	checkVocationsStartAndEndDateBelongsTheSameYear(vocation);
-	vocationDaoInt.update(vocation);
+	vocationDao.update(vocation);
     }
 
     public Vocation getById(int id) {
 	log.debug("Get vocation by id={}", id);
-	return vocationDaoInt.getById(id)
+	return vocationDao.getById(id)
 		.orElseThrow(() -> new EntityNotFoundException(format("Vocation whith id=%s not exist", id)));
     }
 
     public List<Vocation> getAll() {
 	log.debug("Get all vocations");
-	return vocationDaoInt.getAll();
+	return vocationDao.getAll();
     }
 
     public void delete(Vocation vocation) {
 	log.debug("Delete vocation={}", vocation);
-	vocationDaoInt.delete(vocation);
+	vocationDao.delete(vocation);
     }
 
     public List<Vocation> getByTeacherAndYear(Teacher teacher, Year year) {
 	log.debug("Get by teacherId={} and year={}", teacher.getId(), year);
-	return vocationDaoInt.getByTeacherAndYear(teacher, year);
+	return vocationDao.getByTeacherAndYear(teacher, year);
     }
 
     private void checkVocationPeriodIsFree(Vocation vocation) {
-	if (!lessonDaoInt.getByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd())
+	if (!lessonDao.getByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd())
 		.isEmpty()) {
 	    throw new VocationPeriodNotFreeException("vocation period is not free from lessons");
 	}
@@ -106,11 +106,11 @@ public class VocationService {
     }
 
     private void checkVocationDuratioMoreThenMaxDuration(Vocation vocation) {
-	List<Vocation> vocations = vocationDaoInt.getByTeacherAndYear(vocation.getTeacher(),
+	List<Vocation> vocations = vocationDao.getByTeacherAndYear(vocation.getTeacher(),
 		Year.from(vocation.getStart()));
 	vocations.add(vocation);
 	List<LocalDate> vocationDates = getVocationDates(vocations);
-	List<LocalDate> holidays = holidayDaoInt.getAll().stream().map(Holiday::getDate).collect(Collectors.toList());
+	List<LocalDate> holidays = holidayDao.getAll().stream().map(Holiday::getDate).collect(Collectors.toList());
 	if (vocationDates.stream().filter(d -> !isDateWeekend(d)).filter(d -> !holidays.contains(d))
 		.count() > vocationDurationBykind.get(vocation.getKind())) {
 	    throw new VocationPeriodTooLongException("vocation duration more then max duration");

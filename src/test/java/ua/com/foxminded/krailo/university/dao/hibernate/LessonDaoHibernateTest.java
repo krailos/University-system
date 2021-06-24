@@ -34,7 +34,7 @@ import ua.com.foxminded.krailo.university.model.Year;
 class LessonDaoHibernateTest {
 
     @Autowired
-    private LessonDaoHibernate lessonDao;
+    private HibernateLessonDao lessonDao;
     @Autowired
     private HibernateTemplate hibernateTemplate;
 

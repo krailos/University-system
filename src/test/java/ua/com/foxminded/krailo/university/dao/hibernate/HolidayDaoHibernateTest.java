@@ -23,7 +23,7 @@ import ua.com.foxminded.krailo.university.model.Holiday;
 class HolidayDaoHibernateTest {
 
     @Autowired
-    private HolidayDaoHibernate holidayDao;
+    private HibernateHolidayDao holidayDao;
     @Autowired
     private HibernateTemplate hibernateTemplate;
 

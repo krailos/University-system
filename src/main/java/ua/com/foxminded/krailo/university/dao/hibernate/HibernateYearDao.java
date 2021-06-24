@@ -13,11 +13,11 @@ import ua.com.foxminded.krailo.university.dao.interf.YearDao;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @Repository
-public class YearDaoHibernate implements YearDao {
+public class HibernateYearDao implements YearDao {
 
     private SessionFactory sessionFactory;
 
-    public YearDaoHibernate(SessionFactory sessionFactory) {
+    public HibernateYearDao(SessionFactory sessionFactory) {
 	this.sessionFactory = sessionFactory;
     }
 

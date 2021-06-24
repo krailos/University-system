@@ -28,51 +28,51 @@ public class StudentService {
 
     private static final Logger log = LoggerFactory.getLogger(StudentService.class);
 
-    private StudentDao studentDaoInt;
-    private GroupDao groupDaoInt;
+    private StudentDao studentDao;
+    private GroupDao groupDao;
     @Value("${group.maxSize}")
     private int groupMaxSize;
 
     public StudentService(StudentDao studentDaoInt, GroupDao groupDaoInt) {
-	this.studentDaoInt = studentDaoInt;
-	this.groupDaoInt = groupDaoInt;
+	this.studentDao = studentDaoInt;
+	this.groupDao = groupDaoInt;
     }
 
     public void create(Student student) {
 	log.debug("Create student={}", student);
 	checkGroupCapacityNotTooBig(student);
-	studentDaoInt.create(student);
+	studentDao.create(student);
     }
 
     public void update(Student student) {
 	log.debug("Update student={}", student);
 	checkGroupCapacityNotTooBig(student);
-	studentDaoInt.update(student);
+	studentDao.update(student);
     }
 
     public Student getById(int id) {
 	log.debug("Get student by id={}", id);
-	return studentDaoInt.getById(id)
+	return studentDao.getById(id)
 		.orElseThrow(() -> new EntityNotFoundException(format("Student whith id=%s not exist", id)));
     }
 
     public List<Student> getAll() {
 	log.debug("Get all students");
-	return studentDaoInt.getAll();
+	return studentDao.getAll();
     }
 
     public List<Student> getByGroup(Group group) {
 	log.debug("get students  by groupId={}", group.getId());
-	return studentDaoInt.getByGroup(group);
+	return studentDao.getByGroup(group);
     }
 
     public void delete(Student student) {
 	log.debug("Delete student={}", student);
-	studentDaoInt.delete(student);
+	studentDao.delete(student);
     }
 
     private void checkGroupCapacityNotTooBig(Student student) {
-	Group existingGroup = groupDaoInt.getById(student.getGroup().getId())
+	Group existingGroup = groupDao.getById(student.getGroup().getId())
 		.orElseThrow(() -> new EntityNotFoundException(
 			"group for this student not found, groupId=" + student.getGroup().getId()));
 	if (existingGroup.getStudents().size() >= groupMaxSize) {
@@ -81,12 +81,12 @@ public class StudentService {
     }
 
     public int getQuantity() {
-	return studentDaoInt.count();
+	return studentDao.count();
 
     }
 
     public Page<Student> getSelectedPage(Pageable pageable) {
 	log.debug("get lessons by page");
-	return new PageImpl<>(studentDaoInt.getByPage(pageable), pageable, studentDaoInt.count());
+	return new PageImpl<>(studentDao.getByPage(pageable), pageable, studentDao.count());
     }
 }

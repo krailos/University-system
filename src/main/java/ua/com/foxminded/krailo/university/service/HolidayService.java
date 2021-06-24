@@ -18,36 +18,36 @@ import ua.com.foxminded.krailo.university.model.Holiday;
 public class HolidayService {
 
     private static final Logger log = LoggerFactory.getLogger(HolidayService.class);
-    private HolidayDao holidayDaoInt;
+    private HolidayDao holidayDao;
 
     public HolidayService(HolidayDao holidayDaoInt) {
-	this.holidayDaoInt = holidayDaoInt;
+	this.holidayDao = holidayDaoInt;
     }
 
     public void create(Holiday holiday) {
 	log.debug("Create holiday={}", holiday);
-	holidayDaoInt.create(holiday);
+	holidayDao.create(holiday);
     }
 
     public void update(Holiday holiday) {
 	log.debug("Update holiday={}", holiday);
-	holidayDaoInt.update(holiday);
+	holidayDao.update(holiday);
     }
 
     public Holiday getById(int id) {
 	log.debug("Get holiday by id={}", id);
-	return holidayDaoInt.getById(id)
+	return holidayDao.getById(id)
 		.orElseThrow(() -> new EntityNotFoundException(format("Holiday whith id=%s not exist", id)));
     }
 
     public List<Holiday> getAll() {
 	log.debug("Get all holidays");
-	return holidayDaoInt.getAll();
+	return holidayDao.getAll();
     }
 
     public void delete(Holiday holiday) {
 	log.debug("Delete holiday={}", holiday);
-	holidayDaoInt.delete(holiday);
+	holidayDao.delete(holiday);
     }
 
 }

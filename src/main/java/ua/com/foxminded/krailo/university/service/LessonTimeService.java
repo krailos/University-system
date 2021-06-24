@@ -21,42 +21,42 @@ public class LessonTimeService {
 
     private static final Logger log = LoggerFactory.getLogger(LessonTimeService.class);
 
-    private LessonTimeDao lessonTimeDaoInt;
+    private LessonTimeDao lessonTimeDao;
 
     public LessonTimeService(LessonTimeDao lessonTimeDaoInt) {
-	this.lessonTimeDaoInt = lessonTimeDaoInt;
+	this.lessonTimeDao = lessonTimeDaoInt;
     }
 
     public void create(LessonTime lessonTime) {
 	log.debug("Create lessonTime={}", lessonTime);
 	checkLessonTimeBeFree(lessonTime);
-	lessonTimeDaoInt.create(lessonTime);
+	lessonTimeDao.create(lessonTime);
     }
 
     public void update(LessonTime lessonTime) {
 	log.debug("Update lessonTime={}", lessonTime);
 	checkLessonTimeBeFree(lessonTime);
-	lessonTimeDaoInt.update(lessonTime);
+	lessonTimeDao.update(lessonTime);
     }
 
     public LessonTime getById(int id) {
 	log.debug("Get lessonTime by id={}", id);
-	return lessonTimeDaoInt.getById(id)
+	return lessonTimeDao.getById(id)
 		.orElseThrow(() -> new EntityNotFoundException(format("LessonTime whith id=%s not exist", id)));
     }
 
     public List<LessonTime> getAll() {
 	log.debug("Get all lessonTimes");
-	return lessonTimeDaoInt.getAll();
+	return lessonTimeDao.getAll();
     }
 
     public void delete(LessonTime lessonTime) {
 	log.debug("Delete lessonTime={}", lessonTime);
-	lessonTimeDaoInt.delete(lessonTime);
+	lessonTimeDao.delete(lessonTime);
     }
 
     private void checkLessonTimeBeFree(LessonTime lessonTime) {
-	Optional<LessonTime> existingLessonTime = lessonTimeDaoInt.getByStartOrEndLessonTime(lessonTime);
+	Optional<LessonTime> existingLessonTime = lessonTimeDao.getByStartOrEndLessonTime(lessonTime);
 	log.debug("existing audience={}", existingLessonTime);
 	if (existingLessonTime.filter(a -> a.getId() != lessonTime.getId()).isPresent()) {
 	    throw new LessonTimeNotFreeException("lessonTime not free, lessonTime=" + lessonTime);

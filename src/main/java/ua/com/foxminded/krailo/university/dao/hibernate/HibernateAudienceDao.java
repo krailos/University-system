@@ -15,11 +15,11 @@ import ua.com.foxminded.krailo.university.dao.interf.AudienceDao;
 import ua.com.foxminded.krailo.university.model.Audience;
 
 @Repository
-public class AudienceDaoHibernate implements AudienceDao {
+public class HibernateAudienceDao implements AudienceDao {
 
     private SessionFactory sessionFactory;
 
-    public AudienceDaoHibernate(SessionFactory sessionFactory) {
+    public HibernateAudienceDao(SessionFactory sessionFactory) {
 	this.sessionFactory = sessionFactory;
     }
 

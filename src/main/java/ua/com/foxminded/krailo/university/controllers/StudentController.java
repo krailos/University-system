@@ -80,8 +80,6 @@ public class StudentController {
 	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
 	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finishDate) {
 	Student student = studentService.getById(studentId);
-	System.out.println("-----------------------------*******------------------------");
-	System.out.println(student);
 	model.addAttribute("student", student);
 	model.addAttribute("lessons", lessonService.getLessonsForStudentByPeriod(student, startDate, finishDate));
 	model.addAttribute("startDate", startDate);

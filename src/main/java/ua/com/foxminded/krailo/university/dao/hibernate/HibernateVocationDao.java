@@ -18,11 +18,11 @@ import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Vocation;
 
 @Repository
-public class VocationDaoHibernate implements VocationDao {
+public class HibernateVocationDao implements VocationDao {
 
     private SessionFactory sessionFactory;
 
-    public VocationDaoHibernate(SessionFactory sessionFactory) {
+    public HibernateVocationDao(SessionFactory sessionFactory) {
 	this.sessionFactory = sessionFactory;
     }
 

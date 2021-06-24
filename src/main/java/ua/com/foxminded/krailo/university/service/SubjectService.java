@@ -19,37 +19,37 @@ public class SubjectService {
 
     private static final Logger log = LoggerFactory.getLogger(SubjectService.class);
 
-    private SubjectDao subjectDaoInt;
+    private SubjectDao subjectDao;
 
     public SubjectService(SubjectDao subjectDaoInt) {
-	this.subjectDaoInt = subjectDaoInt;
+	this.subjectDao = subjectDaoInt;
     }
 
     public void create(Subject subject) {
 	log.debug("Create subject={}", subject);
-	subjectDaoInt.create(subject);
+	subjectDao.create(subject);
     }
 
     public void update(Subject subject) {
 	log.debug("Update subject={}", subject);
-	subjectDaoInt.update(subject);
+	subjectDao.update(subject);
     }
 
     public Subject getById(int id) {
 	log.debug("Get subject by id={}", id);
-	return subjectDaoInt.getById(id)
+	return subjectDao.getById(id)
 		.orElseThrow(() -> new EntityNotFoundException(format("Subject whith id=%s not exist", id)));
     }
 
     public List<Subject> getAll() {
 	log.debug("Get all subjects");
-	return subjectDaoInt.getAll();
+	return subjectDao.getAll();
 
     }
 
     public void delete(Subject subject) {
 	log.debug("Delete subject={}", subject);
-	subjectDaoInt.delete(subject);
+	subjectDao.delete(subject);
     }
 
 }

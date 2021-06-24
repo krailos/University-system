@@ -14,11 +14,11 @@ import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
 
 @Repository
-public class TeacherDaoHibernate implements TeacherDao {
+public class HibernateTeacherDao implements TeacherDao {
 
     private SessionFactory sessionFactory;
 
-    public TeacherDaoHibernate(SessionFactory sessionFactory) {
+    public HibernateTeacherDao(SessionFactory sessionFactory) {
 	this.sessionFactory = sessionFactory;
     }
 

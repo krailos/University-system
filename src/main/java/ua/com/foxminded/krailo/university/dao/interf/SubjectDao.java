@@ -8,12 +8,8 @@ import ua.com.foxminded.krailo.university.model.Year;
 
 public interface SubjectDao extends GenericDao<Subject> {
 
-    List<Subject> getAll();
-
     List<Subject> getByTeacher(Teacher teacher);
 
     List<Subject> getByYear(Year year);
-
-    int count();
 
 }

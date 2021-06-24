@@ -24,54 +24,54 @@ public class AudienceService {
 
     private static final Logger log = LoggerFactory.getLogger(AudienceService.class);
 
-    private AudienceDao audienceDaoInt;
+    private AudienceDao audienceDao;
 
     public AudienceService(AudienceDao audienceDaoInt) {
-	this.audienceDaoInt = audienceDaoInt;
+	this.audienceDao = audienceDaoInt;
     }
 
     public Audience getById(int id) {
 	log.debug("get audience by id={}", id);
-	return audienceDaoInt.getById(id)
+	return audienceDao.getById(id)
 		.orElseThrow(() -> new EntityNotFoundException(format("Audience whith id=%s not exist", id)));
     }
 
     public Audience getByNumber(String number) {
 	log.debug("get audience by number={}", number);
-	return audienceDaoInt.getByNumber(number)
+	return audienceDao.getByNumber(number)
 		.orElseThrow(() -> new EntityNotFoundException(format("Audience whith number=%s not exist", number)));
     }
 
     public void create(Audience audience) {
 	log.debug("create audience={}", audience);
 	checkAudienceNumberBeUnique(audience);
-	audienceDaoInt.create(audience);
+	audienceDao.create(audience);
 
     }
 
     public void update(Audience audience) {
 	log.debug("update audience={}", audience);
 	checkAudienceNumberBeUnique(audience);
-	audienceDaoInt.update(audience);
+	audienceDao.update(audience);
     }
 
     public List<Audience> getAll() {
 	log.debug("get all audiences");
-	return audienceDaoInt.getAll();
+	return audienceDao.getAll();
     }
 
     public Page<Audience> getSelectedPage(Pageable pageable) {
 	log.debug("get audiences by page");
-	return new PageImpl<>(audienceDaoInt.getByPage(pageable), pageable, audienceDaoInt.count());
+	return new PageImpl<>(audienceDao.getByPage(pageable), pageable, audienceDao.count());
     }
 
     public void delete(Audience audience) {
 	log.debug("delete audience={}", audience);
-	audienceDaoInt.delete(audience);
+	audienceDao.delete(audience);
     }
 
     private void checkAudienceNumberBeUnique(Audience audience) {
-	Optional<Audience> existingAudience = audienceDaoInt.getByNumber(audience.getNumber());
+	Optional<Audience> existingAudience = audienceDao.getByNumber(audience.getNumber());
 	log.debug("existing audience={}", existingAudience);
 	if (existingAudience.filter(a -> a.getId() != audience.getId()).isPresent()) {
 	    throw new NotUniqueNameException(format("audiences number=%s  not unique", audience.getNumber()));

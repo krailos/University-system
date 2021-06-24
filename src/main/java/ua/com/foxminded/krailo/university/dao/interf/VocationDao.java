@@ -10,8 +10,6 @@ import ua.com.foxminded.krailo.university.model.Vocation;
 
 public interface VocationDao extends GenericDao<Vocation> {
 
-    List<Vocation> getAll();
-
     List<Vocation> getByTeacher(Teacher teacher);
 
     List<Vocation> getByTeacherAndYear(Teacher teacher, Year year);
