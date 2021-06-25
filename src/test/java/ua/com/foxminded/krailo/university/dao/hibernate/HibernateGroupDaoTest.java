@@ -1,12 +1,15 @@
 package ua.com.foxminded.krailo.university.dao.hibernate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.orm.hibernate5.HibernateTemplate;
@@ -73,7 +76,7 @@ class HibernateGroupDaoTest {
 
 	groupDao.delete(group);
 
-	assertEquals(null, hibernateTemplate.get(Group.class, group.getId()));
+	assertNull(hibernateTemplate.get(Group.class, group.getId()));
     }
 
     @Test
@@ -102,9 +105,9 @@ class HibernateGroupDaoTest {
 	int pageNumber = 0;
 	int pageSize = 3;
 	Pageable pageable = PageRequest.of(pageNumber, pageSize);
-	List<Group> expected = getGroups();
+	Page<Group> expected = new PageImpl<>(getGroups(), pageable, 2);
 
-	List<Group> actual = groupDao.getByPage(pageable);
+	Page<Group> actual = groupDao.getAll(pageable);
 
 	assertEquals(expected, actual);
     }
@@ -114,7 +117,7 @@ class HibernateGroupDaoTest {
 
 	int actual = groupDao.count();
 
-	assertEquals(2, actual);
+	assertEquals(hibernateTemplate.execute( session -> session.createQuery("from Group").list().size()), actual);
     }
 
     private Group getGroup() {

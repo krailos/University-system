@@ -10,7 +10,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,7 +99,7 @@ public class LessonService {
 
     public Page<Lesson> getSelectedPage(Pageable pageable) {
 	log.debug("get lessons by page");
-	return new PageImpl<>(lessonDao.getByPage(pageable), pageable, lessonDao.count());
+	return lessonDao.getAll(pageable);
     }
 
     public List<Lesson> getLessonsForTeacherByDate(Teacher teacher, LocalDate date) {

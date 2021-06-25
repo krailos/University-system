@@ -69,9 +69,4 @@ public class HibernateTeacherDao implements TeacherDao {
 	return query.list();
     }
 
-    @Override
-    public List<Teacher> getByPage(Pageable pageable) {
-	return null;
-    }
-
 }

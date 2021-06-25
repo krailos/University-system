@@ -1,6 +1,7 @@
 package ua.com.foxminded.krailo.university.dao.hibernate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -8,6 +9,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.orm.hibernate5.HibernateTemplate;
@@ -101,7 +104,7 @@ class HibernateStudentDaoTest {
 
 	studentDao.delete(student);
 
-	assertEquals(null, hibernateTemplate.get(Student.class, student.getId()));
+	assertNull(hibernateTemplate.get(Student.class, student.getId()));
     }
 
     @Test
@@ -109,7 +112,7 @@ class HibernateStudentDaoTest {
 
 	int actual = studentDao.count();
 
-	assertEquals(2, actual);
+	assertEquals(hibernateTemplate.execute( session -> session.createQuery("from Student").list().size()), actual);
     }
 
     @Test
@@ -117,21 +120,23 @@ class HibernateStudentDaoTest {
 	int PageNo = 0;
 	int pageSize = 3;
 	Pageable pageable = PageRequest.of(PageNo, pageSize);
-	List<Student> expected = new ArrayList<>();
-	expected.add(Student.builder().id(1).studentId("1id").firstName("student first name 1")
+	List<Student> students = new ArrayList<>();
+	students.add(Student.builder().id(1).studentId("1id").firstName("student first name 1")
 		.lastName("student last name 1").birthDate(LocalDate.of(2000, 01, 01)).address("address 1")
 		.phone("0670000001").email("email 1").rank("0").gender(Gender.MALE)
 		.group(Group.builder().id(1).name("group 1").year(Year.builder().id(1).name("year 1").build()).build())
 		.build());
-	expected.add(Student.builder().id(2).studentId("2id").firstName("student first name 2")
+	students.add(Student.builder().id(2).studentId("2id").firstName("student first name 2")
 		.lastName("student last name 2").birthDate(LocalDate.of(2002, 02, 02)).address("address 2")
 		.phone("0670000002").email("email 2").rank("0").gender(Gender.FEMALE)
 		.group(Group.builder().id(2).name("group 2").year(Year.builder().id(1).name("year 1").build()).build())
 		.build());
 
-	List<Student> students = studentDao.getByPage(pageable);
+	Page<Student> expected = new PageImpl<>(students, pageable, 2);
 
-	assertEquals(expected, students);
+	Page<Student> actual = studentDao.getAll(pageable);
+
+	assertEquals(expected, actual);
     }
 
     private Student getStudent() {

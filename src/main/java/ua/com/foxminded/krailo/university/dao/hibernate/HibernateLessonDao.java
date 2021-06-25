@@ -9,6 +9,8 @@ import javax.persistence.NoResultException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -60,12 +62,12 @@ public class HibernateLessonDao implements LessonDao {
     }
 
     @Override
-    public List<Lesson> getByPage(Pageable pageable) {
+    public Page<Lesson> getAll(Pageable pageable) {
 	Session session = sessionFactory.getCurrentSession();
 	Query<Lesson> query = session.createNamedQuery("SelectAllLessons");
 	query.setFirstResult((int) pageable.getOffset());
 	query.setMaxResults(pageable.getPageSize());
-	return query.list();
+	return new PageImpl<>(query.list(), pageable, count());
     }
 
     @Override

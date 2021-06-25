@@ -8,6 +8,8 @@ import javax.persistence.NoResultException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -60,12 +62,12 @@ public class HibernateAudienceDao implements AudienceDao {
     }
 
     @Override
-    public List<Audience> getByPage(Pageable pageable) {
+    public Page<Audience> getAll(Pageable pageable) {
 	Session session = sessionFactory.getCurrentSession();
 	Query<Audience> query = session.createNamedQuery("SelectAllAudiences");
 	query.setFirstResult((int) pageable.getOffset());
 	query.setMaxResults(pageable.getPageSize());
-	return query.list();
+	return new PageImpl<>(query.list(), pageable, count());
     }
 
     @Override

@@ -9,7 +9,6 @@ import javax.persistence.NoResultException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
@@ -66,16 +65,6 @@ public class HibernateHolidayDao implements HolidayDao {
 	} catch (NoResultException e) {
 	    return Optional.empty();
 	}
-    }
-
-    @Override
-    public List<Holiday> getByPage(Pageable pageable) {
-	return null;
-    }
-
-    @Override
-    public int count() {
-	return 0;
     }
 
 }

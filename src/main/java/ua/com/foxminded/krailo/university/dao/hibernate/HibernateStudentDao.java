@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -49,12 +51,12 @@ public class HibernateStudentDao implements StudentDao {
     }
 
     @Override
-    public List<Student> getByPage(Pageable pageable) {
+    public Page<Student> getAll(Pageable pageable) {
 	Session session = sessionFactory.getCurrentSession();
 	Query<Student> query = session.createNamedQuery("SelectAllStudents");
 	query.setFirstResult((int) pageable.getOffset());
 	query.setMaxResults(pageable.getPageSize());
-	return query.list();
+	return new PageImpl<>(query.list(), pageable, count());
     }
 
     @Override

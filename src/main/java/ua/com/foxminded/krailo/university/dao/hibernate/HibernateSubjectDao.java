@@ -78,9 +78,4 @@ public class HibernateSubjectDao implements SubjectDao {
 	return query.list();
     }
 
-    @Override
-    public List<Subject> getByPage(Pageable pageable) {
-	return null;
-    }
-
 }

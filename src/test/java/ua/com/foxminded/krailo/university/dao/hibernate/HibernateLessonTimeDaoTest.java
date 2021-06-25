@@ -1,6 +1,7 @@
 package ua.com.foxminded.krailo.university.dao.hibernate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalTime;
@@ -75,7 +76,7 @@ class HibernateLessonTimeDaoTest {
 
 	lessonTimeDao.delete(lessonTime);
 
-	assertEquals(null, hibernateTemplate.get(LessonTime.class, lessonTime.getId()));
+	assertNull(hibernateTemplate.get(LessonTime.class, lessonTime.getId()));
     }
 
     @Test

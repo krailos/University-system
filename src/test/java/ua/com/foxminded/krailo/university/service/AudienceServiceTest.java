@@ -136,11 +136,10 @@ class AudienceServiceTest {
 	Pageable pageable = PageRequest.of(pageNo, pageSize);
 	List<Audience> audiences = new ArrayList<>();
 	audiences.add(createAudience());
-	when(audienceDao.count()).thenReturn(6);
-	when(audienceDao.getByPage(pageable)).thenReturn(audiences);
-	Page<Audience> expected = new PageImpl<>(audienceDao.getByPage(pageable), pageable, audienceDao.count());
+	Page<Audience> expected = new PageImpl<>(audiences);
+	when(audienceDao.getAll(pageable)).thenReturn(expected);
 
-	assertEquals(expected, audienceService.getSelectedPage(pageable));
+	assertEquals(expected, audienceService.getAll(pageable));
     }
 
     private Audience createAudience() {

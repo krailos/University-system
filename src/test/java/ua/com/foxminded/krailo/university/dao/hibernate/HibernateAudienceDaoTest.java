@@ -1,6 +1,7 @@
 package ua.com.foxminded.krailo.university.dao.hibernate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
@@ -10,8 +11,11 @@ import java.util.Optional;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.orm.hibernate5.HibernateCallback;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
@@ -56,7 +60,7 @@ class HibernateAudienceDaoTest {
     @Test
     void givenAudience_whenGetByNumber_thenGot() {
 	Audience expected = getAudience();
-		
+
 	Audience actual = audienceDao.getByNumber("1").get();
 
 	assertEquals(expected, actual);
@@ -68,7 +72,7 @@ class HibernateAudienceDaoTest {
 	expected.add(Audience.builder().id(1).number("1").capacity(300).description("description1").build());
 	expected.add(Audience.builder().id(2).number("2").capacity(120).description("description2").build());
 	expected.add(Audience.builder().id(3).number("3").capacity(120).description("description3").build());
-	
+
 	List<Audience> actual = audienceDao.getAll();
 
 	assertEquals(expected, actual);
@@ -77,7 +81,7 @@ class HibernateAudienceDaoTest {
     @Test
     void givenId_whenGetdById_thenGot() {
 	Audience expected = getAudience();
-	
+
 	Audience actual = audienceDao.getById(1).get();
 
 	assertEquals(expected, actual);
@@ -108,28 +112,30 @@ class HibernateAudienceDaoTest {
 
 	audienceDao.delete(audience);
 
-	assertEquals(null, hibernateTemplate.get(Audience.class, audience.getId()));
+	assertNull(hibernateTemplate.get(Audience.class, audience.getId()));
     }
 
     @Test
     void givenAudiences_whenCount_thenCountReturned() {
-
+		
 	int actual = audienceDao.count();
 
-	assertEquals(3, actual);
+	assertEquals(hibernateTemplate.execute( session -> session.createQuery("from Audience").list().size()), actual);
     }
 
     @Test
-    void givenAudiences_whenGetByPage_thenAudiencesReturned() {
-	List<Audience> expected = new ArrayList<>();
-	expected.add(Audience.builder().id(1).number("1").capacity(300).description("description1").build());
-	expected.add(Audience.builder().id(2).number("2").capacity(120).description("description2").build());
-	expected.add(Audience.builder().id(3).number("3").capacity(120).description("description3").build());	
-	int pageNo = 1;
+    void givenAudiences_whenGetAllByPage_thenAudiencesReturned() {
+	List<Audience> audiences = new ArrayList<>();
+	audiences.add(Audience.builder().id(1).number("1").capacity(300).description("description1").build());
+	audiences.add(Audience.builder().id(3).number("3").capacity(120).description("description3").build());
+	audiences.add(Audience.builder().id(2).number("2").capacity(120).description("description2").build());
+	audiences.sort((Audience a1, Audience a2) -> a1.getNumber().compareTo(a2.getNumber()));
+	int pageNo = 0;
 	int pageSize = 3;
-	Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+	Pageable pageable = PageRequest.of(pageNo, pageSize);
+	Page<Audience> expected = new PageImpl<>(audiences, pageable, 3);
 
-	assertEquals(expected, audienceDao.getByPage(pageable));
+	assertEquals(expected, audienceDao.getAll(pageable));
     }
 
     private Audience getAudience() {

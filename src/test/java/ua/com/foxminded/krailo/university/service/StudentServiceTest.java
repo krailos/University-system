@@ -146,14 +146,14 @@ class StudentServiceTest {
 
     @Test
     void givenStudents_whenGetByPage_thenGot() {
-	int pageNo = 1;
+	int pageNo = 0;
 	int pageSize = 3;
 	Pageable pageable = PageRequest.of(pageNo, pageSize);
 	List<Student> students = new ArrayList<>();
 	students.add(createStudent());
-	when(studentDao.count()).thenReturn(6);
-	when(studentDao.getByPage(pageable)).thenReturn(students);
-	Page<Student> expected = new PageImpl<>(studentDao.getByPage(pageable), pageable, studentDao.count());
+	Page<Student> expected = new PageImpl<>(students, pageable, 3);
+	when(studentDao.getAll(pageable)).thenReturn(expected);
+	
 
 	assertEquals(expected, studentService.getSelectedPage(pageable));
     }

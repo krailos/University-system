@@ -1,6 +1,7 @@
 package ua.com.foxminded.krailo.university.dao.hibernate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +73,7 @@ class HibernateSubjectDaoTest {
 
 	subjectDao.delete(subject);
 
-	assertEquals(null, hibernateTemplate.get(Subject.class, subject.getId()));
+	assertNull(hibernateTemplate.get(Subject.class, subject.getId()));
     }
 
     @Test

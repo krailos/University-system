@@ -1,6 +1,7 @@
 package ua.com.foxminded.krailo.university.dao.hibernate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.time.LocalDate;
 import java.time.Year;
@@ -100,7 +101,7 @@ class HibernateVocationDaoTest {
 
 	vocationDao.delete(vocation);
 
-	assertEquals(null, hibernateTemplate.get(Vocation.class, vocation.getId()));
+	assertNull(hibernateTemplate.get(Vocation.class, vocation.getId()));
     }
 
     @Test

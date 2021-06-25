@@ -88,14 +88,4 @@ public class HibernateVocationDao implements VocationDao {
 	}
     }
 
-    @Override
-    public List<Vocation> getByPage(Pageable pageable) {
-	return null;
-    }
-
-    @Override
-    public int count() {
-	return 0;
-    }
-
 }

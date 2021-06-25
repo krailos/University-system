@@ -120,9 +120,8 @@ class GroupServiceTest {
 	Pageable pageable = PageRequest.of(pageNo, pageSize);
 	List<Group> groups = new ArrayList<>();
 	groups.add(createGroup());
-	when(groupDao.count()).thenReturn(6);
-	when(groupDao.getByPage(pageable)).thenReturn(groups);
-	Page<Group> expected = new PageImpl<>(groupDao.getByPage(pageable), pageable, groupDao.count());
+	Page<Group> expected = new PageImpl<>(groups);
+	when(groupDao.getAll(pageable)).thenReturn(expected);
 
 	assertEquals(expected, groupService.getSelectedPage(pageable));
     }

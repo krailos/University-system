@@ -8,6 +8,8 @@ import javax.persistence.NoResultException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -16,11 +18,11 @@ import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @Repository
-public class GroupDaoHibernate implements GroupDao {
+public class HibernateGroupDao implements GroupDao {
 
     private SessionFactory sessionFactory;
 
-    public GroupDaoHibernate(SessionFactory sessionFactory) {
+    public HibernateGroupDao(SessionFactory sessionFactory) {
 	this.sessionFactory = sessionFactory;
     }
 
@@ -84,12 +86,12 @@ public class GroupDaoHibernate implements GroupDao {
     }
 
     @Override
-    public List<Group> getByPage(Pageable pageable) {
+    public Page<Group> getAll(Pageable pageable) {
 	Session session = sessionFactory.getCurrentSession();
 	Query<Group> query = session.createNamedQuery("SelectAllGroups");
 	query.setFirstResult((int) pageable.getOffset());
 	query.setMaxResults(pageable.getPageSize());
-	return query.list();
+	return new PageImpl<>(query.list(), pageable, count());
     }
 
 }

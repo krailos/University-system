@@ -56,7 +56,7 @@ class AudienceControllerTest {
 	audiences.addAll(buildAudiences());
 	Pageable pageable = PageRequest.of(pageNo, pageSize);
 	Page<Audience> expected = new PageImpl<>(audiences, pageable, allAudiencesCount);
-	when(audienceService.getSelectedPage(pageable)).thenReturn(expected);
+	when(audienceService.getAll(pageable)).thenReturn(expected);
 
 	mockMvc.perform(get("/audiences")
 		.param("page", "0")
@@ -75,7 +75,7 @@ class AudienceControllerTest {
 	audiences.addAll(buildAudiences());
 	Pageable pageable = PageRequest.of(pageNo, pageSize);
 	Page<Audience> expected = new PageImpl<>(audiences, pageable, allAudiencesCount);
-	when(audienceService.getSelectedPage(pageable)).thenReturn(expected);
+	when(audienceService.getAll(pageable)).thenReturn(expected);
 
 	mockMvc.perform(get("/audiences")
 		.param("page", "1")

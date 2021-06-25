@@ -124,11 +124,11 @@ class LessonServiceTest {
     void givenStudentAndDate_whenGetLessonsByStudentAndDate_thenGot() {
 	Group group = Group.builder().id(1).name("group 1").build();
 	Student student = Student.builder().id(1).group(group).build();
-	
+
 	List<Lesson> lessons = createLessons();
 	when(lessonDao.getByGroupAndDate(group, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
 	when(groupDao.getById(1)).thenReturn(Optional.of(group));
-	
+
 	List<Lesson> actual = lessonService.getLessonsForStudentByDate(student, LocalDate.of(2021, 01, 02));
 
 	List<Lesson> expected = createLessons();
@@ -154,8 +154,8 @@ class LessonServiceTest {
     @Test
     void givenLessonWhithAllCorrectFields_whenCreate_thenCreated() {
 	Lesson lesson = createLesson();
-	when(lessonDao.getByDateAndTeacherAndLessonTime(lesson.getDate(), lesson.getTeacher(),
-		lesson.getLessonTime())).thenReturn(Optional.empty());
+	when(lessonDao.getByDateAndTeacherAndLessonTime(lesson.getDate(), lesson.getTeacher(), lesson.getLessonTime()))
+		.thenReturn(Optional.empty());
 	when(lessonDao.getByDateAndAudienceAndLessonTime(lesson.getDate(), lesson.getAudience(),
 		lesson.getLessonTime())).thenReturn(Optional.empty());
 	when(vocationDao.getByTeacherAndDate(lesson.getTeacher(), lesson.getDate())).thenReturn(Optional.empty());
@@ -171,8 +171,8 @@ class LessonServiceTest {
     @Test
     void givenLessonWhithAllCorrectFields_whenUpdate_thenUpdated() {
 	Lesson lesson = createLesson();
-	when(lessonDao.getByDateAndTeacherAndLessonTime(lesson.getDate(), lesson.getTeacher(),
-		lesson.getLessonTime())).thenReturn(Optional.empty());
+	when(lessonDao.getByDateAndTeacherAndLessonTime(lesson.getDate(), lesson.getTeacher(), lesson.getLessonTime()))
+		.thenReturn(Optional.empty());
 	when(lessonDao.getByDateAndAudienceAndLessonTime(lesson.getDate(), lesson.getAudience(),
 		lesson.getLessonTime())).thenReturn(Optional.empty());
 	when(vocationDao.getByTeacherAndDate(lesson.getTeacher(), lesson.getDate())).thenReturn(Optional.empty());
@@ -225,8 +225,8 @@ class LessonServiceTest {
     @Test
     void givenLessonInWhichTeacherIsBooked_whenCreate_thenTeacherNotFreeExceptionThrown() {
 	Lesson lesson = createLesson();
-	when(lessonDao.getByDateAndTeacherAndLessonTime(lesson.getDate(), lesson.getTeacher(),
-		lesson.getLessonTime())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
+	when(lessonDao.getByDateAndTeacherAndLessonTime(lesson.getDate(), lesson.getTeacher(), lesson.getLessonTime()))
+		.thenReturn(Optional.of(Lesson.builder().id(2).build()));
 
 	Exception exception = assertThrows(TeacherNotFreeException.class, () -> lessonService.create(lesson));
 
@@ -238,8 +238,8 @@ class LessonServiceTest {
     @Test
     void givenLessonInWhichTeacherIsBooked_whenUpdate_thenTeacherNotFreeExceptionThrown() {
 	Lesson lesson = createLesson();
-	when(lessonDao.getByDateAndTeacherAndLessonTime(lesson.getDate(), lesson.getTeacher(),
-		lesson.getLessonTime())).thenReturn(Optional.of(Lesson.builder().id(2).build()));
+	when(lessonDao.getByDateAndTeacherAndLessonTime(lesson.getDate(), lesson.getTeacher(), lesson.getLessonTime()))
+		.thenReturn(Optional.of(Lesson.builder().id(2).build()));
 
 	Exception exception = assertThrows(TeacherNotFreeException.class, () -> lessonService.update(lesson));
 
@@ -251,8 +251,8 @@ class LessonServiceTest {
     @Test
     void givenLessonInWhichTeacherIsBookedByTheSameLesson_whenUpdate_thenUpdated() {
 	Lesson lesson = createLesson();
-	when(lessonDao.getByDateAndTeacherAndLessonTime(lesson.getDate(), lesson.getTeacher(),
-		lesson.getLessonTime())).thenReturn(Optional.of(Lesson.builder().id(1).build()));
+	when(lessonDao.getByDateAndTeacherAndLessonTime(lesson.getDate(), lesson.getTeacher(), lesson.getLessonTime()))
+		.thenReturn(Optional.of(Lesson.builder().id(1).build()));
 
 	lessonService.update(lesson);
 
@@ -424,17 +424,15 @@ class LessonServiceTest {
 
     @Test
     void givenLessons_whenGetAudiencesByPage_thenGot() {
-	int pageNo = 1;
+	int pageNo = 0;
 	int pageSize = 3;
 	Pageable pageable = PageRequest.of(pageNo, pageSize);
 	List<Lesson> lessons = new ArrayList<>();
 	lessons.add(createLesson());
-	when(lessonDao.count()).thenReturn(6);
-	when(lessonDao.getByPage(pageable)).thenReturn(lessons);
-	Page<Lesson> expected = new PageImpl<>(lessonDao.getByPage(pageable), pageable, lessonDao.count());
+	Page<Lesson> expected = new PageImpl<>(lessons, pageable, 3);
+	when(lessonDao.getAll(pageable)).thenReturn(expected);
 
 	assertEquals(expected, lessonService.getSelectedPage(pageable));
-
     }
 
     @Test
@@ -447,8 +445,7 @@ class LessonServiceTest {
 	Lesson lesson = createLesson();
 	lesson.setTeacher(oldTeacher);
 	lesson.setSubject(subject);
-	when(lessonDao.getByTeacherBetweenDates(oldTeacher, startDate, finishDate))
-		.thenReturn(Arrays.asList(lesson));
+	when(lessonDao.getByTeacherBetweenDates(oldTeacher, startDate, finishDate)).thenReturn(Arrays.asList(lesson));
 
 	lessonService.substituteTeacher(oldTeacher, newTeacher, startDate, finishDate);
 

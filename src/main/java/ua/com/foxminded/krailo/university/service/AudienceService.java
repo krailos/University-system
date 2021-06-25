@@ -8,7 +8,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,9 +59,9 @@ public class AudienceService {
 	return audienceDao.getAll();
     }
 
-    public Page<Audience> getSelectedPage(Pageable pageable) {
+    public Page<Audience> getAll(Pageable pageable) {
 	log.debug("get audiences by page");
-	return new PageImpl<>(audienceDao.getByPage(pageable), pageable, audienceDao.count());
+	return audienceDao.getAll(pageable);
     }
 
     public void delete(Audience audience) {

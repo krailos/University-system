@@ -1,8 +1,11 @@
 package ua.com.foxminded.krailo.university.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 public interface GenericDao<Entity> {
@@ -15,10 +18,14 @@ public interface GenericDao<Entity> {
 
     void delete(Entity entity);
 
-    List<Entity> getByPage(Pageable pageable);
-
     List<Entity> getAll();
 
-    int count();
+    default Page<Entity> getAll(Pageable pageable) {
+	return new PageImpl<>(new ArrayList<>());
+    }
+
+    default int count() {
+	return 0;
+    }
 
 }
