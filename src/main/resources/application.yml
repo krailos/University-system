@@ -4,7 +4,7 @@ hibernate.show_sql: true
 hibernate.format_sql: true
 current_session_context_class: thread
 hibernate.enable_lazy_load_no_trans: true
-spring.data.pageable.defaulPageSize: 3
+spring.data.pageable.defaultPageSize: 3
 
 
 spring.datasource.driver-class-name: org.postgresql.Driver
@@ -18,5 +18,5 @@ spring.thymeleaf.prefix: classpath:/templates/
 
 group.maxSize: 30
 vocation.durationBykind: {GENERAL:'14', PREFERENTIAL:'24'}
-page.defaultPageSize: 5
+
 
