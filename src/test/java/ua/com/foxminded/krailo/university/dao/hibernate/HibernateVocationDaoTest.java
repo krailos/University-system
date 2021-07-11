@@ -15,7 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.config.ConfigTest;
+import ua.com.foxminded.krailo.university.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Teacher;

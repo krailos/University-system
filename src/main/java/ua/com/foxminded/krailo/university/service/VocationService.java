@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,7 @@ import ua.com.foxminded.krailo.university.model.VocationKind;
 
 @Transactional
 @Service
+@ConfigurationProperties
 public class VocationService {
 
     private static final Logger log = LoggerFactory.getLogger(VocationService.class);
@@ -38,7 +40,7 @@ public class VocationService {
     private VocationDao vocationDao;
     private LessonDao lessonDao;
     private HolidayDao holidayDao;
-    @Value("#{${vocation.durationBykind}}")
+ //   @Value("#{${vocationDurationBykind}}")
     private Map<VocationKind, Integer> vocationDurationBykind;
 
     public VocationService(VocationDao vocationDaoInt, LessonDao lessonDaoInt, HolidayDao holidayDaoInt) {

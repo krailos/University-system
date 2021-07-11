@@ -22,7 +22,6 @@ import ua.com.foxminded.krailo.university.model.Student;
 
 @Transactional
 @Service
-@PropertySource("classpath:config.properties")
 public class StudentService {
 
     private static final Logger log = LoggerFactory.getLogger(StudentService.class);

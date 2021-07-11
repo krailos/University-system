@@ -28,42 +28,11 @@ import ua.com.foxminded.krailo.university.formatters.TeacherFormatter;
 
 @EnableSpringDataWebSupport
 @Configuration
-@ComponentScan("ua.com.foxminded.krailo.university")
-@PropertySource("classpath:application.yml")
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${spring.data.pageable.defaulPageSize}")
+    @Value("${spring.data.pageable.defaultPageSize}")
     private int pagableDefaultPageSize;
-
-//    @Bean
-//    public SpringResourceTemplateResolver templateResolver(ApplicationContext applicationContext) {
-//	SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-//	templateResolver.setApplicationContext(applicationContext);
-//	templateResolver.setPrefix("classpath:/templates/");
-//	templateResolver.setSuffix(".html");
-//	templateResolver.setCacheable(false);
-//	templateResolver.setCharacterEncoding("UTF-8");
-//	return templateResolver;
-//    }
-//
-//    @Bean
-//    public SpringTemplateEngine templateEngine(SpringResourceTemplateResolver templateResolver) {
-//	SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-//	templateEngine.setTemplateResolver(templateResolver);
-//	templateEngine.setEnableSpringELCompiler(true);
-//	return templateEngine;
-//    }
-//
-//    @Bean
-//    public ViewResolver viewResolver(SpringTemplateEngine templateEngine) {
-//	ThymeleafViewResolver resolver = new ThymeleafViewResolver();
-//	resolver.setTemplateEngine(templateEngine);
-//	templateEngine.addDialect(new Java8TimeDialect());
-//	resolver.setCharacterEncoding("UTF-8");
-//	resolver.setContentType("text/html; charset=UTF-8");
-//	return resolver;
-//    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

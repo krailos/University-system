@@ -10,23 +10,29 @@ import java.util.Optional;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.orm.hibernate5.HibernateCallback;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.config.ConfigTest;
+import ua.com.foxminded.krailo.university.ConfigTest;
 import ua.com.foxminded.krailo.university.dao.AudienceDao;
 import ua.com.foxminded.krailo.university.model.Audience;
 
+@ExtendWith(SpringExtension.class)
 @Transactional
 @SpringJUnitWebConfig(ConfigTest.class)
+@SpringBootTest(classes = ConfigTest.class)
+@AutoConfigureMockMvc
 @Sql({ "classpath:schema.sql", "classpath:dataTest.sql" })
 class HibernateAudienceDaoTest {
 
@@ -117,10 +123,10 @@ class HibernateAudienceDaoTest {
 
     @Test
     void givenAudiences_whenCount_thenCountReturned() {
-		
+
 	int actual = audienceDao.count();
 
-	assertEquals(hibernateTemplate.execute( session -> session.createQuery("from Audience").list().size()), actual);
+	assertEquals(hibernateTemplate.execute(session -> session.createQuery("from Audience").list().size()), actual);
     }
 
     @Test

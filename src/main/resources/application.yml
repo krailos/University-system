@@ -1,22 +1,26 @@
-hibernate.dialect: org.hibernate.dialect.PostgreSQL10Dialect
-hibernate.hbm2ddl.auto: update
-hibernate.show_sql: true
-hibernate.format_sql: true
-current_session_context_class: thread
-hibernate.enable_lazy_load_no_trans: true
-spring.data.pageable.defaultPageSize: 3
-
-
 spring.datasource.driver-class-name: org.postgresql.Driver
 spring.datasource.url: jdbc:postgresql://localhost:5432/kneu
 spring.datasource.username: postgres
 spring.datasource.password: postgres
+
+hibernate:
+   dialect: org.hibernate.dialect.PostgreSQL10Dialect
+   hbm2ddl.auto: update
+   show_sql: true
+   format_sql: true
+   enable_lazy_load_no_trans: true
+   
+spring.data.pageable.defaultPageSize: 3
+current_session_context_class: thread
+
 
 spring.thymeleaf.suffix: .html
 spring.thymeleaf.mode: HTML5
 spring.thymeleaf.prefix: classpath:/templates/
 
 group.maxSize: 30
-vocation.durationBykind: {GENERAL:'14', PREFERENTIAL:'24'}
+vocationDurationBykind:
+  GENERAL: 14
+  PREFERENTIAL: 24
 
-
+ 
