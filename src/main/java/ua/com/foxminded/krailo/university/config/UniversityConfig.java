@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement(proxyTargetClass = true)
 public class UniversityConfig {
 
-    @Bean
+    @Bean	
     public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
 	LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
 	sessionFactory.setDataSource(dataSource);

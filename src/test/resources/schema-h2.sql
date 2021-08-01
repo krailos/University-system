@@ -19,6 +19,7 @@ DROP TYPE IF EXISTS kind CASCADE;
 CREATE TYPE gender AS enum ('MALE', 'FEMALE');
 CREATE TYPE kind AS enum ('GENERAL', 'PREFERENTIAL');
 
+
 CREATE TABLE holidays (
 	id serial NOT NULL,
 	name character varying (50) NOT NULL,
