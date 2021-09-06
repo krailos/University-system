@@ -3,6 +3,8 @@
 import java.time.LocalDate;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -28,6 +30,8 @@ import ua.com.foxminded.krailo.university.util.Paging;
 @Controller
 @RequestMapping("/lessons")
 public class LessonController {
+    
+    private static final Logger log = LoggerFactory.getLogger(LessonController.class);
 
     private LessonService lessonService;
     private LessonTimeService lessonTimeService;
@@ -55,7 +59,9 @@ public class LessonController {
 
     @GetMapping("/{id}")
     public String getLesson(@PathVariable int id, Model model) {
+	log.debug("get lesson by id={}", id);
 	model.addAttribute("lesson", lessonService.getById(id));
+	log.debug("lesson by id={} got", id);
 	return "lessons/lesson";
     }
 

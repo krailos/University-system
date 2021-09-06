@@ -48,6 +48,7 @@ public class TeacherController {
     @GetMapping("/{id}")
     public String getTeacher(@PathVariable int id, Model model) {
 	Teacher teacher = teacherService.getById(id);
+	//System.out.println(teacher.getSubjects());
 	model.addAttribute("teacher", teacher);
 	return "teachers/teacher";
     }

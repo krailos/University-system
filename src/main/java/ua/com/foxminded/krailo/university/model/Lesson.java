@@ -55,7 +55,7 @@ public class Lesson {
     private Audience audience;
     @ManyToOne
     private Teacher teacher;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "lessons_groups", joinColumns = { @JoinColumn(name = "lesson_id") }, inverseJoinColumns = {
 	    @JoinColumn(name = "group_id") })
     private List<Group> groups = new ArrayList<>();

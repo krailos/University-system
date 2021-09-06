@@ -9,6 +9,8 @@ import javax.persistence.NoResultException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -20,10 +22,13 @@ import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.LessonTime;
 import ua.com.foxminded.krailo.university.model.Teacher;
+import ua.com.foxminded.krailo.university.service.LessonService;
 
 @Repository
 public class HibernateLessonDao implements LessonDao {
 
+    private static final Logger log = LoggerFactory.getLogger(HibernateLessonDao.class);
+    
     SessionFactory sessionFactory;
 
     public HibernateLessonDao(SessionFactory sessionFactory) {
@@ -32,6 +37,7 @@ public class HibernateLessonDao implements LessonDao {
 
     @Override
     public Optional<Lesson> getById(int id) {
+	log.debug("get lesson by id={}", id);
 	Session session = sessionFactory.getCurrentSession();
 	return Optional.ofNullable(session.get(Lesson.class, id));
     }

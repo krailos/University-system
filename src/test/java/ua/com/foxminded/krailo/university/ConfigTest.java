@@ -15,16 +15,6 @@ import ua.com.foxminded.krailo.university.config.UniversityConfig;
 @PropertySource("classpath:application.yml")
 public class ConfigTest {
 
-//    @Bean
-//    public DataSource dataSource() {
-//	DriverManagerDataSource dataSource = new DriverManagerDataSource();
-//	dataSource.setDriverClassName("org.h2.Driver");
-//	dataSource.setUrl("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
-//	dataSource.setUsername("sa");
-//	dataSource.setPassword("");
-//	return dataSource;
-//    }
-
     @Bean
     public HibernateTemplate hibernateTemplate(SessionFactory sessionFactory) {
 	return new HibernateTemplate(sessionFactory);

@@ -13,11 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.orm.hibernate5.HibernateTemplate;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,10 +54,11 @@ class HibernateAudienceDaoTest {
     void givenAudienceWithExistingNumber_whenCreate_thenDaoConstraintViolationExceptionThrown() {
 	Audience audience = Audience.builder().number("1").capacity(120).description("description3").build();
 
-	String actual = assertThrows(ConstraintViolationException.class, () -> audienceDao.create(audience))
+	String actual = assertThrows(DataIntegrityViolationException.class, () -> audienceDao.create(audience))
 		.getMessage();
 
-	String expected = "could not execute statement";
+	String expected = "could not execute statement; SQL [n/a]; constraint [\"PUBLIC.CONSTRAINT_INDEX_B ON PUBLIC.AUDIENCES(NUMBER) VALUES 1\"; SQL statement:\n"
+		+ "insert into audiences (id, capacity, description, number) values (null, ?, ?, ?) [23505-200]]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement";
 	assertEquals(expected, actual);
     }
 

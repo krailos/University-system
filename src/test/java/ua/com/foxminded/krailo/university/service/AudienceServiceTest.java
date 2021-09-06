@@ -27,10 +27,11 @@ import ua.com.foxminded.krailo.university.model.Audience;
 @ExtendWith(MockitoExtension.class)
 class AudienceServiceTest {
 
-    @InjectMocks
-    private AudienceService audienceService;
     @Mock
     private AudienceDao audienceDao;
+    @InjectMocks
+    private AudienceService audienceService;
+
 
     @Test
     void givenAudience_whenCreate_thenCreated() {

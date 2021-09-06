@@ -8,7 +8,6 @@ hibernate:
    hbm2ddl.auto: update
    show_sql: true
    format_sql: true
-   enable_lazy_load_no_trans: true
    
 spring.data.pageable.defaultPageSize: 3
 current_session_context_class: thread
