@@ -247,9 +247,12 @@ public class Lesson {
 
     @Override
     public String toString() {
-	return "Lesson [id=" + id + ", date=" + date + ", lessonTime=" + lessonTime.getId() + ", subject="
-		+ subject.getId() + ", audience=" + audience.getId() + ", teacher=" + teacher.getId() + ", groupsSize="
-		+ groups.size() + "]";
+	return "Lesson [id=" + id
+		+ ", date=" + date
+		+ ", lessonTime=" + (lessonTime ==  null  ? "null": lessonTime.getId())
+		+ ", subject="+ (subject ==  null  ? "null": subject.getId())
+		+ ", audience=" + (audience ==  null  ? "null": audience.getId())
+		+ ", teacher=" + (teacher ==  null  ? "null": teacher.getId()) + "]";
     }
 
 }

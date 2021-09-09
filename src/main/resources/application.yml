@@ -1,23 +1,25 @@
-spring.datasource.driver-class-name: org.postgresql.Driver
-spring.datasource.url: jdbc:postgresql://localhost:5432/kneu
-spring.datasource.username: postgres
-spring.datasource.password: postgres
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/kneu
+    username: postgres
+    password: postgres
+  thymeleaf:
+    suffix: .html
+    mode: HTML5
+    prefix: classpath:/templates/
+  data:
+    pageable:
+      defaultPageSize: 3
 
 hibernate:
    dialect: org.hibernate.dialect.PostgreSQL10Dialect
    hbm2ddl.auto: update
    show_sql: true
    format_sql: true
-   
-spring.data.pageable.defaultPageSize: 3
-current_session_context_class: thread
 
-
-spring.thymeleaf.suffix: .html
-spring.thymeleaf.mode: HTML5
-spring.thymeleaf.prefix: classpath:/templates/
-
-group.maxSize: 30
+group:
+  maxSize: 30
 vocationDurationBykind:
   GENERAL: 14
   PREFERENTIAL: 24

@@ -12,16 +12,14 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.orm.hibernate5.HibernateTemplate;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.ConfigTest;
@@ -36,8 +34,8 @@ import ua.com.foxminded.krailo.university.model.Year;
 
 @ExtendWith(SpringExtension.class)
 @Transactional
-@Import(ConfigTest.class)
-@WebAppConfiguration
+@SpringBootTest
+@ContextConfiguration(classes = ConfigTest.class)
 class HibernateLessonDaoTest {
 
     @Autowired
@@ -79,7 +77,7 @@ class HibernateLessonDaoTest {
     @Test
     void givenLessons_whenGetByPage_thenLessonsReturned() {
 	int pageNo = 0;
-	int pageSize = 3;
+	int pageSize = 1;
 	Pageable pageable = PageRequest.of(pageNo, pageSize);
 	List<Lesson> lessons = new ArrayList<>();
 	lessons.add(Lesson.builder().id(1).date(LocalDate.of(2021, 01, 01))
@@ -95,29 +93,7 @@ class HibernateLessonDaoTest {
 			Group.builder().id(2).name("group 2").year(Year.builder().id(1).name("year 1").build())
 				.build()))
 		.build());
-	lessons.add(Lesson.builder().id(2).date(LocalDate.of(2021, 01, 01))
-		.lessonTime(LessonTime.builder().id(2).orderNumber("second lesson").startTime(LocalTime.of(9, 30))
-			.endTime(LocalTime.of(10, 15)).build())
-		.subject(Subject.builder().id(2).name("subject 2").build())
-		.audience(Audience.builder().id(2).number("2").capacity(120).description("description2").build())
-		.teacher(Teacher.builder().id(2).firstName("first name 2").lastName("last name 2")
-			.birthDate(LocalDate.of(2002, 02, 02)).phone("0670000002").address("address 2").email("email 2")
-			.degree("0").gender(Gender.FEMALE).build())
-		.groups(Arrays.asList(
-			Group.builder().id(1).name("group 1").year(Year.builder().id(1).name("year 1").build()).build(),
-			Group.builder().id(2).name("group 2").year(Year.builder().id(1).name("year 1").build())
-				.build()))
-		.build());
-	lessons.add(Lesson.builder().id(3).date(LocalDate.of(2021, 01, 02))
-		.lessonTime(LessonTime.builder().id(1).orderNumber("first lesson").startTime(LocalTime.of(8, 30))
-			.endTime(LocalTime.of(9, 15)).build())
-		.subject(Subject.builder().id(1).name("subject 1").build())
-		.audience(Audience.builder().id(1).number("1").capacity(300).description("description1").build())
-		.teacher(Teacher.builder().id(1).firstName("first name 1").lastName("last name 1")
-			.birthDate(LocalDate.of(2000, 01, 01)).phone("0670000001").address("address 1").email("email 1")
-			.degree("0").gender(Gender.MALE).build())
-		.build());
-	lessons.sort((Lesson l1, Lesson l2) -> l1.getDate().compareTo(l2.getDate()));
+
 	Page<Lesson> expected = new PageImpl<>(lessons, pageable, 3);
 
 	Page<Lesson> actual = lessonDao.getAll(pageable);
@@ -379,7 +355,7 @@ class HibernateLessonDaoTest {
 
 	int actual = lessonDao.count();
 
-	assertEquals(hibernateTemplate.execute( session -> session.createQuery("from Lesson").list().size()), actual);
+	assertEquals(hibernateTemplate.execute(session -> session.createQuery("from Lesson").list().size()), actual);
     }
 
     private Lesson getLesson() {

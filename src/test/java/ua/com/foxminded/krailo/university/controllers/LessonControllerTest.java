@@ -42,7 +42,6 @@ import ua.com.foxminded.krailo.university.service.LessonService;
 import ua.com.foxminded.krailo.university.service.LessonTimeService;
 import ua.com.foxminded.krailo.university.service.SubjectService;
 import ua.com.foxminded.krailo.university.service.TeacherService;
-import ua.com.foxminded.krailo.university.util.Paging;
 
 @ExtendWith(MockitoExtension.class)
 class LessonControllerTest {
@@ -65,8 +64,7 @@ class LessonControllerTest {
 
     @BeforeEach
     public void init() {
-	mockMvc = standaloneSetup(lessonController)
-		.setControllerAdvice(new ControllerExceptionHandler())
+	mockMvc = standaloneSetup(lessonController).setControllerAdvice(new ControllerExceptionHandler())
 		.setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver()).build();
     }
 
@@ -81,10 +79,7 @@ class LessonControllerTest {
 	Page<Lesson> expected = new PageImpl<>(lessons, pageable, allLessonsCount);
 	when(lessonService.getSelectedPage(pageable)).thenReturn(expected);
 
-	mockMvc.perform(get("/lessons")
-		.param("page", "0")
-		.param("size", "3"))
-		.andExpect(view().name("lessons/all"))
+	mockMvc.perform(get("/lessons").param("page", "0").param("size", "3")).andExpect(view().name("lessons/all"))
 		.andExpect(model().attribute("lessonsPage", expected));
     }
 
@@ -99,10 +94,7 @@ class LessonControllerTest {
 	Page<Lesson> expected = new PageImpl<>(lessons, pageable, allLessonsCount);
 	when(lessonService.getSelectedPage(pageable)).thenReturn(expected);
 
-	mockMvc.perform(get("/lessons")
-		.param("page", "1")
-		.param("size", "3"))
-		.andExpect(view().name("lessons/all"))
+	mockMvc.perform(get("/lessons").param("page", "1").param("size", "3")).andExpect(view().name("lessons/all"))
 		.andExpect(model().attribute("lessonsPage", expected));
     }
 
@@ -111,11 +103,8 @@ class LessonControllerTest {
 	Lesson expected = buildLessons().get(0);
 	when(lessonService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/lessons/{id}", "1")
-		.param("pageSize", "2"))
-		.andExpect(view().name("lessons/lesson"))
-		.andExpect(status().isOk())
-		.andExpect(model().attribute("lesson", expected));
+	mockMvc.perform(get("/lessons/{id}", "1").param("pageSize", "2")).andExpect(view().name("lessons/lesson"))
+		.andExpect(status().isOk()).andExpect(model().attribute("lesson", expected));
 
     }
 
@@ -123,8 +112,7 @@ class LessonControllerTest {
     void givenWrongLessonId_whenGetLesson_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(lessonService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/lessons/{id}", "1"))
-		.andExpect(view().name("errors/error"))
+	mockMvc.perform(get("/lessons/{id}", "1")).andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
@@ -141,14 +129,10 @@ class LessonControllerTest {
 	List<Teacher> teachers = buildTeachers();
 	when(teacherService.getAll()).thenReturn(teachers);
 
-	mockMvc.perform(get("/lessons/create"))
-		.andExpect(view().name("lessons/edit"))
-		.andExpect(status().isOk())
-		.andExpect(model().attributeExists("lesson"))
-		.andExpect(model().attribute("subjects", subjects))
+	mockMvc.perform(get("/lessons/create")).andExpect(view().name("lessons/edit")).andExpect(status().isOk())
+		.andExpect(model().attribute("lesson", new Lesson())).andExpect(model().attribute("subjects", subjects))
 		.andExpect(model().attribute("lessonTimes", lessonTimes))
-		.andExpect(model().attribute("audiences", audiences))
-		.andExpect(model().attribute("teachers", teachers))
+		.andExpect(model().attribute("audiences", audiences)).andExpect(model().attribute("teachers", teachers))
 		.andExpect(model().attribute("groups", groups));
     }
 
@@ -167,10 +151,9 @@ class LessonControllerTest {
 	Teacher teacher = buildTeachers().get(0);
 	when(teacherService.getById(1)).thenReturn(teacher);
 
-	mockMvc.perform(post("/lessons/save").flashAttr("lesson", lesson))
-		.andExpect(view().name("redirect:/lessons"))
+	mockMvc.perform(post("/lessons/save").flashAttr("lesson", lesson)).andExpect(view().name("redirect:/lessons"))
 		.andExpect(status().is(302));
-	
+
 	verify(lessonService).create(lesson);
     }
 
@@ -188,10 +171,9 @@ class LessonControllerTest {
 	Teacher teacher = buildTeachers().get(0);
 	when(teacherService.getById(1)).thenReturn(teacher);
 
-	mockMvc.perform(post("/lessons/save").flashAttr("lesson", lesson))
-		.andExpect(view().name("redirect:/lessons"))
+	mockMvc.perform(post("/lessons/save").flashAttr("lesson", lesson)).andExpect(view().name("redirect:/lessons"))
 		.andExpect(status().is(302));
-	
+
 	verify(lessonService).update(lesson);
     }
 
@@ -210,14 +192,11 @@ class LessonControllerTest {
 	List<Teacher> teachers = buildTeachers();
 	when(teacherService.getAll()).thenReturn(teachers);
 
-	mockMvc.perform(get("/lessons/edit/{id}", "1"))
-		.andExpect(view().name("lessons/edit"))
-		.andExpect(status().isOk())
-		.andExpect(model().attributeExists("lesson"))
+	mockMvc.perform(get("/lessons/edit/{id}", "1")).andExpect(view().name("lessons/edit"))
+		.andExpect(status().isOk()).andExpect(model().attributeExists("lesson"))
 		.andExpect(model().attribute("subjects", subjects))
 		.andExpect(model().attribute("lessonTimes", lessonTimes))
-		.andExpect(model().attribute("audiences", audiences))
-		.andExpect(model().attribute("teachers", teachers))
+		.andExpect(model().attribute("audiences", audiences)).andExpect(model().attribute("teachers", teachers))
 		.andExpect(model().attribute("groups", groups));
     }
 
@@ -226,14 +205,12 @@ class LessonControllerTest {
 	Lesson lesson = buildLessons().get(0);
 	when(lessonService.getById(1)).thenReturn(lesson);
 
-	mockMvc.perform(post("/lessons/delete").param("id", "1"))
-		.andExpect(view().name("redirect:/lessons"))
+	mockMvc.perform(post("/lessons/delete").param("id", "1")).andExpect(view().name("redirect:/lessons"))
 		.andExpect(status().is(302));
-	
+
 	verify(lessonService).delete(lesson);
     }
-    
-    
+
     @Test
     void givenTeacherStartDateFinishDate_whenFindTeacherForSubstitute_thensubstituteTeacherFormGot() throws Exception {
 	List<Teacher> teachers = buildTeachers();
@@ -251,9 +228,10 @@ class LessonControllerTest {
 		.andExpect(model().attribute("teachersForSubstitite", teachers))
 		.andExpect(model().attribute("teacher", teacher));
     }
-        
+
     @Test
-    void givenNoTeachersForSubstitute_whenFindTeacherForSubstitute_thenNoTeachersForSubstituteThrown() throws Exception {
+    void givenNoTeachersForSubstitute_whenFindTeacherForSubstitute_thenNoTeachersForSubstituteThrown()
+	    throws Exception {
 	LocalDate startDate = LocalDate.now();
 	LocalDate finishDate = LocalDate.now().plusWeeks(1);
 	Teacher teacher = buildTeachers().get(0);
@@ -266,31 +244,30 @@ class LessonControllerTest {
 		.andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "there is no free teachers"));
     }
-    
-    
+
     @Test
     void whenSubstituteTeacherGetForm_thensubstituteTeacherFormGot() throws Exception {
 	List<Teacher> teachers = buildTeachers();
 	when(teacherService.getAll()).thenReturn(teachers);
 
-	mockMvc.perform(get("/lessons/substituteTeacherForm"))
-		.andExpect(view().name("lessons/substituteTeacherForm"))
+	mockMvc.perform(get("/lessons/substituteTeacherForm")).andExpect(view().name("lessons/substituteTeacherForm"))
 		.andExpect(model().attribute("teachers", teachers));
     }
-    
-    @Test 
-    void givenOldTeacherIdNewTeacherIdPeriodSubstitute_whenSubstituteTeacher_thenTeaceherSubstituted() throws Exception{
+
+    @Test
+    void givenOldTeacherIdNewTeacherIdPeriodSubstitute_whenSubstituteTeacher_thenTeaceherSubstituted()
+	    throws Exception {
 	LocalDate startDate = LocalDate.now();
 	LocalDate finishDate = LocalDate.now().plusWeeks(1);
 	Teacher teacher = buildTeachers().get(0);
 	when(teacherService.getById(1)).thenReturn(teacher);
-	
+
 	mockMvc.perform(post("/lessons/substituteTeacher").param("startDate", startDate.toString())
 		.param("finishDate", finishDate.toString()).param("oldId", "1").param("newId", "1"))
 		.andExpect(view().name("redirect:/lessons"));
-	verify(lessonService).substituteTeacher(teacher, teacher, startDate, finishDate);	
+	verify(lessonService).substituteTeacher(teacher, teacher, startDate, finishDate);
     }
-    
+
     private List<Lesson> buildLessons() {
 	return Arrays.asList(Lesson.builder().id(1).lessonTime(LessonTime.builder().id(1).build())
 		.audience(Audience.builder().id(1).build()).subject(Subject.builder().id(1).name("subject1").build())

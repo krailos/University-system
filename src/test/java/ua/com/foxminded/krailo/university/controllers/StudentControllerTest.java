@@ -29,7 +29,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
-import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
@@ -37,7 +36,6 @@ import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.service.GroupService;
 import ua.com.foxminded.krailo.university.service.LessonService;
 import ua.com.foxminded.krailo.university.service.StudentService;
-import ua.com.foxminded.krailo.university.util.Paging;
 
 @ExtendWith(MockitoExtension.class)
 class StudentControllerTest {

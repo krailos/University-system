@@ -11,12 +11,10 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.hibernate5.HibernateTemplate;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.ConfigTest;
@@ -27,8 +25,8 @@ import ua.com.foxminded.krailo.university.model.Teacher;
 
 @ExtendWith(SpringExtension.class)
 @Transactional
-@Import(ConfigTest.class)
-@WebAppConfiguration
+@SpringBootTest
+@ContextConfiguration(classes = ConfigTest.class)
 class HibernateTeacherDaoTest {
 
     @Autowired

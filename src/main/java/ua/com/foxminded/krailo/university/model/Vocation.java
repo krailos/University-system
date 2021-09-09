@@ -207,7 +207,10 @@ public class Vocation {
 
     @Override
     public String toString() {
-	return teacher.toString() + " " + kind + " from " + start + " till " + end;
+	return "Vocation [id=" + id + ", kind=" + kind + ", applyingDate=" + applyingDate + ", start=" + start
+		+ ", end=" + end + ", teacher=" + ( teacher == null ? "null": teacher.getId() ) + "]";
     }
+
+
 
 }

@@ -8,20 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.orm.hibernate5.HibernateTemplate;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.ConfigTest;
@@ -30,8 +28,8 @@ import ua.com.foxminded.krailo.university.model.Audience;
 
 @ExtendWith(SpringExtension.class)
 @Transactional
-@Import(ConfigTest.class)
-@WebAppConfiguration
+@SpringBootTest
+@ContextConfiguration(classes = ConfigTest.class)
 class HibernateAudienceDaoTest {
 
     @Autowired

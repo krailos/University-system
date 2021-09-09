@@ -30,6 +30,8 @@ public class UniversityConfig {
 	transactionManager.setSessionFactory(localSessionFactoryBean.getObject());
 	return transactionManager;
     }
+    
+    
 
 
 }
