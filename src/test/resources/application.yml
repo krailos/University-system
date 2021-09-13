@@ -15,13 +15,6 @@ spring:
     pageable:
       defaultPageSize: 3 
 
-hibernate:
-   dialect: org.hibernate.dialect.PostgreSQL10Dialect
-   hbm2ddl.auto: update
-   show_sql: true
-   format_sql: true
-   enable_lazy_load_no_trans: true
-
 group:
   maxSize: 30
 vocationDurationBykind:
