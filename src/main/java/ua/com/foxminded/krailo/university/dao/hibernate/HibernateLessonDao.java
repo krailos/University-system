@@ -22,7 +22,6 @@ import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.LessonTime;
 import ua.com.foxminded.krailo.university.model.Teacher;
-import ua.com.foxminded.krailo.university.service.LessonService;
 
 @Repository
 public class HibernateLessonDao implements LessonDao {

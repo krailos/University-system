@@ -3,16 +3,12 @@ package ua.com.foxminded.krailo.university.dao.hibernate;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.NoResultException;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.krailo.university.dao.TeacherDao;
-import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
 

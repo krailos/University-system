@@ -62,7 +62,10 @@ class GroupControllerTest {
 	Page<Group> expected = new PageImpl<>(groups, pageable, allGroupsCount);
 	when(groupService.getSelectedPage(pageable)).thenReturn(expected);
 
-	mockMvc.perform(get("/groups").param("page", "0").param("size", "3")).andExpect(view().name("groups/all"))
+	mockMvc.perform(get("/groups")
+		.param("page", "0")
+		.param("size", "3"))
+		.andExpect(view().name("groups/all"))
 		.andExpect(model().attribute("groupsPage", expected));
     }
 
@@ -77,7 +80,10 @@ class GroupControllerTest {
 	Page<Group> expected = new PageImpl<>(groups, pageable, allGroupsCount);
 	when(groupService.getSelectedPage(pageable)).thenReturn(expected);
 
-	mockMvc.perform(get("/groups").param("page", "1").param("size", "3")).andExpect(view().name("groups/all"))
+	mockMvc.perform(get("/groups")
+		.param("page", "1")
+		.param("size", "3"))
+		.andExpect(view().name("groups/all"))
 		.andExpect(model().attribute("groupsPage", expected));
     }
 
@@ -86,7 +92,9 @@ class GroupControllerTest {
 	Group expected = buildGroups().get(0);
 	when(groupService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/groups/{id}", "1")).andExpect(view().name("groups/group")).andExpect(status().isOk())
+	mockMvc.perform(get("/groups/{id}", "1"))
+		.andExpect(view().name("groups/group"))
+		.andExpect(status().isOk())
 		.andExpect(model().attribute("group", expected));
     }
 
@@ -94,7 +102,8 @@ class GroupControllerTest {
     void givenWrongGroupId_whenGetGroup_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(groupService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/groups/{id}", "1")).andExpect(view().name("errors/error"))
+	mockMvc.perform(get("/groups/{id}", "1"))
+		.andExpect(view().name("errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
@@ -103,8 +112,10 @@ class GroupControllerTest {
 	List<Year> years = buildYears();
 	when(yearService.getAll()).thenReturn(years);
 
-	mockMvc.perform(get("/groups/create")).andExpect(view().name("groups/edit")).andExpect(status().isOk())
-		.andExpect(model().attribute("years", years)).andExpect(model().attributeExists("group"));
+	mockMvc.perform(get("/groups/create"))
+		.andExpect(view().name("groups/edit")).andExpect(status().isOk())
+		.andExpect(model().attribute("years", years))
+		.andExpect(model().attributeExists("group"));
     }
 
     @Test
@@ -112,7 +123,9 @@ class GroupControllerTest {
 	Group group = buildGroups().get(0);
 	group.setId(0);
 
-	mockMvc.perform(post("/groups/save").flashAttr("group", group)).andExpect(view().name("redirect:/groups"))
+	mockMvc.perform(post("/groups/save")
+		.flashAttr("group", group))
+		.andExpect(view().name("redirect:/groups"))
 		.andExpect(status().is(302));
 
 	verify(groupService).create(group);
@@ -122,7 +135,9 @@ class GroupControllerTest {
     void givenUpdatedGroup_whenUpdateGroup_thenGroupUpdated() throws Exception {
 	Group group = buildGroups().get(0);
 
-	mockMvc.perform(post("/groups/save").flashAttr("group", group)).andExpect(view().name("redirect:/groups"))
+	mockMvc.perform(post("/groups/save")
+		.flashAttr("group", group))
+		.andExpect(view().name("redirect:/groups"))
 		.andExpect(status().is(302));
 
 	verify(groupService).update(group);
@@ -135,8 +150,11 @@ class GroupControllerTest {
 	Group group = buildGroups().get(0);
 	when(groupService.getById(1)).thenReturn(group);
 
-	mockMvc.perform(get("/groups/edit/{id}", "1")).andExpect(view().name("groups/edit")).andExpect(status().isOk())
-		.andExpect(model().attribute("group", group)).andExpect(model().attribute("years", years));
+	mockMvc.perform(get("/groups/edit/{id}", "1"))
+		.andExpect(view().name("groups/edit"))
+		.andExpect(status().isOk())
+		.andExpect(model().attribute("group", group))
+		.andExpect(model().attribute("years", years));
     }
 
     @Test
@@ -144,7 +162,8 @@ class GroupControllerTest {
 	Group group = buildGroups().get(0);
 	when(groupService.getById(1)).thenReturn(group);
 
-	mockMvc.perform(post("/groups/delete").param("id", "1")).andExpect(view().name("redirect:/groups"))
+	mockMvc.perform(post("/groups/delete").param("id", "1"))
+		.andExpect(view().name("redirect:/groups"))
 		.andExpect(status().is(302));
 
 	verify(groupService).delete(group);

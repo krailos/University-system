@@ -7,13 +7,10 @@ import java.time.LocalDate;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,11 +25,10 @@ import ua.com.foxminded.krailo.university.exception.VocationPeriodTooLongExcepti
 import ua.com.foxminded.krailo.university.model.Holiday;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Vocation;
-import ua.com.foxminded.krailo.university.model.VocationKind;
+import ua.com.foxminded.krailo.university.util.UniversityConfigData;
 
 @Transactional
 @Service
-@ConfigurationProperties
 public class VocationService {
 
     private static final Logger log = LoggerFactory.getLogger(VocationService.class);
@@ -40,13 +36,14 @@ public class VocationService {
     private VocationDao vocationDao;
     private LessonDao lessonDao;
     private HolidayDao holidayDao;
- //   @Value("#{${vocationDurationBykind}}")
-    private Map<VocationKind, Integer> vocationDurationBykind;
+    private UniversityConfigData universityConfigData;
 
-    public VocationService(VocationDao vocationDaoInt, LessonDao lessonDaoInt, HolidayDao holidayDaoInt) {
-	this.vocationDao = vocationDaoInt;
-	this.lessonDao = lessonDaoInt;
-	this.holidayDao = holidayDaoInt;
+    public VocationService(VocationDao vocationDao, LessonDao lessonDao, HolidayDao holidayDao,
+	    UniversityConfigData universityConfigData) {
+	this.vocationDao = vocationDao;
+	this.lessonDao = lessonDao;
+	this.holidayDao = holidayDao;
+	this.universityConfigData = universityConfigData;
     }
 
     public void create(Vocation vocation) {
@@ -114,7 +111,7 @@ public class VocationService {
 	List<LocalDate> vocationDates = getVocationDates(vocations);
 	List<LocalDate> holidays = holidayDao.getAll().stream().map(Holiday::getDate).collect(Collectors.toList());
 	if (vocationDates.stream().filter(d -> !isDateWeekend(d)).filter(d -> !holidays.contains(d))
-		.count() > vocationDurationBykind.get(vocation.getKind())) {
+		.count() > universityConfigData.getVocationDurationBykind().get(vocation.getKind())) {
 	    throw new VocationPeriodTooLongException("vocation duration more then max duration");
 	}
     }

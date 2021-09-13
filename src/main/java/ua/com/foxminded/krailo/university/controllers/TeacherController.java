@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.service.LessonService;
 import ua.com.foxminded.krailo.university.service.SubjectService;
@@ -48,7 +47,6 @@ public class TeacherController {
     @GetMapping("/{id}")
     public String getTeacher(@PathVariable int id, Model model) {
 	Teacher teacher = teacherService.getById(id);
-	//System.out.println(teacher.getSubjects());
 	model.addAttribute("teacher", teacher);
 	return "teachers/teacher";
     }

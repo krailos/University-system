@@ -4,24 +4,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/kneu
     username: postgres
     password: postgres
-  thymeleaf:
-    suffix: .html
-    mode: HTML5
-    prefix: classpath:/templates/
-  data:
-    pageable:
-      defaultPageSize: 3
 
-hibernate:
-   dialect: org.hibernate.dialect.PostgreSQL10Dialect
-   hbm2ddl.auto: update
-   show_sql: true
-   format_sql: true
-
-group:
-  maxSize: 30
-vocationDurationBykind:
-  GENERAL: 14
-  PREFERENTIAL: 24
 
  
