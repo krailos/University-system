@@ -21,13 +21,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import ua.com.foxminded.krailo.university.config.UniversityConfigProperties;
 import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.StudentDao;
 import ua.com.foxminded.krailo.university.exception.ServiceException;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Student;
-import ua.com.foxminded.krailo.university.util.UniversityConfigData;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
@@ -39,11 +39,11 @@ class StudentServiceTest {
     @Mock
     private GroupDao groupDao;
     @Mock
-    private UniversityConfigData universityConfigData;
+    private UniversityConfigProperties universityConfigProperties;
 
     @Test
     void givenStudent_whenCreate_thenCreated() {
-	when(universityConfigData.getGroupMaxSize()).thenReturn(30);
+	when(universityConfigProperties.getMaxGroupSize()).thenReturn(30);
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
@@ -56,7 +56,7 @@ class StudentServiceTest {
 
     @Test
     void givenStudentWithNotEnoughtGroupCapacity_whenCreate_thenThrowServiceException() {
-	when(universityConfigData.getGroupMaxSize()).thenReturn(1);
+	when(universityConfigProperties.getMaxGroupSize()).thenReturn(1);
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
@@ -69,7 +69,7 @@ class StudentServiceTest {
 
     @Test
     void givenStudent_whenUpdate_thenUpdated() {
-	when(universityConfigData.getGroupMaxSize()).thenReturn(30);
+	when(universityConfigProperties.getMaxGroupSize()).thenReturn(30);
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
@@ -82,7 +82,7 @@ class StudentServiceTest {
 
     @Test
     void givenStudentWithNotEnoughtGroupCapacity_whenUpdate_thenThrowServiceException() {
-	when(universityConfigData.getGroupMaxSize()).thenReturn(1);
+	when(universityConfigProperties.getMaxGroupSize()).thenReturn(1);
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
@@ -155,7 +155,6 @@ class StudentServiceTest {
 	students.add(createStudent());
 	Page<Student> expected = new PageImpl<>(students, pageable, 3);
 	when(studentDao.getAll(pageable)).thenReturn(expected);
-	
 
 	assertEquals(expected, studentService.getSelectedPage(pageable));
     }

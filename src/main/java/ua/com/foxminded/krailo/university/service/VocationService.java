@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ua.com.foxminded.krailo.university.config.UniversityConfigProperties;
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
@@ -25,7 +26,6 @@ import ua.com.foxminded.krailo.university.exception.VocationPeriodTooLongExcepti
 import ua.com.foxminded.krailo.university.model.Holiday;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Vocation;
-import ua.com.foxminded.krailo.university.util.UniversityConfigData;
 
 @Transactional
 @Service
@@ -36,14 +36,14 @@ public class VocationService {
     private VocationDao vocationDao;
     private LessonDao lessonDao;
     private HolidayDao holidayDao;
-    private UniversityConfigData universityConfigData;
+    private UniversityConfigProperties universityConfigProperties;
 
     public VocationService(VocationDao vocationDao, LessonDao lessonDao, HolidayDao holidayDao,
-	    UniversityConfigData universityConfigData) {
+	    UniversityConfigProperties universityConfigData) {
 	this.vocationDao = vocationDao;
 	this.lessonDao = lessonDao;
 	this.holidayDao = holidayDao;
-	this.universityConfigData = universityConfigData;
+	this.universityConfigProperties = universityConfigData;
     }
 
     public void create(Vocation vocation) {
@@ -111,7 +111,7 @@ public class VocationService {
 	List<LocalDate> vocationDates = getVocationDates(vocations);
 	List<LocalDate> holidays = holidayDao.getAll().stream().map(Holiday::getDate).collect(Collectors.toList());
 	if (vocationDates.stream().filter(d -> !isDateWeekend(d)).filter(d -> !holidays.contains(d))
-		.count() > universityConfigData.getVocationDurationBykind().get(vocation.getKind())) {
+		.count() > universityConfigProperties.getVocationDurationBykind().get(vocation.getKind())) {
 	    throw new VocationPeriodTooLongException("vocation duration more then max duration");
 	}
     }

@@ -19,11 +19,12 @@ hibernate:
    format_sql: true
    enable_lazy_load_no_trans: true
 
-group:
-  maxSize: 30
-vocationDurationBykind:
-  GENERAL: 14
-  PREFERENTIAL: 24
+university:
+  group:
+    maxGroupSize: 30
+  vocationDurationBykind:
+    GENERAL: 14
+    PREFERENTIAL: 24
 
 
  

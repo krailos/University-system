@@ -11,13 +11,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ua.com.foxminded.krailo.university.config.UniversityConfigProperties;
 import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.StudentDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.GroupOverflowException;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Student;
-import ua.com.foxminded.krailo.university.util.UniversityConfigData;
 
 @Transactional
 @Service
@@ -27,9 +27,9 @@ public class StudentService {
 
     private StudentDao studentDao;
     private GroupDao groupDao;
-    private UniversityConfigData universityConfigData;
+    private UniversityConfigProperties universityConfigData;
 
-    public StudentService(StudentDao studentDao, GroupDao groupDao, UniversityConfigData universityConfigData) {
+    public StudentService(StudentDao studentDao, GroupDao groupDao, UniversityConfigProperties universityConfigData) {
 	this.studentDao = studentDao;
 	this.groupDao = groupDao;
 	this.universityConfigData = universityConfigData;
@@ -72,9 +72,9 @@ public class StudentService {
 	Group existingGroup = groupDao.getById(student.getGroup().getId())
 		.orElseThrow(() -> new EntityNotFoundException(
 			"group for this student not found, groupId=" + student.getGroup().getId()));
-	if (existingGroup.getStudents().size() >= universityConfigData.getGroupMaxSize()) {
+	if (existingGroup.getStudents().size() >= universityConfigData.getMaxGroupSize()) {
 	    throw new GroupOverflowException(
-		    "group capacity more then groupMaxSize=" + universityConfigData.getGroupMaxSize());
+		    "group capacity more then groupMaxSize=" + universityConfigData.getMaxGroupSize());
 	}
     }
 

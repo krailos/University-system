@@ -20,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ua.com.foxminded.krailo.university.config.UniversityConfigProperties;
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
@@ -32,7 +33,6 @@ import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Vocation;
 import ua.com.foxminded.krailo.university.model.VocationKind;
-import ua.com.foxminded.krailo.university.util.UniversityConfigData;
 
 @ExtendWith(MockitoExtension.class)
 class VocationServiceTest {
@@ -44,7 +44,7 @@ class VocationServiceTest {
     @Mock
     private HolidayDao holidayDao;
     @Mock
-    private UniversityConfigData universityConfigData;
+    private UniversityConfigProperties universityConfigData;
     @InjectMocks
     private VocationService vocationService;
 

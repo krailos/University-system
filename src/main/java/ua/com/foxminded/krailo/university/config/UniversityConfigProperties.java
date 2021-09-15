@@ -1,20 +1,18 @@
-package ua.com.foxminded.krailo.university.util;
+package ua.com.foxminded.krailo.university.config;
 
 import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.annotation.Configuration;
 
 import ua.com.foxminded.krailo.university.model.VocationKind;
 
-@Transactional
-@Component
+@Configuration
 @ConfigurationProperties
-public class UniversityConfigData {
+public class UniversityConfigProperties {
 
     private Map<VocationKind, Integer> vocationDurationBykind;
-    private int groupMaxSize;
+    private int maxGroupSize;
 
     public Map<VocationKind, Integer> getVocationDurationBykind() {
 	return vocationDurationBykind;
@@ -24,12 +22,12 @@ public class UniversityConfigData {
 	this.vocationDurationBykind = vocationDurationBykind;
     }
 
-    public int getGroupMaxSize() {
-	return groupMaxSize;
+    public int getMaxGroupSize() {
+	return maxGroupSize;
     }
 
-    public void setGroupMaxSize(int groupMaxSize) {
-	this.groupMaxSize = groupMaxSize;
+    public void setMaxGroupSize(int maxGroupSize) {
+	this.maxGroupSize = maxGroupSize;
     }
 
 }
