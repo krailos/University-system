@@ -12,13 +12,14 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		<springframework.boot>2.4.4</springframework.boot>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
-				<version>2.4.4</version>
+				<version>${springframework.boot}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

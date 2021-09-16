@@ -27,15 +27,16 @@ public class StudentService {
 
     private StudentDao studentDao;
     private GroupDao groupDao;
-    private UniversityConfigProperties universityConfigData;
+    private UniversityConfigProperties universityConfigProperties;
 
     public StudentService(StudentDao studentDao, GroupDao groupDao, UniversityConfigProperties universityConfigData) {
 	this.studentDao = studentDao;
 	this.groupDao = groupDao;
-	this.universityConfigData = universityConfigData;
+	this.universityConfigProperties = universityConfigData;
     }
 
     public void create(Student student) {
+	System.out.println( universityConfigProperties.getMaxGroupSize());
 	log.debug("Create student={}", student);
 	checkGroupCapacityNotTooBig(student);
 	studentDao.create(student);
@@ -72,9 +73,9 @@ public class StudentService {
 	Group existingGroup = groupDao.getById(student.getGroup().getId())
 		.orElseThrow(() -> new EntityNotFoundException(
 			"group for this student not found, groupId=" + student.getGroup().getId()));
-	if (existingGroup.getStudents().size() >= universityConfigData.getMaxGroupSize()) {
+	if (existingGroup.getStudents().size() >= universityConfigProperties.getMaxGroupSize()) {
 	    throw new GroupOverflowException(
-		    "group capacity more then groupMaxSize=" + universityConfigData.getMaxGroupSize());
+		    "group capacity more then groupMaxSize=" + universityConfigProperties.getMaxGroupSize());
 	}
     }
 

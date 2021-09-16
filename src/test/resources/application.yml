@@ -9,4 +9,4 @@ spring:
     password:
   data:
     pageable:
-      defaultPageSize: 3 
+      defaultPageSize: 3

@@ -3,12 +3,10 @@ package ua.com.foxminded.krailo.university.config;
 import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
 import ua.com.foxminded.krailo.university.model.VocationKind;
 
-@Configuration
-@ConfigurationProperties
+@ConfigurationProperties(prefix = "university")
 public class UniversityConfigProperties {
 
     private Map<VocationKind, Integer> vocationDurationBykind;
