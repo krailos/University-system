@@ -36,7 +36,6 @@ public class StudentService {
     }
 
     public void create(Student student) {
-	System.out.println( universityConfigProperties.getMaxGroupSize());
 	log.debug("Create student={}", student);
 	checkGroupCapacityNotTooBig(student);
 	studentDao.create(student);
