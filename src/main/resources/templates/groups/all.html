@@ -167,19 +167,19 @@
 
 				<div class="col-10 offset-1 text-right">
                     <a th:if="${groupsPage.hasPrevious()}"
-                        th:href="@{~/university/groups?size=} + ${groupsPage.getSize()} + '&page=' + ${groupsPage.getNumber()}">Prev.</a>
+                        th:href="@{~/groups?size=} + ${groupsPage.getSize()} + '&page=' + ${groupsPage.getNumber()}">Prev.</a>
                     <span th:unless="${groupsPage.hasPrevious()}">Prev.</span>
                     &nbsp;
 
                     <th:block th:each="pageNo : ${#numbers.sequence( 1, groupsPage.getTotalPages(), 1)}">
                         <a th:if="${groupsPage.getNumber()+1 != pageNo}" th:text="${pageNo}"
-                            th:href="@{~/university/groups?size=} + ${groupsPage.getSize()} + '&page=' + ${pageNo}"></a>
+                            th:href="@{~/groups?size=} + ${groupsPage.getSize()} + '&page=' + ${pageNo}"></a>
                         <span th:unless="${groupsPage.getNumber()+1 != pageNo}" th:text="${pageNo}"></span>
                         &nbsp;
                     </th:block>
 
                     <a th:if="${groupsPage.hasNext()}"
-                        th:href="@{~/university/groups?size=} + ${groupsPage.getSize()} + '&page=' + ${groupsPage.getNumber()+2}">Next.</a>
+                        th:href="@{~/groups?size=} + ${groupsPage.getSize()} + '&page=' + ${groupsPage.getNumber()+2}">Next.</a>
                     <span th:unless="${groupsPage.hasNext()}">Next.</span>
                 </div>
 

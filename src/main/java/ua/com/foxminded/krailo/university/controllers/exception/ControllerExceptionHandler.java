@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -15,7 +16,7 @@ public class ControllerExceptionHandler {
     public String handleException(Exception e, Model model) {
 	model.addAttribute("message", e.getMessage());
 	log.error("exception message={}", e.getMessage());
-	return "errors/error";
+	return "/error";
     }
 
 }

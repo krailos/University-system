@@ -1,7 +1,5 @@
 package ua.com.foxminded.krailo.university.service;
 
-import static java.lang.String.format;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -12,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.dao.AudienceDao;
+import ua.com.foxminded.krailo.university.dao.jpa.AudienceDaoJpa;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
 import ua.com.foxminded.krailo.university.model.Audience;
@@ -23,45 +21,32 @@ public class AudienceService {
 
     private static final Logger log = LoggerFactory.getLogger(AudienceService.class);
 
-    private AudienceDao audienceDao;
+    private AudienceDaoJpa audienceDao;
 
-    public AudienceService(AudienceDao audienceDaoInt) {
-	this.audienceDao = audienceDaoInt;
+    public AudienceService(AudienceDaoJpa audienceDao) {
+	this.audienceDao = audienceDao;
     }
 
-    public Audience getById(int id) {
+    public Audience getById(Integer id) {
 	log.debug("get audience by id={}", id);
-	return audienceDao.getById(id)
-		.orElseThrow(() -> new EntityNotFoundException(format("Audience whith id=%s not exist", id)));
+	return audienceDao.findById(id)
+		.orElseThrow(() -> new EntityNotFoundException(String.format("Audience whith id=%s not exist", id)));
     }
 
-    public Audience getByNumber(String number) {
-	log.debug("get audience by number={}", number);
-	return audienceDao.getByNumber(number)
-		.orElseThrow(() -> new EntityNotFoundException(format("Audience whith number=%s not exist", number)));
+    public Page<Audience> getAll(Pageable pageable) {
+	log.debug("get audiences by page");
+	return audienceDao.findAll(pageable);
+    }
+    
+    public List<Audience> getAll() {
+	log.debug("get all audiences");
+	return audienceDao.findAll();
     }
 
     public void create(Audience audience) {
 	log.debug("create audience={}", audience);
 	checkAudienceNumberBeUnique(audience);
-	audienceDao.create(audience);
-
-    }
-
-    public void update(Audience audience) {
-	log.debug("update audience={}", audience);
-	checkAudienceNumberBeUnique(audience);
-	audienceDao.update(audience);
-    }
-
-    public List<Audience> getAll() {
-	log.debug("get all audiences");
-	return audienceDao.getAll();
-    }
-
-    public Page<Audience> getAll(Pageable pageable) {
-	log.debug("get audiences by page");
-	return audienceDao.getAll(pageable);
+	audienceDao.save(audience);
     }
 
     public void delete(Audience audience) {
@@ -69,11 +54,17 @@ public class AudienceService {
 	audienceDao.delete(audience);
     }
 
+    public Audience getByNumber(String number) {
+	log.debug("get audience by number={}", number);
+	return audienceDao.findByNumber(number).orElseThrow(
+		() -> new EntityNotFoundException(String.format("Audience whith number=%s not exist", number)));
+    }
+
     private void checkAudienceNumberBeUnique(Audience audience) {
-	Optional<Audience> existingAudience = audienceDao.getByNumber(audience.getNumber());
+	Optional<Audience> existingAudience = audienceDao.findByNumber(audience.getNumber());
 	log.debug("existing audience={}", existingAudience);
 	if (existingAudience.filter(a -> a.getId() != audience.getId()).isPresent()) {
-	    throw new NotUniqueNameException(format("audiences number=%s  not unique", audience.getNumber()));
+	    throw new NotUniqueNameException(String.format("audiences number=%s  not unique", audience.getNumber()));
 	}
     }
 

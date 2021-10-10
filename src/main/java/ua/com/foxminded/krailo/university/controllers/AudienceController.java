@@ -24,7 +24,7 @@ public class AudienceController {
     }
 
     @GetMapping
-    public String getAllAudiences (Model model, Pageable  pageable) {
+    public String getAllAudiences(Model model, Pageable pageable) {
 	model.addAttribute("audiencesPage", audienceService.getAll(pageable));
 	return "audiences/all";
     }
@@ -42,26 +42,22 @@ public class AudienceController {
 	return "audiences/edit";
     }
 
-    @GetMapping("/edit/{id}")
-    public String editAudience(@PathVariable int id, Model model) {
-	model.addAttribute("audience", audienceService.getById(id));
-	return "audiences/edit";
-    }
-
-    @PostMapping("/save")
-    public String saveAudeince(@ModelAttribute("audience") Audience audience) {
-	if (audience.getId() == 0) {
-	    audienceService.create(audience);
-	} else {
-	    audienceService.update(audience);
-	}
-	return "redirect:/audiences";
-    }
-
     @PostMapping("/delete")
     public String deleteAudience(@RequestParam int id) {
 	audienceService.delete(audienceService.getById(id));
 	return "redirect:/audiences";
+    }
+
+    @PostMapping("/save")
+    public String saveAudeince(@ModelAttribute("audience") Audience audience) {
+	audienceService.create(audience);
+	return "redirect:/audiences";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editAudience(@PathVariable int id, Model model) {
+	model.addAttribute("audience", audienceService.getById(id));
+	return "audiences/edit";
     }
 
 }

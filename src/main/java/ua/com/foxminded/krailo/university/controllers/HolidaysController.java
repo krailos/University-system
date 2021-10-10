@@ -52,11 +52,7 @@ public class HolidaysController {
 
     @PostMapping("/save")
     public String saveHoliday(@ModelAttribute("holiday") Holiday holiday) {
-	if (holiday.getId() == 0) {
-	    holidayService.create(holiday);
-	} else {
-	    holidayService.update(holiday);
-	}
+	    holidayService.create(holiday);	
 	return "redirect:/holidays";
     }
 

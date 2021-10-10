@@ -57,11 +57,7 @@ public class YearController {
 
     @PostMapping("/save")
     public String saveYear(@ModelAttribute("year") Year year) {
-	if (year.getId() == 0) {
-	    yearService.create(year);
-	} else {
-	    yearService.update(year);
-	}
+	yearService.create(year);
 	return "redirect:/years";
     }
 

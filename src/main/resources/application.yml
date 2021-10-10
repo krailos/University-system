@@ -10,14 +10,17 @@ spring:
     prefix: classpath:/templates/
   data:
     pageable:
-      defaultPageSize: 3 
-
-hibernate:
-   dialect: org.hibernate.dialect.PostgreSQL10Dialect
-   hbm2ddl.auto: update
-   show_sql: true
-   format_sql: true
-   enable_lazy_load_no_trans: true
+      defaultPageSize: 3
+  jpa:
+    hibernate:
+      ddl-auto: create
+    generate-ddl: true
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect 
+    
+ 
 
 university:
   maxGroupSize: 30

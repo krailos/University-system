@@ -28,7 +28,7 @@ public class GroupController {
     }
 
     @GetMapping
-    public String getAllGroups(Model model, Pageable  pageable) {
+    public String getAllGroups(Model model, Pageable pageable) {
 	model.addAttribute("groupsPage", groupService.getSelectedPage(pageable));
 	return "groups/all";
     }
@@ -56,11 +56,9 @@ public class GroupController {
 
     @PostMapping("/save")
     public String saveGroup(@ModelAttribute("group") Group group) {
-	if (group.getId() == 0) {
-	    groupService.create(group);
-	} else {
-	    groupService.update(group);
-	}
+
+	groupService.create(group);
+
 	return "redirect:/groups";
     }
 

@@ -1,7 +1,5 @@
 package ua.com.foxminded.krailo.university.service;
 
-import static java.lang.String.format;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Year;
@@ -15,9 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.config.UniversityConfigProperties;
-import ua.com.foxminded.krailo.university.dao.HolidayDao;
-import ua.com.foxminded.krailo.university.dao.LessonDao;
-import ua.com.foxminded.krailo.university.dao.VocationDao;
+import ua.com.foxminded.krailo.university.dao.jpa.HolidayDaoJpa;
+import ua.com.foxminded.krailo.university.dao.jpa.LessonDaoJpa;
+import ua.com.foxminded.krailo.university.dao.jpa.VocationDaoJpa;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.VocationEndBoforeStartException;
 import ua.com.foxminded.krailo.university.exception.VocationPeriodNotFreeException;
@@ -33,46 +31,37 @@ public class VocationService {
 
     private static final Logger log = LoggerFactory.getLogger(VocationService.class);
 
-    private VocationDao vocationDao;
-    private LessonDao lessonDao;
-    private HolidayDao holidayDao;
+    private VocationDaoJpa vocationDao;
+    private LessonDaoJpa lessonDao;
+    private HolidayDaoJpa holidayDao;
     private UniversityConfigProperties universityConfigProperties;
 
-    public VocationService(VocationDao vocationDao, LessonDao lessonDao, HolidayDao holidayDao,
+    public VocationService(VocationDaoJpa vocationDao, LessonDaoJpa lessonDao, HolidayDaoJpa holidayDao,
 	    UniversityConfigProperties universityConfigData) {
 	this.vocationDao = vocationDao;
 	this.lessonDao = lessonDao;
 	this.holidayDao = holidayDao;
 	this.universityConfigProperties = universityConfigData;
     }
+    
+    public Vocation getById(int id) {
+	log.debug("Get vocation by id={}", id);
+	return vocationDao.findById(id)
+		.orElseThrow(() -> new EntityNotFoundException(String.format("Vocation whith id=%s not exist", id)));
+    }
 
+    public List<Vocation> getAll() {
+	log.debug("Get all vocations");
+	return (List<Vocation>) vocationDao.findAll();
+    }
+    
     public void create(Vocation vocation) {
 	log.debug("Create vocation={}", vocation);
 	checkVocationDuratioMoreThenMaxDuration(vocation);
 	checkVocationPeriodIsFree(vocation);
 	checkVocationsEndDateMoreThenStart(vocation);
 	checkVocationsStartAndEndDateBelongsTheSameYear(vocation);
-	vocationDao.create(vocation);
-    }
-
-    public void update(Vocation vocation) {
-	log.debug("Update vocation={}", vocation);
-	checkVocationDuratioMoreThenMaxDuration(vocation);
-	checkVocationPeriodIsFree(vocation);
-	checkVocationsEndDateMoreThenStart(vocation);
-	checkVocationsStartAndEndDateBelongsTheSameYear(vocation);
-	vocationDao.update(vocation);
-    }
-
-    public Vocation getById(int id) {
-	log.debug("Get vocation by id={}", id);
-	return vocationDao.getById(id)
-		.orElseThrow(() -> new EntityNotFoundException(format("Vocation whith id=%s not exist", id)));
-    }
-
-    public List<Vocation> getAll() {
-	log.debug("Get all vocations");
-	return vocationDao.getAll();
+	vocationDao.save(vocation);
     }
 
     public void delete(Vocation vocation) {
@@ -82,11 +71,11 @@ public class VocationService {
 
     public List<Vocation> getByTeacherAndYear(Teacher teacher, Year year) {
 	log.debug("Get by teacherId={} and year={}", teacher.getId(), year);
-	return vocationDao.getByTeacherAndYear(teacher, year);
+	return vocationDao.getByTeacherAndYear(teacher.getId(), year.getValue());
     }
 
     private void checkVocationPeriodIsFree(Vocation vocation) {
-	if (!lessonDao.getByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd())
+	if (!lessonDao.getByTeacherBetweenDates(vocation.getTeacher().getId(), vocation.getStart(), vocation.getEnd())
 		.isEmpty()) {
 	    throw new VocationPeriodNotFreeException("vocation period is not free from lessons");
 	}
@@ -105,11 +94,11 @@ public class VocationService {
     }
 
     private void checkVocationDuratioMoreThenMaxDuration(Vocation vocation) {
-	List<Vocation> vocations = vocationDao.getByTeacherAndYear(vocation.getTeacher(),
-		Year.from(vocation.getStart()));
+	List<Vocation> vocations = vocationDao.getByTeacherAndYear(vocation.getTeacher().getId(),
+		Year.from(vocation.getStart()).getValue());
 	vocations.add(vocation);
 	List<LocalDate> vocationDates = getVocationDates(vocations);
-	List<LocalDate> holidays = holidayDao.getAll().stream().map(Holiday::getDate).collect(Collectors.toList());
+	List<LocalDate> holidays = holidayDao.findAll().stream().map(Holiday::getDate).collect(Collectors.toList());
 	if (vocationDates.stream().filter(d -> !isDateWeekend(d)).filter(d -> !holidays.contains(d))
 		.count() > universityConfigProperties.getVocationDurationBykind().get(vocation.getKind())) {
 	    throw new VocationPeriodTooLongException("vocation duration more then max duration");

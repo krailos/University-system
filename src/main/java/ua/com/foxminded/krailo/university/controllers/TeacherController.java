@@ -54,17 +54,13 @@ public class TeacherController {
     @GetMapping("/create")
     public String createTeacher(Model model) {
 	model.addAttribute("teacher", new Teacher());
-	model.addAttribute("subjects", subjectService.getAll());	    
+	model.addAttribute("subjects", subjectService.getAll());
 	return "teachers/edit";
     }
 
     @PostMapping("/save")
     public String saveTeacher(@ModelAttribute("teacher") Teacher teacher) {
-	if (teacher.getId() == 0) {
-	    teacherService.create(teacher);
-	} else {
-	    teacherService.update(teacher);
-	}
+	teacherService.create(teacher);
 	return "redirect:/teachers";
     }
 
@@ -87,7 +83,7 @@ public class TeacherController {
 	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finishDate) {
 	Teacher teacher = teacherService.getById(teacherId);
 	model.addAttribute("teacher", teacher);
-	model.addAttribute("lessons", lessonService.getLessonsForTeacherByPeriod(teacher, startDate, finishDate));
+	model.addAttribute("lessons", lessonService.getLessonsByTeacherByPeriod(teacher, startDate, finishDate));
 	model.addAttribute("startDate", startDate);
 	model.addAttribute("finishDate", finishDate);
 	return "teachers/schedule";

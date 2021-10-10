@@ -55,18 +55,18 @@ public class SubjectController {
 	return "subjects/edit";
     }
 
-    @PostMapping("/save")
-    public String saveSubject(@ModelAttribute("subject") Subject subject) {
-	for (Teacher teacher : subject.getTeachers()) {
-	    teacher = teacherService.getById(teacher.getId());
-	}
-	if (subject.getId() == 0) {
-	    subjectService.create(subject);
-	} else {
-	    subjectService.update(subject);
-	}
-	return "redirect:/subjects";
-    }
+//    @PostMapping("/save")
+//    public String saveSubject(@ModelAttribute("subject") Subject subject) {
+//	for (Teacher teacher : subject.getTeachers()) {
+//	    teacher = teacherService.getById(teacher.getId());
+//	}
+//	if (subject.getId() == 0) {
+//	    subjectService.create(subject);
+//	} else {
+//	    subjectService.update(subject);
+//	}
+//	return "redirect:/subjects";
+//    }
 
     @PostMapping("/delete")
     public String deleteSubject(@RequestParam int id) {

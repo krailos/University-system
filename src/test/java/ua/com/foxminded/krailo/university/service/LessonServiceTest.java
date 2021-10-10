@@ -113,7 +113,7 @@ class LessonServiceTest {
 	when(lessonDao.getByTeacherBetweenDates(teacher, LocalDate.of(2021, 01, 02), LocalDate.of(2021, 02, 02)))
 		.thenReturn(lessons);
 
-	List<Lesson> actual = lessonService.getLessonsForTeacherByPeriod(teacher, LocalDate.of(2021, 01, 02),
+	List<Lesson> actual = lessonService.getLessonsByTeacherByPeriod(teacher, LocalDate.of(2021, 01, 02),
 		LocalDate.of(2021, 02, 02));
 
 	List<Lesson> expected = createLessons();
@@ -129,7 +129,7 @@ class LessonServiceTest {
 	when(lessonDao.getByGroupAndDate(group, LocalDate.of(2021, 01, 02))).thenReturn(lessons);
 	when(groupDao.getById(1)).thenReturn(Optional.of(group));
 
-	List<Lesson> actual = lessonService.getLessonsForStudentByDate(student, LocalDate.of(2021, 01, 02));
+	List<Lesson> actual = lessonService.getLessonsByGroupByDate(student, LocalDate.of(2021, 01, 02));
 
 	List<Lesson> expected = createLessons();
 	assertEquals(expected, actual);

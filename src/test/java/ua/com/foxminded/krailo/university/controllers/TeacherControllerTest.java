@@ -164,7 +164,7 @@ class TeacherControllerTest {
     void whenGetScheduleByTeacher_thenScheduleReturned() throws Exception {
 	Teacher teacher = buildTeachers().get(0);
 	List<Lesson> lessons = Arrays.asList(Lesson.builder().id(1).date(LocalDate.now()).build());
-	when(lessonService.getLessonsForTeacherByPeriod(teacher, LocalDate.now(), LocalDate.now().plusMonths(1)))
+	when(lessonService.getLessonsByTeacherByPeriod(teacher, LocalDate.now(), LocalDate.now().plusMonths(1)))
 		.thenReturn(lessons);
 	when(teacherService.getById(1)).thenReturn(teacher);
 

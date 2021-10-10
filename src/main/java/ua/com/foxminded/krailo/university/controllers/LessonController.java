@@ -65,81 +65,81 @@ public class LessonController {
 	return "lessons/lesson";
     }
 
-    @GetMapping("/create")
-    public String createLesson(Model model) {
-	model.addAttribute("lesson", new Lesson());
-	model.addAttribute("lessonTimes", lessonTimeService.getAll());
-	model.addAttribute("subjects", subjectService.getAll());
-	model.addAttribute("audiences", audienceService.getAll());
-	model.addAttribute("teachers", teacherService.getAll());
-	model.addAttribute("groups", groupService.getAll());
-
-	return "lessons/edit";
-    }
-
-    @PostMapping("/save")
-    public String saveLesson(@ModelAttribute("lesson") Lesson lesson) {
-	lesson.setLessonTime(lessonTimeService.getById(lesson.getLessonTime().getId()));
-	lesson.setSubject(subjectService.getById(lesson.getSubject().getId()));
-	lesson.setAudience(audienceService.getById(lesson.getAudience().getId()));
-	lesson.setTeacher(teacherService.getById(lesson.getTeacher().getId()));
-	for (Group group : lesson.getGroups()) {
-	    group = groupService.getById(group.getId());
-	}
-	if (lesson.getId() == 0) {
-	    lessonService.create(lesson);
-	} else {
-	    lessonService.update(lesson);
-	}
-	return "redirect:/lessons";
-    }
-
-    @GetMapping("/edit/{id}")
-    public String editLesson(@PathVariable int id, Model model) {
-	model.addAttribute("lesson", lessonService.getById(id));
-	model.addAttribute("lessonTimes", lessonTimeService.getAll());
-	model.addAttribute("subjects", subjectService.getAll());
-	model.addAttribute("audiences", audienceService.getAll());
-	model.addAttribute("teachers", teacherService.getAll());
-	model.addAttribute("groups", groupService.getAll());
-	return "lessons/edit";
-    }
-
-    @PostMapping("/delete")
-    public String deleteLesson(@RequestParam int id, Model model) {
-	lessonService.delete(lessonService.getById(id));
-	return "redirect:/lessons";
-    }
-
-    @GetMapping("/substituteTeacherForm")
-    public String substituteTeacherGetForm(Model model) {
-	List<Teacher> teachers = teacherService.getAll();
-	model.addAttribute("teachers", teachers);
-	return "lessons/substituteTeacherForm";
-    }
-
-    @PostMapping("/findTeacherForSubstitute")
-    public String findTeacherForSubstitute(
-	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finishDate, @RequestParam int teacherId,
-	    Model model) {
-	Teacher substitutedTeacher = teacherService.getById(teacherId);
-	List<Teacher> teachersForSubstitite = teacherService.findTeachersForSubstitute(substitutedTeacher, startDate, finishDate);
-	model.addAttribute("startDate", startDate);
-	model.addAttribute("finishDate", finishDate);
-	model.addAttribute("teacher", teacherService.getById(teacherId));
-	model.addAttribute("teachersForSubstitite", teachersForSubstitite);
-	return "lessons/substituteTeacher";
-    }
-
-    @PostMapping("/substituteTeacher")
-    public String substituteTeacher(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finishDate, @RequestParam int oldId,
-	    @RequestParam int newId, Model model) {
-	Teacher newTeacher = teacherService.getById(newId);
-	Teacher oldTeacher = teacherService.getById(oldId);
-	lessonService.substituteTeacher(oldTeacher, newTeacher, startDate, finishDate);
-	return "redirect:/lessons";
-    }
+//    @GetMapping("/create")
+//    public String createLesson(Model model) {
+//	model.addAttribute("lesson", new Lesson());
+//	model.addAttribute("lessonTimes", lessonTimeService.getAll());
+//	model.addAttribute("subjects", subjectService.getAll());
+//	model.addAttribute("audiences", audienceService.findAll());
+//	model.addAttribute("teachers", teacherService.getAll());
+//	model.addAttribute("groups", groupService.getAll());
+//
+//	return "lessons/edit";
+//    }
+//
+//    @PostMapping("/save")
+//    public String saveLesson(@ModelAttribute("lesson") Lesson lesson) {
+//	lesson.setLessonTime(lessonTimeService.getById(lesson.getLessonTime().getId()));
+//	lesson.setSubject(subjectService.getById(lesson.getSubject().getId()));
+//	lesson.setAudience(audienceService.getById(lesson.getAudience().getId()));
+//	lesson.setTeacher(teacherService.getById(lesson.getTeacher().getId()));
+//	for (Group group : lesson.getGroups()) {
+//	    group = groupService.getById(group.getId());
+//	}
+//	if (lesson.getId() == 0) {
+//	    lessonService.create(lesson);
+//	} else {
+//	    lessonService.update(lesson);
+//	}
+//	return "redirect:/lessons";
+//    }
+//
+//    @GetMapping("/edit/{id}")
+//    public String editLesson(@PathVariable int id, Model model) {
+//	model.addAttribute("lesson", lessonService.getById(id));
+//	model.addAttribute("lessonTimes", lessonTimeService.getAll());
+//	model.addAttribute("subjects", subjectService.getAll());
+//	model.addAttribute("audiences", audienceService.getAll());
+//	model.addAttribute("teachers", teacherService.getAll());
+//	model.addAttribute("groups", groupService.getAll());
+//	return "lessons/edit";
+//    }
+//
+//    @PostMapping("/delete")
+//    public String deleteLesson(@RequestParam int id, Model model) {
+//	lessonService.delete(lessonService.getById(id));
+//	return "redirect:/lessons";
+//    }
+//
+//    @GetMapping("/substituteTeacherForm")
+//    public String substituteTeacherGetForm(Model model) {
+//	List<Teacher> teachers = teacherService.getAll();
+//	model.addAttribute("teachers", teachers);
+//	return "lessons/substituteTeacherForm";
+//    }
+//
+//    @PostMapping("/findTeacherForSubstitute")
+//    public String findTeacherForSubstitute(
+//	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+//	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finishDate, @RequestParam int teacherId,
+//	    Model model) {
+//	Teacher substitutedTeacher = teacherService.getById(teacherId);
+//	List<Teacher> teachersForSubstitite = teacherService.findTeachersForSubstitute(substitutedTeacher, startDate, finishDate);
+//	model.addAttribute("startDate", startDate);
+//	model.addAttribute("finishDate", finishDate);
+//	model.addAttribute("teacher", teacherService.getById(teacherId));
+//	model.addAttribute("teachersForSubstitite", teachersForSubstitite);
+//	return "lessons/substituteTeacher";
+//    }
+//
+//    @PostMapping("/substituteTeacher")
+//    public String substituteTeacher(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+//	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finishDate, @RequestParam int oldId,
+//	    @RequestParam int newId, Model model) {
+//	Teacher newTeacher = teacherService.getById(newId);
+//	Teacher oldTeacher = teacherService.getById(oldId);
+//	lessonService.substituteTeacher(oldTeacher, newTeacher, startDate, finishDate);
+//	return "redirect:/lessons";
+//    }
 
 }

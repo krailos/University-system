@@ -56,12 +56,8 @@ public class VocationController {
     }
 
     @PostMapping("/save")
-    public String saveVocation(@ModelAttribute("vocation") Vocation vocation) {
-	if (vocation.getId() == 0) {
+    public String saveVocation(@ModelAttribute("vocation") Vocation vocation) {	
 	    vocationService.create(vocation);
-	} else {
-	    vocationService.update(vocation);
-	}
 	return "redirect:/vocations";
     }
 
