@@ -1,19 +1,20 @@
 package ua.com.foxminded.krailo.university.dao;
 
 import java.time.LocalDate;
-import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 
-import ua.com.foxminded.krailo.university.model.Teacher;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
+
 import ua.com.foxminded.krailo.university.model.Vocation;
 
-public interface VocationDao extends GenericDao<Vocation> {
+public interface VocationDao extends PagingAndSortingRepository<Vocation, Integer> {
 
-    List<Vocation> getByTeacher(Teacher teacher);
+    @Query("from Vocation v where v.teacher.id = ?1 and" + " extract (year from v.start) = ?2 order by v.start ")
+    List<Vocation> getByTeacherAndYear(int teacherId, int year);
 
-    List<Vocation> getByTeacherAndYear(Teacher teacher, Year year);
-
-    Optional<Vocation> getByTeacherAndDate(Teacher teacher, LocalDate date);
+    @Query("from Vocation v where v.teacher.id = ?1 and ?2 between v.start and v.end")
+    Optional<Vocation> getByTeacherAndDate(int teacherId, LocalDate date);
 
 }

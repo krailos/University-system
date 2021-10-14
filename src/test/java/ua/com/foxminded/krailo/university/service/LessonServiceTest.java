@@ -110,7 +110,7 @@ class LessonServiceTest {
     void givenTeacherAndStartFinishDate_whenGetByTeacherBetweenDates_thenGot() {
 	Teacher teacher = Teacher.builder().id(1).build();
 	List<Lesson> lessons = createLessons();
-	when(lessonDao.getByTeacherBetweenDates(teacher, LocalDate.of(2021, 01, 02), LocalDate.of(2021, 02, 02)))
+	when(lessonDao.getByTeacherAndLessonDateBetween(teacher, LocalDate.of(2021, 01, 02), LocalDate.of(2021, 02, 02)))
 		.thenReturn(lessons);
 
 	List<Lesson> actual = lessonService.getLessonsByTeacherByPeriod(teacher, LocalDate.of(2021, 01, 02),
@@ -445,7 +445,7 @@ class LessonServiceTest {
 	Lesson lesson = createLesson();
 	lesson.setTeacher(oldTeacher);
 	lesson.setSubject(subject);
-	when(lessonDao.getByTeacherBetweenDates(oldTeacher, startDate, finishDate)).thenReturn(Arrays.asList(lesson));
+	when(lessonDao.getByTeacherAndLessonDateBetween(oldTeacher, startDate, finishDate)).thenReturn(Arrays.asList(lesson));
 
 	lessonService.substituteTeacher(oldTeacher, newTeacher, startDate, finishDate);
 

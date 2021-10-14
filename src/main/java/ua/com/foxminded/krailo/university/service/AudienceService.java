@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.dao.jpa.AudienceDaoJpa;
+import ua.com.foxminded.krailo.university.dao.AudienceDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
 import ua.com.foxminded.krailo.university.model.Audience;
@@ -21,9 +21,9 @@ public class AudienceService {
 
     private static final Logger log = LoggerFactory.getLogger(AudienceService.class);
 
-    private AudienceDaoJpa audienceDao;
+    private AudienceDao audienceDao;
 
-    public AudienceService(AudienceDaoJpa audienceDao) {
+    public AudienceService(AudienceDao audienceDao) {
 	this.audienceDao = audienceDao;
     }
 
@@ -40,7 +40,7 @@ public class AudienceService {
     
     public List<Audience> getAll() {
 	log.debug("get all audiences");
-	return audienceDao.findAll();
+	return (List<Audience>) audienceDao.findAll();
     }
 
     public void create(Audience audience) {

@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.dao.jpa.LessonDaoJpa;
-import ua.com.foxminded.krailo.university.dao.jpa.TeacherDaoJpa;
+import ua.com.foxminded.krailo.university.dao.LessonDao;
+import ua.com.foxminded.krailo.university.dao.TeacherDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.Subject;
@@ -24,10 +24,10 @@ public class TeacherService {
 
     private static final Logger log = LoggerFactory.getLogger(TeacherService.class);
 
-    private TeacherDaoJpa teacherDao;
-    private LessonDaoJpa lessonDao;
+    private TeacherDao teacherDao;
+    private LessonDao lessonDao;
 
-    public TeacherService(TeacherDaoJpa teacherDao, LessonDaoJpa lessonDao) {
+    public TeacherService(TeacherDao teacherDao, LessonDao lessonDao) {
 	this.teacherDao = teacherDao;
 	this.lessonDao = lessonDao;
     }
@@ -61,7 +61,7 @@ public class TeacherService {
 
     public List<Teacher> findTeachersForSubstitute(Teacher substitutedTeacher, LocalDate startDate,
 	    LocalDate finishDate) {
-	List<Lesson> substitutedLessons = lessonDao.getByTeacherBetweenDates(substitutedTeacher.getId(), startDate,
+	List<Lesson> substitutedLessons = lessonDao.getByTeacherAndDateBetween(substitutedTeacher, startDate,
 		finishDate);
 	List<Subject> substitutedSubjects = substitutedLessons.stream().map(Lesson::getSubject)
 		.collect(Collectors.toList());
@@ -70,7 +70,7 @@ public class TeacherService {
 		.filter(t -> t.getSubjects().containsAll(substitutedSubjects)).collect(Collectors.toList());
 	return teachersForSubstitute.stream()
 		.filter(t -> substitutedLessons.stream().noneMatch(l -> lessonDao
-			.getByDateAndTeacherAndLessonTime(l.getDate(), t.getId(), l.getLessonTime().getId()).isPresent()))
+			.getByDateAndTeacherAndLessonTime(l.getDate(), t, l.getLessonTime()).isPresent()))
 		.collect(Collectors.toList());
     }
 

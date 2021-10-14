@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.dao.jpa.YearDaoJpa;
+import ua.com.foxminded.krailo.university.dao.YearDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Year;
 
@@ -19,9 +19,9 @@ public class YearService {
 
     private static final Logger log = LoggerFactory.getLogger(YearService.class);
 
-    private YearDaoJpa yearDao;
+    private YearDao yearDao;
 
-    public YearService(YearDaoJpa yearDao) {
+    public YearService(YearDao yearDao) {
 	this.yearDao = yearDao;
     }
 

@@ -127,7 +127,7 @@ class VocationServiceTest {
 	vocation.setStart(LocalDate.of(2021, 01, 01));
 	vocation.setEnd(LocalDate.of(2021, 01, 03));
 	List<Lesson> lessons = createLessons();
-	when(lessonDao.getByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
+	when(lessonDao.getByTeacherAndLessonDateBetween(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
 		.thenReturn(lessons);
 
 	Exception exception = assertThrows(VocationPeriodNotFreeException.class,
@@ -145,7 +145,7 @@ class VocationServiceTest {
 	vocation.setStart(LocalDate.of(2021, 01, 01));
 	vocation.setEnd(LocalDate.of(2021, 01, 03));
 	List<Lesson> lessons = createLessons();
-	when(lessonDao.getByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
+	when(lessonDao.getByTeacherAndLessonDateBetween(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
 		.thenReturn(lessons);
 
 	Exception exception = assertThrows(VocationPeriodNotFreeException.class,
@@ -220,7 +220,7 @@ class VocationServiceTest {
     void givenVocationPeriodWhithoutLessons_whenUpdate_thenUpdated() {
 	when(universityConfigProperties.getVocationDurationBykind()).thenReturn(getVocationDurationBykind());
 	Vocation vocation = createVocation();
-	when(lessonDao.getByTeacherBetweenDates(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
+	when(lessonDao.getByTeacherAndLessonDateBetween(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
 		.thenReturn(new ArrayList<>());
 
 	vocationService.update(vocation);

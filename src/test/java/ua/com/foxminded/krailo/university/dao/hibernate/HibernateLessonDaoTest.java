@@ -200,7 +200,7 @@ class HibernateLessonDaoTest {
 			.degree("0").gender(Gender.MALE).build())
 		.build());
 
-	List<Lesson> actual = lessonDao.getByTeacherBetweenDates(teacher, LocalDate.of(2021, 01, 01),
+	List<Lesson> actual = lessonDao.getByTeacherAndLessonDateBetween(teacher, LocalDate.of(2021, 01, 01),
 		LocalDate.of(2021, 01, 05));
 
 	assertEquals(expected, actual);

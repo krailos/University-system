@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.dao.jpa.SubjectDaoJpa;
+import ua.com.foxminded.krailo.university.dao.SubjectDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Subject;
 
@@ -17,9 +17,9 @@ public class SubjectService {
 
     private static final Logger log = LoggerFactory.getLogger(SubjectService.class);
 
-    private SubjectDaoJpa subjectDao;
+    private SubjectDao subjectDao;
 
-    public SubjectService(SubjectDaoJpa subjectDao) {
+    public SubjectService(SubjectDao subjectDao) {
 	this.subjectDao = subjectDao;
     }
 

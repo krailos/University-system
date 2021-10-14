@@ -17,7 +17,6 @@ import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.service.GroupService;
 import ua.com.foxminded.krailo.university.service.LessonService;
 import ua.com.foxminded.krailo.university.service.StudentService;
-import ua.com.foxminded.krailo.university.util.Paging;
 
 @Controller
 @RequestMapping("/students")
@@ -34,7 +33,7 @@ public class StudentController {
     }
 
     @GetMapping
-    public String getAllStudents(Model model, Pageable  pageable) {
+    public String getAllStudents(Model model, Pageable pageable) {
 	model.addAttribute("studentsPage", studentService.getSelectedPage(pageable));
 	return "students/all";
     }
@@ -45,46 +44,42 @@ public class StudentController {
 	return "students/student";
     }
 
-//    @GetMapping("/create")
-//    public String createStudent(Model model) {
-//	model.addAttribute("student", new Student());
-//	model.addAttribute("groups", groupService.getAll());
-//	return "students/edit";
-//    }
-//
-//    @PostMapping("/save")
-//    public String saveStudent(@ModelAttribute("student") Student student) {
-//	if (student.getId() == 0) {
-//	    studentService.create(student);
-//	} else {
-//	    studentService.update(student);
-//	}
-//	return "redirect:/students";
-//    }
-//
-//    @GetMapping("/edit/{id}")
-//    public String editStudent(@PathVariable int id, Model model) {
-//	model.addAttribute("student", studentService.getById(id));
-//	model.addAttribute("groups", groupService.getAll());
-//	return "students/edit";
-//    }
-//
-//    @PostMapping("/delete")
-//    public String deleteStudent(@RequestParam("id") int id, Model model) {
-//	studentService.delete(studentService.getById(id));
-//	return "redirect:/students";
-//    }
-//
-//    @GetMapping("/schedule/{id}")
-//    public String getSchedule(Model model, @PathVariable("id") int studentId,
-//	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-//	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finishDate) {
-//	Student student = studentService.getById(studentId);
-//	model.addAttribute("student", student);
-//	model.addAttribute("lessons", lessonService.getLessonsForStudentByPeriod(student, startDate, finishDate));
-//	model.addAttribute("startDate", startDate);
-//	model.addAttribute("finishDate", finishDate);
-//	return "students/schedule";
-//    }
+    @GetMapping("/create")
+    public String createStudent(Model model) {
+	model.addAttribute("student", new Student());
+	model.addAttribute("groups", groupService.getAll());
+	return "students/edit";
+    }
+
+    @PostMapping("/save")
+    public String saveStudent(@ModelAttribute("student") Student student) {
+	studentService.create(student);
+	return "redirect:/students";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editStudent(@PathVariable int id, Model model) {
+	model.addAttribute("student", studentService.getById(id));
+	model.addAttribute("groups", groupService.getAll());
+	return "students/edit";
+    }
+
+    @PostMapping("/delete")
+    public String deleteStudent(@RequestParam("id") int id, Model model) {
+	studentService.delete(studentService.getById(id));
+	return "redirect:/students";
+    }
+
+    @GetMapping("/schedule/{id}")
+    public String getSchedule(Model model, @PathVariable("id") int studentId,
+	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+	    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finishDate) {
+	Student student = studentService.getById(studentId);
+	model.addAttribute("student", student);
+	model.addAttribute("lessons", lessonService.getLessonsForStudentByPeriod(student, startDate, finishDate));
+	model.addAttribute("startDate", startDate);
+	model.addAttribute("finishDate", finishDate);
+	return "students/schedule";
+    }
 
 }

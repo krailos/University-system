@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.config.UniversityConfigProperties;
-import ua.com.foxminded.krailo.university.dao.jpa.HolidayDaoJpa;
-import ua.com.foxminded.krailo.university.dao.jpa.LessonDaoJpa;
-import ua.com.foxminded.krailo.university.dao.jpa.VocationDaoJpa;
+import ua.com.foxminded.krailo.university.dao.HolidayDao;
+import ua.com.foxminded.krailo.university.dao.LessonDao;
+import ua.com.foxminded.krailo.university.dao.VocationDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.VocationEndBoforeStartException;
 import ua.com.foxminded.krailo.university.exception.VocationPeriodNotFreeException;
@@ -31,12 +31,12 @@ public class VocationService {
 
     private static final Logger log = LoggerFactory.getLogger(VocationService.class);
 
-    private VocationDaoJpa vocationDao;
-    private LessonDaoJpa lessonDao;
-    private HolidayDaoJpa holidayDao;
+    private VocationDao vocationDao;
+    private LessonDao lessonDao;
+    private HolidayDao holidayDao;
     private UniversityConfigProperties universityConfigProperties;
 
-    public VocationService(VocationDaoJpa vocationDao, LessonDaoJpa lessonDao, HolidayDaoJpa holidayDao,
+    public VocationService(VocationDao vocationDao, LessonDao lessonDao, HolidayDao holidayDao,
 	    UniversityConfigProperties universityConfigData) {
 	this.vocationDao = vocationDao;
 	this.lessonDao = lessonDao;
@@ -75,7 +75,7 @@ public class VocationService {
     }
 
     private void checkVocationPeriodIsFree(Vocation vocation) {
-	if (!lessonDao.getByTeacherBetweenDates(vocation.getTeacher().getId(), vocation.getStart(), vocation.getEnd())
+	if (!lessonDao.getByTeacherAndDateBetween(vocation.getTeacher(), vocation.getStart(), vocation.getEnd())
 		.isEmpty()) {
 	    throw new VocationPeriodNotFreeException("vocation period is not free from lessons");
 	}

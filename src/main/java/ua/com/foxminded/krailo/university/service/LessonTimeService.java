@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.dao.jpa.LessonTimeDaoJpa;
+import ua.com.foxminded.krailo.university.dao.LessonTimeDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.LessonTimeNotFreeException;
 import ua.com.foxminded.krailo.university.model.LessonTime;
@@ -19,9 +19,9 @@ public class LessonTimeService {
 
     private static final Logger log = LoggerFactory.getLogger(LessonTimeService.class);
 
-    private LessonTimeDaoJpa lessonTimeDao;
+    private LessonTimeDao lessonTimeDao;
 
-    public LessonTimeService(LessonTimeDaoJpa lessonTimeDao) {
+    public LessonTimeService(LessonTimeDao lessonTimeDao) {
 	this.lessonTimeDao = lessonTimeDao;
     }
 

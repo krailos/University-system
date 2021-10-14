@@ -12,10 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.dao.jpa.GroupDaoJpa;
-import ua.com.foxminded.krailo.university.dao.jpa.HolidayDaoJpa;
-import ua.com.foxminded.krailo.university.dao.jpa.LessonDaoJpa;
-import ua.com.foxminded.krailo.university.dao.jpa.VocationDaoJpa;
+import ua.com.foxminded.krailo.university.dao.GroupDao;
+import ua.com.foxminded.krailo.university.dao.HolidayDao;
+import ua.com.foxminded.krailo.university.dao.LessonDao;
+import ua.com.foxminded.krailo.university.dao.VocationDao;
 import ua.com.foxminded.krailo.university.exception.AudienceNotFreeException;
 import ua.com.foxminded.krailo.university.exception.AudienceOverflowException;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
@@ -36,13 +36,13 @@ public class LessonService {
 
     private static final Logger log = LoggerFactory.getLogger(LessonService.class);
 
-    private LessonDaoJpa lessonDao;
-    private VocationDaoJpa vocationDao;
-    private HolidayDaoJpa holidayDao;
-    private GroupDaoJpa groupDao;
+    private LessonDao lessonDao;
+    private VocationDao vocationDao;
+    private HolidayDao holidayDao;
+    private GroupDao groupDao;
 
-    public LessonService(LessonDaoJpa lessonDao, VocationDaoJpa vocationDao, HolidayDaoJpa holidayDao,
-	    GroupDaoJpa groupDao) {
+    public LessonService(LessonDao lessonDao, VocationDao vocationDao, HolidayDao holidayDao,
+	    GroupDao groupDao) {
 	this.lessonDao = lessonDao;
 	this.vocationDao = vocationDao;
 	this.holidayDao = holidayDao;
@@ -85,12 +85,12 @@ public class LessonService {
 
     public List<Lesson> getLessonsForTeacherByDate(Teacher teacher, LocalDate date) {
 	log.debug("get lessons for teacher={} by date={}", teacher, date);
-	return lessonDao.getByTeacherAndDate(teacher.getId(), date);
+	return lessonDao.getByTeacherAndDate(teacher, date);
     }
 
     public List<Lesson> getLessonsByTeacherByPeriod(Teacher teacher, LocalDate startDate, LocalDate finishDate) {
 	log.debug("get timetable for teacher={} by month", teacher);
-	return lessonDao.getByTeacherBetweenDates(teacher.getId(), startDate, finishDate);
+	return lessonDao.getByTeacherAndDateBetween(teacher, startDate, finishDate);
     }
 
     public List<Lesson> getLessonsByGroupByDate(Student student, LocalDate date) {
@@ -107,7 +107,7 @@ public class LessonService {
     }
 
     public void substituteTeacher(Teacher oldTeacher, Teacher newTeacher, LocalDate startDate, LocalDate finishDate) {
-	lessonDao.getByTeacherBetweenDates(oldTeacher.getId(), startDate, finishDate).stream().peek(l -> {
+	lessonDao.getByTeacherAndDateBetween(oldTeacher, startDate, finishDate).stream().peek(l -> {
 	    checkTeacherIsFree(l);
 	    checkTeacherTeachesLessonSubject(l);
 	    l.setTeacher(newTeacher);
@@ -116,7 +116,7 @@ public class LessonService {
 
     private void checkTeacherIsFree(Lesson lesson) {
 	Optional<Lesson> existingLesson = lessonDao.getByDateAndTeacherAndLessonTime(lesson.getDate(),
-		lesson.getTeacher().getId(), lesson.getLessonTime().getId());
+		lesson.getTeacher(), lesson.getLessonTime());
 	if (existingLesson.filter(l -> l.getId() != lesson.getId()).isPresent()) {
 	    throw new TeacherNotFreeException("Teacher not free, teacherId=" + lesson.getTeacher().getId());
 	}
@@ -124,7 +124,7 @@ public class LessonService {
 
     private void checkAudienceIsFree(Lesson lesson) {
 	Optional<Lesson> existingLeson = lessonDao.getByDateAndAudienceAndLessonTime(lesson.getDate(),
-		lesson.getAudience().getId(), lesson.getLessonTime().getId());
+		lesson.getAudience(), lesson.getLessonTime());
 	if (existingLeson.filter(l -> l.getId() != lesson.getId()).isPresent()) {
 	    throw new AudienceNotFreeException("Audience not free, audienceId=" + lesson.getAudience().getId());
 	}

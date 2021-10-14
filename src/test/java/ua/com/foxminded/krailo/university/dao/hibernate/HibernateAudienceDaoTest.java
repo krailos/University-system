@@ -40,7 +40,7 @@ class HibernateAudienceDaoTest {
 	audience.setNumber("one");
 	audience.setId(0);
 
-	audienceDao.create(audience);
+	audienceDao.save(audience);
 
 	assertEquals(audience, hibernateTemplate.get(Audience.class, audience.getId()));
     }
@@ -49,7 +49,7 @@ class HibernateAudienceDaoTest {
     void givenAudienceWithExistingNumber_whenCreate_thenDaoConstraintViolationExceptionThrown() {
 	Audience audience = Audience.builder().number("1").capacity(120).description("description3").build();
 
-	String actual = assertThrows(DataIntegrityViolationException.class, () -> audienceDao.create(audience))
+	String actual = assertThrows(DataIntegrityViolationException.class, () -> audienceDao.save(audience))
 		.getMessage();
 
 	String expected = "could not execute statement; SQL [n/a]; constraint [\"PUBLIC.CONSTRAINT_INDEX_B ON PUBLIC.AUDIENCES(NUMBER) VALUES 1\"; SQL statement:\n"
@@ -61,7 +61,7 @@ class HibernateAudienceDaoTest {
     void givenAudience_whenGetByNumber_thenGot() {
 	Audience expected = getAudience();
 
-	Audience actual = audienceDao.getByNumber("1").get();
+	Audience actual = audienceDao.findByNumber("1").get();
 
 	assertEquals(expected, actual);
     }
@@ -73,7 +73,7 @@ class HibernateAudienceDaoTest {
 	expected.add(Audience.builder().id(2).number("2").capacity(120).description("description2").build());
 	expected.add(Audience.builder().id(3).number("3").capacity(120).description("description3").build());
 
-	List<Audience> actual = audienceDao.getAll();
+	List<Audience> actual = (List<Audience>) audienceDao.findAll();
 
 	assertEquals(expected, actual);
     }
@@ -82,7 +82,7 @@ class HibernateAudienceDaoTest {
     void givenId_whenGetdById_thenGot() {
 	Audience expected = getAudience();
 
-	Audience actual = audienceDao.getById(1).get();
+	Audience actual = audienceDao.findById(1).get();
 
 	assertEquals(expected, actual);
     }
@@ -90,7 +90,7 @@ class HibernateAudienceDaoTest {
     @Test
     void givenNotExistingId_whenGetById_thenEmptyOptional() {
 
-	Optional<Audience> actual = audienceDao.getById(10);
+	Optional<Audience> actual = audienceDao.findById(10);
 
 	assertEquals(Optional.empty(), actual);
     }
@@ -101,7 +101,7 @@ class HibernateAudienceDaoTest {
 	expected.setCapacity(111);
 	expected.setNumber("new number");
 
-	audienceDao.update(expected);
+	audienceDao.save(expected);
 
 	assertEquals(expected, hibernateTemplate.get(Audience.class, expected.getId()));
     }
@@ -118,7 +118,7 @@ class HibernateAudienceDaoTest {
     @Test
     void givenAudiences_whenCount_thenCountReturned() {
 
-	int actual = audienceDao.count();
+	int actual = (int) audienceDao.count();
 
 	assertEquals(hibernateTemplate.execute(session -> session.createQuery("from Audience").list().size()), actual);
     }
@@ -135,7 +135,7 @@ class HibernateAudienceDaoTest {
 	Pageable pageable = PageRequest.of(pageNo, pageSize);
 	Page<Audience> expected = new PageImpl<>(audiences, pageable, 3);
 
-	assertEquals(expected, audienceDao.getAll(pageable));
+	assertEquals(expected, audienceDao.findAll(pageable));
     }
 
     private Audience getAudience() {

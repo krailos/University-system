@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.config.UniversityConfigProperties;
-import ua.com.foxminded.krailo.university.dao.jpa.GroupDaoJpa;
-import ua.com.foxminded.krailo.university.dao.jpa.StudentDaoJpa;
+import ua.com.foxminded.krailo.university.dao.GroupDao;
+import ua.com.foxminded.krailo.university.dao.StudentDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.GroupOverflowException;
 import ua.com.foxminded.krailo.university.model.Group;
@@ -23,11 +23,11 @@ public class StudentService {
 
     private static final Logger log = LoggerFactory.getLogger(StudentService.class);
 
-    private StudentDaoJpa studentDao;
-    private GroupDaoJpa groupDao;
+    private StudentDao studentDao;
+    private GroupDao groupDao;
     private UniversityConfigProperties universityConfigProperties;
 
-    public StudentService(StudentDaoJpa studentDao, GroupDaoJpa groupDao,
+    public StudentService(StudentDao studentDao, GroupDao groupDao,
 	    UniversityConfigProperties universityConfigData) {
 	this.studentDao = studentDao;
 	this.groupDao = groupDao;
@@ -59,7 +59,7 @@ public class StudentService {
 
     public List<Student> getByGroup(Group group) {
 	log.debug("get students  by groupId={}", group.getId());
-	return studentDao.getByGroup(group.getId());
+	return studentDao.getByGroup(group);
     }
 
     public void delete(Student student) {

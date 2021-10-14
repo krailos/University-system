@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.dao.jpa.HolidayDaoJpa;
+import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Holiday;
 
@@ -16,9 +16,9 @@ import ua.com.foxminded.krailo.university.model.Holiday;
 public class HolidayService {
 
     private static final Logger log = LoggerFactory.getLogger(HolidayService.class);
-    private HolidayDaoJpa holidayDao;
+    private HolidayDao holidayDao;
 
-    public HolidayService(HolidayDaoJpa holidayDao) {
+    public HolidayService(HolidayDao holidayDao) {
 	this.holidayDao = holidayDao;
     }
 

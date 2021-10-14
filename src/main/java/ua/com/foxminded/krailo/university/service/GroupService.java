@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.dao.jpa.GroupDaoJpa;
+import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.exception.NotUniqueNameException;
 import ua.com.foxminded.krailo.university.model.Group;
@@ -22,9 +22,9 @@ public class GroupService {
 
     private static final Logger log = LoggerFactory.getLogger(GroupService.class);
 
-    private GroupDaoJpa groupDao;
+    private GroupDao groupDao;
 
-    public GroupService(GroupDaoJpa groupDao) {
+    public GroupService(GroupDao groupDao) {
 	this.groupDao = groupDao;
     }
 
@@ -35,10 +35,15 @@ public class GroupService {
     }
 
     public Page<Group> getSelectedPage(Pageable pageable) {
-	log.debug("get audiences by page");
+	log.debug("get group by page");
 	return groupDao.findAll(pageable);
     }
 
+    public List<Group> getAll() {
+	log.debug("get all group");
+	return (List<Group>) groupDao.findAll();
+    }
+    
     public void create(Group group) {
 	log.debug("create group={}", group);
 	checkGroupNameBeUnique(group);
