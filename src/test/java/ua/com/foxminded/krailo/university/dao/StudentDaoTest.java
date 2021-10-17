@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.university.dao.hibernate;
+package ua.com.foxminded.krailo.university.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -9,40 +9,39 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.StudentDao;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @Transactional
-@SpringBootTest
+@DataJpaTest
 @ContextConfiguration(classes = ConfigTest.class)
-class HibernateStudentDaoTest {
+class StudentDaoTest {
 
     @Autowired
     private StudentDao studentDao;
     @Autowired
-    private HibernateTemplate hibernateTemplate;
+    private TestEntityManager entityManager;
 
     @Test
     void givenNewStudent_whenCreate_thenCreated() {
 	Student expected = getStudent();
 	expected.setId(0);
 
-	studentDao.create(expected);
+	studentDao.save(expected);
 
-	assertEquals(expected, hibernateTemplate.get(Student.class, expected.getId()));
+	assertEquals(expected, entityManager.find(Student.class, expected.getId()));
     }
 
     @Test
@@ -51,16 +50,16 @@ class HibernateStudentDaoTest {
 	expected.setFirstName("new first name");
 	expected.setGroup(Group.builder().id(2).name("group 2").build());
 
-	studentDao.update(expected);
+	studentDao.save(expected);
 
-	assertEquals(expected, hibernateTemplate.get(Student.class, expected.getId()));
+	assertEquals(expected, entityManager.find(Student.class, expected.getId()));
     }
 
     @Test
     void givenId_whenFindById_thenFound() {
 	Student expected = getStudent();
 
-	Student actual = studentDao.getById(1).get();
+	Student actual = studentDao.findById(1).get();
 
 	assertEquals(expected, actual);
     }
@@ -79,7 +78,7 @@ class HibernateStudentDaoTest {
 		.group(Group.builder().id(2).name("group 2").year(Year.builder().id(1).name("year 1").build()).build())
 		.build());
 
-	List<Student> actual = studentDao.getAll();
+	List<Student> actual = studentDao.findAll();
 
 	assertEquals(expected, actual);
     }
@@ -104,15 +103,15 @@ class HibernateStudentDaoTest {
 
 	studentDao.delete(student);
 
-	assertNull(hibernateTemplate.get(Student.class, student.getId()));
+	assertNull(entityManager.find(Student.class, student.getId()));
     }
 
     @Test
     void givenStudents_whenCount_thenCounted() {
 
-	int actual = studentDao.count();
+	int actual = (int) studentDao.count();
 
-	assertEquals(hibernateTemplate.execute(session -> session.createQuery("from Student").list().size()), actual);
+	assertEquals(2, actual);
     }
 
     @Test
@@ -134,7 +133,7 @@ class HibernateStudentDaoTest {
 
 	Page<Student> expected = new PageImpl<>(students, pageable, 2);
 
-	Page<Student> actual = studentDao.getAll(pageable);
+	Page<Student> actual = studentDao.findAll(pageable);
 
 	assertEquals(expected, actual);
     }

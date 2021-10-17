@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.university.dao.hibernate;
+package ua.com.foxminded.krailo.university.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -9,34 +9,33 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.orm.hibernate5.HibernateTemplate;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.YearDao;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @Transactional
-@SpringBootTest
+@DataJpaTest
 @ContextConfiguration(classes = ConfigTest.class)
-class HibernateYearDaoTest {
+class YearDaoTest {
 
     @Autowired
     private YearDao yearDao;
     @Autowired
-    private HibernateTemplate hibernateTemplate;
+    private TestEntityManager entityManager;
 
     @Test
     void givenNewYear_whenCreate_thenCreated() {
 	Year expected = Year.builder().id(1).name("new year 1").build();
 	expected.setId(0);
 
-	yearDao.create(expected);
+	yearDao.save(expected);
 
-	assertEquals(expected, hibernateTemplate.get(Year.class, expected.getId()));
+	assertEquals(expected, entityManager.find(Year.class, expected.getId()));
     }
 
     @Test
@@ -46,7 +45,7 @@ class HibernateYearDaoTest {
 		Subject.builder().id(4).name("new subject").build()));
 	expected.setSubjects(subjects);
 
-	yearDao.create(expected);
+	yearDao.save(expected);
 
 	assertEquals(subjects, expected.getSubjects());
     }
@@ -58,16 +57,16 @@ class HibernateYearDaoTest {
 		Subject.builder().id(2).name("new subject").build()));
 	expected.setSubjects(subjects);
 
-	yearDao.update(expected);
+	yearDao.save(expected);
 
-	assertEquals(expected, hibernateTemplate.get(Year.class, expected.getId()));
+	assertEquals(expected, entityManager.find(Year.class, expected.getId()));
     }
 
     @Test
     void givenId_whenGetById_thenGot() {
 	Year expected = Year.builder().id(1).name("year 1").build();
 
-	Year actual = yearDao.getById(1).get();
+	Year actual = yearDao.findById(1).get();
 
 	assertEquals(expected, actual);
     }
@@ -79,7 +78,7 @@ class HibernateYearDaoTest {
 	expected.add(Year.builder().id(2).name("year 2").build());
 	expected.add(Year.builder().id(3).name("year 3").build());
 
-	List<Year> actual = yearDao.getAll();
+	List<Year> actual = yearDao.findAll();
 
 	assertEquals(expected, actual);
     }
@@ -90,7 +89,7 @@ class HibernateYearDaoTest {
 
 	yearDao.delete(year);
 
-	assertNull(hibernateTemplate.get(Year.class, year.getId()));
+	assertNull(entityManager.find(Year.class, year.getId()));
     }
 
 }

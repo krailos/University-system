@@ -47,11 +47,11 @@ class StudentServiceTest {
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
-	when(groupDao.getById(student.getGroup().getId())).thenReturn(Optional.of(group));
+	when(groupDao.findById(student.getGroup().getId())).thenReturn(Optional.of(group));
 
 	studentService.create(student);
 
-	verify(studentDao).create(student);
+	verify(studentDao).save(student);
     }
 
     @Test
@@ -60,7 +60,7 @@ class StudentServiceTest {
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
-	when(groupDao.getById(student.getGroup().getId())).thenReturn(Optional.of(group));
+	when(groupDao.findById(student.getGroup().getId())).thenReturn(Optional.of(group));
 
 	assertEquals("group capacity more then groupMaxSize=1",
 		assertThrows(ServiceException.class, () -> studentService.create(student)).getMessage());
@@ -73,11 +73,11 @@ class StudentServiceTest {
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
-	when(groupDao.getById(student.getGroup().getId())).thenReturn(Optional.of(group));
+	when(groupDao.findById(student.getGroup().getId())).thenReturn(Optional.of(group));
 
-	studentService.update(student);
+	studentService.create(student);
 
-	verify(studentDao).update(student);
+	verify(studentDao).save(student);
     }
 
     @Test
@@ -86,17 +86,17 @@ class StudentServiceTest {
 	Student student = createStudent();
 	Group group = Group.builder().id(1).build();
 	group.setStudents(new ArrayList<>(createStudents()));
-	when(groupDao.getById(student.getGroup().getId())).thenReturn(Optional.of(group));
+	when(groupDao.findById(student.getGroup().getId())).thenReturn(Optional.of(group));
 
 	assertEquals("group capacity more then groupMaxSize=1",
-		assertThrows(ServiceException.class, () -> studentService.update(student)).getMessage());
+		assertThrows(ServiceException.class, () -> studentService.create(student)).getMessage());
 
     }
 
     @Test
     void givenStudentId_whenGetById_thenGot() {
 	Student student = createStudent();
-	when(studentDao.getById(1)).thenReturn(Optional.of(student));
+	when(studentDao.findById(1)).thenReturn(Optional.of(student));
 
 	Student actual = studentService.getById(1);
 
@@ -107,7 +107,7 @@ class StudentServiceTest {
     @Test
     void givenStudents_whenGetAll_thenGot() {
 	List<Student> students = createStudents();
-	when(studentDao.getAll()).thenReturn(students);
+	when(studentDao.findAll()).thenReturn(students);
 
 	List<Student> actual = studentService.getAll();
 
@@ -138,15 +138,6 @@ class StudentServiceTest {
     }
 
     @Test
-    void whenGetQuantity_thenGot() {
-	when(studentDao.count()).thenReturn(10);
-
-	int actual = studentService.getQuantity();
-
-	assertEquals(10, actual);
-    }
-
-    @Test
     void givenStudents_whenGetByPage_thenGot() {
 	int pageNo = 0;
 	int pageSize = 3;
@@ -154,7 +145,7 @@ class StudentServiceTest {
 	List<Student> students = new ArrayList<>();
 	students.add(createStudent());
 	Page<Student> expected = new PageImpl<>(students, pageable, 3);
-	when(studentDao.getAll(pageable)).thenReturn(expected);
+	when(studentDao.findAll(pageable)).thenReturn(expected);
 
 	assertEquals(expected, studentService.getSelectedPage(pageable));
     }

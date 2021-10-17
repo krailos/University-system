@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.service.GroupService;
 import ua.com.foxminded.krailo.university.service.YearService;
-import ua.com.foxminded.krailo.university.util.Paging;
 
 @Controller
 @RequestMapping("/groups")

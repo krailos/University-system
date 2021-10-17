@@ -69,7 +69,7 @@ class HolidayControllerTest {
 	when(holidayService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/holidays/{id}", "1"))
-		.andExpect(view().name("errors/error"))
+		.andExpect(view().name("/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
@@ -102,7 +102,7 @@ class HolidayControllerTest {
 		.andExpect(view().name("redirect:/holidays"))
 		.andExpect(status().is(302));
 	
-	verify(holidayService).update(holiday);
+	verify(holidayService).create(holiday);
     }
 
     @Test

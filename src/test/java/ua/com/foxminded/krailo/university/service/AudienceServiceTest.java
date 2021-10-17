@@ -36,27 +36,27 @@ class AudienceServiceTest {
     @Test
     void givenAudience_whenCreate_thenCreated() {
 	Audience audience = createAudience();
-	when(audienceDao.getByNumber(audience.getNumber())).thenReturn(Optional.empty());
+	when(audienceDao.findByNumber(audience.getNumber())).thenReturn(Optional.empty());
 
 	audienceService.create(audience);
 
-	verify(audienceDao).create(audience);
+	verify(audienceDao).save(audience);
     }
 
     @Test
     void givenAudience_whenUpdate_thenUpdated() {
 	Audience audience = createAudience();
-	when(audienceDao.getByNumber(audience.getNumber())).thenReturn(Optional.empty());
-	audienceService.update(audience);
+	when(audienceDao.findByNumber(audience.getNumber())).thenReturn(Optional.empty());
+	audienceService.create(audience);
 
-	verify(audienceDao).update(audience);
+	verify(audienceDao).save(audience);
     }
 
     @Test
     void givenAudienceWithExistingNumber_whenCreate_thenNotUniqueNameExceptionThrown() {
 	Audience audience = createAudience();
 	audience.setId(0);
-	when(audienceDao.getByNumber(audience.getNumber())).thenReturn(Optional.of(Audience.builder().id(1).build()));
+	when(audienceDao.findByNumber(audience.getNumber())).thenReturn(Optional.of(Audience.builder().id(1).build()));
 
 	Exception exception = assertThrows(NotUniqueNameException.class, () -> audienceService.create(audience));
 
@@ -68,9 +68,9 @@ class AudienceServiceTest {
     @Test
     void givenAudienceWithExistingNumberAndDiffrentId_whenUpdate_thenNotUniqueNameExceptionThrown() {
 	Audience audience = createAudience();
-	when(audienceDao.getByNumber(audience.getNumber())).thenReturn(Optional.of(Audience.builder().id(9).build()));
+	when(audienceDao.findByNumber(audience.getNumber())).thenReturn(Optional.of(Audience.builder().id(9).build()));
 
-	Exception exception = assertThrows(NotUniqueNameException.class, () -> audienceService.update(audience));
+	Exception exception = assertThrows(NotUniqueNameException.class, () -> audienceService.create(audience));
 
 	String expectedMessage = "audiences number=number 1  not unique";
 	String actualMessage = exception.getMessage();
@@ -80,7 +80,7 @@ class AudienceServiceTest {
     @Test
     void givenAudienceId_whenGetById_thenGot() {
 	Optional<Audience> audience = Optional.of(createAudience());
-	when(audienceDao.getById(1)).thenReturn(audience);
+	when(audienceDao.findById(1)).thenReturn(audience);
 
 	Audience actual = audienceService.getById(1);
 
@@ -90,7 +90,7 @@ class AudienceServiceTest {
 
     @Test
     void givenEmptyOptional_whenGetById_thenEntityNotFoundExceptionThrown() {
-	when(audienceDao.getById(10)).thenReturn(Optional.empty());
+	when(audienceDao.findById(10)).thenReturn(Optional.empty());
 
 	Exception exception = assertThrows(EntityNotFoundException.class, () -> audienceService.getById(10));
 
@@ -102,7 +102,7 @@ class AudienceServiceTest {
     @Test
     void givenNumber_whenGetByNumber_thenGot() {
 	Optional<Audience> audience = Optional.of(createAudience());
-	when(audienceDao.getByNumber("1")).thenReturn(audience);
+	when(audienceDao.findByNumber("1")).thenReturn(audience);
 
 	Audience actual = audienceService.getByNumber("1");
 
@@ -113,7 +113,7 @@ class AudienceServiceTest {
     @Test
     void givenAudiences_whenGetAll_thenGot() {
 	List<Audience> audiences = createAudiences();
-	when(audienceDao.getAll()).thenReturn(audiences);
+	when(audienceDao.findAll()).thenReturn(audiences);
 
 	List<Audience> actual = audienceService.getAll();
 
@@ -138,7 +138,7 @@ class AudienceServiceTest {
 	List<Audience> audiences = new ArrayList<>();
 	audiences.add(createAudience());
 	Page<Audience> expected = new PageImpl<>(audiences);
-	when(audienceDao.getAll(pageable)).thenReturn(expected);
+	when(audienceDao.findAll(pageable)).thenReturn(expected);
 
 	assertEquals(expected, audienceService.getAll(pageable));
     }

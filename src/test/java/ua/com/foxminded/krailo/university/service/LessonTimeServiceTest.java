@@ -2,7 +2,6 @@ package ua.com.foxminded.krailo.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,13 +35,13 @@ class LessonTimeServiceTest {
 
 	lessonTimeService.create(lessonTime);
 
-	verify(lessonTimeDao).create(lessonTime);
+	verify(lessonTimeDao).save(lessonTime);
     }
 
     @Test
     void givenExistingLessonTime_whenCereate_thanLessonTimeNotFreeExceptionThrown() {
 	LessonTime lessonTime = createLessonTime();
-	when(lessonTimeDao.getByStartOrEndLessonTime(lessonTime))
+	when(lessonTimeDao.findByStartTimeAndEndTimeBetween(lessonTime.getStartTime(), lessonTime.getEndTime()))
 		.thenReturn(Optional.of(LessonTime.builder().id(2).build()));
 
 	Exception exception = assertThrows(LessonTimeNotFreeException.class,
@@ -56,11 +55,11 @@ class LessonTimeServiceTest {
     @Test
     void givenExistingLessonTime_whenUpdate_thanLessonTimeNotFreeExceptionThrown() {
 	LessonTime lessonTime = createLessonTime();
-	when(lessonTimeDao.getByStartOrEndLessonTime(lessonTime))
+	when(lessonTimeDao.findByStartTimeAndEndTimeBetween(lessonTime.getStartTime(), lessonTime.getEndTime()))
 		.thenReturn(Optional.of(LessonTime.builder().id(2).build()));
 
 	Exception exception = assertThrows(LessonTimeNotFreeException.class,
-		() -> lessonTimeService.update(lessonTime));
+		() -> lessonTimeService.create(lessonTime));
 
 	String expectedMessage = "lessonTime not free, lessonTime=from: 08:30 - to: 09:15";
 	String actualMessage = exception.getMessage();
@@ -70,17 +69,16 @@ class LessonTimeServiceTest {
     @Test
     void givenGLessonTime_whenUpdate_thanUpdeted() {
 	LessonTime lessonTime = createLessonTime();
-	doNothing().when(lessonTimeDao).update(lessonTime);
 
-	lessonTimeService.update(lessonTime);
+	lessonTimeService.create(lessonTime);
 
-	verify(lessonTimeDao).update(lessonTime);
+	verify(lessonTimeDao).save(lessonTime);
     }
 
     @Test
     void givenLessonTimeId_whenGetById_thenGot() {
 	LessonTime lessonTime = createLessonTime();
-	when(lessonTimeDao.getById(1)).thenReturn(Optional.of(lessonTime));
+	when(lessonTimeDao.findById(1)).thenReturn(Optional.of(lessonTime));
 	LessonTime expected = createLessonTime();
 
 	LessonTime actual = lessonTimeService.getById(1);
@@ -91,7 +89,7 @@ class LessonTimeServiceTest {
     @Test
     void givenLessonTimes_whenGetAll_thenGot() {
 	List<LessonTime> lessonTimes = createLessonTimes();
-	when(lessonTimeDao.getAll()).thenReturn(lessonTimes);
+	when(lessonTimeDao.findAll()).thenReturn(lessonTimes);
 
 	List<LessonTime> actual = lessonTimeService.getAll();
 

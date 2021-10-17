@@ -41,7 +41,7 @@ public class GroupService {
 
     public List<Group> getAll() {
 	log.debug("get all group");
-	return (List<Group>) groupDao.findAll();
+	return groupDao.findAll();
     }
     
     public void create(Group group) {

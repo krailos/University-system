@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.university.dao.hibernate;
+package ua.com.foxminded.krailo.university.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -10,29 +10,28 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.AudienceDao;
 import ua.com.foxminded.krailo.university.model.Audience;
 
 @Transactional
-@SpringBootTest
 @ContextConfiguration(classes = ConfigTest.class)
-class HibernateAudienceDaoTest {
+@DataJpaTest
+class AudienceDaoTest {
 
     @Autowired
     private AudienceDao audienceDao;
     @Autowired
-    private HibernateTemplate hibernateTemplate;
+    private TestEntityManager entityManager;
 
     @Test
     void givenNewAudience_whenCreate_thenCreated() throws Exception {
@@ -40,9 +39,9 @@ class HibernateAudienceDaoTest {
 	audience.setNumber("one");
 	audience.setId(0);
 
-	audienceDao.save(audience);
+	Audience expected = audienceDao.save(audience);
 
-	assertEquals(audience, hibernateTemplate.get(Audience.class, audience.getId()));
+	assertEquals(expected, entityManager.find(Audience.class, expected.getId()));
     }
 
     @Test
@@ -103,7 +102,7 @@ class HibernateAudienceDaoTest {
 
 	audienceDao.save(expected);
 
-	assertEquals(expected, hibernateTemplate.get(Audience.class, expected.getId()));
+	assertEquals(expected, entityManager.find(Audience.class, expected.getId()));
     }
 
     @Test
@@ -112,7 +111,7 @@ class HibernateAudienceDaoTest {
 
 	audienceDao.delete(audience);
 
-	assertNull(hibernateTemplate.get(Audience.class, audience.getId()));
+	assertNull(entityManager.find(Audience.class, audience.getId()));
     }
 
     @Test
@@ -120,7 +119,7 @@ class HibernateAudienceDaoTest {
 
 	int actual = (int) audienceDao.count();
 
-	assertEquals(hibernateTemplate.execute(session -> session.createQuery("from Audience").list().size()), actual);
+	assertEquals(3, actual);
     }
 
     @Test

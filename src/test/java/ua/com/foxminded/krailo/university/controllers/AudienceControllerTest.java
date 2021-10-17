@@ -19,7 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -32,7 +32,7 @@ import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
 import ua.com.foxminded.krailo.university.model.Audience;
 import ua.com.foxminded.krailo.university.service.AudienceService;
 
-@SpringBootTest
+@DataJpaTest
 @ExtendWith(MockitoExtension.class)
 class AudienceControllerTest {
 
@@ -60,12 +60,9 @@ class AudienceControllerTest {
 	Page<Audience> expected = new PageImpl<>(audiences, pageable, allAudiencesCount);
 	when(audienceService.getAll(pageable)).thenReturn(expected);
 
-	mockMvc.perform(get("/audiences")
-		.param("page", "0")
-		.param("size", "3"))
-		.andExpect(view().name("audiences/all"))
+	mockMvc.perform(get("/audiences").param("page", "0").param("size", "3")).andExpect(view().name("audiences/all"))
 		.andExpect(model().attribute("audiencesPage", expected));
-	
+
     }
 
     @Test
@@ -79,10 +76,7 @@ class AudienceControllerTest {
 	Page<Audience> expected = new PageImpl<>(audiences, pageable, allAudiencesCount);
 	when(audienceService.getAll(pageable)).thenReturn(expected);
 
-	mockMvc.perform(get("/audiences")
-		.param("page", "1")
-		.param("size", "3"))
-		.andExpect(view().name("audiences/all"))
+	mockMvc.perform(get("/audiences").param("page", "1").param("size", "3")).andExpect(view().name("audiences/all"))
 		.andExpect(model().attribute("audiencesPage", expected));
     }
 
@@ -91,8 +85,7 @@ class AudienceControllerTest {
 	Audience expected = buildAudiences().get(0);
 	when(audienceService.getById(1)).thenReturn(expected);
 
-	mockMvc.perform(get("/audiences/{id}", "1"))
-		.andExpect(view().name("audiences/audience"))
+	mockMvc.perform(get("/audiences/{id}", "1")).andExpect(view().name("audiences/audience"))
 		.andExpect(model().attribute("audience", expected));
     }
 
@@ -100,17 +93,14 @@ class AudienceControllerTest {
     void givenWrongAudienceId_whenGetAudience_thenEntityNotFoundExceptionThrown() throws Exception {
 	when(audienceService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
-	mockMvc.perform(get("/audiences/{id}", "1"))
-		.andExpect(view().name("errors/error"))
+	mockMvc.perform(get("/audiences/{id}", "1")).andExpect(view().name("/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
     @Test
     void whenCreateAudience_thenAudienceReturned() throws Exception {
 
-	mockMvc.perform(get("/audiences/create"))
-		.andExpect(view().name("audiences/edit"))
-		.andExpect(status().isOk())
+	mockMvc.perform(get("/audiences/create")).andExpect(view().name("audiences/edit")).andExpect(status().isOk())
 		.andExpect(model().attributeExists("audience"));
     }
 
@@ -119,10 +109,8 @@ class AudienceControllerTest {
 	Audience audience = buildAudiences().get(0);
 	audience.setId(0);
 
-	mockMvc.perform(post("/audiences/save")
-		.flashAttr("audience", audience))
-		.andExpect(view().name("redirect:/audiences"))
-		.andExpect(status().is(302));
+	mockMvc.perform(post("/audiences/save").flashAttr("audience", audience))
+		.andExpect(view().name("redirect:/audiences")).andExpect(status().is(302));
 
 	verify(audienceService).create(audience);
     }
@@ -131,12 +119,10 @@ class AudienceControllerTest {
     void givenUpdatedAudience_whenUpdateAudience_thenAudienceUpdated() throws Exception {
 	Audience audience = buildAudiences().get(0);
 
-	mockMvc.perform(post("/audiences/save")
-		.flashAttr("audience", audience))
-		.andExpect(view().name("redirect:/audiences"))
-		.andExpect(status().is(302));
+	mockMvc.perform(post("/audiences/save").flashAttr("audience", audience))
+		.andExpect(view().name("redirect:/audiences")).andExpect(status().is(302));
 
-	verify(audienceService).update(audience);
+	verify(audienceService).create(audience);
     }
 
     @Test
@@ -144,10 +130,8 @@ class AudienceControllerTest {
 	Audience audience = buildAudiences().get(0);
 	when(audienceService.getById(1)).thenReturn(audience);
 
-	mockMvc.perform(get("/audiences/edit/{id}", "1"))
-		.andExpect(view().name("audiences/edit"))
-		.andExpect(status().isOk())
-		.andExpect(model().attribute("audience", audience));
+	mockMvc.perform(get("/audiences/edit/{id}", "1")).andExpect(view().name("audiences/edit"))
+		.andExpect(status().isOk()).andExpect(model().attribute("audience", audience));
     }
 
     @Test
@@ -155,9 +139,7 @@ class AudienceControllerTest {
 	Audience audience = buildAudiences().get(0);
 	when(audienceService.getById(1)).thenReturn(audience);
 
-	mockMvc.perform(post("/audiences/delete")
-		.param("id", "1"))
-		.andExpect(view().name("redirect:/audiences"))
+	mockMvc.perform(post("/audiences/delete").param("id", "1")).andExpect(view().name("redirect:/audiences"))
 		.andExpect(status().is(302));
 
 	verify(audienceService).delete(audience);

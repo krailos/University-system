@@ -122,7 +122,7 @@ class LessonControllerTest {
 	when(lessonService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/lessons/{id}", "1"))
-		.andExpect(view().name("errors/error"))
+		.andExpect(view().name("/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
@@ -188,7 +188,7 @@ class LessonControllerTest {
 		.andExpect(view().name("redirect:/lessons"))
 		.andExpect(status().is(302));
 
-	verify(lessonService).update(lesson);
+	verify(lessonService).create(lesson);
     }
 
     @Test
@@ -257,7 +257,7 @@ class LessonControllerTest {
 
 	mockMvc.perform(post("/lessons/findTeacherForSubstitute").param("startDate", startDate.toString())
 		.param("finishDate", finishDate.toString()).param("teacherId", "1"))
-		.andExpect(view().name("errors/error"))
+		.andExpect(view().name("/error"))
 		.andExpect(model().attribute("message", "there is no free teachers"));
     }
 

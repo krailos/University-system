@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.university.dao.hibernate;
+package ua.com.foxminded.krailo.university.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -10,36 +10,35 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.orm.hibernate5.HibernateTemplate;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.VocationDao;
 import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Vocation;
 import ua.com.foxminded.krailo.university.model.VocationKind;
 
 @Transactional
-@SpringBootTest
+@DataJpaTest
 @ContextConfiguration(classes = ConfigTest.class)
-class HibernateVocationDaoTest {
+class VocationDaoTest {
 
     @Autowired
     private VocationDao vocationDao;
     @Autowired
-    private HibernateTemplate hibernateTemplate;
+    private TestEntityManager entityManager;
 
     @Test
     void givenNewVocation_whenCreate_thenCreated() {
 	Vocation expected = getVocation();
 	expected.setId(0);
 
-	vocationDao.create(expected);
+	vocationDao.save(expected);
 
-	assertEquals(expected, hibernateTemplate.get(Vocation.class, expected.getId()));
+	assertEquals(expected, entityManager.find(Vocation.class, expected.getId()));
     }
 
     @Test
@@ -47,16 +46,16 @@ class HibernateVocationDaoTest {
 	Vocation expected = getVocation();
 	expected.setKind(VocationKind.PREFERENTIAL);
 
-	vocationDao.update(expected);
+	vocationDao.save(expected);
 
-	assertEquals(expected, hibernateTemplate.get(Vocation.class, expected.getId()));
+	assertEquals(expected, entityManager.find(Vocation.class, expected.getId()));
     }
 
     @Test
     void givenId_whenGetById_thenGot() {
 	Vocation expected = getVocation();
 
-	Vocation actual = vocationDao.getById(1).get();
+	Vocation actual = vocationDao.findById(1).get();
 
 	assertEquals(expected, actual);
     }
@@ -75,7 +74,7 @@ class HibernateVocationDaoTest {
 	expected.add(Vocation.builder().id(2).kind(VocationKind.GENERAL).applyingDate(LocalDate.of(2022, 01, 01))
 		.startDate(LocalDate.of(2022, 02, 02)).endDate(LocalDate.of(2022, 02, 10)).teacher(teacher2).build());
 
-	List<Vocation> actual = vocationDao.getAll();
+	List<Vocation> actual = vocationDao.findAll();
 
 	assertEquals(expected, actual);
     }
@@ -90,7 +89,7 @@ class HibernateVocationDaoTest {
 	List<Vocation> expected = new ArrayList<Vocation>();
 	expected.add(vocation);
 
-	List<Vocation> actual = vocationDao.getByTeacher(teacher);
+	List<Vocation> actual = vocationDao.findByTeacher(teacher);
 
 	assertEquals(expected, actual);
     }
@@ -101,7 +100,7 @@ class HibernateVocationDaoTest {
 
 	vocationDao.delete(vocation);
 
-	assertNull(hibernateTemplate.get(Vocation.class, vocation.getId()));
+	assertNull(entityManager.find(Vocation.class, vocation.getId()));
     }
 
     @Test
@@ -112,7 +111,8 @@ class HibernateVocationDaoTest {
 	Vocation expected = getVocation();
 	expected.setTeacher(teacher);
 
-	Vocation actual = vocationDao.getByTeacherAndDate(expected.getTeacher(), LocalDate.of(2021, 02, 07)).get();
+	Vocation actual = vocationDao
+		.findByTeacherAndApplyingDateBetween(expected.getTeacher().getId(), LocalDate.of(2021, 02, 07)).get();
 
 	assertEquals(expected, actual);
     }
@@ -127,7 +127,8 @@ class HibernateVocationDaoTest {
 	List<Vocation> expected = new ArrayList<Vocation>();
 	expected.add(vocation);
 
-	List<Vocation> actual = vocationDao.getByTeacherAndYear(teacher, Year.from(vocation.getStart()));
+	List<Vocation> actual = vocationDao.findByTeacherAndYear(teacher.getId(),
+		Year.from(vocation.getStart()).getValue());
 
 	assertEquals(expected, actual);
     }

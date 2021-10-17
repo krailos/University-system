@@ -108,7 +108,7 @@ class StudentControllerTest {
 	when(studentService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/students/{id}", "1"))
-		.andExpect(view().name("errors/error"))
+		.andExpect(view().name("/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
@@ -152,7 +152,7 @@ class StudentControllerTest {
 	mockMvc.perform(post("/students/save").flashAttr("student", student))
 		.andExpect(view().name("redirect:/students"));
 
-	verify(studentService).update(student);
+	verify(studentService).create(student);
     }
 
     @Test

@@ -40,7 +40,7 @@ public class TeacherService {
 
     public List<Teacher> getAll() {
 	log.debug("Get all teachers");
-	return (List<Teacher>) teacherDao.findAll();
+	return teacherDao.findAll();
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)

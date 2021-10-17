@@ -31,7 +31,7 @@ public class SubjectService {
 
     public List<Subject> getAll() {
 	log.debug("Get all subjects");
-	return (List<Subject>) subjectDao.findAll();
+	return subjectDao.findAll();
     }
 
     public void create(Subject subject) {

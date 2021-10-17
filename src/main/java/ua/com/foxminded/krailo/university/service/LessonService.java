@@ -57,7 +57,7 @@ public class LessonService {
 
     public List<Lesson> getAll() {
 	log.debug("get all lessons");
-	return (List<Lesson>) lessonDao.findAll();
+	return lessonDao.findAll();
     }
 
     public Page<Lesson> getSelectedPage(Pageable pageable) {
@@ -95,13 +95,13 @@ public class LessonService {
 
     public List<Lesson> getLessonsByGroupByDate(Student student, LocalDate date) {
 	log.debug("get timetable for student={} by date={}", student, date);
-	return lessonDao.getByGroupByDate(groupDao.findById(student.getGroup().getId()).get().getId(), date);
+	return lessonDao.findByGroupAndDate(groupDao.findById(student.getGroup().getId()).get().getId(), date);
 
     }
 
     public List<Lesson> getLessonsForStudentByPeriod(Student student, LocalDate startDate, LocalDate finishDate) {
 	log.debug("get timetable for student={} by month", student);
-	return lessonDao.getByGroupBetweenDates(groupDao.findById(student.getGroup().getId()).get().getId(), startDate,
+	return lessonDao.findByGroupAndDateBetween(groupDao.findById(student.getGroup().getId()).get().getId(), startDate,
 		finishDate);
 
     }
@@ -165,7 +165,7 @@ public class LessonService {
 
     private void checkLessonGroupsAreFree(Lesson lesson) {
 	if (lesson
-		.getGroups().stream().map(g -> lessonDao.getByDateAndLessonTimeAndGroup(lesson.getDate(),
+		.getGroups().stream().map(g -> lessonDao.findByDateAndLessonTimeAndGroup(lesson.getDate(),
 			lesson.getLessonTime().getId(), g.getId()))
 		.anyMatch(o -> o.filter(l -> l.getId() != lesson.getId()).isPresent())) {
 	    throw new GroupNotFreeException("lesson groups are not free");

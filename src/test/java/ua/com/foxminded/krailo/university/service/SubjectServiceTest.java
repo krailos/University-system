@@ -33,27 +33,25 @@ class SubjectServiceTest {
     @Test
     void givenSubject_whenCereate_thanCreated() {
 	Subject subject = createSubject();
-	doNothing().when(subjectDao).create(subject);
 
 	subjectService.create(subject);
 
-	verify(subjectDao).create(subject);
+	verify(subjectDao).save(subject);
     }
 
     @Test
     void givenSubject_whenUpdate_thanUpdeted() {
 	Subject subject = createSubject();
-	doNothing().when(subjectDao).update(subject);
 
-	subjectService.update(subject);
+	subjectService.create(subject);
 
-	verify(subjectDao).update(subject);
+	verify(subjectDao).save(subject);
     }
 
     @Test
     void givenSubjectId_whenGetById_thenGot() {
 	Subject subject = createSubject();
-	when(subjectDao.getById(1)).thenReturn(Optional.of(subject));
+	when(subjectDao.findById(1)).thenReturn(Optional.of(subject));
 	Subject expected = createSubject();
 
 	Subject actual = subjectService.getById(1);
@@ -64,7 +62,7 @@ class SubjectServiceTest {
     @Test
     void givenSubjects_whenGetAll_thenGot() {
 	List<Subject> subjects = createSubjects();
-	when(subjectDao.getAll()).thenReturn(subjects);
+	when(subjectDao.findAll()).thenReturn(subjects);
 
 	List<Subject> actual = subjectService.getAll();
 

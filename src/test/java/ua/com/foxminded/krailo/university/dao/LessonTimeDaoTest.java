@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.university.dao.hibernate;
+package ua.com.foxminded.krailo.university.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -10,33 +10,32 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.orm.hibernate5.HibernateTemplate;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.LessonTimeDao;
 import ua.com.foxminded.krailo.university.model.LessonTime;
 
 @Transactional
-@SpringBootTest
+@DataJpaTest
 @ContextConfiguration(classes = ConfigTest.class)
-class HibernateLessonTimeDaoTest {
+class LessonTimeDaoTest {
 
     @Autowired
     private LessonTimeDao lessonTimeDao;
     @Autowired
-    private HibernateTemplate hibernateTemplate;
+    private TestEntityManager entityManager;
 
     @Test
     void givenNewLessonTime_whenCreate_thenCreated() {
 	LessonTime expected = getLessonTime();
 	expected.setId(0);
 
-	lessonTimeDao.create(expected);
+	lessonTimeDao.save(expected);
 
-	assertEquals(expected, hibernateTemplate.get(LessonTime.class, expected.getId()));
+	assertEquals(expected, entityManager.find(LessonTime.class, expected.getId()));
     }
 
     @Test
@@ -44,16 +43,16 @@ class HibernateLessonTimeDaoTest {
 	LessonTime lessonTime = getLessonTime();
 	lessonTime.setOrderNumber("new order number");
 
-	lessonTimeDao.update(lessonTime);
+	lessonTimeDao.save(lessonTime);
 
-	assertEquals(lessonTime, hibernateTemplate.get(LessonTime.class, lessonTime.getId()));
+	assertEquals(lessonTime, entityManager.find(LessonTime.class, lessonTime.getId()));
     }
 
     @Test
     void givenId_whenGetById_thenFound() {
 	LessonTime expected = getLessonTime();
 
-	LessonTime actual = lessonTimeDao.getById(1).get();
+	LessonTime actual = lessonTimeDao.findById(1).get();
 
 	assertEquals(expected, actual);
     }
@@ -65,7 +64,7 @@ class HibernateLessonTimeDaoTest {
 		.endTime(LocalTime.of(9, 15)).build());
 	expected.add(LessonTime.builder().id(2).orderNumber("second lesson").startTime(LocalTime.of(9, 30))
 		.endTime(LocalTime.of(10, 15)).build());
-	List<LessonTime> actual = lessonTimeDao.getAll();
+	List<LessonTime> actual = lessonTimeDao.findAll();
 
 	assertEquals(expected, actual);
     }
@@ -76,14 +75,15 @@ class HibernateLessonTimeDaoTest {
 
 	lessonTimeDao.delete(lessonTime);
 
-	assertNull(hibernateTemplate.get(LessonTime.class, lessonTime.getId()));
+	assertNull(entityManager.find(LessonTime.class, lessonTime.getId()));
     }
 
     @Test
     void givenLessonTime_whenGetByStartEndLessonTime_thenFound() {
 	LessonTime lessonTime = getLessonTime();
 
-	LessonTime actual = lessonTimeDao.getByStartOrEndLessonTime(lessonTime).get();
+	LessonTime actual = lessonTimeDao
+		.findByStartTimeAndEndTimeBetween(lessonTime.getStartTime(), lessonTime.getEndTime()).get();
 
 	assertTrue(actual.getStartTime().isAfter(LocalTime.of(8, 29))
 		&& actual.getStartTime().isBefore(LocalTime.of(9, 16)));

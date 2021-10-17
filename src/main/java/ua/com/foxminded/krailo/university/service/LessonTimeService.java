@@ -33,7 +33,7 @@ public class LessonTimeService {
 
     public List<LessonTime> getAll() {
 	log.debug("Get all lessonTimes");
-	return (List<LessonTime>) lessonTimeDao.findAll();
+	return lessonTimeDao.findAll();
     }
 
     public void create(LessonTime lessonTime) {
@@ -48,7 +48,7 @@ public class LessonTimeService {
     }
 
     private void checkLessonTimeBeFree(LessonTime lessonTime) {
-	Optional<LessonTime> existingLessonTime = lessonTimeDao.getByStartOrEndLessonTime(lessonTime.getStartTime(),
+	Optional<LessonTime> existingLessonTime = lessonTimeDao.findByStartTimeAndEndTimeBetween(lessonTime.getStartTime(),
 		lessonTime.getEndTime());
 	log.debug("existing audience={}", existingLessonTime);
 	if (existingLessonTime.filter(a -> a.getId() != lessonTime.getId()).isPresent()) {

@@ -40,7 +40,7 @@ public class AudienceService {
     
     public List<Audience> getAll() {
 	log.debug("get all audiences");
-	return (List<Audience>) audienceDao.findAll();
+	return audienceDao.findAll();
     }
 
     public void create(Audience audience) {

@@ -30,27 +30,25 @@ class YearServiceTest {
     @Test
     void givenYear_whenCereate_thanCreated() {
 	Year year = createYear();
-	doNothing().when(yearDao).create(year);
 
 	yearService.create(year);
 
-	verify(yearDao).create(year);
+	verify(yearDao).save(year);
     }
 
     @Test
     void givenYear_whenUpdate_thanUpdeted() {
 	Year year = createYear();
-	doNothing().when(yearDao).update(year);
 
-	yearService.update(year);
+	yearService.create(year);
 
-	verify(yearDao).update(year);
+	verify(yearDao).save(year);
     }
 
     @Test
     void givenYearId_whenGetById_thenGot() {
 	Year year = createYear();
-	when(yearDao.getById(1)).thenReturn(Optional.of(year));
+	when(yearDao.findById(1)).thenReturn(Optional.of(year));
 	Year expected = createYear();
 
 	Year actual = yearService.getById(1);
@@ -61,7 +59,7 @@ class YearServiceTest {
     @Test
     void givenYears_whenGetAll_thenGot() {
 	List<Year> years = createYears();
-	when(yearDao.getAll()).thenReturn(years);
+	when(yearDao.findAll()).thenReturn(years);
 
 	List<Year> actual = yearService.getAll();
 

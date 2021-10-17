@@ -103,7 +103,7 @@ class GroupControllerTest {
 	when(groupService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/groups/{id}", "1"))
-		.andExpect(view().name("errors/error"))
+		.andExpect(view().name("/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
@@ -140,7 +140,7 @@ class GroupControllerTest {
 		.andExpect(view().name("redirect:/groups"))
 		.andExpect(status().is(302));
 
-	verify(groupService).update(group);
+	verify(groupService).create(group);
     }
 
     @Test

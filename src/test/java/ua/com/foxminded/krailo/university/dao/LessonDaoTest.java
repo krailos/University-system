@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.university.dao.hibernate;
+package ua.com.foxminded.krailo.university.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -11,12 +11,12 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,30 +31,30 @@ import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @Transactional
-@SpringBootTest
+@DataJpaTest
 @ContextConfiguration(classes = ConfigTest.class)
-class HibernateLessonDaoTest {
+class LessonDaoTest {
 
     @Autowired
-    private HibernateLessonDao lessonDao;
+    private LessonDao lessonDao;
     @Autowired
-    private HibernateTemplate hibernateTemplate;
+    private TestEntityManager entityManager;
 
     @Test
     void givenNewLesson_whenCreate_thenCreated() {
 	Lesson expected = getLesson();
 	expected.setId(0);
 
-	lessonDao.create(expected);
+	lessonDao.save(expected);
 
-	assertEquals(expected, hibernateTemplate.get(Lesson.class, expected.getId()));
+	assertEquals(expected, entityManager.find(Lesson.class, expected.getId()));
     }
 
     @Test
     void givenLessonId_whenGetById_thenLessonReturned() {
 	Lesson expected = getLesson();
 
-	Lesson actual = lessonDao.getById(1).get();
+	Lesson actual = lessonDao.findById(1).get();
 
 	assertEquals(expected, actual);
     }
@@ -66,9 +66,9 @@ class HibernateLessonDaoTest {
 	Audience audience = Audience.builder().id(3).number("3").capacity(120).description("description3").build();
 	expected.setAudience(audience);
 
-	lessonDao.update(expected);
+	lessonDao.save(expected);
 
-	assertEquals(expected, hibernateTemplate.get(Lesson.class, expected.getId()));
+	assertEquals(expected, entityManager.find(Lesson.class, expected.getId()));
     }
 
     @Test
@@ -93,7 +93,7 @@ class HibernateLessonDaoTest {
 
 	Page<Lesson> expected = new PageImpl<>(lessons, pageable, 3);
 
-	Page<Lesson> actual = lessonDao.getAll(pageable);
+	Page<Lesson> actual = lessonDao.findAll(pageable);
 
 	assertEquals(expected, actual);
     }
@@ -104,13 +104,13 @@ class HibernateLessonDaoTest {
 
 	lessonDao.delete(lesson);
 
-	assertNull(hibernateTemplate.get(Lesson.class, lesson.getId()));
+	assertNull(entityManager.find(Lesson.class, lesson.getId()));
     }
 
     @Test
     void whenGetAllLessons_thenAllLessonsReturned() {
 
-	List<Lesson> actual = lessonDao.getAll();
+	List<Lesson> actual = lessonDao.findAll();
 
 	assertEquals(3, actual.size());
     }
@@ -145,7 +145,7 @@ class HibernateLessonDaoTest {
 				.build()))
 		.build());
 
-	List<Lesson> actual = lessonDao.getByDate(LocalDate.of(2021, 01, 01));
+	List<Lesson> actual = lessonDao.findByDate(LocalDate.of(2021, 01, 01));
 
 	assertEquals(expected, actual);
     }
@@ -200,7 +200,7 @@ class HibernateLessonDaoTest {
 			.degree("0").gender(Gender.MALE).build())
 		.build());
 
-	List<Lesson> actual = lessonDao.getByTeacherAndLessonDateBetween(teacher, LocalDate.of(2021, 01, 01),
+	List<Lesson> actual = lessonDao.getByTeacherAndDateBetween(teacher, LocalDate.of(2021, 01, 01),
 		LocalDate.of(2021, 01, 05));
 
 	assertEquals(expected, actual);
@@ -237,7 +237,7 @@ class HibernateLessonDaoTest {
 				.build()))
 		.build());
 
-	List<Lesson> actual = lessonDao.getByGroupBetweenDates(group, LocalDate.of(2021, 01, 01),
+	List<Lesson> actual = lessonDao.findByGroupAndDateBetween(group.getId(), LocalDate.of(2021, 01, 01),
 		LocalDate.of(2021, 01, 05));
 
 	assertEquals(expected, actual);
@@ -274,7 +274,7 @@ class HibernateLessonDaoTest {
 				.build()))
 		.build());
 
-	List<Lesson> actual = lessonDao.getByGroupAndDate(group, LocalDate.of(2021, 01, 01));
+	List<Lesson> actual = lessonDao.findByGroupAndDate(group.getId(), LocalDate.of(2021, 01, 01));
 
 	assertEquals(expected, actual);
     }
@@ -341,8 +341,8 @@ class HibernateLessonDaoTest {
 				.build()))
 		.build();
 
-	Lesson actual = lessonDao.getByDateAndLessonTimeAndGroup(expected.getDate(), expected.getLessonTime(),
-		expected.getGroups().get(0)).get();
+	Lesson actual = lessonDao.findByDateAndLessonTimeAndGroup(expected.getDate(), expected.getLessonTime().getId(),
+		expected.getGroups().get(0).getId()).get();
 
 	assertEquals(expected, actual);
     }
@@ -350,9 +350,9 @@ class HibernateLessonDaoTest {
     @Test
     void givenLessons_whenCount_thenCounted() {
 
-	int actual = lessonDao.count();
+	int actual = (int) lessonDao.count();
 
-	assertEquals(hibernateTemplate.execute(session -> session.createQuery("from Lesson").list().size()), actual);
+	assertEquals(3, actual);
     }
 
     private Lesson getLesson() {

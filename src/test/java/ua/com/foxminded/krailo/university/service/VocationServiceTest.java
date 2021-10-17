@@ -55,7 +55,7 @@ class VocationServiceTest {
 
 	vocationService.create(vocation);
 
-	verify(vocationDao).create(vocation);
+	verify(vocationDao).save(vocation);
     }
 
     @Test
@@ -82,7 +82,7 @@ class VocationServiceTest {
 	vocation.setEnd(LocalDate.of(2021, 10, 25));
 
 	Exception exception = assertThrows(VocationPeriodTooLongException.class,
-		() -> vocationService.update(vocation));
+		() -> vocationService.create(vocation));
 
 	String expectedMessage = "vocation duration more then max duration";
 	String actualMessage = exception.getMessage();
@@ -101,7 +101,7 @@ class VocationServiceTest {
 
 	vocationService.create(vocation);
 
-	verify(vocationDao).create(vocation);
+	verify(vocationDao).save(vocation);
     }
 
     @Test
@@ -112,12 +112,12 @@ class VocationServiceTest {
 	Vocation vocation = createVocation();
 	vocation.setStart(LocalDate.of(2021, 03, 01));
 	vocation.setEnd(LocalDate.of(2021, 03, 14));
-	when(holidayDao.getAll())
+	when(holidayDao.findAll())
 		.thenReturn(new ArrayList<>(Arrays.asList(Holiday.builder().date(LocalDate.of(2021, 03, 01)).build())));
 
 	vocationService.create(vocation);
 
-	verify(vocationDao).create(vocation);
+	verify(vocationDao).save(vocation);
     }
 
     @Test
@@ -127,7 +127,7 @@ class VocationServiceTest {
 	vocation.setStart(LocalDate.of(2021, 01, 01));
 	vocation.setEnd(LocalDate.of(2021, 01, 03));
 	List<Lesson> lessons = createLessons();
-	when(lessonDao.getByTeacherAndLessonDateBetween(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
+	when(lessonDao.getByTeacherAndDateBetween(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
 		.thenReturn(lessons);
 
 	Exception exception = assertThrows(VocationPeriodNotFreeException.class,
@@ -145,11 +145,11 @@ class VocationServiceTest {
 	vocation.setStart(LocalDate.of(2021, 01, 01));
 	vocation.setEnd(LocalDate.of(2021, 01, 03));
 	List<Lesson> lessons = createLessons();
-	when(lessonDao.getByTeacherAndLessonDateBetween(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
+	when(lessonDao.getByTeacherAndDateBetween(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
 		.thenReturn(lessons);
 
 	Exception exception = assertThrows(VocationPeriodNotFreeException.class,
-		() -> vocationService.update(vocation));
+		() -> vocationService.create(vocation));
 
 	String expectedMessage = "vocation period is not free from lessons";
 	String actualMessage = exception.getMessage();
@@ -179,7 +179,7 @@ class VocationServiceTest {
 	vocation.setEnd(LocalDate.of(2021, 01, 01));
 
 	Exception exception = assertThrows(VocationEndBoforeStartException.class,
-		() -> vocationService.update(vocation));
+		() -> vocationService.create(vocation));
 
 	String expectedMessage = "vocation end date less then start date";
 	String actualMessage = exception.getMessage();
@@ -209,7 +209,7 @@ class VocationServiceTest {
 	vocation.setEnd(LocalDate.of(2022, 01, 10));
 
 	Exception exception = assertThrows(VocationPeriodNotSameYearException.class,
-		() -> vocationService.update(vocation));
+		() -> vocationService.create(vocation));
 
 	String expectedMessage = "vocation start and end dates not belong the same year";
 	String actualMessage = exception.getMessage();
@@ -220,12 +220,12 @@ class VocationServiceTest {
     void givenVocationPeriodWhithoutLessons_whenUpdate_thenUpdated() {
 	when(universityConfigProperties.getVocationDurationBykind()).thenReturn(getVocationDurationBykind());
 	Vocation vocation = createVocation();
-	when(lessonDao.getByTeacherAndLessonDateBetween(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
+	when(lessonDao.getByTeacherAndDateBetween(vocation.getTeacher(), vocation.getStart(), vocation.getEnd()))
 		.thenReturn(new ArrayList<>());
 
-	vocationService.update(vocation);
+	vocationService.create(vocation);
 
-	verify(vocationDao).update(vocation);
+	verify(vocationDao).save(vocation);
     }
 
     @Test
@@ -237,9 +237,9 @@ class VocationServiceTest {
 	vocation.setStart(LocalDate.of(2021, 03, 01));
 	vocation.setEnd(LocalDate.of(2021, 03, 14));
 
-	vocationService.update(vocation);
+	vocationService.create(vocation);
 
-	verify(vocationDao).update(vocation);
+	verify(vocationDao).save(vocation);
     }
 
     @Test
@@ -250,18 +250,18 @@ class VocationServiceTest {
 	Vocation vocation = createVocation();
 	vocation.setStart(LocalDate.of(2021, 03, 01));
 	vocation.setEnd(LocalDate.of(2021, 03, 14));
-	when(holidayDao.getAll())
+	when(holidayDao.findAll())
 		.thenReturn(new ArrayList<>(Arrays.asList(Holiday.builder().date(LocalDate.of(2021, 03, 01)).build())));
 
-	vocationService.update(vocation);
+	vocationService.create(vocation);
 
-	verify(vocationDao).update(vocation);
+	verify(vocationDao).save(vocation);
     }
 
     @Test
     void givenVocationId_whenGetById_thenGot() {
 	Vocation vocation = createVocation();
-	when(vocationDao.getById(1)).thenReturn(Optional.of(vocation));
+	when(vocationDao.findById(1)).thenReturn(Optional.of(vocation));
 	Vocation expected = createVocation();
 
 	Vocation actual = vocationService.getById(1);
@@ -272,7 +272,7 @@ class VocationServiceTest {
     @Test
     void givenVocations_whenGetAll_thenGot() {
 	List<Vocation> vocations = createVocations();
-	when(vocationDao.getAll()).thenReturn(vocations);
+	when(vocationDao.findAll()).thenReturn(vocations);
 
 	List<Vocation> actual = vocationService.getAll();
 

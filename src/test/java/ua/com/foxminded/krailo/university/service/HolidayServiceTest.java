@@ -24,34 +24,32 @@ import ua.com.foxminded.krailo.university.model.Holiday;
 class HolidayServiceTest {
 
     @Mock
-    private HolidayDao holidayDaoInt;
+    private HolidayDao holidayDao;
     @InjectMocks
     private HolidayService holidayService;
 
     @Test
     void givenHoliday_whenCereate_thanCreated() {
 	Holiday holiday = createHoliday();
-	doNothing().when(holidayDaoInt).create(holiday);
 
 	holidayService.create(holiday);
 
-	verify(holidayDaoInt).create(holiday);
+	verify(holidayDao).save(holiday);
     }
 
     @Test
     void givenHoliday_whenUpdate_thanUpdeted() {
 	Holiday holiday = createHoliday();
-	doNothing().when(holidayDaoInt).update(holiday);
+	
+	holidayService.create(holiday);
 
-	holidayService.update(holiday);
-
-	verify(holidayDaoInt).update(holiday);
+	verify(holidayDao).save(holiday);
     }
 
     @Test
     void givenHolidayId_whenGetById_thenGot() {
 	Holiday holiday = createHoliday();
-	when(holidayDaoInt.getById(1)).thenReturn(Optional.of(holiday));
+	when(holidayDao.findById(1)).thenReturn(Optional.of(holiday));
 	Holiday expected = createHoliday();
 
 	Holiday actual = holidayService.getById(1);
@@ -62,7 +60,7 @@ class HolidayServiceTest {
     @Test
     void givenHolidays_whenGetAll_thenGot() {
 	List<Holiday> holidays = createHolidays();
-	when(holidayDaoInt.getAll()).thenReturn(holidays);
+	when(holidayDao.findAll()).thenReturn(holidays);
 
 	List<Holiday> actual = holidayService.getAll();
 
@@ -73,11 +71,11 @@ class HolidayServiceTest {
     @Test
     void givenHoliday_whenDelete_thenDeleted() {
 	Holiday holiday = createHoliday();
-	doNothing().when(holidayDaoInt).delete(holiday);
+	doNothing().when(holidayDao).delete(holiday);
 
 	holidayService.delete(holiday);
 
-	verify(holidayDaoInt).delete(holiday);
+	verify(holidayDao).delete(holiday);
     }
 
     private Holiday createHoliday() {

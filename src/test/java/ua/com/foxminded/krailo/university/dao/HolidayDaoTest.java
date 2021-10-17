@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.university.dao.hibernate;
+package ua.com.foxminded.krailo.university.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -9,8 +9,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.orm.hibernate5.HibernateTemplate;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,20 +18,20 @@ import ua.com.foxminded.krailo.university.ConfigTest;
 import ua.com.foxminded.krailo.university.model.Holiday;
 
 @Transactional
-@SpringBootTest
+@DataJpaTest
 @ContextConfiguration(classes = ConfigTest.class)
-class HibernateHolidayDaoTest {
+class HolidayDaoTest {
 
     @Autowired
-    private HibernateHolidayDao holidayDao;
+    private HolidayDao holidayDao;
     @Autowired
-    private HibernateTemplate hibernateTemplate;
+    private TestEntityManager entityManager;
 
     @Test
     void givenHolidayId_whenGetById_thenGot() {
 	Holiday expected = Holiday.builder().id(1).name("Holiday 1").date(LocalDate.of(2021, 01, 01)).build();
 
-	Holiday actual = holidayDao.getById(1).get();
+	Holiday actual = holidayDao.findById(1).get();
 
 	assertEquals(expected, actual);
     }
@@ -49,18 +49,18 @@ class HibernateHolidayDaoTest {
     void givenHoliday_whenUpdate_thenUpdated() {
 	Holiday holiday = Holiday.builder().id(1).name("new Holiday").date(LocalDate.of(2021, 01, 01)).build();
 
-	holidayDao.update(holiday);
+	holidayDao.save(holiday);
 
-	assertEquals(holiday, hibernateTemplate.get(Holiday.class, holiday.getId()));
+	assertEquals(holiday, entityManager.find(Holiday.class, holiday.getId()));
     }
 
     @Test
     void givenNewHoliday_whenCreate_thenCreated() {
 	Holiday expected = Holiday.builder().id(0).name("new Holiday").date(LocalDate.of(2021, 02, 02)).build();
 
-	holidayDao.create(expected);
+	holidayDao.save(expected);
 
-	assertEquals(expected, hibernateTemplate.get(Holiday.class, expected.getId()));
+	assertEquals(expected, entityManager.find(Holiday.class, expected.getId()));
     }
 
     @Test
@@ -69,7 +69,7 @@ class HibernateHolidayDaoTest {
 
 	holidayDao.delete(holiday);
 
-	assertNull(hibernateTemplate.get(Holiday.class, holiday.getId()));
+	assertNull(entityManager.find(Holiday.class, holiday.getId()));
     }
 
     @Test
@@ -78,7 +78,7 @@ class HibernateHolidayDaoTest {
 	expected.add(Holiday.builder().id(1).name("Holiday 1").date(LocalDate.of(2021, 01, 01)).build());
 	expected.add(Holiday.builder().id(2).name("Holiday 2").date(LocalDate.of(2021, 01, 02)).build());
 
-	List<Holiday> actual = holidayDao.getAll();
+	List<Holiday> actual = holidayDao.findAll();
 
 	assertEquals(expected, actual);
     }

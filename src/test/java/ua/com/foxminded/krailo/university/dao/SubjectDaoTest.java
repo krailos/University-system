@@ -1,4 +1,4 @@
-package ua.com.foxminded.krailo.university.dao.hibernate;
+package ua.com.foxminded.krailo.university.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -8,35 +8,34 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.orm.hibernate5.HibernateTemplate;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.krailo.university.ConfigTest;
-import ua.com.foxminded.krailo.university.dao.SubjectDao;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Year;
 
 @Transactional
-@SpringBootTest
+@DataJpaTest
 @ContextConfiguration(classes = ConfigTest.class)
-class HibernateSubjectDaoTest {
+class SubjectDaoTest {
 
     @Autowired
     private SubjectDao subjectDao;
     @Autowired
-    private HibernateTemplate hibernateTemplate;
+    private TestEntityManager entityManager;
 
     @Test
     void givenNewSubject_whenCreate_thenCreated() {
 	Subject expected = getSubject();
 	expected.setId(0);
 
-	subjectDao.create(expected);
+	subjectDao.save(expected);
 
-	assertEquals(expected, hibernateTemplate.get(Subject.class, expected.getId()));
+	assertEquals(expected, entityManager.find(Subject.class, expected.getId()));
     }
 
     @Test
@@ -44,16 +43,16 @@ class HibernateSubjectDaoTest {
 	Subject expected = getSubject();
 	expected.setName("new name");
 
-	subjectDao.update(expected);
+	subjectDao.save(expected);
 
-	assertEquals(expected, hibernateTemplate.get(Subject.class, expected.getId()));
+	assertEquals(expected, entityManager.find(Subject.class, expected.getId()));
     }
 
     @Test
     void givenId_whenGetById_thenGot() {
 	Subject expected = getSubject();
 
-	Subject actual = subjectDao.getById(1).get();
+	Subject actual = subjectDao.findById(1).get();
 
 	assertEquals(expected, actual);
     }
@@ -62,7 +61,7 @@ class HibernateSubjectDaoTest {
     void givenSubjects_whenGetAll_thenGot() {
 	List<Subject> expected = getSubjects();
 
-	List<Subject> actual = subjectDao.getAll();
+	List<Subject> actual = subjectDao.findAll();
 
 	assertEquals(expected, actual);
     }
@@ -73,7 +72,7 @@ class HibernateSubjectDaoTest {
 
 	subjectDao.delete(subject);
 
-	assertNull(hibernateTemplate.get(Subject.class, subject.getId()));
+	assertNull(entityManager.find(Subject.class, subject.getId()));
     }
 
     @Test
@@ -83,7 +82,7 @@ class HibernateSubjectDaoTest {
 	expected.add(Subject.builder().id(1).name("subject 1").build());
 	expected.add(Subject.builder().id(2).name("subject 2").build());
 
-	List<Subject> actual = subjectDao.getByTeacher(teacher);
+	List<Subject> actual = subjectDao.findByTeacher(teacher.getId());
 
 	assertEquals(expected, actual);
     }
@@ -95,7 +94,7 @@ class HibernateSubjectDaoTest {
 	expected.add(Subject.builder().id(1).name("subject 1").build());
 	expected.add(Subject.builder().id(2).name("subject 2").build());
 
-	List<Subject> actual = subjectDao.getByYear(year);
+	List<Subject> actual = subjectDao.findByYear(year.getId());
 
 	assertEquals(expected, actual);
     }

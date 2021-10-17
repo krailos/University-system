@@ -39,17 +39,17 @@ class GroupServiceTest {
     @Test
     void givenGroup_whenCereate_thanCreated() {
 	Group group = createGroup();
-	when(groupDao.getByNameAndYear(group.getName(), group.getYear())).thenReturn(Optional.empty());
+	when(groupDao.findByNameAndYear(group.getName(), group.getYear())).thenReturn(Optional.empty());
 
 	groupService.create(group);
 
-	verify(groupDao).create(group);
+	verify(groupDao).save(group);
     }
 
     @Test
     void givenGroupWithExistingName_whenCereate_thenNotUniqueNameExceptionThrown() {
 	Group group = Group.builder().id(1).name("name1").year(Year.builder().id(1).build()).build();
-	when(groupDao.getByNameAndYear(group.getName(), group.getYear()))
+	when(groupDao.findByNameAndYear(group.getName(), group.getYear()))
 		.thenReturn(Optional.of(Group.builder().name("name").build()));
 
 	Exception exception = assertThrows(NotUniqueNameException.class, () -> groupService.create(group));
@@ -62,20 +62,20 @@ class GroupServiceTest {
     @Test
     void givenGroup_whenUpdate_thanUpdeted() {
 	Group group = createGroup();
-	when(groupDao.getByNameAndYear(group.getName(), group.getYear())).thenReturn(Optional.empty());
+	when(groupDao.findByNameAndYear(group.getName(), group.getYear())).thenReturn(Optional.empty());
 
-	groupService.update(group);
+	groupService.create(group);
 
-	verify(groupDao).update(group);
+	verify(groupDao).save(group);
     }
 
     @Test
     void givenGroupWithExistingNameAndDiffrentId_whenUpdate_thenNotUniqueNameExceptionThrown() {
 	Group group = Group.builder().id(1).name("name1").year(Year.builder().id(1).build()).build();
-	when(groupDao.getByNameAndYear(group.getName(), group.getYear())).thenReturn(
+	when(groupDao.findByNameAndYear(group.getName(), group.getYear())).thenReturn(
 		Optional.of(Group.builder().id(2).name("name1").year(Year.builder().id(1).build()).build()));
 
-	Exception exception = assertThrows(NotUniqueNameException.class, () -> groupService.update(group));
+	Exception exception = assertThrows(NotUniqueNameException.class, () -> groupService.create(group));
 
 	String expectedMessage = "group name=name1 and yearId=1 not unique";
 	String actualMessage = exception.getMessage();
@@ -85,7 +85,7 @@ class GroupServiceTest {
     @Test
     void givenGroupId_whenGetById_thenGot() {
 	Group group = createGroup();
-	when(groupDao.getById(1)).thenReturn(Optional.of(group));
+	when(groupDao.findById(1)).thenReturn(Optional.of(group));
 	Group expected = createGroup();
 
 	Group actual = groupService.getById(1);
@@ -96,7 +96,7 @@ class GroupServiceTest {
     @Test
     void givenGroups_whenGetAll_thenGot() {
 	List<Group> groups = createGroups();
-	when(groupDao.getAll()).thenReturn(groups);
+	when(groupDao.findAll()).thenReturn(groups);
 
 	List<Group> actual = groupService.getAll();
 
@@ -121,18 +121,9 @@ class GroupServiceTest {
 	List<Group> groups = new ArrayList<>();
 	groups.add(createGroup());
 	Page<Group> expected = new PageImpl<>(groups);
-	when(groupDao.getAll(pageable)).thenReturn(expected);
+	when(groupDao.findAll(pageable)).thenReturn(expected);
 
 	assertEquals(expected, groupService.getSelectedPage(pageable));
-    }
-
-    @Test
-    void whenGetQuantity_thenGot() {
-	when(groupDao.count()).thenReturn(10);
-
-	int actual = groupService.getQuantity();
-
-	assertEquals(10, actual);
     }
 
     private Group createGroup() {

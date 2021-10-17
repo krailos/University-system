@@ -30,7 +30,7 @@ public class HolidayService {
 
     public List<Holiday> getAll() {
 	log.debug("Get all holidays");
-	return (List<Holiday>) holidayDao.findAll();
+	return holidayDao.findAll();
     }
 
     

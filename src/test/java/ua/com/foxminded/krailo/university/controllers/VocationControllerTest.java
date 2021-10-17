@@ -74,7 +74,7 @@ class VocationControllerTest {
 	when(vocationService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/vocations/{id}", "1"))
-        	.andExpect(view().name("errors/error"))
+        	.andExpect(view().name("/error"))
         	.andExpect(model().attribute("message", "entity not exist"));
     }
 
@@ -110,7 +110,7 @@ class VocationControllerTest {
 		.andExpect(view().name("redirect:/vocations"))
 		.andExpect(status().is(302));
 	
-	verify(vocationService).update(vocation);
+	verify(vocationService).create(vocation);
     }
 
     @Test

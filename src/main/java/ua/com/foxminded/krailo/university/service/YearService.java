@@ -33,7 +33,7 @@ public class YearService {
 
     public List<Year> getAll() {
 	log.debug("Get all years");
-	return (List<Year>) yearDao.findAll();
+	return yearDao.findAll();
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)

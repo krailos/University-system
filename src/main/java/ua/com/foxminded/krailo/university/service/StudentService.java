@@ -42,7 +42,7 @@ public class StudentService {
 
     public List<Student> getAll() {
 	log.debug("Get all students");
-	return (List<Student>) studentDao.findAll();
+	return studentDao.findAll();
     }
     
   public Page<Student> getSelectedPage(Pageable pageable) {

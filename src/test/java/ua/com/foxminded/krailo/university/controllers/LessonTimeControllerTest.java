@@ -69,7 +69,7 @@ class LessonTimeControllerTest {
 	when(lessonTimeService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/lessonTimes/{id}", "1"))
-		.andExpect(view().name("errors/error"))
+		.andExpect(view().name("/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
@@ -102,7 +102,7 @@ class LessonTimeControllerTest {
 		.andExpect(view().name("redirect:/lessonTimes"))
 		.andExpect(status().is(302));
 	
-	verify(lessonTimeService).update(lessonTime);
+	verify(lessonTimeService).create(lessonTime);
     }
 
     @Test

@@ -60,7 +60,7 @@ class YearControllerTest {
 	when(yearService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/years/{id}", "1"))
-	.andExpect(view().name("errors/error"))
+	.andExpect(view().name("/error"))
 	.andExpect(model().attribute("message", "entity not exist"));
     }
 
@@ -106,7 +106,7 @@ class YearControllerTest {
 	mockMvc.perform(post("/years/save").flashAttr("year", year))
 	.andExpect(view().name("redirect:/years"))
 	.andExpect(status().is(302));
-	verify(yearService).update(year);
+	verify(yearService).create(year);
     }
 
     @Test

@@ -52,7 +52,7 @@ public class VocationService {
 
     public List<Vocation> getAll() {
 	log.debug("Get all vocations");
-	return (List<Vocation>) vocationDao.findAll();
+	return vocationDao.findAll();
     }
     
     public void create(Vocation vocation) {
