@@ -43,7 +43,7 @@ public class VocationService {
 	this.holidayDao = holidayDao;
 	this.universityConfigProperties = universityConfigData;
     }
-    
+
     public Vocation getById(int id) {
 	log.debug("Get vocation by id={}", id);
 	return vocationDao.findById(id)
@@ -54,7 +54,7 @@ public class VocationService {
 	log.debug("Get all vocations");
 	return vocationDao.findAll();
     }
-    
+
     public void create(Vocation vocation) {
 	log.debug("Create vocation={}", vocation);
 	checkVocationDuratioMoreThenMaxDuration(vocation);
@@ -71,7 +71,7 @@ public class VocationService {
 
     public List<Vocation> getByTeacherAndYear(Teacher teacher, Year year) {
 	log.debug("Get by teacherId={} and year={}", teacher.getId(), year);
-	return vocationDao.getByTeacherAndYear(teacher.getId(), year.getValue());
+	return vocationDao.findByTeacherAndYear(teacher.getId(), year.getValue());
     }
 
     private void checkVocationPeriodIsFree(Vocation vocation) {
@@ -94,7 +94,7 @@ public class VocationService {
     }
 
     private void checkVocationDuratioMoreThenMaxDuration(Vocation vocation) {
-	List<Vocation> vocations = vocationDao.getByTeacherAndYear(vocation.getTeacher().getId(),
+	List<Vocation> vocations = vocationDao.findByTeacherAndYear(vocation.getTeacher().getId(),
 		Year.from(vocation.getStart()).getValue());
 	vocations.add(vocation);
 	List<LocalDate> vocationDates = getVocationDates(vocations);

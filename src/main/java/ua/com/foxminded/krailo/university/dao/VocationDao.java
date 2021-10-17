@@ -18,9 +18,6 @@ public interface VocationDao extends PagingAndSortingRepository<Vocation, Intege
     @Query("from Vocation v where v.teacher.id = :teacherId and :date between v.start and v.end")
     Optional<Vocation> findByTeacherAndApplyingDateBetween(int teacherId, LocalDate date);
 
-    @Query("from Vocation v where v.teacher.id = ?1 and" + " extract (year from v.start) = ?2 order by v.start ")
-    List<Vocation> getByTeacherAndYear(int teacherId, int year);
-
     @Query("from Vocation v where v.teacher.id = ?1 and ?2 between v.start and v.end")
     Optional<Vocation> getByTeacherAndDate(int teacherId, LocalDate date);
 

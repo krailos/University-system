@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import ua.com.foxminded.krailo.university.model.Audience;
-import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.LessonTime;
 import ua.com.foxminded.krailo.university.model.Teacher;
@@ -26,13 +25,13 @@ public interface LessonDao extends PagingAndSortingRepository<Lesson, Integer>, 
 
     List<Lesson> findByDate(LocalDate date);
 
-    @Query("select l from Lesson l join l.groups as g  where g.id = ?1 and l.date = ?2")
+    @Query("select l from Lesson l join l.groups as g  where g.id = :groupId and l.date = :date")
     List<Lesson> findByGroupAndDate(int groupId, LocalDate date);
 
-    @Query("select l from Lesson l join l.groups as g  where g.id = ?1 and l.date between ?2 and ?3")
+    @Query("select l from Lesson l join l.groups as g  where g.id = :groupId and l.date between :start and :end")
     List<Lesson> findByGroupAndDateBetween(int groupId, LocalDate start, LocalDate end);
 
-    @Query("select l from Lesson l inner join l.groups as g where l.date = ?1 and l.lessonTime.id = ?2 and g.id = ?3")
+    @Query("select l from Lesson l inner join l.groups as g where l.date = :date and l.lessonTime.id = :lessonTimeId and g.id = :groupId")
     Optional<Lesson> findByDateAndLessonTimeAndGroup(LocalDate date, int lessonTimeId, int groupId);
 
 }

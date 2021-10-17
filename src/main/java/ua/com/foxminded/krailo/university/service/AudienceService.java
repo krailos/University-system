@@ -27,7 +27,7 @@ public class AudienceService {
 	this.audienceDao = audienceDao;
     }
 
-    public Audience getById(Integer id) {
+    public Audience getById(int id) {
 	log.debug("get audience by id={}", id);
 	return audienceDao.findById(id)
 		.orElseThrow(() -> new EntityNotFoundException(String.format("Audience whith id=%s not exist", id)));
@@ -37,7 +37,7 @@ public class AudienceService {
 	log.debug("get audiences by page");
 	return audienceDao.findAll(pageable);
     }
-    
+
     public List<Audience> getAll() {
 	log.debug("get all audiences");
 	return audienceDao.findAll();
