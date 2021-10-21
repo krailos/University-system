@@ -82,7 +82,7 @@ class SubjectDaoTest {
 	expected.add(Subject.builder().id(1).name("subject 1").build());
 	expected.add(Subject.builder().id(2).name("subject 2").build());
 
-	List<Subject> actual = subjectDao.findByTeacher(teacher.getId());
+	List<Subject> actual = subjectDao.findByTeachers(teacher);
 
 	assertEquals(expected, actual);
     }
@@ -94,7 +94,7 @@ class SubjectDaoTest {
 	expected.add(Subject.builder().id(1).name("subject 1").build());
 	expected.add(Subject.builder().id(2).name("subject 2").build());
 
-	List<Subject> actual = subjectDao.findByYear(year.getId());
+	List<Subject> actual = subjectDao.findByYears(year);
 
 	assertEquals(expected, actual);
     }

@@ -100,7 +100,7 @@ class TeacherServiceTest {
 	List<Lesson> substitutedlessons = Arrays.asList(lesson);
 	when(lessonDao.getByTeacherAndDateBetween(subsitutedTeacher, startDate, finishDate))
 		.thenReturn(substitutedlessons);
-	when(teacherDao.getBySubject(subject.getId())).thenReturn(teachersTeachesTheSameLessons);
+	when(teacherDao.getBySubjects(subject)).thenReturn(teachersTeachesTheSameLessons);
 	when(lessonDao.getByDateAndTeacherAndLessonTime(lesson.getDate(), newTeacher, lesson.getLessonTime()))
 		.thenReturn(Optional.empty());
 
@@ -121,7 +121,7 @@ class TeacherServiceTest {
 	Lesson lesson = Lesson.builder().id(1).date(startDate).subject(subject)
 		.lessonTime(LessonTime.builder().id(1).orderNumber("first").build()).teacher(subsitutedTeacher).build();
 	List<Lesson> substitutedlessons = Arrays.asList(lesson);
-	when(teacherDao.getBySubject(subject.getId())).thenReturn(teachersTeachesTheSameLessons);
+	when(teacherDao.getBySubjects(subject)).thenReturn(teachersTeachesTheSameLessons);
 	when(lessonDao.getByTeacherAndDateBetween(subsitutedTeacher, startDate, finishDate))
 		.thenReturn(substitutedlessons);
 	when(lessonDao.getByDateAndTeacherAndLessonTime(lesson.getDate(), newTeacher, lesson.getLessonTime()))

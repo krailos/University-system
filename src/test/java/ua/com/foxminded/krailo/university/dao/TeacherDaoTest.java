@@ -120,7 +120,7 @@ class TeacherDaoTest {
 		.degree("0").gender(Gender.FEMALE).build());
 	Subject subject = Subject.builder().id(1).name("subject 1").build();
 
-	List<Teacher> actual = teacherDao.getBySubject(subject.getId());
+	List<Teacher> actual = teacherDao.getBySubjects(subject);
 
 	assertEquals(expected, actual);
     }

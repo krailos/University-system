@@ -112,7 +112,7 @@ class VocationDaoTest {
 	expected.setTeacher(teacher);
 
 	Vocation actual = vocationDao
-		.findByTeacherAndApplyingDateBetween(expected.getTeacher().getId(), LocalDate.of(2021, 02, 07)).get();
+		.findByTeacherAndDate(expected.getTeacher().getId(), LocalDate.of(2021, 02, 07)).get();
 
 	assertEquals(expected, actual);
     }
@@ -127,8 +127,8 @@ class VocationDaoTest {
 	List<Vocation> expected = new ArrayList<Vocation>();
 	expected.add(vocation);
 
-	List<Vocation> actual = vocationDao.findByTeacherAndYear(teacher.getId(),
-		Year.from(vocation.getStart()).getValue());
+	List<Vocation> actual = vocationDao.findByTeacherAndApplyingDateBetween(teacher,
+		LocalDate.of(vocation.getStart().getYear(), 1, 1), LocalDate.of(vocation.getStart().getYear(), 12, 31));
 
 	assertEquals(expected, actual);
     }

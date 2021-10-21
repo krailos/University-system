@@ -72,7 +72,7 @@ class AudienceDaoTest {
 	expected.add(Audience.builder().id(2).number("2").capacity(120).description("description2").build());
 	expected.add(Audience.builder().id(3).number("3").capacity(120).description("description3").build());
 
-	List<Audience> actual = (List<Audience>) audienceDao.findAll();
+	List<Audience> actual = audienceDao.findAll();
 
 	assertEquals(expected, actual);
     }

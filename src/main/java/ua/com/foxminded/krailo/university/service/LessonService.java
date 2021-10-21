@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.krailo.university.dao.GroupDao;
 import ua.com.foxminded.krailo.university.dao.HolidayDao;
 import ua.com.foxminded.krailo.university.dao.LessonDao;
 import ua.com.foxminded.krailo.university.dao.VocationDao;
@@ -39,14 +38,11 @@ public class LessonService {
     private LessonDao lessonDao;
     private VocationDao vocationDao;
     private HolidayDao holidayDao;
-    private GroupDao groupDao;
 
-    public LessonService(LessonDao lessonDao, VocationDao vocationDao, HolidayDao holidayDao,
-	    GroupDao groupDao) {
+    public LessonService(LessonDao lessonDao, VocationDao vocationDao, HolidayDao holidayDao) {
 	this.lessonDao = lessonDao;
 	this.vocationDao = vocationDao;
 	this.holidayDao = holidayDao;
-	this.groupDao = groupDao;
     }
 
     public Lesson getById(int id) {
@@ -95,14 +91,13 @@ public class LessonService {
 
     public List<Lesson> getLessonsByGroupByDate(Student student, LocalDate date) {
 	log.debug("get timetable for student={} by date={}", student, date);
-	return lessonDao.findByGroupAndDate(groupDao.findById(student.getGroup().getId()).get().getId(), date);
+	return lessonDao.findByGroupsAndDate(student.getGroup(), date);
 
     }
 
     public List<Lesson> getLessonsForStudentByPeriod(Student student, LocalDate startDate, LocalDate finishDate) {
 	log.debug("get timetable for student={} by month", student);
-	return lessonDao.findByGroupAndDateBetween(groupDao.findById(student.getGroup().getId()).get().getId(), startDate,
-		finishDate);
+	return lessonDao.findByGroupsAndDateBetween(student.getGroup(), startDate, finishDate);
 
     }
 
@@ -139,7 +134,7 @@ public class LessonService {
     }
 
     private void checkTeacherIsOnVocation(Lesson lesson) {
-	if (vocationDao.getByTeacherAndDate(lesson.getTeacher().getId(), lesson.getDate()).isPresent()) {
+	if (vocationDao.findByTeacherAndDate(lesson.getTeacher().getId(), lesson.getDate()).isPresent()) {
 	    throw new TeacherOnVocationException("teacher on vocation, teacherId=" + lesson.getTeacher().getId());
 	}
     }
@@ -164,9 +159,8 @@ public class LessonService {
     }
 
     private void checkLessonGroupsAreFree(Lesson lesson) {
-	if (lesson
-		.getGroups().stream().map(g -> lessonDao.findByDateAndLessonTimeAndGroup(lesson.getDate(),
-			lesson.getLessonTime().getId(), g.getId()))
+	if (lesson.getGroups().stream()
+		.map(g -> lessonDao.findByDateAndLessonTimeAndGroups(lesson.getDate(), lesson.getLessonTime(), g))
 		.anyMatch(o -> o.filter(l -> l.getId() != lesson.getId()).isPresent())) {
 	    throw new GroupNotFreeException("lesson groups are not free");
 	}

@@ -51,7 +51,7 @@ public class TeacherService {
 
     public List<Teacher> getBySubjectId(Subject subject) {
 	log.debug("Get teachers by subjectId={}", subject.getId());
-	return teacherDao.getBySubject(subject.getId());
+	return teacherDao.getBySubjects(subject);
     }
 
     public void delete(Teacher teacher) {
@@ -66,7 +66,7 @@ public class TeacherService {
 	List<Subject> substitutedSubjects = substitutedLessons.stream().map(Lesson::getSubject)
 		.collect(Collectors.toList());
 	List<Teacher> teachersForSubstitute = substitutedSubjects.stream()
-		.flatMap(s -> teacherDao.getBySubject(s.getId()).stream()).distinct()
+		.flatMap(s -> teacherDao.getBySubjects(s).stream()).distinct()
 		.filter(t -> t.getSubjects().containsAll(substitutedSubjects)).collect(Collectors.toList());
 	return teachersForSubstitute.stream()
 		.filter(t -> substitutedLessons.stream().noneMatch(l -> lessonDao

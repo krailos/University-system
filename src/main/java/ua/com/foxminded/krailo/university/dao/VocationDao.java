@@ -6,22 +6,18 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
 import ua.com.foxminded.krailo.university.model.Teacher;
 import ua.com.foxminded.krailo.university.model.Vocation;
 
-public interface VocationDao extends PagingAndSortingRepository<Vocation, Integer>, JpaRepository<Vocation, Integer> {
+public interface VocationDao extends JpaRepository<Vocation, Integer> {
 
     List<Vocation> findByTeacher(Teacher teacher);
 
+    List<Vocation> findByTeacherAndApplyingDateBetween(Teacher teacher, LocalDate firstDayOfYear,
+	    LocalDate lsastDayOfYear);
+
     @Query("from Vocation v where v.teacher.id = :teacherId and :date between v.start and v.end")
-    Optional<Vocation> findByTeacherAndApplyingDateBetween(int teacherId, LocalDate date);
-
-    @Query("from Vocation v where v.teacher.id = ?1 and ?2 between v.start and v.end")
-    Optional<Vocation> getByTeacherAndDate(int teacherId, LocalDate date);
-
-    @Query("from Vocation v where v.teacher.id = :teacherId and extract (year from v.start) = :year order by v.start")
-    List<Vocation> findByTeacherAndYear(int teacherId, int year);
+    Optional<Vocation> findByTeacherAndDate(int teacherId, LocalDate date);
 
 }

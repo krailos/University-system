@@ -3,12 +3,11 @@ package ua.com.foxminded.krailo.university.dao;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
 import ua.com.foxminded.krailo.university.model.Group;
 import ua.com.foxminded.krailo.university.model.Student;
 
-public interface StudentDao extends PagingAndSortingRepository<Student, Integer>, JpaRepository<Student, Integer> {
+public interface StudentDao extends JpaRepository<Student, Integer> {
 
     List<Student> getByGroup(Group group);
 

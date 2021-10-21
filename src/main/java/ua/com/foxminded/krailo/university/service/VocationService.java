@@ -71,7 +71,8 @@ public class VocationService {
 
     public List<Vocation> getByTeacherAndYear(Teacher teacher, Year year) {
 	log.debug("Get by teacherId={} and year={}", teacher.getId(), year);
-	return vocationDao.findByTeacherAndYear(teacher.getId(), year.getValue());
+	return vocationDao.findByTeacherAndApplyingDateBetween(teacher, LocalDate.of(year.getValue(), 1, 1),
+		LocalDate.of(year.getValue(), 12, 31));
     }
 
     private void checkVocationPeriodIsFree(Vocation vocation) {
@@ -94,8 +95,8 @@ public class VocationService {
     }
 
     private void checkVocationDuratioMoreThenMaxDuration(Vocation vocation) {
-	List<Vocation> vocations = vocationDao.findByTeacherAndYear(vocation.getTeacher().getId(),
-		Year.from(vocation.getStart()).getValue());
+	List<Vocation> vocations = vocationDao.findByTeacherAndApplyingDateBetween(vocation.getTeacher(),
+	 	LocalDate.of(Year.from(vocation.getStart()).getValue(), 1, 1), LocalDate.of(Year.from(vocation.getStart()).getValue(), 12, 31) );
 	vocations.add(vocation);
 	List<LocalDate> vocationDates = getVocationDates(vocations);
 	List<LocalDate> holidays = holidayDao.findAll().stream().map(Holiday::getDate).collect(Collectors.toList());

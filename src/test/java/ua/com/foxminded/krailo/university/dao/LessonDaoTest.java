@@ -237,7 +237,7 @@ class LessonDaoTest {
 				.build()))
 		.build());
 
-	List<Lesson> actual = lessonDao.findByGroupAndDateBetween(group.getId(), LocalDate.of(2021, 01, 01),
+	List<Lesson> actual = lessonDao.findByGroupsAndDateBetween(group, LocalDate.of(2021, 01, 01),
 		LocalDate.of(2021, 01, 05));
 
 	assertEquals(expected, actual);
@@ -274,7 +274,7 @@ class LessonDaoTest {
 				.build()))
 		.build());
 
-	List<Lesson> actual = lessonDao.findByGroupAndDate(group.getId(), LocalDate.of(2021, 01, 01));
+	List<Lesson> actual = lessonDao.findByGroupsAndDate(group, LocalDate.of(2021, 01, 01));
 
 	assertEquals(expected, actual);
     }
@@ -341,8 +341,8 @@ class LessonDaoTest {
 				.build()))
 		.build();
 
-	Lesson actual = lessonDao.findByDateAndLessonTimeAndGroup(expected.getDate(), expected.getLessonTime().getId(),
-		expected.getGroups().get(0).getId()).get();
+	Lesson actual = lessonDao.findByDateAndLessonTimeAndGroups(expected.getDate(), expected.getLessonTime(),
+		expected.getGroups().get(0)).get();
 
 	assertEquals(expected, actual);
     }
