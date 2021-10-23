@@ -20,7 +20,7 @@ public interface LessonDao extends JpaRepository<Lesson, Integer> {
 
     List<Lesson> getByTeacherAndDate(Teacher teacher, LocalDate date);
 
-    Optional<Lesson> getByDateAndAudienceAndLessonTime(LocalDate date, Audience audience, LessonTime lessonTimeId);
+    Optional<Lesson> getByDateAndAudienceAndLessonTime(LocalDate date, Audience audience, LessonTime lessonTime);
 
     List<Lesson> findByDate(LocalDate date);
 
