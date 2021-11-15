@@ -13,19 +13,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.validation.Validator;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
@@ -35,13 +42,13 @@ import ua.com.foxminded.krailo.university.service.AudienceService;
 @DataJpaTest
 @ExtendWith(MockitoExtension.class)
 class AudienceControllerTest {
-
+    
     @Mock
     private AudienceService audienceService;
     @InjectMocks
     private AudienceController audienceController;
     private MockMvc mockMvc;
-
+  
     @BeforeEach
     public void setUp() {
 	mockMvc = standaloneSetup(audienceController).setControllerAdvice(new ControllerExceptionHandler())
@@ -113,6 +120,22 @@ class AudienceControllerTest {
 		.andExpect(view().name("redirect:/audiences")).andExpect(status().is(302));
 
 	verify(audienceService).create(audience);
+    }
+    
+
+    @Test
+    void givenAudienceWithErrorFields_whenSaveAudience_thenReturnedFormWithErrors() throws Exception {
+	Audience audience = buildAudiences().get(0);
+	audience.setId(0);
+	audience.setNumber("");
+	audience.setCapacity(301);
+	audience.setDescription("123456789101234567891012345678910123456789101234567891012345678910"
+		+ "1234567891012345678910123456789101234567891012345678910");
+
+	mockMvc.perform(post("/audiences/save").
+		flashAttr("audience", audience)).
+	        andExpect(model().
+	        attributeHasFieldErrors("audience", "number", "capacity", "description")).andExpect(view().name("audiences/edit"));
     }
 
     @Test

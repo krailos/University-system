@@ -141,7 +141,7 @@ class StudentDaoTest {
     private Student getStudent() {
 	return Student.builder().id(1).studentId("1id").firstName("student first name 1")
 		.lastName("student last name 1").birthDate(LocalDate.of(2000, 01, 01)).address("address 1")
-		.phone("0670000001").email("email 1").rank("0").gender(Gender.MALE)
+		.phone("0670000001").email("email@com").rank("0").gender(Gender.MALE)
 		.group(Group.builder().id(1).name("group 1").year(Year.builder().id(1).name("year 1").build()).build())
 		.build();
     }

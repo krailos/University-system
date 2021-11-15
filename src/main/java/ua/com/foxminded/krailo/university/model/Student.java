@@ -11,6 +11,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -29,15 +33,21 @@ public class Student {
     private int id;
     @Column(name = "student_id")
     private String studentId;
+    @NotBlank(message = "Name is mandatory")
     @Column(name = "first_name")
     private String firstName;
+    @NotBlank(message = "Name is mandatory")
     @Column(name = "last_name")
     private String lastName;
     @Column(name = "birth_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @NotNull
     private LocalDate birthDate;
+    @NotBlank
     private String phone;
+    @NotBlank
     private String address;
+    @Email
     private String email;
     private String rank;
     @Enumerated(EnumType.STRING)

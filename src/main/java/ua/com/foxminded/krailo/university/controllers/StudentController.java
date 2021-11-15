@@ -2,10 +2,13 @@ package ua.com.foxminded.krailo.university.controllers;
 
 import java.time.LocalDate;
 
+import javax.validation.Valid;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +21,7 @@ import ua.com.foxminded.krailo.university.service.GroupService;
 import ua.com.foxminded.krailo.university.service.LessonService;
 import ua.com.foxminded.krailo.university.service.StudentService;
 
+//@Validated
 @Controller
 @RequestMapping("/students")
 public class StudentController {
@@ -52,7 +56,7 @@ public class StudentController {
     }
 
     @PostMapping("/save")
-    public String saveStudent(@ModelAttribute("student") Student student) {
+    public String saveStudent(@ModelAttribute("student") @Valid Student student) {
 	studentService.create(student);
 	return "redirect:/students";
     }

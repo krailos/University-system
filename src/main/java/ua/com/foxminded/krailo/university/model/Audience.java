@@ -5,9 +5,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
+
+import com.sun.istack.NotNull;
 
 @Entity
 @Table(name = "audiences")
@@ -19,8 +26,11 @@ public class Audience {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @NotBlank(message = "can not be blank")
     private String number;
+    @Max(value = 300, message = "max value is 300")
     private int capacity;
+    @Size(max = 100, message = "max size is 100 letters")
     private String description;
 
     public Audience() {
