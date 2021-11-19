@@ -2,8 +2,11 @@ package ua.com.foxminded.krailo.university.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,7 +54,10 @@ public class HolidaysController {
     }
 
     @PostMapping("/save")
-    public String saveHoliday(@ModelAttribute("holiday") Holiday holiday) {
+    public String saveHoliday(@Valid @ModelAttribute("holiday") Holiday holiday, BindingResult result) {
+	if(result.hasErrors()) {
+	    return "holidays/edit";
+	}
 	    holidayService.create(holiday);	
 	return "redirect:/holidays";
     }

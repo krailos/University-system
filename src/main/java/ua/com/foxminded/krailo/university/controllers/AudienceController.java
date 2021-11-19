@@ -6,8 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,7 +53,7 @@ public class AudienceController {
 
     @PostMapping("/save")
     public String saveAudeince(@Valid @ModelAttribute("audience") Audience audience, BindingResult result) {
-	if(result.hasErrors()) {
+	if (result.hasErrors()) {
 	    return "audiences/edit";
 	}
 	audienceService.create(audience);

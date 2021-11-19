@@ -32,7 +32,6 @@ class AudienceServiceTest {
     @InjectMocks
     private AudienceService audienceService;
 
-
     @Test
     void givenAudience_whenCreate_thenCreated() {
 	Audience audience = createAudience();

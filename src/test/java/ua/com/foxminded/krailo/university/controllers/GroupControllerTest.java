@@ -130,6 +130,19 @@ class GroupControllerTest {
 
 	verify(groupService).create(group);
     }
+    
+    @Test
+    void givenNewGroupWithBlankName_whenSaveGroup_thenFormWithErrorReturned() throws Exception {
+	Group group = buildGroups().get(0);
+	group.setId(0);
+	group.setName(" ");
+
+	mockMvc.perform(post("/groups/save")
+		.flashAttr("group", group))
+		.andExpect(view().name("group/edit"))
+		.andExpect(model().attributeHasFieldErrors("group", "name"))
+		.andExpect(status().is(200));
+    }
 
     @Test
     void givenUpdatedGroup_whenUpdateGroup_thenGroupUpdated() throws Exception {

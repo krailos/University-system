@@ -134,6 +134,22 @@ class StudentControllerTest {
     }
 
     @Test
+    void givenStudentWhithNotValidFields_whenSaveStudent_thenFormWithErrorReturned() throws Exception {
+	Student student = buildStudent();
+	student.setId(0);
+	student.setFirstName(" ");
+	student.setLastName(" ");
+	student.setBirthDate(null);
+	student.setPhone("123");
+	student.setAddress(null);
+	student.setRank("1000");	
+	
+	mockMvc.perform(post("/students/save").flashAttr("student", student))
+		.andExpect(view().name("students/edit"))
+		.andExpect(model().attributeHasFieldErrors("student", "firstName", "lastName", "birthDate", "phone", "address" ,"rank"));
+    }    
+    
+    @Test
     void givenStudent_whenEditStudent_thenReturnStudentAndAllGroups() throws Exception {
 	when(studentService.getById(1)).thenReturn(buildStudent());
 	when(groupService.getAll()).thenReturn(buildGroups());

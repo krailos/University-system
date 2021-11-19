@@ -69,7 +69,7 @@ class HolidayControllerTest {
 	when(holidayService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/holidays/{id}", "1"))
-		.andExpect(view().name("/error"))
+		.andExpect(view().name("/errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
@@ -92,6 +92,18 @@ class HolidayControllerTest {
 		.andExpect(status().is(302));
 	
 	verify(holidayService).create(holiday);
+    }
+    
+    @Test
+    void givenNewHolidayWithBlankName_whenSaveHoliday_thenFormWhithErrorReturned() throws Exception {
+	Holiday holiday = buildHolidays().get(0);
+	holiday.setId(0);
+	holiday.setName(" ");
+
+	mockMvc.perform(post("/holidays/save").flashAttr("holiday", holiday))
+		.andExpect(view().name("holidays/edit"))
+		.andExpect(model().attributeHasFieldErrors("holiday", "name"))
+		.andExpect(status().is(200));
     }
 
     @Test

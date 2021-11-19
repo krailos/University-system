@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,7 +22,6 @@ import ua.com.foxminded.krailo.university.service.GroupService;
 import ua.com.foxminded.krailo.university.service.LessonService;
 import ua.com.foxminded.krailo.university.service.StudentService;
 
-//@Validated
 @Controller
 @RequestMapping("/students")
 public class StudentController {
@@ -56,7 +56,10 @@ public class StudentController {
     }
 
     @PostMapping("/save")
-    public String saveStudent(@ModelAttribute("student") @Valid Student student) {
+    public String saveStudent(@ModelAttribute("student") @Valid Student student, BindingResult result) {
+	if(result.hasErrors()) {
+	    return "students/edit";
+	}
 	studentService.create(student);
 	return "redirect:/students";
     }

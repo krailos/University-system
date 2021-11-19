@@ -15,6 +15,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -44,11 +45,13 @@ public class Student {
     @NotNull
     private LocalDate birthDate;
     @NotBlank
+    @Size(min=10)
     private String phone;
     @NotBlank
     private String address;
     @Email
     private String email;
+    @Size(max=3)
     private String rank;
     @Enumerated(EnumType.STRING)
     private Gender gender;

@@ -106,6 +106,16 @@ class LessonTimeControllerTest {
     }
 
     @Test
+    void givenLessonTimeWithBlankOrderNumber_whenSvaeLessonTime_thenLessonTimeFromWithErrorReturned() throws Exception {
+	LessonTime lessonTime = buildLessonTimes().get(0);
+	lessonTime.setOrderNumber(" ");
+
+	mockMvc.perform(post("/lessonTimes/save").flashAttr("lessonTime", lessonTime))
+		.andExpect(view().name("lessonTimes/edit"))
+		.andExpect(model().attributeHasFieldErrors("lessonTime", "orderNumber"));	
+    }
+    
+    @Test
     void givenLessonTimeId_whenEditLessonTime_thenLessonTimeReturnedToEdite() throws Exception {
 	LessonTime lessonTime = buildLessonTimes().get(0);
 	when(lessonTimeService.getById(1)).thenReturn(lessonTime);

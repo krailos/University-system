@@ -95,6 +95,18 @@ class SubjectControllerTest {
 		.andExpect(status().is(302));
 	verify(subjectService).create(subject);
     }
+    
+    @Test
+    void givenSubjectWithErrorFields_whenSaveSubject_thenFormWhithErrorReturned() throws Exception {
+	Subject subject = buildSubjects().get(0);
+	subject.setId(0);
+	subject.setName(" ");
+	subject.setDescription("1234567891011");
+
+	mockMvc.perform(post("/subjects/save").flashAttr("subject", subject))
+		.andExpect(view().name("subjects/edit"))
+		.andExpect(model().attributeHasFieldErrors("subject", "name", "description"));
+    }
 
     @Test
     void givenUpdatedSubject_whenUpdateSubject_thenSubjectUpdated() throws Exception {

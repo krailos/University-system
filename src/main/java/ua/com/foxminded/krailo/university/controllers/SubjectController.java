@@ -2,8 +2,11 @@ package ua.com.foxminded.krailo.university.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,7 +59,10 @@ public class SubjectController {
     }
 
     @PostMapping("/save")
-    public String saveSubject(@ModelAttribute("subject") Subject subject) {
+    public String saveSubject(@Valid @ModelAttribute("subject") Subject subject, BindingResult result) {
+	if(result.hasErrors()) {
+	    return "subjects/edit";
+	}
 	for (Teacher teacher : subject.getTeachers()) {
 	    teacher = teacherService.getById(teacher.getId());
 	}

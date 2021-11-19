@@ -3,12 +3,15 @@ package ua.com.foxminded.krailo.university.controllers;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,7 +80,10 @@ public class LessonController {
     }
 
     @PostMapping("/save")
-    public String saveLesson(@ModelAttribute("lesson") Lesson lesson) {
+    public String saveLesson(@Valid @ModelAttribute("lesson") Lesson lesson, BindingResult result) {
+	if(result.hasErrors()) {
+	    return "lessons/edit";
+	}
 	lesson.setLessonTime(lessonTimeService.getById(lesson.getLessonTime().getId()));
 	lesson.setSubject(subjectService.getById(lesson.getSubject().getId()));
 	lesson.setAudience(audienceService.getById(lesson.getAudience().getId()));
