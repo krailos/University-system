@@ -1,6 +1,7 @@
 package ua.com.foxminded.krailo.university.controllers;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 import javax.validation.Valid;
 
@@ -9,6 +10,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -56,10 +59,12 @@ public class StudentController {
     }
 
     @PostMapping("/save")
-    public String saveStudent(@ModelAttribute("student") @Valid Student student, BindingResult result) {
-	if(result.hasErrors()) {
+    public String saveStudent(@Valid @ModelAttribute("student") Student student, BindingResult result, Model model) {
+	if (result.hasErrors()) {
+	    model.addAttribute("groups", groupService.getAll());
 	    return "students/edit";
 	}
+
 	studentService.create(student);
 	return "redirect:/students";
     }

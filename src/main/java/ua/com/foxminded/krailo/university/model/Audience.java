@@ -26,11 +26,11 @@ public class Audience {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotBlank(message = "can not be blank")
+    @NotBlank(message = "{notblank}")
     private String number;
-    @Max(value = 300, message = "max value is 300")
+    @Max(value = 300, message = "{max}")
     private int capacity;
-    @Size(max = 100, message = "max size is 100 letters")
+    @Size(max = 100, message = "size")
     private String description;
 
     public Audience() {

@@ -108,7 +108,7 @@ class StudentControllerTest {
 	when(studentService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/students/{id}", "1"))
-		.andExpect(view().name("/error"))
+		.andExpect(view().name("/errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
@@ -139,7 +139,7 @@ class StudentControllerTest {
 	student.setId(0);
 	student.setFirstName(" ");
 	student.setLastName(" ");
-	student.setBirthDate(null);
+	student.setBirthDate(LocalDate.now().minusYears(1));
 	student.setPhone("123");
 	student.setAddress(null);
 	student.setRank("1000");	
@@ -147,7 +147,18 @@ class StudentControllerTest {
 	mockMvc.perform(post("/students/save").flashAttr("student", student))
 		.andExpect(view().name("students/edit"))
 		.andExpect(model().attributeHasFieldErrors("student", "firstName", "lastName", "birthDate", "phone", "address" ,"rank"));
-    }    
+    }   
+    
+    @Test
+    void givenStudentWhithWrongAge_whenSaveStudent_thenFormWithErrorReturned() throws Exception {
+	Student student = buildStudent();
+	student.setId(0);
+	student.setBirthDate(LocalDate.now().minusYears(1));	
+	
+	mockMvc.perform(post("/students/save").flashAttr("student", student))
+		.andExpect(view().name("students/edit"))
+		.andExpect(model().attributeHasFieldErrors("student", "birthDate"));
+    }
     
     @Test
     void givenStudent_whenEditStudent_thenReturnStudentAndAllGroups() throws Exception {
@@ -209,7 +220,8 @@ class StudentControllerTest {
     }
 
     private Student buildStudent() {
-	return Student.builder().firstName("Tom").gender(Gender.MALE).group(Group.builder().id(1).build()).build();
+	return Student.builder().firstName("Tom").lastName("Jon").birthDate(LocalDate.of(1980, 1, 1)).email("abc@gm.com")
+		.address("wd").phone("0670000001").rank("95").gender(Gender.MALE).group(Group.builder().id(1).build()).build();
     }
 
 }

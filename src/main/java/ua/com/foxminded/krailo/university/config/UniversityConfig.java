@@ -8,5 +8,5 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableConfigurationProperties(UniversityConfigProperties.class)
 public class UniversityConfig {
-
+    
 }

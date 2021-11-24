@@ -24,7 +24,7 @@ public class LessonTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotBlank
+    @NotBlank (message = "{notblank}")
     @Column(name = "order_number")
     private String orderNumber;
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)

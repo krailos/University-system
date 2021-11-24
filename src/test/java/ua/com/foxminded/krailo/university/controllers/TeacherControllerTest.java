@@ -82,7 +82,7 @@ class TeacherControllerTest {
 	when(teacherService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/teachers/{id}", "1"))
-		.andExpect(view().name("/error"))
+		.andExpect(view().name("/errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 
@@ -110,6 +110,23 @@ class TeacherControllerTest {
 	verify(teacherService).create(teacher);
     }
 
+    
+    @Test
+    void givenTeacherWhithWrongFields_whenSaveTeacher_thenFormWhithErrorsReturned() throws Exception {
+	Teacher teacher = buildTeachers().get(0);
+	teacher.setId(0);
+	teacher.setFirstName(" ");
+	teacher.setLastName(" ");
+	teacher.setEmail("abc");
+	teacher.setDegree(" ");
+	teacher.setPhone("067");
+
+	mockMvc.perform(post("/teachers/save").flashAttr("teacher", teacher))
+		.andExpect(view().name("teachers/edit"))
+		.andExpect(model().attributeHasFieldErrors("teacher", "firstName", "lastName", "email", "degree", "phone" ));
+	
+    }
+    
     @Test
     void givenUpdatedTeacher_whenUpdateTeacher_thenTeacherUpdated() throws Exception {
 	Teacher teacher = buildTeachers().get(0);
@@ -179,8 +196,8 @@ class TeacherControllerTest {
   
 
     private List<Teacher> buildTeachers() {
-	return Arrays.asList(Teacher.builder().id(1).firstName("Jon").build(),
-		Teacher.builder().id(2).firstName("Tom").build());
+	return Arrays.asList(Teacher.builder().id(1).firstName("Tom").lastName("jon").phone("0670000001").degree("yes").email("abx@gm.com").build(),
+		Teacher.builder().id(2).firstName("Tom").lastName("jon").phone("0670000001").degree("yes").email("abx@gm.com").build());
     }
 
     private List<Subject> buildSubjects() {

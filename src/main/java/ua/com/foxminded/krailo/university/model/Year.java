@@ -13,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -25,6 +26,7 @@ public class Year {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @NotBlank(message = "{notblank}")
     private String name;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "years_subjects", joinColumns = { @JoinColumn(name = "year_id") }, inverseJoinColumns = {

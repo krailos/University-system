@@ -14,12 +14,13 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import ua.com.foxminded.krailo.university.validation.AgeValidation;
 
 @Entity
 @Table(name = "students")
@@ -34,24 +35,25 @@ public class Student {
     private int id;
     @Column(name = "student_id")
     private String studentId;
-    @NotBlank(message = "Name is mandatory")
+    @NotBlank(message = "{notblank}")
     @Column(name = "first_name")
     private String firstName;
-    @NotBlank(message = "Name is mandatory")
+    @NotBlank(message = "{notblank}")
     @Column(name = "last_name")
     private String lastName;
     @Column(name = "birth_date")
+    @AgeValidation(message = "{age}")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @NotNull
+    @NotNull(message = "{notnull}")
     private LocalDate birthDate;
-    @NotBlank
-    @Size(min=10)
+    @NotBlank(message = "{notblank}")
+    @Size(min = 5, message = "{sizemin}")
     private String phone;
-    @NotBlank
+    @NotBlank(message = "{notblank}")
     private String address;
-    @Email
+    @Email(message = "{email}")
     private String email;
-    @Size(max=3)
+    @Size(max = 3, message = "{sizemax}")
     private String rank;
     @Enumerated(EnumType.STRING)
     private Gender gender;

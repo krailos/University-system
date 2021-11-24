@@ -69,7 +69,7 @@ class SubjectControllerTest {
 	when(subjectService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/subjects/{id}", "1"))
-		.andExpect(view().name("/error"))
+		.andExpect(view().name("/errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 

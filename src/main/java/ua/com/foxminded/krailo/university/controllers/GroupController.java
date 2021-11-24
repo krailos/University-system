@@ -58,12 +58,10 @@ public class GroupController {
 
     @PostMapping("/save")
     public String saveGroup(@Valid @ModelAttribute("group") Group group, BindingResult result) {
-	
 	if(result.hasErrors()) {
-	    return "group/edit";
+	    return "groups/edit";
 	}
 	groupService.create(group);
-
 	return "redirect:/groups";
     }
 

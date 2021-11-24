@@ -122,7 +122,7 @@ class LessonControllerTest {
 	when(lessonService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/lessons/{id}", "1"))
-		.andExpect(view().name("/error"))
+		.andExpect(view().name("/errors/error"))
 		.andExpect(model().attribute("message", "entity not exist"));
     }
 

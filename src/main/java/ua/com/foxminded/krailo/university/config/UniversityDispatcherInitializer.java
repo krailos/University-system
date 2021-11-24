@@ -6,7 +6,7 @@ public class UniversityDispatcherInitializer extends AbstractAnnotationConfigDis
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-	return new Class[] { UniversityConfig.class };
+	return new Class[] { UniversityConfig.class};
     }
 
     @Override

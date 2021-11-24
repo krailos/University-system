@@ -17,6 +17,7 @@
 
 <!-- Custom css -->
 <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/errors.css}" />
 
 <!-- Web font awesome 5 local -->
 <link rel="stylesheet"
@@ -33,6 +34,7 @@
 
 
 <title>Edit</title>
+
 </head>
 
 <body>
@@ -51,6 +53,11 @@
 						<p class="h4  text-center text-info">Edit student</p>
 					</div>
 					<div class="col-10 offset-1">
+
+						<!-- h4>All errors:</h4>
+						<ul>
+							<li th:each="err : ${#fields.errors('student.*')}" th:text="${err}" />
+						</ul-->
 
 						<form th:method="POST" th:action="@{/students/save}"
 							th:object=${student}>
@@ -76,7 +83,9 @@
 									class="col-sm-3 col-form-label text-right">First name</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" id="colFormLabel"
-										th:value="*{firstName}" th:field="*{firstName}">
+										th:field="*{firstName}">
+										<p  th:if="${#fields.hasErrors('firstName')}" th:error = "*{firstName}" />
+										
 								</div>
 							</div>
 							<div class="form-group row">
@@ -85,6 +94,8 @@
 								<div class="col-sm-6">
 									<input type="text" class="form-control" id="colFormLabel"
 										th:field="*{lastName}">
+										<p  th:if="${#fields.hasErrors('lastName')}" th:error = "*{lastName}" />
+									
 								</div>
 							</div>
 
@@ -94,6 +105,7 @@
 								<div class="col-sm-6">
 									<input type="date" class="form-control" id="dateId"
 										th:value="*{birthDate}" th:field="*{birthDate}">
+										
 								</div>
 							</div>
 
@@ -103,6 +115,8 @@
 								<div class="col-sm-6">
 									<input type="text" class="form-control" id="colFormLabel"
 										th:field="*{phone}">
+										
+										
 								</div>
 							</div>
 
@@ -112,6 +126,8 @@
 								<div class="col-sm-6">
 									<input type="text" class="form-control" id="colFormLabel"
 										th:field="*{address}">
+																	
+										
 								</div>
 							</div>
 
@@ -120,6 +136,8 @@
 								<div class="col-sm-6">
 									<input type="text" class="form-control" id="email"
 										th:field="*{email}">
+										
+										
 								</div>
 							</div>
 
@@ -129,6 +147,7 @@
 								<div class="col-sm-6">
 									<input type="text" class="form-control" id="colFormLabel"
 										th:field="*{rank}">
+										
 								</div>
 							</div>
 

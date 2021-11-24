@@ -26,7 +26,7 @@ public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotBlank
+    @NotBlank(message = "{notblank}")
     private String name;
     @ManyToOne
     private Year year;

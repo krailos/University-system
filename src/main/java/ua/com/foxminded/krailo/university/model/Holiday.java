@@ -22,7 +22,7 @@ public class Holiday {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotBlank
+    @NotBlank (message = "{notblank}")
     private String name;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate date;

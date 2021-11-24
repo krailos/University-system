@@ -16,6 +16,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -33,8 +36,10 @@ public class Teacher {
     private int id;
     @Column(name = "teacher_id")
     private String teacherId;
+    @NotBlank(message = "{notblank}")
     @Column(name = "first_name")
     private String firstName;
+    @NotBlank(message = "{notblank}")
     @Column(name = "last_name")
     private String lastName;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -44,13 +49,16 @@ public class Teacher {
     @JoinTable(name = "teachers_subjects", joinColumns = { @JoinColumn(name = "teacher_id") }, inverseJoinColumns = {
 	    @JoinColumn(name = "subject_id") })
     private List<Subject> subjects = new ArrayList<>();
+    @Size(min = 5, message = "{sizemin}")
     private String phone;
     @Column(name = "address")
     private String address;
+    @Email(message = "{email}")
     @Column(name = "email")
     private String email;
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    @NotBlank(message = "{notblank}")
     private String degree;
 
     public Teacher() {

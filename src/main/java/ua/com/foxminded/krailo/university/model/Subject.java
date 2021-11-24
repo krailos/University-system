@@ -27,9 +27,9 @@ public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotBlank
+    @NotBlank(message = "{notblank}")
     private String name;
-    @Size(max=10)
+    @Size(max=10, message = "{sizemax}")
     private String description;
     @ManyToMany(mappedBy = "subjects", fetch = FetchType.LAZY)
     private List<Teacher> teachers = new ArrayList<>();

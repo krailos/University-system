@@ -60,7 +60,7 @@ class YearControllerTest {
 	when(yearService.getById(1)).thenThrow(new EntityNotFoundException("entity not exist"));
 
 	mockMvc.perform(get("/years/{id}", "1"))
-	.andExpect(view().name("/error"))
+	.andExpect(view().name("/errors/error"))
 	.andExpect(model().attribute("message", "entity not exist"));
     }
 
@@ -97,6 +97,18 @@ class YearControllerTest {
 	.andExpect(view().name("redirect:/years"))
 	.andExpect(status().is(302));
 	verify(yearService).create(year);
+    }
+    
+    @Test
+    void givenYearWhithWrongField_whenSaveYear_thenFormWhithErrorsReturned() throws Exception {
+	Year year = buildYaers().get(0);
+	year.setId(0);
+	year.setName(" ");
+
+	mockMvc.perform(post("/years/save").flashAttr("year", year))
+	.andExpect(view().name("years/edit"))
+	.andExpect(model().attributeHasFieldErrors("year", "name"))
+	.andExpect(status().is(200));
     }
 
     @Test
