@@ -54,10 +54,10 @@
 					</div>
 					<div class="col-10 offset-1">
 
-						<!-- h4>All errors:</h4>
+						<h4> All errors:</h4>
 						<ul>
 							<li th:each="err : ${#fields.errors('student.*')}" th:text="${err}" />
-						</ul-->
+						</ul>
 
 						<form th:method="POST" th:action="@{/students/save}"
 							th:object=${student}>

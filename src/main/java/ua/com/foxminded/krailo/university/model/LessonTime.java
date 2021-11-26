@@ -14,6 +14,9 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import ua.com.foxminded.krailo.university.validation.LessonTimeValidation;
+
+@LessonTimeValidation(startLessonTime = "startTime", endLessonTime = "endTime", message = "{lessonTime}")
 @Entity
 @Table(name = "lesson_Times")
 @NamedQueries({ @NamedQuery(name = "SelectAllLessonTime", query = "from LessonTime l order by l.startTime"),
@@ -24,7 +27,7 @@ public class LessonTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotBlank (message = "{notblank}")
+    @NotBlank(message = "{notblank}")
     @Column(name = "order_number")
     private String orderNumber;
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)

@@ -51,7 +51,6 @@ public class Teacher {
     private List<Subject> subjects = new ArrayList<>();
     @Size(min = 5, message = "{sizemin}")
     private String phone;
-    @Column(name = "address")
     private String address;
     @Email(message = "{email}")
     @Column(name = "email")

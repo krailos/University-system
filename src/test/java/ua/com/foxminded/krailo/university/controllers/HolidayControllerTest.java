@@ -99,10 +99,11 @@ class HolidayControllerTest {
 	Holiday holiday = buildHolidays().get(0);
 	holiday.setId(0);
 	holiday.setName(" ");
+	holiday.setDate(null);
 
 	mockMvc.perform(post("/holidays/save").flashAttr("holiday", holiday))
 		.andExpect(view().name("holidays/edit"))
-		.andExpect(model().attributeHasFieldErrors("holiday", "name"))
+		.andExpect(model().attributeHasFieldErrors("holiday", "name", "date" ))
 		.andExpect(status().is(200));
     }
 

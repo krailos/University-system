@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.validation.ConstraintViolationException;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -46,59 +44,6 @@ class AudienceDaoTest {
 	assertEquals(expected, entityManager.find(Audience.class, expected.getId()));
     }
 
-    @Test
-    void givenAudienceWithBlankNumber_whenCreate_thenExceptionThrown() throws Exception {
-	Audience audience = getAudience();
-	audience.setNumber(" ");
-	audience.setId(0);
-
-	String expected = "Validation failed for classes [ua.com.foxminded.krailo.university.model.Audience] during persist time for groups [javax.validation.groups.Default, ]\n"
-		+ "List of constraint violations:[\n"
-		+ "	ConstraintViolationImpl{interpolatedMessage='can not be blank', propertyPath=number, rootBeanClass=class ua.com.foxminded.krailo.university.model.Audience, messageTemplate='can not be blank'}\n"
-		+ "]";
-	
-	String actual = assertThrows(ConstraintViolationException.class, () -> audienceDao.save(audience))
-		.getMessage();
-	
-	assertEquals(expected, actual);
-    }
-    
-    @Test
-    void givenAudienceWithCapacityMoreMax_whenCreate_thenExceptionThrown() throws Exception {
-	Audience audience = getAudience();
-	audience.setCapacity(301);
-	audience.setId(0);
-
-	String expected = "Validation failed for classes [ua.com.foxminded.krailo.university.model.Audience] during persist time for groups [javax.validation.groups.Default, ]\n"
-		+ "List of constraint violations:[\n"
-		+ "	ConstraintViolationImpl{interpolatedMessage='max value is 300', propertyPath=capacity, rootBeanClass=class ua.com.foxminded.krailo.university.model.Audience, messageTemplate='max value is 300'}\n"
-		+ "]";
-	
-	String actual = assertThrows(ConstraintViolationException.class, () -> audienceDao.save(audience))
-		.getMessage();
-	
-	assertEquals(expected, actual);	
-    }
-    
-    @Test
-    void givenAudienceWithDescriptionMoreSize_whenCreate_thenExceptionThrown() throws Exception {
-	Audience audience = getAudience();
-	audience.setDescription("testtesttesttesttesttesttesttesttesttesttesttesttest"
-		+ "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest");
-	audience.setId(0);
-
-	String expected = "Validation failed for classes [ua.com.foxminded.krailo.university.model.Audience] during persist time for groups [javax.validation.groups.Default, ]\n"
-		+ "List of constraint violations:[\n"
-		+ "	ConstraintViolationImpl{interpolatedMessage='max size is 100 letters', propertyPath=description, rootBeanClass=class ua.com.foxminded.krailo.university.model.Audience, messageTemplate='max size is 100 letters'}\n"
-		+ "]";
-	
-	String actual = assertThrows(ConstraintViolationException.class, () -> audienceDao.save(audience))
-		.getMessage();
-	
-	assertEquals(expected, actual);
-    }
-
-    
     @Test
     void givenAudienceWithExistingNumber_whenCreate_thenDaoConstraintViolationExceptionThrown() {
 	Audience audience = Audience.builder().number("1").capacity(120).description("description3").build();

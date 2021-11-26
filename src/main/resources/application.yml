@@ -23,6 +23,7 @@ spring:
     
 university:
   maxGroupSize: 30
+  ageConstraint: 14
   vocationDurationBykind:
     GENERAL: 14
     PREFERENTIAL: 24
