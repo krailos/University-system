@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -113,6 +114,19 @@ class LessonTimeControllerTest {
 	mockMvc.perform(post("/lessonTimes/save").flashAttr("lessonTime", lessonTime))
 		.andExpect(view().name("lessonTimes/edit"))
 		.andExpect(model().attributeHasFieldErrors("lessonTime", "orderNumber"));	
+    }
+    
+    @Test
+    void givenLessonTimeWithBlankOrderNumberAndStartTimeAfterEnd_whenSvaeLessonTime_thenLessonTimeFromWithErrorReturned() throws Exception {
+	LessonTime lessonTime = buildLessonTimes().get(0);
+	lessonTime.setOrderNumber(" ");
+	lessonTime.setStartTime(LocalTime.now());
+	lessonTime.setEndTime(LocalTime.now().minusHours(1));
+
+	mockMvc.perform(post("/lessonTimes/save").flashAttr("lessonTime", lessonTime))
+		.andExpect(view().name("lessonTimes/edit"))
+		.andExpect(model().attributeHasFieldErrors("lessonTime", "orderNumber"))
+		.andExpect(model().errorCount(2));	
     }
     
     @Test

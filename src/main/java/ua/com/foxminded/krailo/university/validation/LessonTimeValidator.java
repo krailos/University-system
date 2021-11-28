@@ -5,20 +5,14 @@ import java.time.LocalTime;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.springframework.beans.BeanWrapperImpl;
+import ua.com.foxminded.krailo.university.model.LessonTime;
 
-public class LessonTimeValidator implements ConstraintValidator<LessonTimeValidation, Object> {
-
-    private String startLessonTime;
-    private String endLessonTime;
+public class LessonTimeValidator implements ConstraintValidator<LessonTimeValidation, LessonTime> {
 
     @Override
-    public boolean isValid(Object value, ConstraintValidatorContext context) {
-	Object lessonStart = new BeanWrapperImpl(value).getPropertyValue(startLessonTime);
-	Object lessonEnd = new BeanWrapperImpl(value).getPropertyValue(endLessonTime);
-
-	LocalTime start = (LocalTime) lessonStart;
-	LocalTime end = (LocalTime) lessonEnd;
+    public boolean isValid(LessonTime value, ConstraintValidatorContext context) {
+	LocalTime start = value.getStartTime();
+	LocalTime end = value.getEndTime();
 	return start.isBefore(end);
     }
 

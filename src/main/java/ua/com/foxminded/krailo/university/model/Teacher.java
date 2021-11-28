@@ -18,6 +18,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.NamedQueries;
@@ -43,6 +44,7 @@ public class Teacher {
     @Column(name = "last_name")
     private String lastName;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @NotNull
     @Column(name = "birth_date")
     private LocalDate birthDate;
     @ManyToMany(fetch = FetchType.LAZY)

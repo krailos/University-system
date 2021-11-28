@@ -17,5 +17,5 @@ public class ControllerExceptionHandler {
 	log.error("exception message={}", e.getMessage());
 	return "/errors/error";
     }
-
+    
 }

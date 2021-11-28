@@ -83,21 +83,19 @@
 									class="col-sm-3 col-form-label text-right">First name</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" id="colFormLabel"
-										th:field="*{firstName}">
-										<p  th:if="${#fields.hasErrors('firstName')}" th:error = "*{firstName}" />
-										
+										th:field="*{firstName}">										
 								</div>
 							</div>
+							<p  th:if="${#fields.hasErrors('firstName')}" th:error = "*{firstName}" />
 							<div class="form-group row">
 								<label for="colFormLabel"
 									class="col-sm-3 col-form-label text-right">Last name</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" id="colFormLabel"
-										th:field="*{lastName}">
-										<p  th:if="${#fields.hasErrors('lastName')}" th:error = "*{lastName}" />
-									
+										th:field="*{lastName}">								
 								</div>
 							</div>
+							<p  th:if="${#fields.hasErrors('lastName')}" th:error = "*{lastName}" />
 
 							<div class="form-group row">
 								<label for="dateId" class="col-sm-3 col-form-label text-right">Birth

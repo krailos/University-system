@@ -14,9 +14,11 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.sun.istack.NotNull;
+
 import ua.com.foxminded.krailo.university.validation.LessonTimeValidation;
 
-@LessonTimeValidation(startLessonTime = "startTime", endLessonTime = "endTime", message = "{lessonTime}")
+@LessonTimeValidation(message = "{lessonTime}")
 @Entity
 @Table(name = "lesson_Times")
 @NamedQueries({ @NamedQuery(name = "SelectAllLessonTime", query = "from LessonTime l order by l.startTime"),
@@ -30,9 +32,11 @@ public class LessonTime {
     @NotBlank(message = "{notblank}")
     @Column(name = "order_number")
     private String orderNumber;
+    @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @Column(name = "start_time")
     private LocalTime startTime;
+    @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @Column(name = "end_time")
     private LocalTime endTime;

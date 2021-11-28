@@ -15,10 +15,6 @@ public @interface LessonTimeValidation {
 
     String message() default "lesson time constraint";
 
-    String startLessonTime();
-
-    String endLessonTime();
-
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
