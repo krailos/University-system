@@ -14,6 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -37,13 +38,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 	@NamedQuery(name = "SelectLessonsByGroupAndDate", query = "select l from Lesson l join l.groups as g  where g.id = :groupId and "
 		+ " l.date = :date"),
 	@NamedQuery(name = "SelectLessonsByGroupBetweenDates", query = "select l from Lesson l join l.groups as g  where g.id = :groupId and "
-		+ " l.date between :startDate and :finishDate")
-})
+		+ " l.date between :startDate and :finishDate") })
 public class Lesson {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @NotNull(message = "{notnull}")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate date;
     @ManyToOne
@@ -59,7 +60,7 @@ public class Lesson {
     @JoinTable(name = "lessons_groups", joinColumns = { @JoinColumn(name = "lesson_id") }, inverseJoinColumns = {
 	    @JoinColumn(name = "group_id") })
     private List<Group> groups = new ArrayList<>();
-   
+
     public Lesson() {
     }
 
@@ -185,8 +186,6 @@ public class Lesson {
 
     }
 
-  
-
     @Override
     public int hashCode() {
 	final int prime = 31;
@@ -247,12 +246,11 @@ public class Lesson {
 
     @Override
     public String toString() {
-	return "Lesson [id=" + id
-		+ ", date=" + date
-		+ ", lessonTime=" + (lessonTime ==  null  ? "null": lessonTime.getId())
-		+ ", subject="+ (subject ==  null  ? "null": subject.getId())
-		+ ", audience=" + (audience ==  null  ? "null": audience.getId())
-		+ ", teacher=" + (teacher ==  null  ? "null": teacher.getId()) + "]";
+	return "Lesson [id=" + id + ", date=" + date + ", lessonTime="
+		+ (lessonTime == null ? "null" : lessonTime.getId()) + ", subject="
+		+ (subject == null ? "null" : subject.getId()) + ", audience="
+		+ (audience == null ? "null" : audience.getId()) + ", teacher="
+		+ (teacher == null ? "null" : teacher.getId()) + "]";
     }
 
 }

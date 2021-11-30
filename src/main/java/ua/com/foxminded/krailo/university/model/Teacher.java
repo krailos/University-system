@@ -44,19 +44,23 @@ public class Teacher {
     @Column(name = "last_name")
     private String lastName;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @NotNull
+    @NotNull(message = "{notnull}")
     @Column(name = "birth_date")
     private LocalDate birthDate;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "teachers_subjects", joinColumns = { @JoinColumn(name = "teacher_id") }, inverseJoinColumns = {
 	    @JoinColumn(name = "subject_id") })
     private List<Subject> subjects = new ArrayList<>();
+    @NotBlank(message = "{notblank}")
     @Size(min = 5, message = "{sizemin}")
     private String phone;
+    @NotBlank(message = "{notblank}")
     private String address;
+    @NotNull(message = "{notnull}")
     @Email(message = "{email}")
     @Column(name = "email")
     private String email;
+    @NotNull(message = "{notnull}")
     @Enumerated(EnumType.STRING)
     private Gender gender;
     @NotBlank(message = "{notblank}")

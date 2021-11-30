@@ -9,12 +9,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import com.sun.istack.NotNull;
 
 import ua.com.foxminded.krailo.university.validation.LessonTimeValidation;
 
@@ -32,11 +31,11 @@ public class LessonTime {
     @NotBlank(message = "{notblank}")
     @Column(name = "order_number")
     private String orderNumber;
-    @NotNull
+    @NotNull(message = "{notnull}")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @Column(name = "start_time")
     private LocalTime startTime;
-    @NotNull
+    @NotNull(message = "{notnull}")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @Column(name = "end_time")
     private LocalTime endTime;

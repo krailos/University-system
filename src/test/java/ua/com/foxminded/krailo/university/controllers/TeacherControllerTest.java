@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
+import ua.com.foxminded.krailo.university.model.Gender;
 import ua.com.foxminded.krailo.university.model.Lesson;
 import ua.com.foxminded.krailo.university.model.Subject;
 import ua.com.foxminded.krailo.university.model.Teacher;
@@ -196,8 +197,8 @@ class TeacherControllerTest {
   
 
     private List<Teacher> buildTeachers() {
-	return Arrays.asList(Teacher.builder().id(1).firstName("Tom").lastName("jon").phone("0670000001").degree("yes").email("abx@gm.com").build(),
-		Teacher.builder().id(2).firstName("Tom").lastName("jon").phone("0670000001").degree("yes").email("abx@gm.com").build());
+	return Arrays.asList(Teacher.builder().id(1).firstName("Tom").lastName("jon").phone("0670000001").gender(Gender.MALE).degree("yes").email("abx@gmail.com").build(),
+		Teacher.builder().id(2).firstName("Tom").lastName("jon").phone("0670000001").degree("yes").email("abx@gmail.com").gender(Gender.MALE).build());
     }
 
     private List<Subject> buildSubjects() {

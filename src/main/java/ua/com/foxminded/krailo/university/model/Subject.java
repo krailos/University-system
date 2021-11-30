@@ -29,7 +29,7 @@ public class Subject {
     private int id;
     @NotBlank(message = "{notblank}")
     private String name;
-    @Size(max=10, message = "{sizemax}")
+    @Size(max = 100, message = "{sizemax}")
     private String description;
     @ManyToMany(mappedBy = "subjects", fetch = FetchType.LAZY)
     private List<Teacher> teachers = new ArrayList<>();
@@ -129,9 +129,6 @@ public class Subject {
 	}
 
     }
-
-  
-    
 
     @Override
     public int hashCode() {

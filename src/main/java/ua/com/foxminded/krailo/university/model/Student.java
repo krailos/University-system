@@ -51,10 +51,12 @@ public class Student {
     private String phone;
     @NotBlank(message = "{notblank}")
     private String address;
+    @NotNull(message = "{notnull}")
     @Email(message = "{email}")
     private String email;
     @Size(max = 3, message = "{sizemax}")
     private String rank;
+    @NotNull(message = "{notnull}")
     @Enumerated(EnumType.STRING)
     private Gender gender;
     @ManyToOne

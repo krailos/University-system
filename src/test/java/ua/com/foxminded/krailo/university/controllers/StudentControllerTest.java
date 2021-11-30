@@ -141,7 +141,7 @@ class StudentControllerTest {
 	student.setLastName(" ");
 	student.setBirthDate(LocalDate.now().minusYears(1));
 	student.setPhone("123");
-	student.setAddress(null);
+	student.setAddress(" ");
 	student.setRank("1000");	
 	
 	mockMvc.perform(post("/students/save").flashAttr("student", student))
@@ -153,7 +153,7 @@ class StudentControllerTest {
     void givenStudentWhithWrongAge_whenSaveStudent_thenFormWithErrorReturned() throws Exception {
 	Student student = buildStudent();
 	student.setId(0);
-	student.setBirthDate(LocalDate.now().minusYears(1));	
+	student.setBirthDate(LocalDate.now().minusYears(18));	
 	
 	mockMvc.perform(post("/students/save").flashAttr("student", student))
 		.andExpect(view().name("students/edit"))

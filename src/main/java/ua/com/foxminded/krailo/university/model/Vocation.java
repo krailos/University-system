@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -29,14 +30,18 @@ public class Vocation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @NotNull(message = "{notnull}")
     @Enumerated(EnumType.STRING)
     private VocationKind kind;
+    @NotNull(message = "{notnull}")
     @Column(name = "applying_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate applyingDate;
+    @NotNull(message = "{notnull}")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "start_date")
     private LocalDate start;
+    @NotNull(message = "{notnull}")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "end_date")
     private LocalDate end;
