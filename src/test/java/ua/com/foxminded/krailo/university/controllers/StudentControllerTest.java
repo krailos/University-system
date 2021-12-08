@@ -14,11 +14,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.validation.ConstraintValidatorContext;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,6 +29,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import ua.com.foxminded.krailo.university.controllers.exception.ControllerExceptionHandler;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;
@@ -36,6 +41,7 @@ import ua.com.foxminded.krailo.university.model.Student;
 import ua.com.foxminded.krailo.university.service.GroupService;
 import ua.com.foxminded.krailo.university.service.LessonService;
 import ua.com.foxminded.krailo.university.service.StudentService;
+import ua.com.foxminded.krailo.university.validation.AgeValidator;
 
 @ExtendWith(MockitoExtension.class)
 class StudentControllerTest {
@@ -49,8 +55,8 @@ class StudentControllerTest {
     @InjectMocks
     private StudentController studentController;
     private MockMvc mockMvc;
-
-    @BeforeEach
+    
+     @BeforeEach
     public void init() {
 	mockMvc = standaloneSetup(studentController).setControllerAdvice(new ControllerExceptionHandler())
 		.setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver()).build();
@@ -153,8 +159,8 @@ class StudentControllerTest {
     void givenStudentWhithWrongAge_whenSaveStudent_thenFormWithErrorReturned() throws Exception {
 	Student student = buildStudent();
 	student.setId(0);
-	student.setBirthDate(LocalDate.now().minusYears(18));	
-	
+	student.setBirthDate(LocalDate.now().minusYears(1));
+	 
 	mockMvc.perform(post("/students/save").flashAttr("student", student))
 		.andExpect(view().name("students/edit"))
 		.andExpect(model().attributeHasFieldErrors("student", "birthDate"));

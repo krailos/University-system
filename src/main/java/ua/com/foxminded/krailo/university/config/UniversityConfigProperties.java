@@ -30,13 +30,11 @@ public class UniversityConfigProperties {
     }
 
     public int getAgeConstraint() {
-        return ageConstraint;
+	return ageConstraint;
     }
 
     public void setAgeConstraint(int ageConstraint) {
-        this.ageConstraint = ageConstraint;
+	this.ageConstraint = ageConstraint;
     }
-    
-
 
 }

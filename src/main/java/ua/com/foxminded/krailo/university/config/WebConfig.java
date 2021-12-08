@@ -49,7 +49,7 @@ public class WebConfig implements WebMvcConfigurer {
 	pageableResolver.setFallbackPageable(PageRequest.of(0, pagableDefaultPageSize));
 	resolvers.add(pageableResolver);
     }
-    
+
     @Bean
     public MessageSource messageSource() {
 	ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
@@ -57,11 +57,12 @@ public class WebConfig implements WebMvcConfigurer {
 	messageSource.setDefaultEncoding("UTF-8");
 	return messageSource;
     }
-    
+
     @Override
     public Validator getValidator() {
 	LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-	    bean.setValidationMessageSource(messageSource());
-	    return bean;
+	bean.setValidationMessageSource(messageSource());
+	return bean;
     }
+
 }

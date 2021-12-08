@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import ua.com.foxminded.krailo.university.dao.AudienceDao;
 import ua.com.foxminded.krailo.university.exception.EntityNotFoundException;

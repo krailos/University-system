@@ -197,8 +197,8 @@ class TeacherControllerTest {
   
 
     private List<Teacher> buildTeachers() {
-	return Arrays.asList(Teacher.builder().id(1).firstName("Tom").lastName("jon").phone("0670000001").gender(Gender.MALE).degree("yes").email("abx@gmail.com").build(),
-		Teacher.builder().id(2).firstName("Tom").lastName("jon").phone("0670000001").degree("yes").email("abx@gmail.com").gender(Gender.MALE).build());
+	return Arrays.asList(Teacher.builder().id(1).firstName("Tom").lastName("jon").birthDate(LocalDate.of(1980, 1, 1)).address("address").phone("0670000001").gender(Gender.MALE).degree("yes").email("abx@gmail.com").build(),
+		Teacher.builder().id(2).firstName("Tom").lastName("jon").birthDate(LocalDate.of(1980, 1, 1)).address("address").phone("0670000001").degree("yes").email("abx@gmail.com").gender(Gender.MALE).build());
     }
 
     private List<Subject> buildSubjects() {
